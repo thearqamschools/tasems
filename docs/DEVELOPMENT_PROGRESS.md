@@ -37,7 +37,7 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Screens tested by automated tests and a live server check; not yet reviewed on a real phone or by Samanabad staff.
 - Urdu translations written by Claude; a native-speaker review is needed before the pilot.
 - No public-holiday calendar yet: registers can be taken on any school day of the session (Sunday off; Saturday only Hifz, Pre-9, 9, 10).
-- Diary: official logo files not yet uploaded (Setup → Diary layout); subject lists for classes other than Class 4; whether the principal must approve a diary before it is shared.
+- Diary: subject lists for classes other than Class 4; whether the principal must approve a diary before it is shared.
 - Fees: Bank Alfalah's API connection (Voucher ID lookup in the Alfa app) still runs through the old software; moving it to TASEMS needs Bank Alfalah's interface document and test account from IT. Until then Alfa payments are entered by staff.
 - Fees: the JazzCash export and import use TASEMS's own column layout; a sample of the form JazzCash receives and sends back is needed to match it exactly.
 - Fees: opening balances (arrears) from the old software are not imported yet; needed before the first TASEMS vouchers so arrears are not lost.

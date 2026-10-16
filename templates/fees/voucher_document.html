@@ -82,7 +82,7 @@
   <div class="copy">
     <div class="head">
       <div class="school">
-        <div>{% if layout.left_logo %}<img src="{{ media_base }}{{ layout.left_logo.name }}" alt="The Arqam Schools">{% endif %}</div>
+        <div><img src="{% official_logo layout media_base font_base %}" alt="The Arqam Schools"></div>
         <div>
           <div class="name">THE ARQAM SCHOOLS</div>
           <div class="addr">{{ branch.address|default:branch.city }}</div>
@@ -150,7 +150,7 @@
 
 {% if fs.print_back_side %}
 <div class="page back">
-  <h1>{% if layout.left_logo %}<img src="{{ media_base }}{{ layout.left_logo.name }}" alt="">{% endif %}{{ fs.back_title }}</h1>
+  <h1><img src="{% official_logo layout media_base font_base %}" alt="">{{ fs.back_title }}</h1>
   {% for c in channels %}
   <div class="channel">
     <h2><span>{{ forloop.counter }}</span><span>{{ c.title_filled }}</span></h2>

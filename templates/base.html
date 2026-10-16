@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{% trans "TASEMS" %}{% endblock %} · {% trans "The Arqam Schools" %}</title>
   <link rel="stylesheet" href="{% static 'css/tasems.css' %}">
+  <link rel="icon" href="{% static 'img/arqam-logo-192.png' %}">
 </head>
 <body>
 {% block body %}
   <header class="topbar">
-    <a class="school" href="{% url 'home' %}">{% trans "The Arqam Schools" %}</a>
+    <a class="school" href="{% url 'home' %}"><img src="{% static 'img/arqam-logo-192.png' %}" alt="" width="32" height="32">{% trans "The Arqam Schools" %}</a>
     <span class="branch-name">{% if current_branch %}{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ current_branch.name }}{% endif %}{% endif %}</span>
     {% if switchable_branches|length > 1 %}
     <form method="post" action="{% url 'switch_branch' %}">{% csrf_token %}

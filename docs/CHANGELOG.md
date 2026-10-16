@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.1 — 2026-10-17 — Official logo
+
+Added
+- The official The Arqam Schools logo on fee vouchers (all three copies and the back), result cards, daily diaries, staff and parent sign-in pages, the top bar and the browser tab icon. Used exactly as provided.
+
+Not deployed.
+
 ## 0.10.0 — 2026-10-16 — Milestone 3c: Admissions
 
 Added

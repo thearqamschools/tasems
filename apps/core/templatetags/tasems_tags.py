@@ -42,3 +42,12 @@ def bold(value):
 @register.filter
 def get_item(mapping, key):
     return mapping.get(key) if mapping else None
+
+
+@register.simple_tag
+def official_logo(layout, media_base, font_base):
+    """The logo uploaded in Setup if there is one, otherwise the official logo shipped with TASEMS
+    (static/img/arqam-logo.png, used exactly as provided — never redrawn or recoloured)."""
+    if layout is not None and getattr(layout, "left_logo", None):
+        return f"{media_base}{layout.left_logo.name}"
+    return f"{font_base[: -len('fonts/')]}img/arqam-logo-512.png"

@@ -7,10 +7,11 @@
   <meta name="theme-color" content="#0f5e4f">
   <title>{% block title %}{% trans "Parents" %}{% endblock %} · {% trans "The Arqam Schools" %}</title>
   <link rel="stylesheet" href="{% static 'css/tasems.css' %}">
+  <link rel="icon" href="{% static 'img/arqam-logo-192.png' %}">
 </head>
 <body class="parent">
   <header class="topbar">
-    <a class="school" href="{% url 'parents:home' %}">{% trans "The Arqam Schools" %}</a>
+    <a class="school" href="{% url 'parents:home' %}"><img src="{% static 'img/arqam-logo-192.png' %}" alt="" width="32" height="32">{% trans "The Arqam Schools" %}</a>
     <span class="branch-name">{% trans "Parents" %}</span>
     <form method="post" action="{% url 'set_language' %}">{% csrf_token %}
       <input type="hidden" name="next" value="{{ request.get_full_path }}">
