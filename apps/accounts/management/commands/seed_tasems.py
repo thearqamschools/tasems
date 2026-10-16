@@ -7,7 +7,7 @@ office to enter, so nothing is invented.
 
 from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
-from django.db import transaction
+from django.db import models, transaction
 
 from apps.academics.models import ClassLevel
 from apps.accounts.models import Role, Scope
@@ -104,8 +104,12 @@ ROLES = [
     ("hifz_teacher", "Hifz Teacher", "حفظ ٹیچر", [B], VIEW_STUDENTS_ONLY + VIEW_ACADEMICS, False),
 ]
 
-# Levels named in the project brief. Whether "Prep / KG" is a separate class is to be confirmed.
-CLASS_LEVELS = [("play-group", "Play Group", "پلے گروپ", "early_years"), ("nursery", "Nursery", "نرسری", "early_years")]
+# Early Years confirmed by the project lead on 16 Oct 2026: Play Group, Nursery, Prep.
+CLASS_LEVELS = [
+    ("play-group", "Play Group", "پلے گروپ", "early_years"),
+    ("nursery", "Nursery", "نرسری", "early_years"),
+    ("prep", "Prep", "پریپ", "early_years"),
+]
 CLASS_LEVELS += [
     (f"class-{n}", f"Class {n}", f"جماعت {n}", "primary" if n <= 5 else "middle" if n <= 8 else "secondary")
     for n in range(1, 11)
@@ -164,6 +168,8 @@ class Command(BaseCommand):
             )
             role.permissions.set(perms(perm_names))
 
+        # Move existing levels out of the way first so re-ordering never hits the unique sort_order rule.
+        ClassLevel.objects.update(sort_order=models.F("sort_order") + 10000)
         for i, (code, name, name_ur, stage) in enumerate(CLASS_LEVELS, start=1):
             ClassLevel.objects.update_or_create(
                 code=code, defaults={"name": name, "name_ur": name_ur, "stage": stage, "sort_order": i * 10}

@@ -22,6 +22,12 @@ def test_seed_is_repeatable(seeded):
     assert Branch.objects.get(code="fsd-samanabad").ownership == Branch.Ownership.COMPANY
     assert Role.objects.filter(is_system=True).count() == 11
     assert ClassLevel.objects.filter(stage="hifz").count() == 1
+    assert list(ClassLevel.objects.filter(stage="early_years").values_list("code", flat=True)) == [
+        "play-group",
+        "nursery",
+        "prep",
+    ]
+    assert ClassLevel.objects.get(code="prep").sort_order < ClassLevel.objects.get(code="class-1").sort_order
 
 
 def test_franchise_default_royalty_is_8_percent(org):

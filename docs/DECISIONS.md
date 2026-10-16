@@ -20,3 +20,4 @@ Decision authority: the project lead at The Arqam Schools (Samanabad head office
 | D-011 | 2026-10-16 | Staff attendance is imported from the existing face-recognition biometric machines, not replaced | Machines already in use; brand/model and export method to confirm | Approved |
 | D-012 | 2026-10-16 | The built-in Django admin is used only as a temporary back-office for head office and IT during early milestones. Teachers, principals and parents get purpose-built screens | Fast, secure setup screens now; proper user experience where it matters | Proposed |
 | D-013 | 2026-10-16 | Seed data contains only confirmed facts (head offices, Samanabad campus, roles, class levels). Lahore address, regions, subjects and session dates are entered by head office | Accuracy rule: nothing invented | Approved |
+| D-014 | 2026-10-16 | Early Years = Play Group, Nursery, Prep; Primary starts at Class 1 | Confirmed by the project lead | Approved |
