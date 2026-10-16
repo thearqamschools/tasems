@@ -24,9 +24,11 @@ RLS_TABLES = [
     "attendance_attendancerecord",
     "attendance_sectionattendance",
     "diary_diary",
+    "exams_mark",
+    "exams_resultremark",
 ]
 
-# The policies themselves are created by core/migrations/0002_row_level_security.py.
+# Policies are created by migrations: core/0002_row_level_security.py and exams/0002_row_level_security.py.
 
 
 @contextmanager

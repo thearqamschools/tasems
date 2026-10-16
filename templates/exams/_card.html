@@ -1,0 +1,122 @@
+{% load i18n %}<style>
+  @font-face { font-family: "CardSerif"; src: url("{{ font_base }}NotoSerif-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "CardSerif"; src: url("{{ font_base }}NotoSerif-Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "CardUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Regular.ttf"); font-weight: 400; }
+  @page { size: A4; margin: 9mm 10mm 10mm; }
+  .rc, .rc * { box-sizing: border-box; }
+  .rc { font-family: "CardSerif", "CardUrdu", serif; color: #14182b; font-size: 9.5pt; line-height: 1.35; max-width: 190mm; margin: 0 auto 8mm; background: #fff; direction: ltr; }
+  .rc + .rc { page-break-before: always; break-before: page; }
+  .rc .head { display: grid; grid-template-columns: 22mm 1fr 22mm; align-items: center; text-align: center; border-bottom: 2pt solid #1d2b6b; padding-bottom: 2mm; }
+  .rc .head img { max-width: 22mm; max-height: 22mm; }
+  .rc .school { font-size: 19pt; font-weight: 700; color: #1d2b6b; margin: 0; letter-spacing: 0.02em; line-height: 1.1; }
+  .rc .school-ur { font-family: "CardUrdu"; color: #c8102e; font-size: 11pt; margin: 0; line-height: 1.7; }
+  .rc .branch { margin: 0; font-size: 9.5pt; color: #3b4157; }
+  .rc .title { text-align: center; margin: 3mm 0 2.5mm; }
+  .rc .title h1 { font-size: 14pt; margin: 0; color: #1d2b6b; }
+  .rc .title p { margin: 0.5mm 0 0; font-size: 10pt; color: #3b4157; }
+  .rc table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .rc .info td { padding: 1.3mm 2mm; border: 0.6pt solid #c9cfdf; }
+  .rc .info td.k { width: 28mm; background: #eef1f8; color: #3b4157; font-size: 8.5pt; }
+  .rc .info td.v { font-weight: 700; }
+  .rc .info .ur { font-family: "CardUrdu"; font-weight: 400; font-size: 9pt; }
+  .rc .marks { margin-top: 3mm; }
+  .rc .marks th { background: #1d2b6b; color: #fff; font-size: 8.5pt; padding: 1.6mm 1.5mm; border: 0.6pt solid #1d2b6b; }
+  .rc .marks td { border: 0.6pt solid #c9cfdf; padding: 1.4mm 1.5mm; text-align: center; }
+  .rc .marks td.subject { text-align: left; font-weight: 700; }
+  .rc .marks tr:nth-child(even) td { background: #f7f8fc; }
+  .rc .marks td.fail { color: #a8322a; font-weight: 700; }
+  .rc .marks .small { font-size: 7.5pt; color: #5a6075; display: block; }
+  .rc .summary { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 3mm; border: 1pt solid #1d2b6b; }
+  .rc .summary div { padding: 2mm 1.5mm; text-align: center; border-left: 0.6pt solid #c9cfdf; }
+  .rc .summary div:first-child { border-left: 0; }
+  .rc .summary .k { display: block; font-size: 7.5pt; color: #5a6075; }
+  .rc .summary .v { display: block; font-size: 13pt; font-weight: 700; color: #1d2b6b; }
+  .rc .summary .v.fail { color: #a8322a; font-size: 10pt; }
+  .rc .lower { display: grid; grid-template-columns: 1fr 52mm; gap: 3mm; margin-top: 3mm; }
+  .rc .box { border: 0.6pt solid #c9cfdf; padding: 2mm; min-height: 17mm; }
+  .rc .box h3 { margin: 0 0 1mm; font-size: 8.5pt; color: #1d2b6b; }
+  .rc .box p { margin: 0; }
+  .rc .bands td, .rc .bands th { border: 0.6pt solid #c9cfdf; padding: 0.6mm 1mm; font-size: 7.5pt; text-align: center; }
+  .rc .bands th { background: #eef1f8; }
+  .rc .signs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8mm; margin-top: 12mm; text-align: center; font-size: 8.5pt; }
+  .rc .signs div { border-top: 0.6pt solid #14182b; padding-top: 1mm; }
+  .rc .foot { margin-top: 3mm; font-size: 7.5pt; color: #5a6075; display: flex; justify-content: space-between; }
+</style>
+{% for r in results %}
+<div class="rc">
+  <div class="head">
+    <div>{% if layout.left_logo %}<img src="{{ media_base }}{{ layout.left_logo.name }}" alt="The Arqam Schools">{% endif %}</div>
+    <div>
+      <p class="school">THE ARQAM SCHOOLS</p>
+      <p class="school-ur" lang="ur" dir="rtl">دی ارقم سکولز</p>
+      <p class="branch">{{ section.branch.name }}</p>
+    </div>
+    <div>{% if layout.right_logo %}<img src="{{ media_base }}{{ layout.right_logo.name }}" alt="">{% endif %}</div>
+  </div>
+  <div class="title">
+    <h1>{% if card == "mid" %}Progress Report{% else %}Annual Result Card{% endif %}</h1>
+    <p>{% if exam %}{{ exam.name }}{% endif %} · Session {{ section.session.name }}</p>
+  </div>
+
+  <table class="info">
+    <tr><td class="k">Student</td><td class="v">{{ r.student.full_name }}{% if r.student.full_name_ur %} <span class="ur" lang="ur" dir="rtl">({{ r.student.full_name_ur }})</span>{% endif %}</td>
+        <td class="k">Admission No.</td><td class="v">{{ r.student.admission_no }}</td></tr>
+    <tr><td class="k">Parent / Guardian</td><td class="v">{{ r.guardian.full_name|default:"—" }}</td>
+        <td class="k">Class</td><td class="v">{{ section }}</td></tr>
+    <tr><td class="k">Roll No.</td><td class="v">{{ r.enrolment.roll_no|default:"—" }}</td>
+        <td class="k">Attendance</td><td class="v">{% if r.attendance_days %}{{ r.present_days }} / {{ r.attendance_days }} days{% else %}—{% endif %}</td></tr>
+  </table>
+
+  <table class="marks">
+    {% if card == "mid" %}
+    <thead><tr><th style="width:34%">Subject</th><th>Total Marks</th><th>Marks Obtained</th><th>Percentage</th><th>Grade</th></tr></thead>
+    <tbody>{% for s in r.subjects %}<tr>
+      <td class="subject">{{ s.subject.name }}</td>
+      <td>{{ s.mid_paper.total_marks|default:"—" }}</td>
+      <td>{% if s.mid.status == "present" %}{{ s.mid.obtained.normalize }}{% elif s.note %}{{ s.note }}{% else %}—{% endif %}</td>
+      <td class="{% if s.passed is False %}fail{% endif %}">{% if s.score is not None %}{{ s.score|floatformat:1 }}%{% else %}—{% endif %}</td>
+      <td class="{% if s.passed is False %}fail{% endif %}">{{ s.grade|default:"—" }}</td>
+    </tr>{% endfor %}</tbody>
+    {% else %}
+    <thead><tr><th style="width:28%">Subject</th><th>Mid-Term<span class="small" style="color:#cfd6ee">obtained / total</span></th><th>Final<span class="small" style="color:#cfd6ee">obtained / total</span></th><th>Score<span class="small" style="color:#cfd6ee">out of 100</span></th><th>Grade</th></tr></thead>
+    <tbody>{% for s in r.subjects %}<tr>
+      <td class="subject">{{ s.subject.name }}</td>
+      <td>{% if s.mid.status == "present" %}{{ s.mid.obtained.normalize }} / {{ s.mid_paper.total_marks }}{% elif s.mid %}{{ s.mid.get_status_display }}{% else %}—{% endif %}</td>
+      <td>{% if s.final.status == "present" %}{{ s.final.obtained.normalize }} / {{ s.final_paper.total_marks }}{% elif s.final %}{{ s.final.get_status_display }}{% else %}—{% endif %}</td>
+      <td class="{% if s.passed is False %}fail{% endif %}">{% if s.score is not None %}{{ s.score|floatformat:1 }}{% else %}—{% endif %}</td>
+      <td class="{% if s.passed is False %}fail{% endif %}">{{ s.grade|default:"—" }}</td>
+    </tr>{% endfor %}</tbody>
+    {% endif %}
+  </table>
+
+  <div class="summary">
+    <div><span class="k">Total</span><span class="v">{% if r.complete %}{{ r.obtained|floatformat:1 }}<span style="font-size:9pt"> / {{ r.maximum|floatformat:0 }}</span>{% else %}—{% endif %}</span></div>
+    <div><span class="k">Percentage</span><span class="v">{% if r.complete %}{{ r.percent|floatformat:2 }}%{% else %}—{% endif %}</span></div>
+    <div><span class="k">Grade</span><span class="v">{{ r.grade|default:"—" }}</span></div>
+    <div><span class="k">Result</span><span class="v {% if r.complete and not r.passed %}fail{% endif %}">{% if not r.complete %}Incomplete{% elif r.passed %}{% if card == "mid" %}Pass{% else %}Promoted{% endif %}{% else %}Needs improvement{% endif %}</span></div>
+    <div><span class="k">Class position</span><span class="v">{% if r.position %}{{ r.position }}{% if r.position == 1 %}st{% elif r.position == 2 %}nd{% elif r.position == 3 %}rd{% else %}th{% endif %}{% else %}—{% endif %}</span></div>
+  </div>
+  {% if r.complete and r.failed_subjects %}<p style="margin:1.5mm 0 0;color:#a8322a;font-size:8.5pt">Below the pass mark ({{ scheme.pass_percent|floatformat:0 }}%) in: {% for s in r.failed_subjects %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}.</p>{% endif %}
+
+  <div class="lower">
+    <div>
+      {% with rm=r.remark %}
+      <div class="box"><h3>Class teacher's remarks</h3><p>{{ rm.teacher_remarks|default:""|linebreaksbr }}</p></div>
+      <div class="box" style="margin-top:2mm"><h3>Principal's remarks</h3><p>{{ rm.principal_remarks|default:""|linebreaksbr }}</p></div>
+      {% endwith %}
+    </div>
+    <table class="bands">
+      <thead><tr><th>Grade</th><th>Score</th></tr></thead>
+      <tbody>{% for grade, low, high in band_rows %}<tr><td>{{ grade }}</td><td>{% if high is None %}{{ low }} and above{% else %}{{ low }} – {{ high }}{% endif %}</td></tr>{% endfor %}</tbody>
+    </table>
+  </div>
+
+  <div class="signs"><div>Class Teacher</div><div>Principal</div><div>Parent / Guardian</div></div>
+  <div class="foot">
+    <span>{% if card == "annual" %}Score = Mid-Term {{ scheme.mid_weight|floatformat:0 }}% + Final {{ scheme.final_weight|floatformat:0 }}%{% if scheme.test_weight %} + Class tests {{ scheme.test_weight|floatformat:0 }}%{% endif %}. Pass mark {{ scheme.pass_percent|floatformat:0 }}% in each subject.{% else %}Pass mark {{ scheme.pass_percent|floatformat:0 }}% in each subject.{% endif %}</span>
+    <span>Issued {% now "d M Y" %}</span>
+  </div>
+</div>
+{% empty %}
+<p>No students.</p>
+{% endfor %}

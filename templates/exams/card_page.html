@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Result card" %}{% endblock %}
+{% block content %}
+<div class="actions no-print">
+  <a class="button" href="?card={{ card }}&format=pdf" target="_blank" rel="noopener">{% trans "PDF for printing" %}</a>
+  <a class="button quiet" href="{% url 'exams:section_results' section.id %}?card={{ card }}">{% trans "Back to results" %}</a>
+</div>
+<div class="diary-preview">{% include "exams/_card.html" %}</div>
+{% endblock %}

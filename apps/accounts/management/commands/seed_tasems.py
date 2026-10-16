@@ -11,6 +11,7 @@ from django.db import models, transaction
 
 from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
+from apps.exams.models import GradingScheme
 from apps.organisation.models import Branch, HeadOffice
 
 VIEW_PEOPLE = ["people.view_student", "people.view_guardian", "people.view_enrolment", "people.view_studentguardian"]
@@ -147,16 +148,36 @@ DIARY_DESIGN = DIARY_VIEW + [
     "diary.change_diarylayout",
 ]
 
+# Examinations and results (Phase 2)
+EXAM_VIEW = [
+    "exams.view_exam",
+    "exams.view_paper",
+    "exams.view_mark",
+    "exams.view_resultremark",
+    "exams.view_gradingscheme",
+]
+EXAM_ENTER = EXAM_VIEW + ["exams.add_mark", "exams.add_resultremark", "exams.change_resultremark"]
+EXAM_MANAGE = EXAM_ENTER + ["exams.change_mark"]
+EXAM_SETUP = EXAM_VIEW + [
+    "exams.add_exam",
+    "exams.change_exam",
+    "exams.add_paper",
+    "exams.change_paper",
+    "exams.delete_paper",
+    "exams.add_gradingscheme",
+    "exams.change_gradingscheme",
+]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW + DIARY_DESIGN,
-    "head_office_admin": ATT_VIEW + DIARY_DESIGN,
-    "regional_director": ATT_VIEW + DIARY_VIEW,
-    "branch_owner": ATT_VIEW + DIARY_VIEW,
-    "principal": ATT_MANAGE + DIARY_MANAGE,
-    "academic_coordinator": ATT_MANAGE + DIARY_MANAGE,
-    "class_teacher": ATT_MARK + DIARY_WRITE,
+    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP,
+    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP,
+    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
+    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
+    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": ATT_MARK + DIARY_WRITE,
-    "subject_teacher": ATT_VIEW + DIARY_VIEW,
+    "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
 }
 
 # Subjects and their order as they appear on the Class 4 diary shared on 16 Oct 2026.
@@ -247,6 +268,17 @@ class Command(BaseCommand):
                 CurriculumSubject.objects.update_or_create(
                     class_level=level, subject=Subject.objects.get(code=subject_code), defaults={"sort_order": order}
                 )
+
+        # Proposed default grading (D-030): Mid-Term 30% + Final 70%; class tests recorded, 0% weight.
+        if not GradingScheme.objects.filter(is_default=True).exists():
+            GradingScheme.objects.create(
+                name="Standard: Mid-Term 30% + Final 70%",
+                test_weight=0,
+                mid_weight=30,
+                final_weight=70,
+                pass_percent=33,
+                is_default=True,
+            )
 
         self.stdout.write(
             self.style.SUCCESS(
