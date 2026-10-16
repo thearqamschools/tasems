@@ -9,7 +9,7 @@ How the money is kept (DECISIONS D-033):
 * A **Voucher** is the printed bill. It lists the new charges, any unpaid balance
   from earlier months (arrears) and the late fine shown as "Payable after due date".
 * Payments are matched to the oldest charges first (PaymentAllocation), which tells
-  which months are paid and how much tuition was collected for royalty statements.
+  which months are paid.
 
 Fee amounts are per branch (each franchise sets its own) and per class.
 """
@@ -68,9 +68,6 @@ class FeeHead(TimeStampedModel):
     kind = models.CharField(max_length=10, choices=Kind.choices)
     charge_months = models.JSONField(
         default=list, blank=True, help_text=_("For yearly and seasonal heads: month numbers, e.g. [4] for April.")
-    )
-    counts_for_royalty = models.BooleanField(
-        default=False, help_text=_("Collections of this head count towards the franchise royalty (monthly fee).")
     )
     sort_order = models.PositiveSmallIntegerField(default=0)
     is_active = models.BooleanField(default=True)

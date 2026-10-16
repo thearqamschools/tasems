@@ -8,7 +8,7 @@ from django.db.models import Count, Sum
 
 from apps.people.models import StudentGuardian
 
-from .models import Charge, FeeHead, Method, Payment, PaymentAllocation, Voucher, add_months, month_start
+from .models import Charge, FeeHead, Method, Payment, Voucher, add_months, month_start
 from .services import ZERO
 
 MAX_ROWS = 3
@@ -153,18 +153,17 @@ def collections(branch, date_from, date_to):
 class RoyaltyRow:
     branch: object
     collected: Decimal
-    royalty_base: Decimal
-    billed_base: Decimal
+    billed: Decimal
     percent: Decimal
 
     @property
     def royalty(self):
-        return (self.royalty_base * self.percent / Decimal(100)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+        return (self.collected * self.percent / Decimal(100)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
 
 
 def royalty(branches, month):
-    """Royalty on monthly fee collected during the month (payments received that month that went
-    to monthly fee charges, any month). Billed monthly fee is shown alongside for comparison."""
+    """Royalty = the branch's percentage of all fees received during the month (D-040, confirmed
+    16 Oct 2026). Fees billed for the month are shown alongside for comparison."""
     month = month_start(month)
     nxt = add_months(month, 1)
     ids = [b.id for b in branches]
@@ -174,31 +173,15 @@ def royalty(branches, month):
         .annotate(t=Sum("amount"))
         .values_list("branch_id", "t")
     )
-    base = dict(
-        PaymentAllocation.objects.filter(
-            branch_id__in=ids,
-            payment__paid_on__gte=month,
-            payment__paid_on__lt=nxt,
-            payment__is_reversed=False,
-            charge__head__counts_for_royalty=True,
-        )
-        .values("branch_id")
-        .annotate(t=Sum("amount"))
-        .values_list("branch_id", "t")
-    )
     billed = dict(
-        Charge.objects.filter(branch_id__in=ids, month=month, is_cancelled=False, head__counts_for_royalty=True)
+        Charge.objects.filter(branch_id__in=ids, month=month, is_cancelled=False)
         .values("branch_id")
         .annotate(t=Sum("amount"))
         .values_list("branch_id", "t")
     )
     return [
         RoyaltyRow(
-            branch=b,
-            collected=collected.get(b.id, ZERO),
-            royalty_base=base.get(b.id, ZERO),
-            billed_base=billed.get(b.id, ZERO),
-            percent=b.royalty_percent,
+            branch=b, collected=collected.get(b.id, ZERO), billed=billed.get(b.id, ZERO), percent=b.royalty_percent
         )
         for b in branches
     ]

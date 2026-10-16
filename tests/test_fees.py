@@ -10,7 +10,7 @@ from apps.academics.models import ClassLevel, Section
 from apps.accounts.models import Scope
 from apps.fees import reports
 from apps.fees import services as S
-from apps.fees.models import BranchFeeSettings, Charge, Concession, FeeHead, FeeRate, Voucher
+from apps.fees.models import BranchFeeSettings, Charge, Concession, FeeHead, FeeRate, Payment, Voucher
 from apps.people.models import Enrolment, Student
 
 pytestmark = pytest.mark.django_db
@@ -88,7 +88,6 @@ def amounts(voucher):
 def test_heads_and_samanabad_rates_are_seeded(seeded):
     assert list(FeeHead.objects.values_list("short_name", flat=True)) == [
         "Admission",
-        "Re Admission",
         "Reg.",
         "Tuition",
         "Annual",
@@ -304,7 +303,7 @@ def test_defaulters_and_month_summary(fees):
     assert summary["collected"] == D(4300) and summary["billed"] == D(8600 + 200)
 
 
-def test_royalty_on_monthly_fee_collected(fees, org, make_user):
+def test_royalty_on_all_fees_received(fees, org, make_user):
     franchise = org["fsd_franchise"]
     level = ClassLevel.objects.get(code="class-1")
     sec = Section.objects.create(branch=franchise, session=org["session"], class_level=level, name="A")
@@ -320,7 +319,8 @@ def test_royalty_on_monthly_fee_collected(fees, org, make_user):
     S.add_charge(kid, FeeHead.objects.get(code="others"), OCT, D(500), owner, note="Books")
     S.record_payment(kid, D(3500), dt.date(2026, 10, 15), "counter", owner)
     row = reports.royalty([franchise], OCT)[0]
-    assert (row.collected, row.royalty_base, row.percent, row.royalty) == (D(3500), D(3000), D(8), D(240))
+    # 8% of everything received in the month (confirmed 16 Oct 2026)
+    assert (row.collected, row.billed, row.percent, row.royalty) == (D(3500), D(3500), D(8), D(280))
 
 
 # --- Screens ---------------------------------------------------------------------------------
@@ -430,3 +430,65 @@ def test_fee_pages_in_urdu(fees, login_as):
     for url in ["/fees/", f"/fees/student/{child.id}/", f"/fees/voucher/{v.id}/receive/", "/fees/defaulters/"]:
         page = client.get(url, HTTP_ACCEPT_LANGUAGE="ur").content.decode()
         assert 'lang="ur"' in page and "فیس" in page, url
+
+
+# --- JazzCash files --------------------------------------------------------------------------
+
+
+def _xlsx(rows):
+    import io
+
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    for r in rows:
+        wb.active.append(r)
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    buffer.name = "jazzcash-paid.xlsx"
+    return buffer
+
+
+def test_voucher_list_for_jazzcash(fees, login_as):
+    import io
+
+    from openpyxl import load_workbook
+
+    a, b = fees["student"](), fees["student"]()
+    generate(fees)
+    S.record_payment(b, D(4300), TODAY["date"], "counter", fees["user"], voucher=voucher_of(b))
+    response = login_as(fees["user"]).get("/fees/jazzcash/vouchers.xlsx?month=2026-10")
+    rows = list(load_workbook(io.BytesIO(response.content)).active.values)
+    assert rows[0][0] == "Voucher ID" and len(rows) == 2  # only the unpaid voucher
+    assert rows[1][0] == voucher_of(a).number and rows[1][8] == 4300
+
+
+def test_jazzcash_paid_file_is_checked_then_recorded(fees, login_as):
+    a, b = fees["student"](), fees["student"]()
+    generate(fees)
+    va, vb = voucher_of(a), voucher_of(b)
+    client = login_as(fees["user"])
+    upload = _xlsx(
+        [
+            ["JazzCash settlement report"],  # a title line above the header
+            ["Sr", "Voucher No", "Amount Paid", "Transaction Date", "TID"],
+            [1, va.number, 4300, "12/10/2026", "JC-1"],
+            [2, 999, 1000, "12/10/2026", "JC-2"],
+            [3, vb.number, "4,300", "14/10/2026", "JC-3"],
+            [4, vb.number, "4,300", "14/10/2026", "JC-3"],
+        ]
+    )
+    page = client.post("/fees/payments/import/", {"step": "check", "method": "jazzcash", "file": upload})
+    body = page.content.decode()
+    assert "No voucher with this ID" in body and "repeated in this file" in body
+    assert not Payment.objects.exists()  # nothing saved by the check
+    token = page.context["token"]
+    client.post("/fees/payments/import/", {"step": "import", "token": token, "method": "jazzcash"})
+    assert Payment.objects.filter(method="jazzcash").count() == 2
+    va.refresh_from_db()
+    assert va.status == Voucher.Status.PAID and Payment.objects.get(reference="JC-1").paid_on == dt.date(2026, 10, 12)
+
+    upload.seek(0)  # the same file again: everything already recorded
+    again = client.post("/fees/payments/import/", {"step": "check", "method": "jazzcash", "file": upload})
+    assert "Already recorded" in again.content.decode() and not again.context["token"]

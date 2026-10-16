@@ -7,7 +7,7 @@ from .models import BranchFeeSettings, Charge, FeeHead, FeeRate, Payment, Paymen
 
 @admin.register(FeeHead)
 class FeeHeadAdmin(admin.ModelAdmin):
-    list_display = ("name", "short_name", "kind", "charge_months", "counts_for_royalty", "sort_order", "is_active")
+    list_display = ("name", "short_name", "kind", "charge_months", "sort_order", "is_active")
     list_editable = ("sort_order",)
 
 

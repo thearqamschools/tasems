@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Payments from a file" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Payments from a file" %}</h1>
+<p class="lede">{% trans "Record many payments at once from the list JazzCash (or the bank) sends: one row per payment with the Voucher ID and the amount. Every row is checked first; nothing is saved until you confirm." %}</p>
+
+{% if not result %}
+<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
+  <input type="hidden" name="step" value="check">
+  <div class="form-grid">
+    <div class="field"><label for="method">{% trans "Payments came through" %}</label>
+      <select id="method" name="method">{% for v, l in methods %}<option value="{{ v }}" {% if v == method %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="paid_on">{% trans "Date paid (when the file has no date column)" %}</label>
+      <input type="date" id="paid_on" name="paid_on" value="{{ paid_on|date:'Y-m-d' }}"></div>
+    <div class="field"><label for="file">{% trans "Excel file (.xlsx)" %}</label><input type="file" id="file" name="file" accept=".xlsx" required></div>
+  </div>
+  <p class="help muted">{% blocktrans %}Columns are found by their heading: “Voucher ID” (or Voucher No, Bill No, Consumer No) and “Amount” are needed; “Date” and “Transaction ID” are used when present. At most {{ max_rows }} rows.{% endblocktrans %}</p>
+  <button class="button" type="submit">{% trans "Check the file" %}</button>
+</form>
+{% else %}
+{% for e in result.errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+{% if result.rows %}
+<div class="figures">
+  <div class="figure"><div class="value">{{ result.good|length }}</div><div class="label">{% trans "Payments to record" %}</div></div>
+  <div class="figure"><div class="value">{{ result.total|rupees }}</div><div class="label">{% trans "Total (Rs) — compare with the partner's total" %}</div></div>
+  <div class="figure {% if result.good|length != result.rows|length %}attention{% endif %}"><div class="value">{{ result.rows|length|add:0 }}</div><div class="label">{% trans "Rows in the file" %}</div></div>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th class="num">{% trans "Row" %}</th><th>{% trans "Voucher ID" %}</th><th>{% trans "Student" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th>{% trans "Date" %}</th><th>{% trans "Transaction ID" %}</th><th>{% trans "Check" %}</th></tr></thead>
+  <tbody>{% for r in result.rows %}<tr>
+    <td class="num">{{ r.number }}</td><td class="num">{{ r.voucher_no }}</td>
+    <td>{% if r.voucher %}{{ r.voucher.student.full_name }}{% else %}—{% endif %}</td>
+    <td class="num">{{ r.amount|rupees }}</td><td>{{ r.paid_on|date:"d M Y"|default:"—" }}</td><td>{{ r.reference|default:"—" }}</td>
+    <td>{% if r.ok %}<span class="badge">{% trans "OK" %}</span>{% else %}<span class="badge attention">{{ r.problem }}</span>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+<div class="actions">
+  {% if token %}
+  <form method="post">{% csrf_token %}
+    <input type="hidden" name="step" value="import"><input type="hidden" name="token" value="{{ token }}">
+    <input type="hidden" name="method" value="{{ method }}"><input type="hidden" name="paid_on" value="{{ paid_on|date:'Y-m-d' }}">
+    <button class="button" type="submit">{% blocktrans count n=result.good|length %}Record {{ n }} payment{% plural %}Record {{ n }} payments{% endblocktrans %}</button>
+  </form>
+  {% endif %}
+  <a class="button quiet" href="{% url 'fees:payments_import' %}">{% trans "Choose another file" %}</a>
+</div>
+{% endif %}
+{% endblock %}
