@@ -13,6 +13,7 @@ from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
 from apps.exams.models import GradingComponent, GradingScheme
 from apps.fees.models import BranchFeeSettings, FeeHead, FeeRate, PaymentChannel, VoucherCounter
+from apps.hr.models import LeaveType
 from apps.organisation.models import Branch, HeadOffice
 
 VIEW_PEOPLE = ["people.view_student", "people.view_guardian", "people.view_enrolment", "people.view_studentguardian"]
@@ -217,14 +218,39 @@ FEE_SETUP = (
     ]
 )
 
+# Staff (HR) — Phase 3a
+HR_VIEW = [
+    "hr.view_employee",
+    "hr.view_staffday",
+    "hr.view_punch",
+    "hr.view_leaverequest",
+    "hr.view_leavetype",
+    "hr.view_holiday",
+    "hr.view_hrsettings",
+]
+HR_MANAGE = HR_VIEW + [
+    "hr.add_employee",
+    "hr.change_employee",
+    "hr.add_punch",
+    "hr.change_staffday",
+    "hr.add_leaverequest",
+    "hr.change_leaverequest",
+    "hr.approve_leaverequest",
+    "hr.add_holiday",
+    "hr.change_holiday",
+    "hr.change_hrsettings",
+    "hr.add_hrsettings",
+]
+HR_SETUP = HR_MANAGE + ["hr.add_leavetype", "hr.change_leavetype"]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP,
-    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP,
-    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"],
-    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"],
-    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE + FEE_MANAGE,
+    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP,
+    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP,
+    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"] + HR_VIEW,
+    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"] + HR_VIEW,
+    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE + FEE_MANAGE + HR_MANAGE,
     "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
-    "accountant": FEE_COLLECT,
+    "accountant": FEE_COLLECT + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
     "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"],
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": ATT_MARK + DIARY_WRITE,
@@ -251,6 +277,13 @@ RESULT_PATTERN = [
     ("neatness", "Neatness", "صفائی", "rating", "subject", 5),
     ("summer_work", "Summer vacation work", "موسم گرما کا کام", "rating", "subject", 5),
     ("class_work", "Class work & homework", "کلاس ورک اور ہوم ورک", "rating", "subject", 5),
+]
+
+# Leave types: names only. How many days each allows is set by head office (Setup → Leave types).
+LEAVE_TYPES = [
+    ("casual", "Casual leave", "اتفاقی رخصت"),
+    ("sick", "Sick leave", "بیماری کی رخصت"),
+    ("other", "Other leave", "دیگر رخصت"),
 ]
 
 # Voucher columns, in the order of the school's current fee voucher (shared 16 Oct 2026).
@@ -438,6 +471,7 @@ class Command(BaseCommand):
                 )
 
         self.seed_fees()
+        self.seed_hr()
 
         self.stdout.write(
             self.style.SUCCESS(
@@ -494,3 +528,7 @@ class Command(BaseCommand):
                     note_ur=note_ur,
                     sort_order=order,
                 )
+
+    def seed_hr(self):
+        for code, name, name_ur in LEAVE_TYPES:
+            LeaveType.objects.get_or_create(code=code, defaults={"name": name, "name_ur": name_ur})

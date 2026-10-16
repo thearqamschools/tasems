@@ -35,6 +35,13 @@ PostgreSQL 16, one database, shared schema. Migrations are versioned in each app
 | fees | Payment | Branch | Money received; never deleted, only reversed |
 | fees | PaymentAllocation | Branch | Which charges a payment paid (oldest first); rebuilt per student |
 | fees | Concession | Branch | Special discount with approval |
+| hr | Employee | Branch | Staff record; code and machine ID unique per branch; optional link to a login |
+| hr | HRSettings | Branch | Duty time, grace, half-day time, working days |
+| hr | Holiday | Network or branch | Staff days off |
+| hr | LeaveType | Network | Casual, Sick, Other; days per session set by head office |
+| hr | LeaveRequest | Branch | Request, approval by someone else, working days counted |
+| hr | Punch | Branch | One machine punch; unique per person and moment |
+| hr | StaffDay | Branch | One per person per day: first in, last out, status; hand corrections kept |
 | core | AuditEvent | — | Append-only; read-only in admin |
 
 ## Isolation rules

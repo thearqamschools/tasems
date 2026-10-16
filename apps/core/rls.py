@@ -33,9 +33,13 @@ RLS_TABLES = [
     "fees_payment",
     "fees_paymentallocation",
     "fees_concession",
+    "hr_employee",
+    "hr_leaverequest",
+    "hr_punch",
+    "hr_staffday",
 ]
 
-# Policies are created by migrations: core/, exams/ and fees/0002_row_level_security.py.
+# Policies are created by migrations: core/, exams/, fees/ and hr/0002_row_level_security.py.
 
 
 @contextmanager

@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Leave" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Staff leave" %}</h1>
+<h2>{% trans "Waiting for approval" %}</h2>
+{% if pending %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Leave" %}</th><th>{% trans "Dates" %}</th><th class="num">{% trans "Days" %}</th><th>{% trans "Reason" %}</th><th>{% trans "Asked by" %}</th><th></th></tr></thead>
+  <tbody>{% for l in pending %}<tr>
+    <td><a href="{% url 'hr:employee' l.employee_id %}">{{ l.employee.full_name }}</a></td><td>{{ l.leave_type }}</td>
+    <td>{{ l.starts_on|date:"d M" }} – {{ l.ends_on|date:"d M Y" }}</td><td class="num">{{ l.days }}</td><td>{{ l.reason }}</td>
+    <td>{{ l.requested_by.get_full_name|default:l.requested_by.username }}</td>
+    <td>{% if can_decide %}<form method="post" class="actions" style="margin:0">{% csrf_token %}<input type="hidden" name="id" value="{{ l.id }}">
+      <button class="button" name="decision" value="approve" type="submit">{% trans "Approve" %}</button>
+      <button class="button quiet" name="decision" value="reject" type="submit">{% trans "Reject" %}</button></form>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<p class="muted">{% trans "Nothing waiting." %}</p>{% endif %}
+<h2>{% trans "Recent" %}</h2>
+{% if recent %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Leave" %}</th><th>{% trans "Dates" %}</th><th class="num">{% trans "Days" %}</th><th>{% trans "Status" %}</th><th>{% trans "Decided by" %}</th><th></th></tr></thead>
+  <tbody>{% for l in recent %}<tr>
+    <td><a href="{% url 'hr:employee' l.employee_id %}">{{ l.employee.full_name }}</a></td><td>{{ l.leave_type }}</td>
+    <td>{{ l.starts_on|date:"d M" }} – {{ l.ends_on|date:"d M Y" }}</td><td class="num">{{ l.days }}</td><td>{{ l.get_status_display }}</td>
+    <td>{{ l.decided_by.get_full_name|default:l.decided_by.username|default:"—" }}</td>
+    <td>{% if can_decide and l.status == "approved" %}<form method="post" style="margin:0">{% csrf_token %}<input type="hidden" name="id" value="{{ l.id }}"><button class="button quiet" name="decision" value="cancel" type="submit">{% trans "Cancel leave" %}</button></form>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<p class="muted">{% trans "None yet." %}</p>{% endif %}
+{% endblock %}

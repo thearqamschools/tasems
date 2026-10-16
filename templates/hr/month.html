@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Monthly staff attendance" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Monthly staff attendance" %} · {{ month|date:"F Y" }}</h1>
+<form method="get" class="actions"><input type="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Show" %}</button>
+  <a class="button" href="?month={{ month|date:'Y-m' }}&format=xlsx">{% trans "Download Excel (for payroll)" %}</a></form>
+<p class="muted">{% trans "P present · L late · H half day · A absent · LV leave · HD holiday · – off day" %}</p>
+<div class="table-wrap"><table class="sheet-table" style="font-size:.78rem">
+  <thead><tr><th>{% trans "Name" %}</th>{% for d in dates %}<th class="num">{{ d.day }}</th>{% endfor %}<th class="num">P</th><th class="num">L</th><th class="num">H</th><th class="num">A</th><th class="num">LV</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td style="white-space:nowrap"><a href="{% url 'hr:employee' r.employee.id %}?month={{ month|date:'Y-m' }}">{{ r.employee.full_name }}</a></td>
+    {% for c in r.cells %}<td class="num" style="padding:.3rem .25rem{% if c.status == 'absent' %};color:var(--danger);font-weight:700{% elif c.status == 'late' or c.status == 'half_day' %};color:var(--attention){% endif %}">{{ c.code|default:"" }}</td>{% endfor %}
+    <td class="num">{{ r.totals.present|default:0 }}</td><td class="num">{{ r.totals.late|default:0 }}</td><td class="num">{{ r.totals.half_day|default:0 }}</td><td class="num">{{ r.totals.absent|default:0 }}</td><td class="num">{{ r.totals.leave|default:0 }}</td>
+  </tr>{% empty %}<tr><td colspan="40" class="muted">{% trans "No staff records yet." %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

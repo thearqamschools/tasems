@@ -48,7 +48,7 @@ class StudentForm(forms.ModelForm):
             "admission_no": forms.TextInput(attrs={"dir": "ltr"}),
             "b_form_no": forms.TextInput(attrs={"dir": "ltr", "inputmode": "numeric"}),
             "father_cnic": forms.TextInput(
-                attrs={"dir": "ltr", "inputmode": "numeric", "placeholder": "33100-1234567-1", "maxlength": 15}
+                attrs={"dir": "ltr", "inputmode": "numeric", "placeholder": "33100-1234567-1", "maxlength": 17}
             ),
             "full_name_ur": forms.TextInput(attrs={"dir": "rtl", "lang": "ur", "class": "ur"}),
         }
@@ -70,6 +70,9 @@ class StudentForm(forms.ModelForm):
         if not self.instance.pk:
             self.fields.pop("status")
         self.initial["father_cnic"] = format_cnic(self.instance.father_cnic)
+        # Typed with dashes (15 characters); stored as 13 digits after cleaning.
+        self.fields["father_cnic"].max_length = 17
+        self.fields["father_cnic"].validators = []
 
     def clean_admission_no(self):
         value = self.cleaned_data["admission_no"].strip()

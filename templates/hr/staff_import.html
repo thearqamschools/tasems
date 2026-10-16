@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Import staff from Excel" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Import staff from Excel" %}</h1>
+<p class="lede">{% trans "Fill the template, then check it here. Nothing is saved until every row is correct; then all rows are saved together." %}</p>
+{% if result and result.ok %}
+<div class="card">
+  <h2 style="margin-top:0">{% blocktrans count n=result.rows|length %}{{ n }} staff member is ready to import{% plural %}{{ n }} staff members are ready to import{% endblocktrans %}</h2>
+  <form method="post">{% csrf_token %}<input type="hidden" name="step" value="import"><input type="hidden" name="token" value="{{ token }}">
+    <div class="actions"><button class="button" type="submit">{% trans "Import" %}</button><a class="button quiet" href="{% url 'hr:staff_import' %}">{% trans "Choose another file" %}</a></div></form>
+</div>
+{% else %}
+  {% if result %}
+  <div class="card" style="margin-bottom:1rem">
+    <h2 style="margin-top:0">{% blocktrans count n=result.errors|length %}{{ n }} problem to fix{% plural %}{{ n }} problems to fix{% endblocktrans %}</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th class="num">{% trans "Row" %}</th><th>{% trans "Column" %}</th><th>{% trans "Problem" %}</th></tr></thead>
+      <tbody>{% for row, col, msg in shown_errors %}<tr><td class="num">{{ row|default:"—" }}</td><td>{{ col|default:"—" }}</td><td>{{ msg }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+  {% endif %}
+  <form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}<input type="hidden" name="step" value="check">
+    <div class="field"><label for="file">{% trans "Excel file (.xlsx)" %}</label><input type="file" id="file" name="file" accept=".xlsx" required></div>
+    <div class="actions"><button class="button" type="submit">{% trans "Check file" %}</button>
+      <a class="button secondary" href="?template=1">{% trans "Download template" %}</a></div>
+  </form>
+{% endif %}
+{% endblock %}

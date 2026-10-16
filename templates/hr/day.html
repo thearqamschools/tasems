@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Staff attendance" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Staff attendance" %} · {{ date|date:"l d M Y" }}</h1>
+<form method="get" class="actions">
+  <a class="button quiet" href="?date={{ previous|date:'Y-m-d' }}">‹ {% trans "Previous day" %}</a>
+  <input type="date" name="date" value="{{ date|date:'Y-m-d' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Show" %}</button>
+  {% if next %}<a class="button quiet" href="?date={{ next|date:'Y-m-d' }}">{% trans "Next day" %} ›</a>{% endif %}
+  {% if can_correct %}<a class="button quiet" href="?date={{ date|date:'Y-m-d' }}&refresh=1">{% trans "Work out again" %}</a>{% endif %}
+</form>
+<div class="figures">
+  <div class="figure"><div class="value">{{ counts.in|default:0 }}</div><div class="label">{% trans "In" %}</div></div>
+  <div class="figure {% if counts.late %}attention{% endif %}"><div class="value">{{ counts.late|default:0 }}</div><div class="label">{% trans "Late" %}</div></div>
+  <div class="figure {% if counts.absent %}attention{% endif %}"><div class="value">{{ counts.absent|default:0 }}</div><div class="label">{% trans "Absent" %}</div></div>
+  <div class="figure"><div class="value">{{ counts.leave|default:0 }}</div><div class="label">{% trans "On leave" %}</div></div>
+  <div class="figure"><div class="value">{{ counts.none|default:0 }}</div><div class="label">{% trans "Nothing recorded" %}</div></div>
+</div>
+{% if rows %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Status" %}</th><th>{% trans "In" %}</th><th>{% trans "Out" %}</th><th>{% trans "Note" %}</th>{% if can_correct %}<th></th>{% endif %}</tr></thead>
+  <tbody>{% for e, d in rows %}<tr>
+    <td><a href="{% url 'hr:employee' e.id %}">{{ e.full_name }}</a></td><td>{{ e.designation }}</td>
+    <td>{% if d %}{% if d.status == "absent" or d.status == "late" or d.status == "half_day" %}<span class="badge attention">{{ d.get_status_display }}</span>{% elif d.status == "off" or d.status == "holiday" %}<span class="badge muted">{{ d.get_status_display }}</span>{% else %}<span class="badge">{{ d.get_status_display }}</span>{% endif %}{% if d.is_corrected %} <span class="muted">({% trans "corrected" %})</span>{% endif %}{% else %}<span class="muted">—</span>{% endif %}</td>
+    <td class="num">{{ d.first_in|time:"H:i"|default:"—" }}</td><td class="num">{{ d.last_out|time:"H:i"|default:"—" }}</td><td class="muted">{{ d.note }}</td>
+    {% if can_correct %}<td><details><summary>{% trans "Correct" %}</summary>
+      <form method="post" class="card" style="padding:.75rem">{% csrf_token %}<input type="hidden" name="employee" value="{{ e.id }}">
+        <div class="field"><label>{% trans "Mark as" %}</label><select name="status">{% for v, l in statuses %}<option value="{{ v }}" {% if d.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="field"><label>{% trans "Time in" %}</label><input type="time" name="first_in" value="{{ d.first_in|time:'H:i' }}"></div>
+        <div class="field"><label>{% trans "Time out" %}</label><input type="time" name="last_out" value="{{ d.last_out|time:'H:i' }}"></div>
+        <div class="field"><label>{% trans "Reason" %}</label><input type="text" name="note" required maxlength="200"></div>
+        <button class="button" type="submit">{% trans "Save correction" %}</button>
+        {% if d.is_corrected %}<button class="button quiet" type="submit" name="remove" value="1" formnovalidate>{% trans "Remove correction" %}</button>{% endif %}
+      </form></details></td>{% endif %}
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card"><p>{% trans "No staff records yet." %}</p></div>{% endif %}
+{% endblock %}

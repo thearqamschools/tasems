@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Staff" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Staff" %}</h1>
+<p class="lede">{% trans "Staff records, attendance from the face-recognition machine, and leave." %}</p>
+{% if settings_missing %}<ul class="messages"><li class="warning">{% trans "Duty time is not set for this branch, so late arrivals are not worked out yet (Setup → HR settings)." %}</li></ul>{% endif %}
+
+<div class="figures">
+  <a class="figure" href="{% url 'hr:day' %}" style="color:inherit;text-decoration:none"><div class="value">{{ counts.in|default:0 }}</div><div class="label">{% trans "In today" %}</div></a>
+  <div class="figure {% if counts.late %}attention{% endif %}"><div class="value">{{ counts.late|default:0 }}</div><div class="label">{% trans "Late today" %}</div></div>
+  <div class="figure"><div class="value">{{ counts.leave|default:0 }}</div><div class="label">{% trans "On leave today" %}</div></div>
+  <div class="figure"><div class="value">{{ counts.none|default:0 }}</div><div class="label">{% trans "Not in yet" %}</div></div>
+</div>
+
+<div class="actions">
+  <a class="button" href="{% url 'hr:day' %}">{% trans "Today's staff attendance" %}</a>
+  {% if can_import %}<a class="button secondary" href="{% url 'hr:punches_import' %}">{% trans "Import machine file" %}</a>{% endif %}
+  <a class="button quiet" href="{% url 'hr:month' %}">{% trans "Monthly sheet" %}</a>
+  <a class="button quiet" href="{% url 'hr:leaves' %}">{% trans "Leave" %}</a>
+  {% if can_edit %}<a class="button quiet" href="{% url 'hr:employee_new' %}">{% trans "Add staff member" %}</a>
+  <a class="button quiet" href="{% url 'hr:staff_import' %}">{% trans "Import staff from Excel" %}</a>{% endif %}
+</div>
+
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="q">{% trans "Search" %}</label><input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name, code, mobile or designation' %}"></div>
+    <div class="field"><label for="type">{% trans "Staff type" %}</label><select id="type" name="type"><option value="">{% trans "All" %}</option>{% for v, l in types %}<option value="{{ v }}" {% if v == staff_type %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="status">{% trans "Status" %}</label><select id="status" name="status">{% for v, l in statuses %}<option value="{{ v }}" {% if v == status %}selected{% endif %}>{{ l }}</option>{% endfor %}<option value="all" {% if status == "all" %}selected{% endif %}>{% trans "All" %}</option></select></div>
+  </div>
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+</form>
+
+<h2>{% blocktrans count n=employees|length %}{{ n }} person{% plural %}{{ n }} people{% endblocktrans %}</h2>
+{% if employees %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Code" %}</th><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Type" %}</th><th>{% trans "Mobile" %}</th><th>{% trans "Machine ID" %}</th></tr></thead>
+  <tbody>{% for e in employees %}<tr>
+    <td class="num">{{ e.code }}</td><td><a href="{% url 'hr:employee' e.id %}">{{ e.full_name }}</a>{% if e.status != "active" %} <span class="badge muted">{{ e.get_status_display }}</span>{% endif %}</td>
+    <td>{{ e.designation }}</td><td>{{ e.get_staff_type_display }}</td>
+    <td>{% if e.phone %}<a href="tel:{{ e.phone }}" class="num">{{ e.phone }}</a>{% else %}—{% endif %}</td>
+    <td class="num">{{ e.machine_id|default:"—" }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card"><p>{% trans "No staff records yet. Add them one by one or import the staff list from Excel." %}</p></div>{% endif %}
+{% endblock %}
