@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from apps.core.audit import audited
-from apps.core.models import TimeStampedModel
+from apps.core.models import BranchScopedQuerySet, TimeStampedModel
 
 
 @audited
@@ -82,6 +82,34 @@ class Branch(TimeStampedModel):
     def clean(self):
         if self.region_id and self.region.head_office_id != self.head_office_id:
             raise ValidationError({"region": _("Region belongs to a different head office.")})
+
+
+@audited
+class Campus(TimeStampedModel):
+    """A building of a branch. One branch can have separate boys and girls buildings;
+    administration and fees stay with the branch."""
+
+    class GenderGroup(models.TextChoices):
+        MIXED = "mixed", _("Boys and girls")
+        BOYS = "boys", _("Boys")
+        GIRLS = "girls", _("Girls")
+
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, related_name="campuses")
+    name = models.CharField(max_length=120, help_text=_("e.g. Boys Campus, Girls Campus, Main Building"))
+    name_ur = models.CharField(_("name (Urdu)"), max_length=120, blank=True)
+    gender_group = models.CharField(max_length=10, choices=GenderGroup.choices, default=GenderGroup.MIXED)
+    address = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+
+    objects = BranchScopedQuerySet.as_manager()
+
+    class Meta:
+        ordering = ["branch__name", "name"]
+        verbose_name_plural = "campuses"
+        constraints = [models.UniqueConstraint(fields=["branch", "name"], name="unique_campus_name_per_branch")]
+
+    def __str__(self):
+        return f"{self.branch} — {self.name}"
 
 
 @audited

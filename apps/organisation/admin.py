@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from apps.core.admin_mixins import ScopedAdminMixin
 
-from .models import AcademicSession, Branch, HeadOffice, Region
+from .models import AcademicSession, Branch, Campus, HeadOffice, Region
 
 
 @admin.register(HeadOffice)
@@ -29,3 +29,9 @@ class BranchAdmin(ScopedAdminMixin, admin.ModelAdmin):
 @admin.register(AcademicSession)
 class AcademicSessionAdmin(admin.ModelAdmin):
     list_display = ("name", "starts_on", "ends_on", "is_current")
+
+
+@admin.register(Campus)
+class CampusAdmin(ScopedAdminMixin, admin.ModelAdmin):
+    list_display = ("name", "branch", "gender_group", "is_active")
+    list_filter = ("gender_group", "branch")

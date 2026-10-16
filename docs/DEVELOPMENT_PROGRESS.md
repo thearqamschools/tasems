@@ -17,5 +17,5 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 
 - PostgreSQL row-level security not yet enabled (required before a second branch holds live data — D-006).
 - Two-factor login not yet enforced (`Role.requires_mfa` is recorded; enforcement in 1b).
-- Not yet provided: Daily Diary template; current software data export; biometric machine brand/model; academic session dates; subject list per class; whether separate boys and girls campuses are run as separate branches (own principal, admissions, fees) or one branch with two buildings.
+- Not yet provided: Daily Diary template; current software data export; biometric machine brand/model; academic session dates; subject list per class.
 - Hosting provider not chosen (no preference stated; shortlist in master plan Part 5).

@@ -166,3 +166,21 @@ def test_student_gender_must_match_section(org, students):
     with pytest.raises(ValidationError):
         Enrolment(branch=girl.branch, student=girl, session=org["session"], section=boys).full_clean()
     Enrolment(branch=girl.branch, student=students["samanabad"], session=org["session"], section=boys).full_clean()
+
+
+def test_one_branch_two_buildings(org, make_user):
+    from apps.organisation.models import Campus
+
+    boys = Campus.objects.create(branch=org["samanabad"], name="Boys Campus", gender_group="boys")
+    Campus.objects.create(branch=org["fsd_franchise"], name="Other Campus")
+    class6 = ClassLevel.objects.get(code="class-6")
+    wrong = Section(
+        branch=org["samanabad"], session=org["session"], class_level=class6, name="A", gender_group="girls", campus=boys
+    )
+    with pytest.raises(ValidationError):
+        wrong.full_clean()
+    wrong.gender_group = "boys"
+    wrong.full_clean()
+    principal = make_user("principal", Scope.BRANCH, org["samanabad"])
+    assert list(Campus.objects.for_user(principal)) == [boys]
+    assert principal.has_branch_perm("organisation.add_campus", org["samanabad"].id)

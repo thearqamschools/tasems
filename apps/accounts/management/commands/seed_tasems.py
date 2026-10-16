@@ -31,9 +31,15 @@ VIEW_ACADEMICS = [
     "academics.view_subject",
     "academics.view_curriculumsubject",
     "organisation.view_branch",
+    "organisation.view_campus",
     "organisation.view_academicsession",
 ]
-EDIT_SECTIONS = ["academics.add_section", "academics.change_section"]
+EDIT_SECTIONS = [
+    "academics.add_section",
+    "academics.change_section",
+    "organisation.add_campus",
+    "organisation.change_campus",
+]
 VIEW_STUDENTS_ONLY = ["people.view_student", "people.view_enrolment"]
 NETWORK_SETUP = [
     "organisation.add_branch",

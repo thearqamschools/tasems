@@ -84,6 +84,14 @@ class Section(BranchOwnedModel):
     class_level = models.ForeignKey(ClassLevel, on_delete=models.PROTECT, related_name="sections")
     name = models.CharField(max_length=20, help_text=_("e.g. A, B, Rose, Jasmine"))
     gender_group = models.CharField(max_length=10, choices=GenderGroup.choices, default=GenderGroup.MIXED)
+    campus = models.ForeignKey(
+        "organisation.Campus",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="sections",
+        help_text=_("Building where this section studies. Leave empty if the branch has one building."),
+    )
     class_teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="class_sections"
     )
@@ -101,6 +109,13 @@ class Section(BranchOwnedModel):
         return f"{self.class_level}-{self.name}"
 
     def clean(self):
+        if self.campus_id and self.branch_id:
+            if self.campus.branch_id != self.branch_id:
+                raise ValidationError({"campus": _("Campus belongs to a different branch.")})
+            if self.campus.gender_group != "mixed" and self.gender_group != self.campus.gender_group:
+                raise ValidationError(
+                    {"campus": _("This campus is for %(g)s only.") % {"g": self.campus.get_gender_group_display()}}
+                )
         if self.class_level_id and self.class_level.separate_by_gender and self.gender_group == self.GenderGroup.MIXED:
             raise ValidationError({"gender_group": _("From this class onwards, sections are for boys or girls only.")})
         if self.class_teacher_id and self.branch_id:

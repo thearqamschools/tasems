@@ -12,6 +12,7 @@ Added
 - Append-only audit log.
 - `seed_tasems` command (confirmed facts only): 15 class levels incl. Prep and Pre-9.
 - Boys/girls separation from Class 6: section gender group and enrolment check.
-- 26 automated tests; GitHub Actions CI (lint, checks, migrations, tests); Dockerfile and docker-compose.
+- Campus (building) under Branch for separate boys/girls buildings; sections can be placed in a campus.
+- 27 automated tests; GitHub Actions CI (lint, checks, migrations, tests); Dockerfile and docker-compose.
 
 Not deployed.
