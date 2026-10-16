@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Find" %}{% endblock %}
+{% block content %}
+<h1>{% blocktrans %}Students matching “{{ q }}”{% endblocktrans %}</h1>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Admission no." %}</th><th>{% trans "Father" %}</th></tr></thead>
+  <tbody>{% for s in matches %}<tr><td><a href="{% url 'fees:student' s.id %}">{{ s.full_name }}</a></td><td class="num">{{ s.admission_no }}</td><td>{{ s.father_name|default:"—" }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

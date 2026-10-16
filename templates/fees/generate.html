@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Make monthly vouchers" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Make monthly vouchers" %}</h1>
+<p class="lede">{% trans "Monthly fee, and annual or summer charges in their months, for every student placed in a class. Brothers and sisters get the sibling fee and approved discounts are applied. Unpaid balances and late fines are carried onto the new voucher." %}</p>
+{% for w in warnings %}<ul class="messages"><li class="warning">{{ w }}</li></ul>{% endfor %}
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  {% if preview %}
+  <div class="figures">
+    <div class="figure"><div class="value">{{ preview.new }}</div><div class="label">{% trans "Vouchers to make" %}</div></div>
+    <div class="figure"><div class="value">{{ preview.done }}</div><div class="label">{% trans "Already have one (skipped)" %}</div></div>
+    <div class="figure {% if preview.unplaced %}attention{% endif %}"><div class="value">{{ preview.unplaced }}</div><div class="label">{% trans "Active students not placed in a class (no voucher)" %}</div></div>
+  </div>
+  <div class="actions">
+    {% if preview.new %}<button class="button" type="submit" name="confirm" value="1">{% blocktrans count n=preview.new %}Make {{ n }} voucher{% plural %}Make {{ n }} vouchers{% endblocktrans %}</button>{% endif %}
+    <button class="button quiet" type="submit">{% trans "Check again" %}</button>
+  </div>
+  {% else %}
+  <div class="actions"><button class="button" type="submit">{% trans "Check" %}</button></div>
+  {% endif %}
+</form>
+{% endblock %}

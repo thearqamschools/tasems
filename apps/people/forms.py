@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from apps.academics.models import Section
-from apps.core.phone import normalize_mobile
+from apps.core.phone import format_cnic, normalize_cnic, normalize_mobile
 
 from .models import Student, StudentGuardian
 
@@ -37,6 +37,8 @@ class StudentForm(forms.ModelForm):
             "date_of_birth",
             "admission_date",
             "b_form_no",
+            "father_name",
+            "father_cnic",
             "is_hifz",
             "status",
         ]
@@ -45,6 +47,9 @@ class StudentForm(forms.ModelForm):
             "admission_date": DATE,
             "admission_no": forms.TextInput(attrs={"dir": "ltr"}),
             "b_form_no": forms.TextInput(attrs={"dir": "ltr", "inputmode": "numeric"}),
+            "father_cnic": forms.TextInput(
+                attrs={"dir": "ltr", "inputmode": "numeric", "placeholder": "33100-1234567-1", "maxlength": 15}
+            ),
             "full_name_ur": forms.TextInput(attrs={"dir": "rtl", "lang": "ur", "class": "ur"}),
         }
 
@@ -64,6 +69,7 @@ class StudentForm(forms.ModelForm):
             self.fields["section"].help_text = _("No current session is set, so the class can be added later.")
         if not self.instance.pk:
             self.fields.pop("status")
+        self.initial["father_cnic"] = format_cnic(self.instance.father_cnic)
 
     def clean_admission_no(self):
         value = self.cleaned_data["admission_no"].strip()
@@ -71,6 +77,15 @@ class StudentForm(forms.ModelForm):
         if clash.exists():
             raise forms.ValidationError(_("This admission number is already used in this branch."))
         return value
+
+    def clean_father_cnic(self):
+        raw = self.cleaned_data.get("father_cnic", "").strip()
+        if not raw:
+            return ""
+        cnic = normalize_cnic(raw)
+        if cnic is None:
+            raise forms.ValidationError(_("A CNIC has 13 digits, e.g. 33100-1234567-1."))
+        return cnic
 
     def clean_guardian_phone(self):
         phone = normalize_mobile(self.cleaned_data["guardian_phone"])
@@ -80,6 +95,9 @@ class StudentForm(forms.ModelForm):
 
     def clean(self):
         data = super().clean()
+        if not data.get("father_name") and data.get("relationship") == "father" and data.get("guardian_name"):
+            data["father_name"] = data["guardian_name"]
+            self.instance.father_name = data["guardian_name"]
         section, gender = data.get("section"), data.get("gender")
         if section and gender and section.gender_group != "mixed":
             if {"boys": "male", "girls": "female"}[section.gender_group] != gender:

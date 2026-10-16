@@ -25,6 +25,12 @@ def navigation(request):
     if branch and user.has_branch_perm("exams.view_mark", branch.id):
         url = reverse("exams:index")
         items.append((url, _("Exams & Results"), path.startswith(url)))
+    if branch and user.has_branch_perm("fees.view_voucher", branch.id):
+        url = reverse("fees:index")
+        items.append((url, _("Fees"), path.startswith(url)))
+    elif user.accessible_branch_ids("fees.view_royalty"):
+        url = reverse("fees:royalty")
+        items.append((url, _("Royalty"), path.startswith(url)))
     if branch and user.has_branch_perm("people.add_student", branch.id):
         url = reverse("people:student_import")
         items.append((url, _("Import from Excel"), path.startswith(url)))

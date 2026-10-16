@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 18:15+0500\n"
+"POT-Creation-Date: 2026-10-16 19:25+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,9 +40,9 @@ msgstr "حفظ القرآن"
 
 #: apps/academics/models.py:28 apps/academics/models.py:50
 #: apps/accounts/models.py:101 apps/exams/models.py:113
-#: apps/exams/models.py:147 apps/organisation/models.py:21
-#: apps/organisation/models.py:41 apps/organisation/models.py:59
-#: apps/organisation/models.py:99
+#: apps/exams/models.py:147 apps/fees/models.py:67
+#: apps/organisation/models.py:21 apps/organisation/models.py:41
+#: apps/organisation/models.py:59 apps/organisation/models.py:99
 msgid "name (Urdu)"
 msgstr "نام (اردو)"
 
@@ -129,12 +129,22 @@ msgstr "روزانہ ڈائری"
 msgid "Exams & Results"
 msgstr "امتحانات اور نتائج"
 
-#: apps/accounts/context_processors.py:30
+#: apps/accounts/context_processors.py:30 templates/fees/index.html:2
+#: templates/fees/index.html:4
+msgid "Fees"
+msgstr "فیس"
+
+#: apps/accounts/context_processors.py:33 templates/fees/index.html:20
+#: templates/fees/royalty.html:2
+msgid "Royalty"
+msgstr "رائلٹی"
+
+#: apps/accounts/context_processors.py:36
 #: templates/people/student_list.html:61
 msgid "Import from Excel"
 msgstr "ایکسل سے درآمد"
 
-#: apps/accounts/context_processors.py:32
+#: apps/accounts/context_processors.py:38
 msgid "Setup"
 msgstr "سیٹ اپ"
 
@@ -171,7 +181,7 @@ msgstr "ریجن"
 
 #: apps/accounts/models.py:23 templates/attendance/branches.html:7
 #: templates/base.html:17 templates/core/home.html:27
-#: templates/core/home.html:41
+#: templates/core/home.html:41 templates/fees/royalty.html:15
 msgid "Branch"
 msgstr "برانچ"
 
@@ -359,7 +369,6 @@ msgid "Show 1st, 2nd and 3rd only"
 msgstr "صرف اول، دوم اور سوم دکھائیں"
 
 #: apps/exams/models.py:54
-#| msgid "Show students"
 msgid "Show every student's position"
 msgstr "ہر طالب علم کی پوزیشن دکھائیں"
 
@@ -394,7 +403,6 @@ msgid "Mid-Term exam paper"
 msgstr "مڈ ٹرم امتحان کا پرچہ"
 
 #: apps/exams/models.py:103
-#| msgid "Attendance"
 msgid "Attendance (automatic)"
 msgstr "حاضری (خودکار)"
 
@@ -419,7 +427,6 @@ msgid "Attendance belongs to the student, not to a subject."
 msgstr "حاضری طالب علم کی ہوتی ہے، کسی مضمون کی نہیں۔"
 
 #: apps/exams/models.py:140
-#| msgid "Class teacher"
 msgid "Class test"
 msgstr "کلاس ٹیسٹ"
 
@@ -465,8 +472,6 @@ msgstr "رخصت — فائنل شمار ہو گا"
 
 #: apps/exams/views.py:116
 #, python-format
-#| msgid "Import %(n)s student"
-#| msgid_plural "Import %(n)s students"
 msgid "Marks saved for %(n)s students."
 msgstr "%(n)s طلبہ کے نمبر محفوظ ہو گئے۔"
 
@@ -480,13 +485,451 @@ msgstr "تاثرات محفوظ ہو گئے۔"
 
 #: apps/exams/views.py:288
 #, python-format
-#| msgid "Saved %(name)s."
 msgid "%(name)s saved."
 msgstr "%(name)s محفوظ ہو گیا۔"
 
 #: apps/exams/views.py:290
 msgid "Some values need correcting. Nothing was saved."
 msgstr "کچھ اندراجات درست کرنے ہیں۔ کچھ بھی محفوظ نہیں ہوا۔"
+
+#: apps/fees/forms.py:26 apps/fees/forms.py:123
+msgid "From month"
+msgstr "کس مہینے سے"
+
+#: apps/fees/forms.py:28
+msgid "To month"
+msgstr "کس مہینے تک"
+
+#: apps/fees/forms.py:28
+msgid "Same as 'From' for one month. E.g. June to July in July."
+msgstr "ایک مہینے کے لیے وہی مہینہ چنیں۔ مثلاً جولائی میں: جون سے جولائی۔"
+
+#: apps/fees/forms.py:30
+msgid "Due date"
+msgstr "آخری تاریخ"
+
+#: apps/fees/forms.py:34
+msgid "Only these classes"
+msgstr "صرف یہ کلاسیں"
+
+#: apps/fees/forms.py:35
+msgid "Leave empty for the whole branch."
+msgstr "پوری برانچ کے لیے خالی چھوڑ دیں۔"
+
+#: apps/fees/forms.py:53
+msgid "'To month' is before 'From month'."
+msgstr "'کس مہینے تک' پہلے مہینے سے پہلے ہے۔"
+
+#: apps/fees/forms.py:55
+msgid "At most 12 months on one voucher."
+msgstr "ایک واؤچر پر زیادہ سے زیادہ 12 مہینے۔"
+
+#: apps/fees/forms.py:65
+msgid "Other charge"
+msgstr "دیگر چارج"
+
+#: apps/fees/forms.py:67 apps/fees/forms.py:77 templates/fees/receipt.html:12
+msgid "Amount"
+msgstr "رقم"
+
+#: apps/fees/forms.py:68
+msgid "What it is for"
+msgstr "کس چیز کے لیے"
+
+#: apps/fees/forms.py:83 apps/fees/forms.py:86
+msgid "Enter the amount."
+msgstr "رقم درج کریں۔"
+
+#: apps/fees/forms.py:91
+msgid "Amount received"
+msgstr "وصول شدہ رقم"
+
+#: apps/fees/forms.py:92 templates/fees/receipt.html:13
+msgid "Date paid"
+msgstr "ادائیگی کی تاریخ"
+
+#: apps/fees/forms.py:93
+msgid "How it was paid"
+msgstr "ادائیگی کا طریقہ"
+
+#: apps/fees/forms.py:97
+msgid "Transaction ID / slip number"
+msgstr "ٹرانزیکشن آئی ڈی / سلپ نمبر"
+
+#: apps/fees/forms.py:98
+msgid "Needed for bank, JazzCash and Alfa payments."
+msgstr "بینک، جاز کیش اور الفا ادائیگیوں کے لیے ضروری ہے۔"
+
+#: apps/fees/forms.py:101 templates/attendance/_people.html:3
+#: templates/attendance/take.html:20 templates/fees/student.html:71
+msgid "Note"
+msgstr "نوٹ"
+
+#: apps/fees/forms.py:110
+msgid "The date is in the future."
+msgstr "یہ تاریخ آنے والی ہے۔"
+
+#: apps/fees/forms.py:116
+msgid "Enter the transaction ID or deposit slip number."
+msgstr "ٹرانزیکشن آئی ڈی یا جمع سلپ نمبر درج کریں۔"
+
+#: apps/fees/forms.py:118
+msgid "This branch accepts only the full amount."
+msgstr "یہ برانچ صرف پوری رقم وصول کرتی ہے۔"
+
+#: apps/fees/forms.py:124
+msgid "Until month"
+msgstr "کس مہینے تک"
+
+#: apps/fees/forms.py:124
+msgid "Leave empty until stopped."
+msgstr "روکے جانے تک خالی چھوڑ دیں۔"
+
+#: apps/fees/forms.py:137 templates/fees/concessions.html:8
+#: templates/fees/concessions.html:23 templates/fees/receipt.html:28
+#: templates/fees/student.html:44 templates/fees/student.html:64
+#: templates/fees/student.html:77
+msgid "Reason"
+msgstr "وجہ"
+
+#: apps/fees/models.py:57
+msgid "Every month"
+msgstr "ہر مہینے"
+
+#: apps/fees/models.py:58
+msgid "Once a year, in the months listed"
+msgstr "سال میں ایک بار، درج مہینوں میں"
+
+#: apps/fees/models.py:59
+msgid "In the months listed, when an amount is set for that year"
+msgstr "درج مہینوں میں، جب اُس سال کی رقم طے ہو"
+
+#: apps/fees/models.py:60
+msgid "Chosen on a voucher (e.g. at admission)"
+msgstr "واؤچر بناتے وقت چنا جائے (مثلاً داخلے پر)"
+
+#: apps/fees/models.py:61
+msgid "Late fine (automatic)"
+msgstr "لیٹ فائن (خودکار)"
+
+#: apps/fees/models.py:62
+msgid "Added by hand"
+msgstr "ہاتھ سے شامل"
+
+#: apps/fees/models.py:66
+msgid "Voucher column heading, e.g. Reg., S.V.W."
+msgstr "واؤچر کے کالم کا عنوان، مثلاً Reg.، S.V.W."
+
+#: apps/fees/models.py:70
+msgid "For yearly and seasonal heads: month numbers, e.g. [4] for April."
+msgstr "سالانہ اور موسمی مدات کے لیے مہینوں کے نمبر، مثلاً اپریل کے لیے [4]۔"
+
+#: apps/fees/models.py:73
+msgid ""
+"Collections of this head count towards the franchise royalty (monthly fee)."
+msgstr "اس مد کی وصولی فرنچائز رائلٹی (ماہانہ فیس) میں شمار ہوتی ہے۔"
+
+#: apps/fees/models.py:96
+msgid ""
+"Leave empty for all classes. A class's own rate wins over the all-classes "
+"rate."
+msgstr ""
+"تمام کلاسوں کے لیے خالی چھوڑ دیں۔ کسی کلاس کی اپنی رقم تمام کلاسوں والی رقم "
+"پر مقدم ہے۔"
+
+#: apps/fees/models.py:104
+msgid ""
+"Amount for brothers and sisters (same father's CNIC) after the first child, "
+"e.g. 4000."
+msgstr ""
+"پہلے بچے کے بعد بہن بھائیوں (والد کا ایک ہی شناختی کارڈ) کی رقم، مثلاً 4000۔"
+
+#: apps/fees/models.py:106
+msgid "First month this amount applies to."
+msgstr "پہلا مہینہ جس سے یہ رقم لاگو ہو۔"
+
+#: apps/fees/models.py:129
+msgid "Last day to pay, e.g. 10"
+msgstr "ادائیگی کا آخری دن، مثلاً 10"
+
+#: apps/fees/models.py:137
+msgid "Parents send online payment receipts to this WhatsApp number."
+msgstr "والدین آن لائن ادائیگی کی رسید اس واٹس ایپ نمبر پر بھیجتے ہیں۔"
+
+#: apps/fees/models.py:140
+msgid "One line under each voucher copy, e.g. how to pay online."
+msgstr "ہر واؤچر کاپی کے نیچے ایک سطر، مثلاً آن لائن ادائیگی کا طریقہ۔"
+
+#: apps/fees/models.py:144
+msgid "special instructions (Urdu)"
+msgstr "خصوصی ہدایات (اردو)"
+
+#: apps/fees/models.py:144
+msgid "One instruction per line, printed on the back."
+msgstr "ہر سطر میں ایک ہدایت، پچھلی طرف چھپتی ہے۔"
+
+#: apps/fees/models.py:146
+msgid "special instructions (English)"
+msgstr "خصوصی ہدایات (انگریزی)"
+
+#: apps/fees/models.py:147
+msgid "closing line (Urdu)"
+msgstr "آخری سطر (اردو)"
+
+#: apps/fees/models.py:150
+msgid "Counter staff may accept less than the full amount."
+msgstr "کاؤنٹر عملہ پوری رقم سے کم بھی وصول کر سکتا ہے۔"
+
+#: apps/fees/models.py:175
+msgid "Cash at school"
+msgstr "سکول میں نقد"
+
+#: apps/fees/models.py:176
+msgid "Deposited at bank with voucher"
+msgstr "واؤچر کے ساتھ بینک میں جمع"
+
+#: apps/fees/models.py:177
+msgid "Bank transfer"
+msgstr "بینک ٹرانسفر"
+
+#: apps/fees/models.py:178
+msgid "JazzCash"
+msgstr "جاز کیش"
+
+#: apps/fees/models.py:179
+msgid "Bank Alfalah (Alfa app)"
+msgstr "بینک الفلاح (الفا ایپ)"
+
+#: apps/fees/models.py:180 apps/people/models.py:98
+msgid "Other"
+msgstr "دیگر"
+
+#: apps/fees/models.py:194
+msgid "Leave empty to show for every branch that has none of its own."
+msgstr "ہر اُس برانچ کے لیے دکھانے کو خالی چھوڑیں جس کا اپنا نہ ہو۔"
+
+#: apps/fees/models.py:198
+msgid "steps (English)"
+msgstr "مراحل (انگریزی)"
+
+#: apps/fees/models.py:198 apps/fees/models.py:199
+msgid "One step per line."
+msgstr "ہر سطر میں ایک مرحلہ۔"
+
+#: apps/fees/models.py:199
+msgid "steps (Urdu)"
+msgstr "مراحل (اردو)"
+
+#: apps/fees/models.py:229
+msgid "Not paid"
+msgstr "ادا نہیں ہوا"
+
+#: apps/fees/models.py:230
+msgid "Paid"
+msgstr "ادا شدہ"
+
+#: apps/fees/models.py:231
+msgid "Carried to a newer voucher"
+msgstr "نئے واؤچر میں منتقل"
+
+#: apps/fees/models.py:232 templates/fees/student.html:76
+msgid "Cancelled"
+msgstr "منسوخ"
+
+#: apps/fees/models.py:241
+msgid "Unpaid balance from earlier vouchers"
+msgstr "پچھلے واؤچرز کا بقایا"
+
+#: apps/fees/models.py:242
+msgid "New charges on this voucher"
+msgstr "اس واؤچر کے نئے چارجز"
+
+#: apps/fees/models.py:243
+msgid "To pay by the due date"
+msgstr "آخری تاریخ تک قابلِ ادائیگی"
+
+#: apps/fees/models.py:244
+msgid "Added if paid after the due date"
+msgstr "آخری تاریخ کے بعد ادائیگی پر شامل"
+
+#: apps/fees/models.py:270
+msgid "Monthly billing"
+msgstr "ماہانہ بلنگ"
+
+#: apps/fees/models.py:271
+msgid "Added by staff"
+msgstr "عملے نے شامل کیا"
+
+#: apps/fees/models.py:272
+msgid "Late fine"
+msgstr "لیٹ فائن"
+
+#: apps/fees/models.py:276
+msgid "First day of the month the charge is for"
+msgstr "جس مہینے کا چارج ہے اُس کی پہلی تاریخ"
+
+#: apps/fees/models.py:279
+msgid "gross − discount"
+msgstr "کل رقم − رعایت"
+
+#: apps/fees/models.py:289
+msgid "Late voucher"
+msgstr "تاخیر والا واؤچر"
+
+#: apps/fees/models.py:324
+msgid "Bank or app transaction ID, deposit slip number"
+msgstr "بینک یا ایپ کی ٹرانزیکشن آئی ڈی، جمع سلپ نمبر"
+
+#: apps/fees/models.py:364
+msgid "Percentage off"
+msgstr "فیصد رعایت"
+
+#: apps/fees/models.py:365
+msgid "Fixed amount off"
+msgstr "مقررہ رقم کی رعایت"
+
+#: apps/fees/models.py:368 templates/fees/concessions.html:5
+msgid "Waiting for approval"
+msgstr "منظوری کا انتظار"
+
+#: apps/fees/models.py:369
+msgid "Approved"
+msgstr "منظور"
+
+#: apps/fees/models.py:370
+msgid "Not approved"
+msgstr "نامنظور"
+
+#: apps/fees/models.py:371
+msgid "Ended"
+msgstr "ختم"
+
+#: apps/fees/models.py:377
+msgid "First month"
+msgstr "پہلا مہینہ"
+
+#: apps/fees/models.py:378
+msgid "Last month; empty = until stopped"
+msgstr "آخری مہینہ؛ خالی = روکے جانے تک"
+
+#: apps/fees/models.py:397
+msgid "A percentage cannot be more than 100."
+msgstr "فیصد 100 سے زیادہ نہیں ہو سکتا۔"
+
+#: apps/fees/models.py:399
+msgid "The last month is before the first month."
+msgstr "آخری مہینہ پہلے مہینے سے پہلے ہے۔"
+
+#: apps/fees/services.py:435
+msgid ""
+"A voucher with payments cannot be cancelled; reverse the payments first."
+msgstr ""
+"جس واؤچر پر ادائیگی ہو وہ منسوخ نہیں ہو سکتا؛ پہلے ادائیگیاں واپس کریں۔"
+
+#: apps/fees/services.py:440
+msgid "Only the student's newest voucher can be cancelled."
+msgstr "صرف طالب علم کا سب سے نیا واؤچر منسوخ ہو سکتا ہے۔"
+
+#: apps/fees/views.py:75
+msgid ""
+"Bank name, account title and account number are not set (Setup → Branch fee "
+"settings)."
+msgstr ""
+"بینک کا نام، اکاؤنٹ ٹائٹل اور اکاؤنٹ نمبر درج نہیں (سیٹ اپ ← برانچ فیس "
+"سیٹنگز)۔"
+
+#: apps/fees/views.py:77
+msgid "No monthly fee is set for this branch (Setup → Fee rates)."
+msgstr "اس برانچ کی ماہانہ فیس درج نہیں (سیٹ اپ ← فیس ریٹس)۔"
+
+#: apps/fees/views.py:126
+#, python-format
+msgid "No voucher or student found for “%(q)s”."
+msgstr "“%(q)s” کا کوئی واؤچر یا طالب علم نہیں ملا۔"
+
+#: apps/fees/views.py:139
+msgid "No current academic session is set."
+msgstr "موجودہ تعلیمی سیشن مقرر نہیں۔"
+
+#: apps/fees/views.py:160
+#, python-format
+msgid ""
+"%(n)s vouchers made (numbers %(a)s to %(b)s). %(s)s students already had "
+"one."
+msgstr ""
+"%(n)s واؤچر بن گئے (نمبر %(a)s سے %(b)s)۔ %(s)s طلبہ کا واؤچر پہلے سے موجود "
+"تھا۔"
+
+#: apps/fees/views.py:164
+msgid "No new vouchers: every student already has one for these months."
+msgstr ""
+"کوئی نیا واؤچر نہیں: ہر طالب علم کا ان مہینوں کا واؤچر پہلے سے موجود ہے۔"
+
+#: apps/fees/views.py:334
+#, python-format
+msgid "Too many vouchers to print at once (%(n)s at most). Choose a class."
+msgstr ""
+"ایک ساتھ پرنٹ کے لیے واؤچر بہت زیادہ ہیں (زیادہ سے زیادہ %(n)s)۔ کلاس چنیں۔"
+
+#: apps/fees/views.py:361
+msgid "Write why the voucher is being cancelled."
+msgstr "واؤچر منسوخ کرنے کی وجہ لکھیں۔"
+
+#: apps/fees/views.py:365
+#, python-format
+msgid "Voucher %(n)s cancelled."
+msgstr "واؤچر %(n)s منسوخ ہو گیا۔"
+
+#: apps/fees/views.py:425
+msgid "Place the student in a class for this session first."
+msgstr "پہلے طالب علم کو اس سیشن کی کسی کلاس میں شامل کریں۔"
+
+#: apps/fees/views.py:451
+msgid "This student already has a voucher for these months."
+msgstr "اس طالب علم کا ان مہینوں کا واؤچر پہلے سے موجود ہے۔"
+
+#: apps/fees/views.py:454
+#, python-format
+msgid "Voucher %(n)s made."
+msgstr "واؤچر %(n)s بن گیا۔"
+
+#: apps/fees/views.py:470
+msgid "Charge cancelled."
+msgstr "چارج منسوخ ہو گیا۔"
+
+#: apps/fees/views.py:472
+msgid "Write why the charge is being cancelled."
+msgstr "چارج منسوخ کرنے کی وجہ لکھیں۔"
+
+#: apps/fees/views.py:505
+#, python-format
+msgid "Rs %(a)s received. Receipt %(r)s."
+msgstr "%(a)s روپے وصول ہوئے۔ رسید %(r)s۔"
+
+#: apps/fees/views.py:560
+#, python-format
+msgid "Receipt %(r)s reversed."
+msgstr "رسید %(r)s واپس کر دی گئی۔"
+
+#: apps/fees/views.py:562
+msgid "Write why the payment is being reversed."
+msgstr "ادائیگی واپس کرنے کی وجہ لکھیں۔"
+
+#: apps/fees/views.py:579
+msgid ""
+"Discount request saved. It applies once the principal or a director approves"
+" it."
+msgstr ""
+"رعایت کی درخواست محفوظ ہو گئی۔ پرنسپل یا ڈائریکٹر کی منظوری کے بعد لاگو ہو "
+"گی۔"
+
+#: apps/fees/views.py:597
+msgid "Someone else must approve a discount you asked for."
+msgstr "آپ کی مانگی ہوئی رعایت کوئی دوسرا منظور کرے گا۔"
+
+#: apps/fees/views.py:600
+msgid "Decision saved."
+msgstr "فیصلہ محفوظ ہو گیا۔"
 
 #: apps/organisation/models.py:54
 msgid "Company-owned"
@@ -534,97 +977,105 @@ msgstr "والدین کا موبائل / واٹس ایپ"
 msgid "e.g. 0300-1234567"
 msgstr "مثلاً 0300-1234567"
 
-#: apps/people/forms.py:27 templates/people/student_detail.html:18
+#: apps/people/forms.py:27 templates/people/student_detail.html:21
 msgid "Relationship"
 msgstr "رشتہ"
 
-#: apps/people/forms.py:64
+#: apps/people/forms.py:69
 msgid "No current session is set, so the class can be added later."
 msgstr "موجودہ سیشن طے نہیں، اس لیے جماعت بعد میں شامل کی جا سکتی ہے۔"
 
-#: apps/people/forms.py:72
+#: apps/people/forms.py:78
 msgid "This admission number is already used in this branch."
 msgstr "یہ داخلہ نمبر اس برانچ میں پہلے سے استعمال ہو رہا ہے۔"
 
-#: apps/people/forms.py:78
+#: apps/people/forms.py:87
+msgid "A CNIC has 13 digits, e.g. 33100-1234567-1."
+msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مثلاً 33100-1234567-1۔"
+
+#: apps/people/forms.py:93
 msgid "Enter a Pakistani mobile number, e.g. 0300-1234567."
 msgstr "پاکستانی موبائل نمبر درج کریں، مثلاً 0300-1234567۔"
 
-#: apps/people/forms.py:87
+#: apps/people/forms.py:105
 #, python-format
 msgid "This section is for %(g)s only."
 msgstr "یہ سیکشن صرف %(g)s کے لیے ہے۔"
 
-#: apps/people/importer.py:176
+#: apps/people/importer.py:178
 msgid "No current academic session is set. Ask head office to set it first."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ پہلے ہیڈ آفس سے طے کروائیں۔"
 
-#: apps/people/importer.py:182
+#: apps/people/importer.py:184
 msgid ""
 "This file could not be opened. Save it as an Excel .xlsx file and try again."
 msgstr ""
 "یہ فائل نہیں کھل سکی۔ اسے ایکسل .xlsx فائل کے طور پر محفوظ کر کے دوبارہ کوشش"
 " کریں۔"
 
-#: apps/people/importer.py:199
+#: apps/people/importer.py:201
 #, python-format
 msgid "These required columns are missing: %(cols)s. Use the template."
 msgstr "یہ لازمی کالم موجود نہیں: %(cols)s۔ ٹیمپلیٹ استعمال کریں۔"
 
-#: apps/people/importer.py:216
+#: apps/people/importer.py:218
 #, python-format
 msgid "Too many rows. Import at most %(n)s students at a time."
 msgstr ""
 "قطاریں بہت زیادہ ہیں۔ ایک وقت میں زیادہ سے زیادہ %(n)s طلبہ درآمد کریں۔"
 
-#: apps/people/importer.py:230 apps/people/importer.py:254
+#: apps/people/importer.py:232 apps/people/importer.py:256
 msgid "Required"
 msgstr "لازمی"
 
-#: apps/people/importer.py:235
+#: apps/people/importer.py:237
 msgid "Already exists in this branch"
 msgstr "اس برانچ میں پہلے سے موجود ہے"
 
-#: apps/people/importer.py:237
+#: apps/people/importer.py:239
 #, python-format
 msgid "Repeated in this file (row %(r)s)"
 msgstr "اس فائل میں دوبارہ آیا ہے (قطار %(r)s)"
 
-#: apps/people/importer.py:243
+#: apps/people/importer.py:245
 msgid "Use Male or Female"
 msgstr "Male یا Female لکھیں"
 
-#: apps/people/importer.py:251
+#: apps/people/importer.py:253
 msgid "Not a date. Use day/month/year, e.g. 15/04/2026"
 msgstr "یہ تاریخ نہیں۔ دن/مہینہ/سال لکھیں، مثلاً 15/04/2026"
 
-#: apps/people/importer.py:256
+#: apps/people/importer.py:258
 msgid "Date of birth is in the future"
 msgstr "تاریخ پیدائش آنے والے وقت کی ہے"
 
-#: apps/people/importer.py:260
+#: apps/people/importer.py:262
 msgid "Unknown class. See the 'How to fill' sheet"
 msgstr "نامعلوم جماعت۔ 'How to fill' شیٹ دیکھیں"
 
-#: apps/people/importer.py:265
+#: apps/people/importer.py:267
 msgid "Not a Pakistani mobile number"
 msgstr "پاکستانی موبائل نمبر نہیں"
 
-#: apps/people/importer.py:271
+#: apps/people/importer.py:273
 msgid "Use Father, Mother, Guardian or Other"
 msgstr "Father، Mother، Guardian یا Other لکھیں"
 
-#: apps/people/importer.py:286
+#: apps/people/importer.py:278
+msgid "A CNIC has 13 digits, e.g. 33100-1234567-1"
+msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مثلاً 33100-1234567-1"
+
+#: apps/people/importer.py:295
 #, python-format
 msgid "Section %(s)s of %(c)s is for %(g)s only"
 msgstr "%(c)s کا سیکشن %(s)s صرف %(g)s کے لیے ہے"
 
-#: apps/people/importer.py:298
+#: apps/people/importer.py:307
 #, python-format
 msgid "Boys and girls cannot share section %(s)s of %(c)s"
 msgstr "لڑکے اور لڑکیاں %(c)s کے سیکشن %(s)s میں اکٹھے نہیں ہو سکتے"
 
-#: apps/people/importer.py:306
+#: apps/people/importer.py:315
 msgid "The file has no student rows."
 msgstr "فائل میں طلبہ کی کوئی قطار نہیں۔"
 
@@ -660,47 +1111,58 @@ msgstr "منتقل ہو گیا"
 msgid "Graduated"
 msgstr "فارغ التحصیل"
 
-#: apps/people/models.py:53 templates/people/student_detail.html:13
+#: apps/people/models.py:53 templates/people/student_detail.html:14
 msgid "B-Form number"
 msgstr "ب فارم نمبر"
 
-#: apps/people/models.py:55 templates/people/student_detail.html:6
+#: apps/people/models.py:54
+msgid "father's name"
+msgstr "والد کا نام"
+
+#: apps/people/models.py:56
+msgid "father's CNIC"
+msgstr "والد کا شناختی کارڈ نمبر"
+
+#: apps/people/models.py:60
+msgid ""
+"13 digits. Brothers and sisters are recognised by this number for the "
+"sibling fee."
+msgstr "13 ہندسے۔ اسی نمبر سے بہن بھائیوں کی پہچان ہو کر سبلنگ فیس لگتی ہے۔"
+
+#: apps/people/models.py:63 templates/people/student_detail.html:6
 msgid "Hifz student"
 msgstr "حفظ کا طالب علم"
 
-#: apps/people/models.py:87
+#: apps/people/models.py:95 templates/fees/find.html:6
+#: templates/fees/student.html:5
 msgid "Father"
 msgstr "والد"
 
-#: apps/people/models.py:88
+#: apps/people/models.py:96
 msgid "Mother"
 msgstr "والدہ"
 
-#: apps/people/models.py:89
+#: apps/people/models.py:97
 msgid "Guardian"
 msgstr "سرپرست"
 
-#: apps/people/models.py:90
-msgid "Other"
-msgstr "دیگر"
-
-#: apps/people/models.py:112
+#: apps/people/models.py:120
 msgid "Guardian and student must belong to the same branch."
 msgstr "سرپرست اور طالب علم کا ایک ہی برانچ سے ہونا ضروری ہے۔"
 
-#: apps/people/models.py:139
+#: apps/people/models.py:147
 msgid "Student belongs to a different branch."
 msgstr "طالب علم کسی اور برانچ کا ہے۔"
 
-#: apps/people/models.py:142
+#: apps/people/models.py:150
 msgid "Section belongs to a different branch."
 msgstr "سیکشن کسی اور برانچ کا ہے۔"
 
-#: apps/people/models.py:144
+#: apps/people/models.py:152
 msgid "Section belongs to a different session."
 msgstr "سیکشن کسی اور سیشن کا ہے۔"
 
-#: apps/people/models.py:151
+#: apps/people/models.py:159
 #, python-format
 msgid "This section is for %(group)s only."
 msgstr "یہ سیکشن صرف %(group)s کے لیے ہے۔"
@@ -803,7 +1265,10 @@ msgid "I have saved my codes"
 msgstr "میں نے کوڈ محفوظ کر لیے"
 
 #: templates/accounts/recovery_codes.html:9
-#: templates/attendance/absentees.html:8
+#: templates/attendance/absentees.html:8 templates/fees/collections.html:9
+#: templates/fees/defaulters.html:11 templates/fees/receipt.html:21
+#: templates/fees/royalty.html:9 templates/fees/student.html:43
+#: templates/fees/vouchers.html:29
 msgid "Print"
 msgstr "پرنٹ"
 
@@ -821,7 +1286,10 @@ msgstr "جاری رکھیں"
 
 #: templates/attendance/_people.html:3 templates/exams/enter_marks.html:9
 #: templates/exams/ratings.html:19 templates/exams/section_results.html:14
-#: templates/people/student_form.html:8
+#: templates/fees/collections.html:20 templates/fees/concessions.html:8
+#: templates/fees/concessions.html:23 templates/fees/defaulters.html:16
+#: templates/fees/find.html:6 templates/fees/receipt.html:10
+#: templates/fees/vouchers.html:20 templates/people/student_form.html:8
 msgid "Student"
 msgstr "طالب علم"
 
@@ -831,13 +1299,10 @@ msgstr "طالب علم"
 msgid "Section"
 msgstr "سیکشن"
 
-#: templates/attendance/_people.html:3 templates/people/student_list.html:37
+#: templates/attendance/_people.html:3 templates/fees/defaulters.html:16
+#: templates/people/student_list.html:37
 msgid "Parent mobile"
 msgstr "والدین کا موبائل"
-
-#: templates/attendance/_people.html:3 templates/attendance/take.html:20
-msgid "Note"
-msgstr "نوٹ"
 
 #: templates/attendance/_people.html:11
 msgid "None."
@@ -964,7 +1429,8 @@ msgstr "پچھلا دن"
 msgid "Today"
 msgstr "آج"
 
-#: templates/attendance/today.html:9
+#: templates/attendance/today.html:9 templates/fees/collections.html:20
+#: templates/fees/student.html:52
 msgid "Date"
 msgstr "تاریخ"
 
@@ -1099,7 +1565,9 @@ msgstr "مرحلہ وار طلبہ"
 msgid "Stage"
 msgstr "مرحلہ"
 
-#: templates/core/home.html:27 templates/people/student_detail.html:28
+#: templates/core/home.html:27 templates/fees/defaulters.html:16
+#: templates/fees/vouchers.html:8 templates/fees/vouchers.html:20
+#: templates/people/student_detail.html:31
 #: templates/people/student_form.html:13 templates/people/student_list.html:17
 #: templates/people/student_list.html:36
 msgid "Class"
@@ -1282,7 +1750,7 @@ msgstr ""
 
 #: templates/exams/enter_marks.html:9 templates/exams/ratings.html:19
 #: templates/exams/section_results.html:14
-#: templates/people/student_detail.html:28
+#: templates/people/student_detail.html:31
 msgid "Roll no."
 msgstr "رول نمبر"
 
@@ -1292,16 +1760,15 @@ msgid "Marks"
 msgstr "نمبر"
 
 #: templates/exams/enter_marks.html:9 templates/exams/enter_marks.html:15
-#| msgid "Attendance"
 msgid "Attendance in exam"
 msgstr "امتحان میں حاضری"
 
 #: templates/exams/enter_marks.html:18
-#| msgid "Save register"
 msgid "Save marks"
 msgstr "نمبر محفوظ کریں"
 
-#: templates/exams/enter_marks.html:19 templates/people/student_form.html:27
+#: templates/exams/enter_marks.html:19 templates/fees/student.html:44
+#: templates/fees/student.html:77 templates/people/student_form.html:27
 msgid "Cancel"
 msgstr "منسوخ"
 
@@ -1310,7 +1777,6 @@ msgid "Marks, ratings and result cards"
 msgstr "نمبر، درجہ بندی اور رزلٹ کارڈ"
 
 #: templates/exams/index.html:14
-#| msgid "Classes by session"
 msgid "Exams this session"
 msgstr "اس سیشن کے امتحانات"
 
@@ -1333,13 +1799,10 @@ msgid "Results"
 msgstr "نتائج"
 
 #: templates/exams/index.html:19
-#| msgid "Published"
 msgid "Not published"
 msgstr "شائع نہیں ہوا"
 
 #: templates/exams/index.html:21
-#| msgid ""
-#| "No subjects are set up yet. Head office adds subjects under Setup."
 msgid ""
 "No exams set up yet. Head office creates exams and their papers under Setup "
 "→ Exams."
@@ -1348,7 +1811,6 @@ msgstr ""
 "ہے۔"
 
 #: templates/exams/index.html:31
-#| msgid "Class and section (this session)"
 msgid "No sections for this session yet."
 msgstr "اس سیشن میں ابھی کوئی سیکشن نہیں۔"
 
@@ -1386,7 +1848,6 @@ msgid "Remarks"
 msgstr "تاثرات"
 
 #: templates/exams/remarks.html:9
-#| msgid "Class teacher"
 msgid "Class teacher's remarks"
 msgstr "کلاس ٹیچر کے تاثرات"
 
@@ -1395,7 +1856,6 @@ msgid "Principal's remarks"
 msgstr "پرنسپل کے تاثرات"
 
 #: templates/exams/remarks.html:15
-#| msgid "Save register"
 msgid "Save remarks"
 msgstr "تاثرات محفوظ کریں"
 
@@ -1445,20 +1905,16 @@ msgid "Enter teacher ratings"
 msgstr "استاد کی درجہ بندی درج کریں"
 
 #: templates/exams/section_results.html:10
-#| msgid ""
-#| "No current academic session is set. Head office sets it under Setup."
 msgid ""
 "No result pattern is set up. Head office sets it under Setup → Grading "
 "schemes."
 msgstr "نتیجے کا طریقہ کار طے نہیں۔ ہیڈ آفس اسے سیٹ اپ میں طے کرتا ہے۔"
 
 #: templates/exams/section_results.html:11
-#| msgid "Not placed in any class yet."
 msgid "No exam papers for this class yet."
 msgstr "اس جماعت کے ابھی کوئی امتحانی پرچے نہیں۔"
 
 #: templates/exams/section_results.html:14
-#| msgid "Graduated"
 msgid "Grade"
 msgstr "گریڈ"
 
@@ -1479,7 +1935,6 @@ msgid "Incomplete"
 msgstr "نامکمل"
 
 #: templates/exams/section_results.html:20
-#| msgid "Password"
 msgid "Pass"
 msgstr "پاس"
 
@@ -1498,78 +1953,639 @@ msgstr "کارڈ"
 msgid "All result cards (PDF)"
 msgstr "تمام رزلٹ کارڈ (PDF)"
 
+#: templates/fees/collections.html:2 templates/fees/index.html:18
+msgid "Daily collection"
+msgstr "روزانہ وصولی"
+
+#: templates/fees/collections.html:4
+msgid "Fee collection"
+msgstr "فیس وصولی"
+
+#: templates/fees/collections.html:6 templates/fees/student.html:64
+msgid "From"
+msgstr "سے"
+
+#: templates/fees/collections.html:7
+msgid "To"
+msgstr "تک"
+
+#: templates/fees/collections.html:8 templates/fees/defaulters.html:10
+#: templates/fees/index.html:25 templates/fees/royalty.html:8
+#: templates/fees/vouchers.html:13
+msgid "Show"
+msgstr "دکھائیں"
+
+#: templates/fees/collections.html:12
+msgid "Received (Rs)"
+msgstr "وصول (روپے)"
+
+#: templates/fees/collections.html:15
+msgid "By person receiving"
+msgstr "وصول کرنے والے کے لحاظ سے"
+
+#: templates/fees/collections.html:17 templates/fees/index.html:36
+#: templates/fees/student.html:49
+msgid "Payments"
+msgstr "ادائیگیاں"
+
+#: templates/fees/collections.html:20 templates/fees/receipt.html:2
+#: templates/fees/student.html:52
+msgid "Receipt"
+msgstr "رسید"
+
+#: templates/fees/collections.html:20 templates/fees/receipt.html:11
+#: templates/fees/receive.html:5 templates/fees/student.html:36
+#: templates/fees/vouchers.html:20
+msgid "Voucher"
+msgstr "واؤچر"
+
+#: templates/fees/collections.html:20 templates/fees/index.html:36
+#: templates/fees/receipt.html:14 templates/fees/student.html:52
+msgid "Method"
+msgstr "طریقہ"
+
+#: templates/fees/collections.html:20 templates/fees/student.html:52
+msgid "Reference"
+msgstr "حوالہ"
+
+#: templates/fees/collections.html:20 templates/fees/index.html:36
+#: templates/fees/student.html:52 templates/fees/student.html:71
+msgid "Amount (Rs)"
+msgstr "رقم (روپے)"
+
+#: templates/fees/collections.html:22 templates/fees/student.html:54
+msgid "Reversed"
+msgstr "واپس شدہ"
+
+#: templates/fees/collections.html:28
+msgid "No payments in these dates."
+msgstr "ان تاریخوں میں کوئی ادائیگی نہیں۔"
+
+#: templates/fees/concession_form.html:2 templates/fees/concession_form.html:4
+#: templates/fees/student.html:15
+msgid "Ask for a special discount"
+msgstr "خصوصی رعایت کی درخواست"
+
+#: templates/fees/concession_form.html:5
+msgid ""
+"The discount applies to vouchers made after the principal or a director "
+"approves it. A student gets either the sibling fee or this discount, "
+"whichever is less to pay."
+msgstr ""
+"پرنسپل یا ڈائریکٹر کی منظوری کے بعد بننے والے واؤچرز پر رعایت لاگو ہو گی۔ "
+"طالب علم کو سبلنگ فیس یا یہ رعایت، جو بھی کم ادائیگی والی ہو، ملے گی۔"
+
+#: templates/fees/concession_form.html:9
+msgid "Send for approval"
+msgstr "منظوری کے لیے بھیجیں"
+
+#: templates/fees/concession_form.html:10 templates/fees/issue.html:27
+msgid "Back"
+msgstr "واپس"
+
+#: templates/fees/concessions.html:2 templates/fees/concessions.html:4
+#: templates/fees/index.html:19 templates/fees/student.html:62
+msgid "Special discounts"
+msgstr "خصوصی رعایتیں"
+
+#: templates/fees/concessions.html:8 templates/fees/concessions.html:23
+#: templates/fees/receive.html:23 templates/fees/student.html:28
+#: templates/fees/student.html:64 templates/fees/student.html:71
+msgid "Fee"
+msgstr "فیس"
+
+#: templates/fees/concessions.html:8 templates/fees/concessions.html:23
+#: templates/fees/student.html:64 templates/fees/student.html:71
+msgid "Discount"
+msgstr "رعایت"
+
+#: templates/fees/concessions.html:8 templates/fees/student.html:36
+#: templates/fees/vouchers.html:20
+msgid "Months"
+msgstr "مہینے"
+
+#: templates/fees/concessions.html:8
+msgid "Asked by"
+msgstr "درخواست کنندہ"
+
+#: templates/fees/concessions.html:15
+msgid "Approve"
+msgstr "منظور کریں"
+
+#: templates/fees/concessions.html:16
+msgid "Reject"
+msgstr "نامنظور کریں"
+
+#: templates/fees/concessions.html:19
+msgid "Nothing waiting."
+msgstr "کچھ زیرِ انتظار نہیں۔"
+
+#: templates/fees/concessions.html:20
+msgid "Decided"
+msgstr "فیصلہ شدہ"
+
+#: templates/fees/concessions.html:23 templates/fees/student.html:36
+#: templates/fees/student.html:64 templates/fees/vouchers.html:10
+#: templates/fees/vouchers.html:20 templates/people/student_list.html:21
+#: templates/people/student_list.html:37
+msgid "Status"
+msgstr "حیثیت"
+
+#: templates/fees/concessions.html:23
+msgid "Decided by"
+msgstr "فیصلہ کرنے والا"
+
+#: templates/fees/concessions.html:28
+msgid "None yet."
+msgstr "ابھی کوئی نہیں۔"
+
+#: templates/fees/defaulters.html:2 templates/fees/defaulters.html:4
+#: templates/fees/index.html:17
+msgid "Defaulters"
+msgstr "نادہندگان"
+
+#: templates/fees/defaulters.html:5
+msgid "Students with fees not paid for months already billed."
+msgstr "وہ طلبہ جن کی بل شدہ مہینوں کی فیس ادا نہیں ہوئی۔"
+
+#: templates/fees/defaulters.html:7
+msgid "Unpaid for at least"
+msgstr "کم از کم اتنے مہینے بقایا"
+
+#: templates/fees/defaulters.html:8
+#, python-format
+msgid "%(m)s month"
+msgid_plural "%(m)s months"
+msgstr[0] "%(m)s مہینہ"
+msgstr[1] "%(m)s مہینے"
+
+#: templates/fees/defaulters.html:9 templates/fees/vouchers.html:8
+#: templates/people/student_list.html:18
+msgid "All classes"
+msgstr "تمام جماعتیں"
+
+#: templates/fees/defaulters.html:13 templates/fees/index.html:31
+#, python-format
+msgid "Owed by %(n)s student (Rs)"
+msgid_plural "Owed by %(n)s students (Rs)"
+msgstr[0] "%(n)s طالب علم کا بقایا (روپے)"
+msgstr[1] "%(n)s طلبہ کا بقایا (روپے)"
+
+#: templates/fees/defaulters.html:16
+msgid "Months unpaid"
+msgstr "بقایا مہینے"
+
+#: templates/fees/defaulters.html:16
+msgid "Since"
+msgstr "کب سے"
+
+#: templates/fees/defaulters.html:16
+msgid "Owed (Rs)"
+msgstr "بقایا (روپے)"
+
+#: templates/fees/defaulters.html:24
+msgid "No defaulters."
+msgstr "کوئی نادہندہ نہیں۔"
+
+#: templates/fees/find.html:2 templates/fees/index.html:11
+msgid "Find"
+msgstr "تلاش کریں"
+
+#: templates/fees/find.html:4
+#, python-format
+msgid "Students matching “%(q)s”"
+msgstr "“%(q)s” سے ملتے طلبہ"
+
+#: templates/fees/find.html:6 templates/fees/student.html:5
 #: templates/people/student_detail.html:6
 #: templates/people/student_list.html:36
 msgid "Admission no."
 msgstr "داخلہ نمبر"
 
+#: templates/fees/generate.html:2 templates/fees/generate.html:4
+#: templates/fees/index.html:15
+msgid "Make monthly vouchers"
+msgstr "ماہانہ واؤچر بنائیں"
+
+#: templates/fees/generate.html:5
+msgid ""
+"Monthly fee, and annual or summer charges in their months, for every student"
+" placed in a class. Brothers and sisters get the sibling fee and approved "
+"discounts are applied. Unpaid balances and late fines are carried onto the "
+"new voucher."
+msgstr ""
+"کلاس میں شامل ہر طالب علم کی ماہانہ فیس، اور اپنے مہینوں میں سالانہ یا سمر "
+"چارجز۔ بہن بھائیوں پر سبلنگ فیس اور منظور شدہ رعایتیں لاگو ہوتی ہیں۔ بقایا "
+"اور لیٹ فائن نئے واؤچر میں شامل ہو جاتے ہیں۔"
+
+#: templates/fees/generate.html:12
+msgid "Vouchers to make"
+msgstr "بننے والے واؤچر"
+
+#: templates/fees/generate.html:13
+msgid "Already have one (skipped)"
+msgstr "پہلے سے موجود (چھوڑ دیے گئے)"
+
+#: templates/fees/generate.html:14
+msgid "Active students not placed in a class (no voucher)"
+msgstr "فعال طلبہ جو کسی کلاس میں نہیں (واؤچر نہیں بنے گا)"
+
+#: templates/fees/generate.html:17
+#, python-format
+msgid "Make %(n)s voucher"
+msgid_plural "Make %(n)s vouchers"
+msgstr[0] "%(n)s واؤچر بنائیں"
+msgstr[1] "%(n)s واؤچر بنائیں"
+
+#: templates/fees/generate.html:18
+msgid "Check again"
+msgstr "دوبارہ چیک کریں"
+
+#: templates/fees/generate.html:21
+msgid "Check"
+msgstr "چیک کریں"
+
+#: templates/fees/index.html:9
+msgid "Voucher number, admission number or name"
+msgstr "واؤچر نمبر، داخلہ نمبر یا نام"
+
+#: templates/fees/index.html:10
+msgid "Scan or type the voucher number"
+msgstr "واؤچر نمبر اسکین کریں یا لکھیں"
+
+#: templates/fees/index.html:16 templates/fees/student.html:33
+#: templates/fees/vouchers.html:2 templates/fees/vouchers.html:4
+msgid "Vouchers"
+msgstr "واؤچر"
+
+#: templates/fees/index.html:23 templates/fees/receive.html:23
+#: templates/fees/royalty.html:6 templates/fees/student.html:28
+#: templates/fees/student.html:71 templates/fees/vouchers.html:7
+msgid "Month"
+msgstr "مہینہ"
+
+#: templates/fees/index.html:28
+msgid "Billed for the month (Rs)"
+msgstr "مہینے کا بل (روپے)"
+
+#: templates/fees/index.html:29
+msgid "Received in the month (Rs)"
+msgstr "مہینے میں وصول (روپے)"
+
+#: templates/fees/index.html:30
+msgid "Vouchers paid"
+msgstr "ادا شدہ واؤچر"
+
+#: templates/fees/index.html:34
+msgid "Received by payment method"
+msgstr "ادائیگی کے طریقے کے لحاظ سے وصولی"
+
+#: templates/fees/issue.html:2 templates/fees/issue.html:4
+#: templates/fees/student.html:14
+msgid "Make a voucher"
+msgstr "واؤچر بنائیں"
+
+#: templates/fees/issue.html:5
+msgid ""
+"Monthly fee for the months chosen, plus anything ticked below. Any unpaid "
+"balance is added automatically."
+msgstr ""
+"چنے گئے مہینوں کی ماہانہ فیس، اور نیچے نشان زد چیزیں۔ کوئی بقایا ہو تو خود "
+"شامل ہو جاتا ہے۔"
+
+#: templates/fees/issue.html:13
+msgid "Also charge"
+msgstr "یہ بھی شامل کریں"
+
+#: templates/fees/issue.html:26
+msgid "Make voucher"
+msgstr "واؤچر بنائیں"
+
+#: templates/fees/receipt.html:7
+msgid "Fee receipt"
+msgstr "فیس رسید"
+
+#: templates/fees/receipt.html:8
+#, python-format
+msgid "Reversed: %(r)s"
+msgstr "واپس شدہ: %(r)s"
+
+#: templates/fees/receipt.html:15
+msgid "Paid for"
+msgstr "کس کی ادائیگی"
+
+#: templates/fees/receipt.html:15
+msgid "Kept as advance"
+msgstr "ایڈوانس کے طور پر جمع"
+
+#: templates/fees/receipt.html:16
+msgid "Balance now"
+msgstr "موجودہ بقایا"
+
+#: templates/fees/receipt.html:17 templates/fees/student.html:52
+msgid "Received by"
+msgstr "وصول کنندہ"
+
+#: templates/fees/receipt.html:22
+msgid "Next payment"
+msgstr "اگلی ادائیگی"
+
+#: templates/fees/receipt.html:23 templates/fees/student.html:2
+#: templates/people/student_detail.html:8
+msgid "Fee account"
+msgstr "فیس اکاؤنٹ"
+
+#: templates/fees/receipt.html:26
+msgid "Reverse this payment (entered by mistake)"
+msgstr "یہ ادائیگی واپس کریں (غلطی سے درج ہوئی)"
+
+#: templates/fees/receipt.html:29
+msgid "Reverse payment"
+msgstr "ادائیگی واپس کریں"
+
+#: templates/fees/receive.html:2 templates/fees/receive.html:4
+msgid "Receive fee"
+msgstr "فیس وصول کریں"
+
+#: templates/fees/receive.html:6
+#, python-format
+msgid ""
+"A newer voucher (%(n)s) has been issued and already includes this voucher's "
+"balance. The amount below is the student's full balance today."
+msgstr ""
+"نیا واؤچر (%(n)s) جاری ہو چکا ہے جس میں اس واؤچر کا بقایا شامل ہے۔ نیچے کی "
+"رقم آج طالب علم کا پورا بقایا ہے۔"
+
+#: templates/fees/receive.html:7
+msgid "This voucher is already paid."
+msgstr "یہ واؤچر ادا ہو چکا ہے۔"
+
+#: templates/fees/receive.html:10
+#, python-format
+msgid "On the voucher, due %(d)s (Rs)"
+msgstr "واؤچر پر، آخری تاریخ %(d)s (روپے)"
+
+#: templates/fees/receive.html:11
+msgid "To pay today (Rs)"
+msgstr "آج قابلِ ادائیگی (روپے)"
+
+#: templates/fees/receive.html:11
+#, python-format
+msgid "includes late fine %(f)s"
+msgstr "لیٹ فائن %(f)s شامل"
+
+#: templates/fees/receive.html:17
+msgid "Save payment"
+msgstr "ادائیگی محفوظ کریں"
+
+#: templates/fees/receive.html:21
+msgid "What is owed"
+msgstr "کیا واجب الادا ہے"
+
+#: templates/fees/receive.html:23 templates/fees/student.html:28
+msgid "Left to pay (Rs)"
+msgstr "باقی ادائیگی (روپے)"
+
+#: templates/fees/royalty.html:4
+msgid "Royalty statement"
+msgstr "رائلٹی گوشوارہ"
+
+#: templates/fees/royalty.html:5
+#, python-format
+msgid ""
+"Royalty is worked out on the monthly (tuition) fee received during the "
+"month, at each branch's royalty percentage. Company-owned campuses are "
+"listed at 0%%."
+msgstr ""
+"رائلٹی مہینے میں وصول شدہ ماہانہ (ٹیوشن) فیس پر، ہر برانچ کی رائلٹی فیصد کے "
+"مطابق نکالی جاتی ہے۔ کمپنی کی اپنی کیمپس 0%% پر درج ہیں۔"
+
+#: templates/fees/royalty.html:11
+msgid "Franchise monthly fee received (Rs)"
+msgstr "فرنچائز ماہانہ فیس وصول (روپے)"
+
+#: templates/fees/royalty.html:12
+msgid "Royalty due (Rs)"
+msgstr "واجب رائلٹی (روپے)"
+
+#: templates/fees/royalty.html:15
+msgid "Ownership"
+msgstr "ملکیت"
+
+#: templates/fees/royalty.html:15
+msgid "Monthly fee billed"
+msgstr "ماہانہ فیس بل"
+
+#: templates/fees/royalty.html:15
+msgid "All fees received"
+msgstr "کل وصول فیس"
+
+#: templates/fees/royalty.html:15
+msgid "Monthly fee received"
+msgstr "ماہانہ فیس وصول"
+
+#: templates/fees/royalty.html:15
+msgid "Royalty (Rs)"
+msgstr "رائلٹی (روپے)"
+
+#: templates/fees/royalty.html:22
+msgid ""
+"Figures come from payments recorded in TASEMS. A branch whose fees are not "
+"yet recorded here shows 0."
+msgstr ""
+"اعداد TASEMS میں درج ادائیگیوں سے ہیں۔ جس برانچ کی فیس ابھی یہاں درج نہیں وہ"
+" 0 دکھائے گی۔"
+
+#: templates/fees/student.html:8
+msgid "Paid in advance (Rs)"
+msgstr "پیشگی ادا (روپے)"
+
+#: templates/fees/student.html:8
+msgid "Owed now (Rs)"
+msgstr "اس وقت بقایا (روپے)"
+
+#: templates/fees/student.html:9
+msgid "Full"
+msgstr "پوری"
+
+#: templates/fees/student.html:9
+msgid "Sibling"
+msgstr "سبلنگ"
+
+#: templates/fees/student.html:9
+msgid "Monthly fee"
+msgstr "ماہانہ فیس"
+
+#: templates/fees/student.html:11
+msgid ""
+"Father's CNIC is not entered, so the sibling fee cannot be worked out for "
+"this student."
+msgstr ""
+"والد کا شناختی کارڈ نمبر درج نہیں، اس لیے اس طالب علم کی سبلنگ فیس طے نہیں "
+"ہو سکتی۔"
+
+#: templates/fees/student.html:11
+msgid "Add it"
+msgstr "درج کریں"
+
+#: templates/fees/student.html:16
+msgid "Student record"
+msgstr "طالب علم کا ریکارڈ"
+
+#: templates/fees/student.html:20
+msgid "Brothers and sisters in this branch"
+msgstr "اس برانچ میں بہن بھائی"
+
+#: templates/fees/student.html:21
+msgid ""
+"The child admitted first pays the full monthly fee; the others pay the "
+"sibling fee."
+msgstr ""
+"سب سے پہلے داخل ہونے والا بچہ پوری ماہانہ فیس دیتا ہے؛ باقی سبلنگ فیس دیتے "
+"ہیں۔"
+
+#: templates/fees/student.html:26
+msgid "Not paid yet"
+msgstr "ابھی ادا نہیں ہوا"
+
+#: templates/fees/student.html:36 templates/fees/vouchers.html:20
+msgid "Due"
+msgstr "آخری تاریخ"
+
+#: templates/fees/student.html:36 templates/fees/vouchers.html:20
+msgid "Payable (Rs)"
+msgstr "قابلِ ادائیگی (روپے)"
+
+#: templates/fees/student.html:43 templates/fees/vouchers.html:29
+msgid "Receive"
+msgstr "وصول کریں"
+
+#: templates/fees/student.html:44
+msgid "Cancel voucher"
+msgstr "واؤچر منسوخ کریں"
+
+#: templates/fees/student.html:47
+msgid "No vouchers yet."
+msgstr "ابھی کوئی واؤچر نہیں۔"
+
+#: templates/fees/student.html:59
+msgid "No payments yet."
+msgstr "ابھی کوئی ادائیگی نہیں۔"
+
+#: templates/fees/student.html:64
+msgid "Until"
+msgstr "تک"
+
+#: templates/fees/student.html:69
+msgid "All charges"
+msgstr "تمام چارجز"
+
+#: templates/fees/student.html:77
+msgid "Cancel charge"
+msgstr "چارج منسوخ کریں"
+
+#: templates/fees/student.html:78
+msgid "Nothing charged yet."
+msgstr "ابھی کوئی چارج نہیں۔"
+
+#: templates/fees/vouchers.html:10
+msgid "All (not cancelled)"
+msgstr "سب (منسوخ کے علاوہ)"
+
+#: templates/fees/vouchers.html:16
+#, python-format
+msgid "Print %(n)s voucher (PDF)"
+msgid_plural "Print %(n)s vouchers (PDF)"
+msgstr[0] "%(n)s واؤچر پرنٹ کریں (PDF)"
+msgstr[1] "%(n)s واؤچر پرنٹ کریں (PDF)"
+
+#: templates/fees/vouchers.html:32 templates/people/student_list.html:53
+msgid "Previous"
+msgstr "پچھلا"
+
+#: templates/fees/vouchers.html:32 templates/people/student_list.html:55
+msgid "Next"
+msgstr "اگلا"
+
+#: templates/fees/vouchers.html:33
+msgid "No vouchers for this month yet."
+msgstr "اس مہینے کے ابھی کوئی واؤچر نہیں۔"
+
 #: templates/people/student_detail.html:7 templates/people/student_form.html:2
 msgid "Edit student"
 msgstr "طالب علم میں ترمیم"
 
-#: templates/people/student_detail.html:10
+#: templates/people/student_detail.html:11
 msgid "Gender"
 msgstr "جنس"
 
-#: templates/people/student_detail.html:11
+#: templates/people/student_detail.html:12
 msgid "Date of birth"
 msgstr "تاریخ پیدائش"
 
-#: templates/people/student_detail.html:12
+#: templates/people/student_detail.html:13
 msgid "Admission date"
 msgstr "تاریخ داخلہ"
 
+#: templates/people/student_detail.html:15
+msgid "Father's name"
+msgstr "والد کا نام"
+
 #: templates/people/student_detail.html:16
+msgid "Father's CNIC"
+msgstr "والد کا شناختی کارڈ نمبر"
+
+#: templates/people/student_detail.html:19
 msgid "Parents and guardians"
 msgstr "والدین اور سرپرست"
 
-#: templates/people/student_detail.html:18
+#: templates/people/student_detail.html:21
 #: templates/people/student_list.html:36
 msgid "Name"
 msgstr "نام"
 
-#: templates/people/student_detail.html:18
+#: templates/people/student_detail.html:21
 msgid "Mobile"
 msgstr "موبائل"
 
-#: templates/people/student_detail.html:22
+#: templates/people/student_detail.html:25
 #: templates/people/student_form.html:17
 msgid "Primary contact"
 msgstr "بنیادی رابطہ"
 
-#: templates/people/student_detail.html:23
+#: templates/people/student_detail.html:26
 msgid "No parent contact recorded"
 msgstr "والدین کا کوئی رابطہ درج نہیں"
 
-#: templates/people/student_detail.html:26
+#: templates/people/student_detail.html:29
 msgid "Classes by session"
 msgstr "سیشن وار جماعتیں"
 
-#: templates/people/student_detail.html:28
+#: templates/people/student_detail.html:31
 msgid "Session"
 msgstr "سیشن"
 
-#: templates/people/student_detail.html:28
+#: templates/people/student_detail.html:31
 msgid "Campus"
 msgstr "کیمپس"
 
-#: templates/people/student_detail.html:30
+#: templates/people/student_detail.html:33
 msgid "Not placed in any class yet."
 msgstr "ابھی کسی جماعت میں نہیں۔"
 
-#: templates/people/student_detail.html:34
+#: templates/people/student_detail.html:37
 msgid "Record history"
 msgstr "ریکارڈ کی تاریخ"
 
-#: templates/people/student_detail.html:36
+#: templates/people/student_detail.html:39
 msgid "When"
 msgstr "کب"
 
-#: templates/people/student_detail.html:36
+#: templates/people/student_detail.html:39
 msgid "Who"
 msgstr "کس نے"
 
-#: templates/people/student_detail.html:36
+#: templates/people/student_detail.html:39
 msgid "What"
 msgstr "کیا"
 
@@ -1701,14 +2717,6 @@ msgstr "تلاش"
 msgid "Name, admission no. or parent mobile"
 msgstr "نام، داخلہ نمبر یا والدین کا موبائل"
 
-#: templates/people/student_list.html:18
-msgid "All classes"
-msgstr "تمام جماعتیں"
-
-#: templates/people/student_list.html:21 templates/people/student_list.html:37
-msgid "Status"
-msgstr "حیثیت"
-
 #: templates/people/student_list.html:24
 msgid "All statuses"
 msgstr "تمام حیثیتیں"
@@ -1729,18 +2737,10 @@ msgstr "جماعت میں نہیں"
 msgid "Pages"
 msgstr "صفحات"
 
-#: templates/people/student_list.html:53
-msgid "Previous"
-msgstr "پچھلا"
-
 #: templates/people/student_list.html:54
 #, python-format
 msgid "Page %(a)s of %(b)s"
 msgstr "صفحہ %(a)s از %(b)s"
-
-#: templates/people/student_list.html:55
-msgid "Next"
-msgstr "اگلا"
 
 #: templates/people/student_list.html:60
 msgid ""

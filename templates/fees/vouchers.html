@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Vouchers" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Vouchers" %} · {{ month|date:"F Y" }}</h1>
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"></div>
+    <div class="field"><label for="section">{% trans "Class" %}</label><select id="section" name="section"><option value="">{% trans "All classes" %}</option>
+      {% for s in sections %}<option value="{{ s.id }}" {% if s.id in section_ids %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="status">{% trans "Status" %}</label><select id="status" name="status"><option value="">{% trans "All (not cancelled)" %}</option>
+      {% for v, l in statuses %}<option value="{{ v }}" {% if v == status %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  </div>
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+</form>
+<div class="actions">
+  {% if page.paginator.count %}<a class="button" href="{% url 'fees:vouchers_pdf' %}?{{ query }}" target="_blank" rel="noopener">{% blocktrans count n=page.paginator.count %}Print {{ n }} voucher (PDF){% plural %}Print {{ n }} vouchers (PDF){% endblocktrans %}</a>{% endif %}
+</div>
+{% if page.object_list %}
+<div class="table-wrap"><table>
+  <thead><tr><th class="num">{% trans "Voucher" %}</th><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Months" %}</th><th>{% trans "Due" %}</th><th class="num">{% trans "Payable (Rs)" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
+  <tbody>{% for v in page.object_list %}<tr>
+    <td class="num">{{ v.number }}</td>
+    <td><a href="{% url 'fees:student' v.student_id %}">{{ v.student.full_name }}</a></td>
+    <td>{{ v.section|default:"—" }}</td>
+    <td>{{ v.first_month|date:"M Y" }}{% if v.last_month != v.first_month %} – {{ v.last_month|date:"M Y" }}{% endif %}</td>
+    <td>{{ v.due_on|date:"d M" }}</td>
+    <td class="num">{{ v.payable|rupees }}</td>
+    <td>{% if v.status == "paid" %}<span class="badge">{{ v.get_status_display }}</span>{% elif v.status == "open" %}<span class="badge attention">{{ v.get_status_display }}</span>{% else %}<span class="badge muted">{{ v.get_status_display }}</span>{% endif %}</td>
+    <td><a href="{% url 'fees:voucher_pdf' v.id %}" target="_blank" rel="noopener">{% trans "Print" %}</a>{% if v.status == "open" or v.status == "superseded" %} · <a href="{% url 'fees:receive' v.id %}">{% trans "Receive" %}</a>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="?{{ query }}&page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %} {{ page.number }} / {{ page.paginator.num_pages }} {% if page.has_next %}<a href="?{{ query }}&page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
+{% else %}<div class="card"><p>{% trans "No vouchers for this month yet." %}</p></div>{% endif %}
+{% endblock %}

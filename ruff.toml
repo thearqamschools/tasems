@@ -4,3 +4,7 @@ extend-exclude = ["*/migrations/*"]
 
 [lint]
 select = ["E", "F", "I", "B", "UP", "DJ"]
+
+[lint.per-file-ignores]
+# Printed text from the school's own voucher is kept line for line.
+"apps/accounts/management/commands/seed_tasems.py" = ["E501"]

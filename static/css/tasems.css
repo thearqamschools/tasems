@@ -126,7 +126,7 @@ td.num, th.num { text-align: end; }
 .field .help { color: var(--ink-soft); font-size: var(--step--1); margin-block-start: 0.2rem; }
 .field .error, .errorlist { color: var(--danger); font-size: var(--step--1); margin: 0.25rem 0 0; padding: 0; list-style: none; }
 input[type="text"], input[type="password"], input[type="date"], input[type="tel"], input[type="email"],
-input[type="search"], input[type="file"], select, textarea {
+input[type="search"], input[type="file"], input[type="month"], input[type="number"], select, textarea {
   width: 100%;
   font-size: var(--step-0);
   padding: 0.6rem 0.7rem;

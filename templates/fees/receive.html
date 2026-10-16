@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Receive fee" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Receive fee" %}</h1>
+<p class="lede">{% trans "Voucher" %} <span class="num">{{ voucher.number }}</span> · <a href="{% url 'fees:student' student.id %}">{{ student.full_name }}</a> · {{ voucher.section|default:"" }}</p>
+{% if newer %}<ul class="messages"><li class="warning">{% blocktrans with n=newer.number %}A newer voucher ({{ n }}) has been issued and already includes this voucher's balance. The amount below is the student's full balance today.{% endblocktrans %}</li></ul>{% endif %}
+{% if voucher.status == "paid" %}<ul class="messages"><li>{% trans "This voucher is already paid." %}</li></ul>{% endif %}
+
+<div class="figures">
+  <div class="figure"><div class="value">{{ voucher.payable|rupees }}</div><div class="label">{% blocktrans with d=voucher.due_on|date:"d M Y" %}On the voucher, due {{ d }} (Rs){% endblocktrans %}</div></div>
+  <div class="figure {% if due > 0 %}attention{% endif %}"><div class="value">{{ due|rupees }}</div><div class="label">{% trans "To pay today (Rs)" %}{% if fine %} — {% blocktrans with f=fine|rupees %}includes late fine {{ f }}{% endblocktrans %}{% endif %}</div></div>
+</div>
+
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <button class="button" type="submit">{% trans "Save payment" %}</button>
+</form>
+
+{% if unpaid %}
+<h2>{% trans "What is owed" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Month" %}</th><th>{% trans "Fee" %}</th><th class="num">{% trans "Left to pay (Rs)" %}</th></tr></thead>
+  <tbody>{% for c, left in unpaid %}<tr><td>{{ c.month|date:"M Y" }}</td><td>{{ c.head.name }}</td><td class="num">{{ left|rupees }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endblock %}

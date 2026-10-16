@@ -1,0 +1,186 @@
+{% load i18n tasems_tags %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Fee vouchers</title>
+<style>
+  @font-face { font-family: "VSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "VSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "VUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "VUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Bold.ttf"); font-weight: 700; }
+  @page { size: A4; margin: 7mm 8mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "VSans", "VUrdu", sans-serif; color: #111; font-size: 8pt; line-height: 1.25; }
+  .page { break-after: page; }
+  .page:last-child { break-after: auto; }
+
+  /* Front: three identical copies, each on its own third of the page */
+  .copy { height: 90mm; padding-top: 1mm; position: relative; }
+  .cut { height: 5.5mm; margin-top: 0.5mm; text-align: center; color: #555; font-size: 7pt; border-top: 0.8pt dashed #777; padding-top: 0.5mm; }
+  .head { display: grid; grid-template-columns: 1.25fr 1fr 1fr; border: 0.8pt solid #222; }
+  .head > div { padding: 1.4mm 2mm; }
+  .school { display: grid; grid-template-columns: 14mm 1fr; gap: 2mm; align-items: center; }
+  .school img { max-width: 14mm; max-height: 14mm; }
+  .school .name { font-weight: 700; font-size: 13pt; letter-spacing: 0.02em; line-height: 1.05; }
+  .school .addr { font-size: 7pt; color: #333; }
+  .mid { border-left: 0.8pt solid #222; border-right: 0.8pt solid #222; text-align: center; padding: 0 !important; }
+  .mid .label { background: #6b6b6b; color: #fff; font-weight: 700; font-size: 7.5pt; letter-spacing: 0.08em; padding: 0.6mm 0; }
+  .mid svg { height: 10mm; width: 44mm; display: block; margin: 0.6mm auto 0; }
+  .mid .num { font-weight: 700; font-size: 8.5pt; letter-spacing: 0.06em; }
+  .bank { font-size: 7.5pt; text-align: center; display: grid; grid-template-rows: auto 1fr; padding: 0 !important; }
+  .bank .details { padding: 1.2mm 1.5mm; border-bottom: 0.8pt solid #222; }
+  .bank .details b { font-size: 8pt; }
+  .bank .stamp { color: #888; font-size: 6.5pt; padding: 0.6mm; text-align: end; align-self: end; }
+  .bank .missing { color: #a8322a; font-weight: 700; }
+  .info { display: grid; grid-template-columns: 21mm 1fr 17mm 1fr 12mm 0.9fr 14mm 0.7fr 22mm; align-items: baseline; margin: 1.6mm 1mm 1mm; row-gap: 0.6mm; font-size: 8.5pt; }
+  .info .k { font-weight: 700; }
+  .info .v { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-inline-end: 1.5mm; }
+  .info .due { grid-row: span 2; text-align: center; border: 0.8pt dashed #222; padding: 0.6mm; align-self: stretch; }
+  .info .due b { display: block; font-size: 9pt; }
+  table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+  .fees th, .fees td { border: 0.6pt solid #222; padding: 0.7mm 0.6mm; text-align: center; font-size: 7.5pt; }
+  .fees th { background: #ececec; font-size: 7pt; }
+  .fees th.month, .fees td.month { width: 19mm; }
+  .fees td.month { white-space: nowrap; font-size: 7pt; }
+  .fees tr.total td { font-weight: 700; }
+  .fees td.zero { color: #777; }
+  .lower { display: grid; grid-template-columns: 1fr 66mm; gap: 3mm; margin-top: 1.2mm; }
+  .notes { font-size: 7pt; color: #333; }
+  .pay { border-collapse: collapse; }
+  .pay td { border: 0.6pt solid #222; padding: 0.6mm 1.5mm; font-size: 8pt; }
+  .pay td:first-child { text-align: end; font-weight: 700; border: 0; }
+  .pay td:last-child { width: 22mm; text-align: center; font-weight: 700; }
+  .pay tr.main td:last-child { font-size: 9.5pt; background: #ececec; }
+  .footnote { position: absolute; bottom: 1.2mm; left: 0; right: 0; text-align: center; font-size: 7.5pt; color: #333; }
+
+  /* Back: how to pay */
+  .back h1 { background: #111; color: #fff; text-align: center; font-size: 17pt; margin: 0 auto 3mm; padding: 1.6mm 6mm; border-radius: 4mm; width: 120mm; }
+  .back h1 img { height: 9mm; vertical-align: middle; margin-inline-end: 3mm; }
+  .channel { margin-bottom: 2.6mm; }
+  .channel h2 { margin: 0; background: #111; color: #fff; font-size: 10.5pt; font-weight: 400; padding: 1.2mm 4mm; border-radius: 2.5mm 2.5mm 0 0; display: grid; grid-template-columns: 10mm 1fr; text-align: center; }
+  .channel h2 span:first-child { font-size: 13pt; font-weight: 700; text-align: start; }
+  .channel .cols { display: grid; grid-template-columns: 1fr 1fr; border: 1pt solid #111; }
+  .channel .cols > div { padding: 1.5mm 3mm; }
+  .channel .cols > div + div { border-left: 1pt solid #111; }
+  .channel ul { margin: 0; padding-inline-start: 4mm; }
+  .channel li { margin: 0.2mm 0; font-size: 8pt; }
+  .channel .ur { font-family: "VUrdu", "VSans"; direction: rtl; text-align: right; }
+  .channel .ur li { font-size: 8pt; line-height: 1.9; }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .channel .note { font-size: 6.5pt; color: #333; margin-top: 1mm; }
+  .channel .ur .note { line-height: 1.8; }
+  .bankbox { text-align: center; font-weight: 700; margin: 1mm 0; font-size: 9pt; line-height: 1.45; }
+  .special h2 { margin: 2mm 0 0; background: #111; color: #fff; text-align: center; font-family: "VUrdu"; font-size: 11pt; font-weight: 400; padding: 0.5mm 0 1.5mm; border-radius: 2.5mm; }
+  .special ul { font-family: "VUrdu"; direction: rtl; text-align: right; margin: 1.5mm 0; padding-inline-start: 5mm; }
+  .special li { font-size: 9pt; line-height: 2; }
+  .special .en li { font-family: "VSans"; direction: ltr; text-align: left; line-height: 1.4; }
+  .closing { text-align: center; margin-top: 2mm; }
+  .closing .ur { font-family: "VUrdu"; font-size: 11pt; font-weight: 700; line-height: 2; }
+  .closing p { margin: 0; font-weight: 700; font-size: 9.5pt; }
+</style></head>
+<body>
+{% for item in items %}{% with v=item.v t=item.table %}
+<div class="page">
+{% for copy in copies %}
+  <div class="copy">
+    <div class="head">
+      <div class="school">
+        <div>{% if layout.left_logo %}<img src="{{ media_base }}{{ layout.left_logo.name }}" alt="The Arqam Schools">{% endif %}</div>
+        <div>
+          <div class="name">THE ARQAM SCHOOLS</div>
+          <div class="addr">{{ branch.address|default:branch.city }}</div>
+          {% if branch.phone %}<div class="addr">Ph: {{ branch.phone }}</div>{% endif %}
+        </div>
+      </div>
+      <div class="mid">
+        <div class="label">{{ copy }}</div>
+        {{ item.barcode }}
+        <div class="num">{{ v.number }}</div>
+      </div>
+      <div class="bank">
+        <div class="details">
+          {% if fs.bank_name %}<b>{{ fs.bank_name }}</b>{% if fs.bank_branch %}, {{ fs.bank_branch }}{% endif %}<br>
+          {% if fs.account_title %}{{ fs.account_title }}<br>{% endif %}
+          A/C # <b>{{ fs.account_number|default:"—" }}</b>
+          {% else %}<span class="missing">Bank details not set</span>{% endif %}
+        </div>
+        <div class="stamp">{% if forloop.counter == 2 %}Bank stamp &amp; signature{% else %}Received by{% endif %}</div>
+      </div>
+    </div>
+
+    <div class="info">
+      <span class="k">Voucher ID:</span><span class="v">{{ v.number }}</span>
+      <span class="k">Adm. No.:</span><span class="v">{{ v.student.admission_no }}</span>
+      <span class="k">Class:</span><span class="v">{{ v.section.class_level.name|default:"—" }}</span>
+      <span class="k">Section:</span><span class="v">{{ v.section.name|default:"—" }}</span>
+      <span class="due">Due Date<b>{{ v.due_on|date:"d/m/Y" }}</b></span>
+      <span class="k">Student:</span><span class="v" style="grid-column: span 3">{{ v.student.full_name }}</span>
+      <span class="k">Father:</span><span class="v" style="grid-column: span 3">{{ item.father|default:"—" }}</span>
+    </div>
+
+    <table class="fees">
+      <thead><tr><th class="month">Fee Month</th>{% for h in heads %}<th>{{ h.short_name }}</th>{% endfor %}<th>Arrears</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for label, cells, arrears, total in t.rows %}<tr>
+          <td class="month">{{ label }}</td>
+          {% if arrears is not None %}{% for h in heads %}<td></td>{% endfor %}<td>{{ arrears|rupees }}</td>
+          {% else %}{% for h in heads %}{% with a=cells|get_item:h.id %}<td{% if not a %} class="zero"{% endif %}>{{ a|default:0|rupees }}</td>{% endwith %}{% endfor %}
+          <td class="zero">0</td>{% endif %}
+          <td>{{ total|rupees }}</td>
+        </tr>{% endfor %}
+        <tr class="total"><td class="month">Total</td>
+          {% for h in heads %}{% with a=t.totals|get_item:h.id %}<td>{{ a|default:0|rupees }}</td>{% endwith %}{% endfor %}
+          <td>{{ t.arrears|rupees }}</td><td>{{ t.total|rupees }}</td></tr>
+      </tbody>
+    </table>
+
+    <div class="lower">
+      <div class="notes">
+        {% for reason, amount in t.discounts %}<div>Includes discount: Rs {{ amount|rupees }} ({{ reason }})</div>{% endfor %}
+        <div>Issued {{ v.issued_on|date:"d/m/Y" }}. Please keep your copy until the next voucher.</div>
+      </div>
+      <table class="pay">
+        <tr class="main"><td>Payable by Due Date:</td><td>{{ v.payable|rupees }}</td></tr>
+        <tr><td>Surcharge:</td><td>{{ v.late_fine|rupees }}</td></tr>
+        <tr><td>Payable After Due Date:</td><td>{{ v.payable_after_due|rupees }}</td></tr>
+      </table>
+    </div>
+    {% if fs.voucher_note %}<div class="footnote">{{ fs.voucher_note }}</div>{% endif %}
+  </div>
+  {% if not forloop.last %}<div class="cut">cut here</div>{% endif %}
+{% endfor %}
+</div>
+
+{% if fs.print_back_side %}
+<div class="page back">
+  <h1>{% if layout.left_logo %}<img src="{{ media_base }}{{ layout.left_logo.name }}" alt="">{% endif %}{{ fs.back_title }}</h1>
+  {% for c in channels %}
+  <div class="channel">
+    <h2><span>{{ forloop.counter }}</span><span>{{ c.title_filled }}</span></h2>
+    <div class="cols">
+      <div>
+        <ul>{% for s in c.steps_en_list %}<li>{{ s }}</li>{% endfor %}</ul>
+        {% if c.shows_bank %}<div class="bankbox">Bank Name: {{ fs.bank_name|default:"—" }}<br>Account Title: {{ fs.account_title|default:"—" }}<br>Account Number: {{ fs.account_number|default:"—" }}</div>{% endif %}
+        {% if c.note_en %}<div class="note">{{ c.note_en }}</div>{% endif %}
+      </div>
+      <div class="ur" lang="ur" dir="rtl">
+        <ul>{% for s in c.steps_ur_list %}<li>{{ s }}</li>{% endfor %}</ul>
+        {% if c.shows_bank %}<div class="bankbox">بینک کا نام: {{ fs.bank_name|default:"—" }}<br>اکاؤنٹ ٹائٹل: {{ fs.account_title|default:"—" }}<br>اکاؤنٹ نمبر: <span dir="ltr">{{ fs.account_number|default:"—" }}</span></div>{% endif %}
+        {% if c.note_ur %}<div class="note">{{ c.note_ur }}</div>{% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% if back_notes_ur or back_notes_en %}
+  <div class="special">
+    <h2 lang="ur" dir="rtl">خصوصی ہدایات برائے آن لائن فیس ادائیگی</h2>
+    {% if back_notes_ur %}<ul lang="ur" dir="rtl">{% for n in back_notes_ur %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+    {% if back_notes_en %}<ul class="en">{% for n in back_notes_en %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  {% endif %}
+  <div class="closing">
+    {% if fs.back_footer_ur %}<div class="ur" lang="ur" dir="rtl">{{ fs.back_footer_ur }}</div>{% endif %}
+    <p>The Arqam Schools, {{ branch.address|default:branch.city }}</p>
+    <p>{% if fs.receipt_whatsapp %}{{ fs.receipt_whatsapp }}{% endif %}{% if fs.receipt_whatsapp and branch.phone %} | {% endif %}{{ branch.phone }}</p>
+  </div>
+</div>
+{% endif %}
+{% endwith %}{% endfor %}
+</body></html>

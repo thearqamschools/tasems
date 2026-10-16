@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.7.0 — 2026-10-16 — Milestone 2b: Fees
+
+Added
+- Fee heads matching the school's voucher; per-branch fee rates by class with start dates; Samanabad fees seeded as confirmed.
+- Father's name and CNIC on the student record and Excel import; brothers and sisters recognised by CNIC for the sibling fee.
+- Monthly vouchers for the whole branch or chosen classes, with a check before anything is made; annual charges in April, summer vacation work in July; students already billed are skipped.
+- Single-student vouchers: admission, registration, annual or other charges, several months together.
+- Unpaid balance carried to the next voucher with the Rs 200 late fine once per late voucher; due date the 10th or the day made.
+- Printed voucher: A4 with School, Bank and Student copies, barcode, bank details from Setup, and the Fee Payment Options back page (English and Urdu).
+- Receive payment by scanning or typing the Voucher ID: cash, bank deposit, transfer, JazzCash, Alfa app; transaction ID required for non-cash; receipt; reversal with reason.
+- Student fee account, special discounts with approval by someone else, defaulters list, daily collection, royalty statement for head office.
+- Row-level security on fee tables; 119 automated tests.
+
+Not deployed.
+
 ## 0.6.0 — 2026-10-16 — Milestone 2a: Examinations and results
 
 Added

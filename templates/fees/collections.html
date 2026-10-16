@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Daily collection" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Fee collection" %}</h1>
+<form method="get" class="actions">
+  <label for="from">{% trans "From" %}</label><input type="date" id="from" name="from" value="{{ date_from|date:'Y-m-d' }}" style="width:auto">
+  <label for="to">{% trans "To" %}</label><input type="date" id="to" name="to" value="{{ date_to|date:'Y-m-d' }}" style="width:auto">
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
+</form>
+<div class="figures">
+  <div class="figure"><div class="value">{{ total|rupees }}</div><div class="label">{% trans "Received (Rs)" %}</div></div>
+  {% for name, amount in by_method %}<div class="figure"><div class="value">{{ amount|rupees }}</div><div class="label">{{ name }}</div></div>{% endfor %}
+</div>
+{% if by_person %}<h2>{% trans "By person receiving" %}</h2>
+<div class="table-wrap"><table><tbody>{% for name, amount in by_person %}<tr><td>{{ name }}</td><td class="num">{{ amount|rupees }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+<h2>{% trans "Payments" %}</h2>
+{% if payments %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Receipt" %}</th><th>{% trans "Date" %}</th><th>{% trans "Student" %}</th><th>{% trans "Voucher" %}</th><th>{% trans "Method" %}</th><th>{% trans "Reference" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>{% for p in payments %}<tr{% if p.is_reversed %} class="muted"{% endif %}>
+    <td><a href="{% url 'fees:receipt' p.id %}">{{ p.receipt_no }}</a>{% if p.is_reversed %} <span class="badge muted">{% trans "Reversed" %}</span>{% endif %}</td>
+    <td>{{ p.paid_on|date:"d M" }}</td><td>{{ p.student.full_name }}</td><td class="num">{{ p.voucher.number|default:"—" }}</td>
+    <td>{{ p.get_method_display }}</td><td>{{ p.reference|default:"—" }}</td>
+    <td class="num">{% if p.is_reversed %}<s>{{ p.amount|rupees }}</s>{% else %}{{ p.amount|rupees }}{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card"><p>{% trans "No payments in these dates." %}</p></div>{% endif %}
+{% endblock %}

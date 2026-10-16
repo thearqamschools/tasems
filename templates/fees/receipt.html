@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Receipt" %} {{ payment.receipt_no }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:34rem">
+  <p style="margin:0;font-weight:700">THE ARQAM SCHOOLS</p>
+  <p class="muted" style="margin:0 0 1rem">{{ branch.name }}</p>
+  <h1>{% trans "Fee receipt" %} <span class="num">{{ payment.receipt_no }}</span></h1>
+  {% if payment.is_reversed %}<ul class="messages"><li class="error">{% blocktrans with r=payment.reverse_reason %}Reversed: {{ r }}{% endblocktrans %}</li></ul>{% endif %}
+  <div class="table-wrap"><table><tbody>
+    <tr><th>{% trans "Student" %}</th><td>{{ payment.student.full_name }} ({{ payment.student.admission_no }})</td></tr>
+    <tr><th>{% trans "Voucher" %}</th><td>{{ payment.voucher.number|default:"—" }}</td></tr>
+    <tr><th>{% trans "Amount" %}</th><td><strong>Rs {{ payment.amount|rupees }}</strong></td></tr>
+    <tr><th>{% trans "Date paid" %}</th><td>{{ payment.paid_on|date:"d M Y" }}</td></tr>
+    <tr><th>{% trans "Method" %}</th><td>{{ payment.get_method_display }}{% if payment.reference %} · {{ payment.reference }}{% endif %}</td></tr>
+    <tr><th>{% trans "Paid for" %}</th><td>{% for a in paid_for %}{{ a.charge.head.name }} {{ a.charge.month|date:"M Y" }}: {{ a.amount|rupees }}{% if not forloop.last %}<br>{% endif %}{% empty %}{% trans "Kept as advance" %}{% endfor %}</td></tr>
+    <tr><th>{% trans "Balance now" %}</th><td>Rs {{ balance|rupees }}</td></tr>
+    <tr><th>{% trans "Received by" %}</th><td>{{ payment.received_by.get_full_name|default:payment.received_by.username }}</td></tr>
+  </tbody></table></div>
+</div>
+<div class="actions">
+  <button class="button" type="button" onclick="window.print()">{% trans "Print" %}</button>
+  <a class="button secondary" href="{% url 'fees:index' %}">{% trans "Next payment" %}</a>
+  <a class="button quiet" href="{% url 'fees:student' payment.student_id %}">{% trans "Fee account" %}</a>
+</div>
+{% if can_reverse and not payment.is_reversed %}
+<details><summary>{% trans "Reverse this payment (entered by mistake)" %}</summary>
+  <form method="post" action="{% url 'fees:reverse_payment' payment.id %}" class="card">{% csrf_token %}
+    <div class="field"><label for="reason">{% trans "Reason" %}</label><input type="text" id="reason" name="reason" required maxlength="200"></div>
+    <button class="button secondary" type="submit">{% trans "Reverse payment" %}</button>
+  </form></details>
+{% endif %}
+{% endblock %}

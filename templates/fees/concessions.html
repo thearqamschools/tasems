@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Special discounts" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Special discounts" %}</h1>
+<h2>{% trans "Waiting for approval" %}</h2>
+{% if pending %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Fee" %}</th><th>{% trans "Discount" %}</th><th>{% trans "Months" %}</th><th>{% trans "Reason" %}</th><th>{% trans "Asked by" %}</th><th></th></tr></thead>
+  <tbody>{% for c in pending %}<tr>
+    <td><a href="{% url 'fees:student' c.student_id %}">{{ c.student.full_name }}</a></td><td>{{ c.head }}</td>
+    <td>{% if c.kind == "percent" %}{{ c.value|floatformat }}%{% else %}Rs {{ c.value|rupees }}{% endif %}</td>
+    <td>{{ c.starts_on|date:"M Y" }} – {{ c.ends_on|date:"M Y"|default:"…" }}</td><td>{{ c.reason }}</td>
+    <td>{{ c.requested_by.get_full_name|default:c.requested_by.username }}</td>
+    <td>{% if can_decide %}<form method="post" class="actions" style="margin:0">{% csrf_token %}<input type="hidden" name="id" value="{{ c.id }}">
+      <button class="button" name="decision" value="approve" type="submit">{% trans "Approve" %}</button>
+      <button class="button quiet" name="decision" value="reject" type="submit">{% trans "Reject" %}</button></form>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<p class="muted">{% trans "Nothing waiting." %}</p>{% endif %}
+<h2>{% trans "Decided" %}</h2>
+{% if decided %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Fee" %}</th><th>{% trans "Discount" %}</th><th>{% trans "Reason" %}</th><th>{% trans "Status" %}</th><th>{% trans "Decided by" %}</th></tr></thead>
+  <tbody>{% for c in decided %}<tr><td><a href="{% url 'fees:student' c.student_id %}">{{ c.student.full_name }}</a></td><td>{{ c.head }}</td>
+    <td>{% if c.kind == "percent" %}{{ c.value|floatformat }}%{% else %}Rs {{ c.value|rupees }}{% endif %}</td><td>{{ c.reason }}</td><td>{{ c.get_status_display }}</td>
+    <td>{{ c.decided_by.get_full_name|default:c.decided_by.username|default:"—" }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<p class="muted">{% trans "None yet." %}</p>{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Ask for a special discount" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Ask for a special discount" %}</h1>
+<p class="lede">{{ student.full_name }} · {{ student.admission_no }}. {% trans "The discount applies to vouchers made after the principal or a director approves it. A student gets either the sibling fee or this discount, whichever is less to pay." %}</p>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <button class="button" type="submit">{% trans "Send for approval" %}</button>
+  <a class="button quiet" href="{% url 'fees:student' student.id %}">{% trans "Back" %}</a>
+</form>
+{% endblock %}
