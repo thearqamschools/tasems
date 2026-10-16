@@ -60,3 +60,13 @@ def test_security_check_reports_superuser_connection(db, capsys):
     call_command("check_security")
     out = capsys.readouterr().out
     assert "superuser" in out or "Security check passed" in out
+
+
+def test_every_branch_table_has_the_policy(db):
+    from apps.core.rls import RLS_TABLES
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT tablename FROM pg_policies WHERE policyname = 'branch_isolation'")
+        protected = {row[0] for row in cursor.fetchall()}
+    assert set(RLS_TABLES) <= protected
+    assert {"fees_voucher", "fees_charge", "fees_payment"} <= protected

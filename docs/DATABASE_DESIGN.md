@@ -25,6 +25,16 @@ PostgreSQL 16, one database, shared schema. Migrations are versioned in each app
 | exams | Mark | Branch | One per paper per student; corrections audited |
 | exams | Rating | Branch | Teacher marks for non-exam parts; subject empty for student-level parts |
 | exams | ResultRemark | Branch | Class teacher and principal remarks per exam |
+| fees | FeeHead | Network | Voucher columns: Admission, Re Admission, Reg., Tuition, Annual, S.V.W., Gen. Exp., Others, Fine |
+| fees | FeeRate | Branch | Amount per head, class (or all classes) and start date; sibling amount |
+| fees | BranchFeeSettings | Branch | Due day, late fine, bank details and printed text |
+| fees | PaymentChannel | Network or branch | Payment options printed on the back of the voucher |
+| fees | VoucherCounter | Network | One voucher-number sequence for the whole network |
+| fees | Voucher | Branch | The printed bill: months, due date, arrears, payable, late fine, status |
+| fees | Charge | Branch | One head for one month; never deleted, only cancelled; one automatic charge per head per month |
+| fees | Payment | Branch | Money received; never deleted, only reversed |
+| fees | PaymentAllocation | Branch | Which charges a payment paid (oldest first); rebuilt per student |
+| fees | Concession | Branch | Special discount with approval |
 | core | AuditEvent | — | Append-only; read-only in admin |
 
 ## Isolation rules
@@ -32,10 +42,10 @@ PostgreSQL 16, one database, shared schema. Migrations are versioned in each app
 1. Every branch-owned table has `branch_id` (indexed).
 2. Code reads branch data only through `Model.objects.for_user(user)`; admin screens use `ScopedAdminMixin`.
 3. Cross-branch links are rejected (enrolment ↔ section, guardian ↔ student).
-4. Planned: PostgreSQL row-level security as a second lock (DECISIONS D-006).
+4. PostgreSQL row-level security as a second lock on every branch-owned table (DECISIONS D-006, D-028).
 
 ## Rules carried from the master plan
 
 - A student is stored once; each session adds an Enrolment.
 - Official records are corrected, not silently overwritten; every change is in the audit log.
-- Money (from the Fees module) will be stored as exact decimals, never floating point.
+- Money is stored as exact decimals (12 digits, 2 decimals), never floating point.

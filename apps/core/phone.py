@@ -20,3 +20,15 @@ def normalize_mobile(value):
     if len(digits) == 11 and digits.startswith("03"):
         return digits
     return None
+
+
+def normalize_cnic(value):
+    """Return the 13 digits of a CNIC (35202-1234567-1 → 3520212345671), or None if it is not one."""
+    if value is None:
+        return None
+    digits = re.sub(r"\D", "", str(value))
+    return digits if len(digits) == 13 else None
+
+
+def format_cnic(digits):
+    return f"{digits[:5]}-{digits[5:12]}-{digits[12]}" if digits and len(digits) == 13 else digits or ""

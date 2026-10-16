@@ -27,9 +27,15 @@ RLS_TABLES = [
     "exams_mark",
     "exams_resultremark",
     "exams_rating",
+    "fees_feerate",
+    "fees_voucher",
+    "fees_charge",
+    "fees_payment",
+    "fees_paymentallocation",
+    "fees_concession",
 ]
 
-# Policies are created by migrations: core/0002_row_level_security.py and exams/0002_row_level_security.py.
+# Policies are created by migrations: core/, exams/ and fees/0002_row_level_security.py.
 
 
 @contextmanager

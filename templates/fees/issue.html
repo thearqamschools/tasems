@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Make a voucher" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Make a voucher" %}</h1>
+<p class="lede">{{ student.full_name }} · {{ student.admission_no }}. {% trans "Monthly fee for the months chosen, plus anything ticked below. Any unpaid balance is added automatically." %}</p>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">
+    {% include "includes_field.html" with field=form.first_month %}
+    {% include "includes_field.html" with field=form.last_month %}
+    {% include "includes_field.html" with field=form.due_on %}
+  </div>
+  <fieldset><legend>{% trans "Also charge" %}</legend>
+    {% for tick, amount in pairs %}
+    <div class="form-grid">
+      <div class="field"><label>{{ tick }} {{ tick.label }}</label></div>
+      {% include "includes_field.html" with field=amount %}
+    </div>
+    {% endfor %}
+    <div class="form-grid">
+      {% include "includes_field.html" with field=form.other_head %}
+      {% include "includes_field.html" with field=form.other_amount %}
+      {% include "includes_field.html" with field=form.other_note %}
+    </div>
+  </fieldset>
+  <button class="button" type="submit">{% trans "Make voucher" %}</button>
+  <a class="button quiet" href="{% url 'fees:student' student.id %}">{% trans "Back" %}</a>
+</form>
+{% endblock %}

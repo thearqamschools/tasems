@@ -51,6 +51,14 @@ class Student(BranchOwnedModel):
     gender = models.CharField(max_length=10, choices=Gender.choices)
     date_of_birth = models.DateField(null=True, blank=True)
     b_form_no = models.CharField(_("B-Form number"), max_length=15, blank=True)
+    father_name = models.CharField(_("father's name"), max_length=150, blank=True)
+    father_cnic = models.CharField(
+        _("father's CNIC"),
+        max_length=13,
+        blank=True,
+        db_index=True,
+        help_text=_("13 digits. Brothers and sisters are recognised by this number for the sibling fee."),
+    )
     admission_date = models.DateField()
     is_hifz = models.BooleanField(_("Hifz student"), default=False)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE, db_index=True)

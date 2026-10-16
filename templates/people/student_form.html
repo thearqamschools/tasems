@@ -6,7 +6,7 @@
 <form method="post" class="card" novalidate>{% csrf_token %}
   {% for e in form.non_field_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
   <fieldset><legend>{% trans "Student" %}</legend><div class="form-grid">
-    {% for field in form %}{% if field.name in "admission_no first_name last_name full_name_ur gender date_of_birth admission_date b_form_no status" %}{% include "includes_field.html" %}{% endif %}{% endfor %}
+    {% for field in form %}{% if field.name in "admission_no first_name last_name full_name_ur gender date_of_birth admission_date b_form_no father_name father_cnic status" %}{% include "includes_field.html" %}{% endif %}{% endfor %}
   </div>
   {% with field=form.is_hifz %}<div class="field"><label>{{ field }} {{ field.label }}</label></div>{% endwith %}
   </fieldset>

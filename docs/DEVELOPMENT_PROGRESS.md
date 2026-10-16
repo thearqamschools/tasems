@@ -18,7 +18,7 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 | Milestone | Contents | Status |
 | --- | --- | --- |
 | 2a — Examinations and results | Approved result pattern (D-030/031) as editable data; exams and papers set up by head office; marks entry per paper with checks and audit; teacher ratings (discipline, neatness, summer work, class work); automatic attendance marks; section results with what is still missing; Mid-Term progress report and annual result card (one A4 page, PDF for one student or the whole section); remarks; row-level security on marks and ratings; 92 automated tests | **Done (16 Oct 2026), not deployed** |
-| 2b — Fees | Fee structures, vouchers, payments (counter, bank, online), reconciliation, 8% royalty statements | Next — needs fee heads, concession rules and the bank(s) used |
+| 2b — Fees | Per-branch fee rates by class (Samanabad fees seeded); monthly vouchers for the whole branch or chosen classes, or one student (admission, several months together); sibling fee by father's CNIC; special discounts with approval; unpaid balance and Rs 200 fine carried to the next voucher; A4 voucher with School, Bank and Student copies, barcode and the payment-options back page (bank details editable in Setup); receive payment by scanning or typing the Voucher ID (cash, bank, transfer, JazzCash, Alfa) with receipt; reversal and cancellation with reasons; student fee account; defaulters; daily collection; royalty statement; row-level security on fee tables; 119 automated tests | **Done (16 Oct 2026), not deployed** |
 
 ## Known gaps and pending inputs
 
@@ -29,6 +29,9 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Urdu translations written by Claude; a native-speaker review is needed before the pilot.
 - No public-holiday calendar yet: registers can be taken on any school day of the session (Sunday off; Saturday only Hifz, Pre-9, 9, 10).
 - Diary: official logo files not yet uploaded (Setup → Diary layout); subject lists for classes other than Class 4; whether the principal must approve a diary before it is shared.
+- Fees: the JazzCash / Bank Alfalah bill-payment connection (Voucher ID lookup) still runs through the old software; until it is moved, online payments are entered by staff. Which provider (e.g. 1Bill, Kuickpay) is to be confirmed by IT.
+- Fees: opening balances (arrears) from the old software are not imported yet; needed before the first TASEMS vouchers so arrears are not lost.
+- Fees: Hifz and Pre-9/9/10 monthly fee, re-admission fee, and the royalty basis (received vs billed) to confirm; bank name, account title and number to enter in Setup; the voucher counter to set above the old system's last Voucher ID.
 - Exams: exam set-up and grading scheme edits are in Setup (admin) for now; a purpose-built head-office screen can follow.
 - Not yet provided: current software data export; biometric machine brand/model; academic session dates; subject list per class.
 - Hosting provider not chosen (no preference stated; shortlist in master plan Part 5).

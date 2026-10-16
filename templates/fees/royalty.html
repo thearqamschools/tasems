@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Royalty" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Royalty statement" %} · {{ month|date:"F Y" }}</h1>
+<p class="lede">{% trans "Royalty is worked out on the monthly (tuition) fee received during the month, at each branch's royalty percentage. Company-owned campuses are listed at 0%." %}</p>
+<form method="get" class="actions"><label for="month">{% trans "Month" %}</label>
+  <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto">
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button></form>
+<div class="figures">
+  <div class="figure"><div class="value">{{ total_base|rupees }}</div><div class="label">{% trans "Franchise monthly fee received (Rs)" %}</div></div>
+  <div class="figure"><div class="value">{{ total_royalty|rupees }}</div><div class="label">{% trans "Royalty due (Rs)" %}</div></div>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Ownership" %}</th><th class="num">{% trans "Monthly fee billed" %}</th><th class="num">{% trans "All fees received" %}</th><th class="num">{% trans "Monthly fee received" %}</th><th class="num">%</th><th class="num">{% trans "Royalty (Rs)" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td>{{ r.branch.name }}</td><td>{{ r.branch.get_ownership_display }}</td>
+    <td class="num">{{ r.billed_base|rupees }}</td><td class="num">{{ r.collected|rupees }}</td><td class="num">{{ r.royalty_base|rupees }}</td>
+    <td class="num">{{ r.percent|floatformat }}</td><td class="num"><strong>{{ r.royalty|rupees }}</strong></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+<p class="muted">{% trans "Figures come from payments recorded in TASEMS. A branch whose fees are not yet recorded here shows 0." %}</p>
+{% endblock %}

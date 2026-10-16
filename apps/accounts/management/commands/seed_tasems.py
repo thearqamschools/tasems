@@ -12,6 +12,7 @@ from django.db import models, transaction
 from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
 from apps.exams.models import GradingComponent, GradingScheme
+from apps.fees.models import BranchFeeSettings, FeeHead, FeeRate, PaymentChannel, VoucherCounter
 from apps.organisation.models import Branch, HeadOffice
 
 VIEW_PEOPLE = ["people.view_student", "people.view_guardian", "people.view_enrolment", "people.view_studentguardian"]
@@ -172,13 +173,59 @@ EXAM_SETUP = EXAM_VIEW + [
     "exams.change_gradingcomponent",
 ]
 
+# Fees (Phase 2b)
+FEE_VIEW = [
+    "fees.view_feehead",
+    "fees.view_feerate",
+    "fees.view_voucher",
+    "fees.view_charge",
+    "fees.view_payment",
+    "fees.view_concession",
+    "fees.view_branchfeesettings",
+]
+FEE_COLLECT = FEE_VIEW + ["fees.add_payment", "fees.add_voucher", "fees.add_charge", "fees.add_concession"]
+FEE_APPROVE = ["fees.approve_concession"]
+FEE_MANAGE = (
+    FEE_COLLECT
+    + FEE_APPROVE
+    + [
+        "fees.change_payment",
+        "fees.change_charge",
+        "fees.change_voucher",
+        "fees.add_feerate",
+        "fees.change_feerate",
+        "fees.add_branchfeesettings",
+        "fees.change_branchfeesettings",
+    ]
+)
+FEE_SETUP = (
+    FEE_VIEW
+    + FEE_APPROVE
+    + [
+        "fees.view_royalty",
+        "fees.add_feehead",
+        "fees.change_feehead",
+        "fees.add_feerate",
+        "fees.change_feerate",
+        "fees.add_branchfeesettings",
+        "fees.change_branchfeesettings",
+        "fees.view_paymentchannel",
+        "fees.add_paymentchannel",
+        "fees.change_paymentchannel",
+        "fees.view_vouchercounter",
+        "fees.change_vouchercounter",
+    ]
+)
+
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP,
-    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP,
-    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
-    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
-    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP,
+    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP,
+    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"],
+    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"],
+    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE + FEE_MANAGE,
     "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "accountant": FEE_COLLECT,
+    "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"],
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": ATT_MARK + DIARY_WRITE,
     "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
@@ -204,6 +251,96 @@ RESULT_PATTERN = [
     ("neatness", "Neatness", "صفائی", "rating", "subject", 5),
     ("summer_work", "Summer vacation work", "موسم گرما کا کام", "rating", "subject", 5),
     ("class_work", "Class work & homework", "کلاس ورک اور ہوم ورک", "rating", "subject", 5),
+]
+
+# Voucher columns, in the order of the school's current fee voucher (shared 16 Oct 2026).
+# code, name, short name, Urdu, kind, charge months, counts for royalty
+FEE_HEADS = [
+    ("admission", "Admission fee", "Admission", "داخلہ فیس", "one_time", [], False),
+    ("re_admission", "Re-admission fee", "Re Admission", "دوبارہ داخلہ فیس", "one_time", [], False),
+    ("registration", "Registration fee", "Reg.", "رجسٹریشن فیس", "one_time", [], False),
+    ("tuition", "Monthly (tuition) fee", "Tuition", "ماہانہ فیس", "monthly", [], True),
+    ("annual", "Annual charges", "Annual", "سالانہ چارجز", "yearly", [4], False),
+    ("summer_work", "Summer vacation work", "S.V.W.", "سمر ویکیشن ورک", "seasonal", [7], False),
+    ("general", "General expenses", "Gen. Exp.", "متفرق اخراجات", "other", [], False),
+    ("others", "Other charges", "Others", "دیگر", "other", [], False),
+    ("fine", "Late fee fine", "Fine", "جرمانہ", "fine", [], False),
+]
+# Samanabad campus fees confirmed by the project lead on 16 Oct 2026. Each franchise sets its own.
+# head, class level code (None = all classes), amount, sibling amount
+SAMANABAD_RATES = [
+    ("tuition", None, 4300, 4000),
+    ("annual", None, 4500, None),
+    ("annual", "pre-9", 5500, None),
+    ("annual", "class-9", 5500, None),
+    ("annual", "class-10", 5500, None),
+    ("annual", "hifz", 2000, None),
+    ("admission", None, 6500, None),
+    ("registration", None, 1500, None),
+]
+OFFICIAL_WHATSAPP = "0339-2406479"
+VOUCHER_NOTE = "Dear parents, you can pay this voucher online via the JazzCash app, anytime, anywhere. Thank you."
+# Back of the voucher, as shared by the project lead on 16 Oct 2026.
+BACK_NOTES_UR = """والدین آن لائن فیس جمع کرواتے وقت ادائیگی سے پہلے واؤچر ضرور چیک کریں تاکہ کسی پریشانی سے بچا جا سکے۔
+والدین آن لائن فیس جمع کروانے کے بعد رسید کاپی + فیس واؤچر سکول کے دیئے گئے واٹس ایپ نمبر پر لازمی بھیجیں تاکہ آپ کی فیس کا اندراج بروقت کیا جا سکے۔
+اگر کسی وجہ سے واؤچر حاصل نہ ہو سکے تو سکول آفس یا واٹس ایپ پر رابطہ کریں۔"""
+BACK_FOOTER_UR = "آپ کے بچوں کے بہترین مستقبل کے لئے کوشاں۔ انتظامیہ"
+PAYMENT_CHANNELS = [
+    (
+        "jazzcash",
+        "JazzCash - Education Payment",
+        """Open the JazzCash app.
+Navigate to the "More" section.
+Under **Education**, select **Schools**.
+Choose **The Arqam Schools** from the list.
+Enter the Voucher ID (as mentioned on the fee voucher).
+Verify your child's name and the fee details.
+Click **Confirm** to complete the transaction.
+After payment, please share the receipt on the school's WhatsApp number: **{whatsapp}**.""",
+        """جاز کیش ایپ کھولیں۔
+"More" سیکشن میں جائیں اور Education کے آپشن میں Schools منتخب کریں۔
+فہرست میں سے The Arqam Schools کا انتخاب کریں۔
+Voucher ID درج کریں (جیسا کہ فیس واؤچر پر درج ہے)۔
+اپنے بچے کا نام اور فیس کی تفصیلات کی تصدیق کریں۔
+Confirm پر کلک کر کے ٹرانزیکشن مکمل کریں۔
+ادائیگی کے بعد، براہ کرم رسید اسکول کے واٹس ایپ نمبر {whatsapp} پر شیئر کریں۔""",
+        "Please note: A service fee of Rs. 15 per transaction is charged by JazzCash for this facility.",
+        "براہ کرم نوٹ فرمائیں: اس سہولت کے استعمال پر جاز کیش کی جانب سے فی ٹرانزیکشن 15 روپے سروس چارج لیا جاتا ہے۔",
+    ),
+    (
+        "bank_branch",
+        "{bank_name} – Branch & Online Payment",
+        """Fees may be deposited at any {bank_name} branch by presenting the fee voucher.
+For online bank transfers, please use the bank details below.
+After completing the payment, it is mandatory to share the payment receipt along with the fee voucher on the school's WhatsApp number: **{whatsapp}**.""",
+        """فیس کسی بھی بینک برانچ میں فیس واؤچر جمع کروا کر ادا کی جا سکتی ہے۔
+آن لائن بینک ٹرانسفر کے لیے، براہ کرم نیچے دی گئی بینک تفصیلات استعمال کریں۔
+ادائیگی مکمل ہونے کے بعد، ادائیگی کی رسید اور فیس واؤچر اسکول کے واٹس ایپ نمبر {whatsapp} پر شیئر کرنا لازمی ہے۔""",
+        "",
+        "",
+    ),
+    (
+        "alfa",
+        "Bank Al-Falah App - Education Payment",
+        """Open the Bank Alfalah Mobile Banking App.
+Navigate to **Bills & Payments**.
+Select **Fees**, then choose **New Payment**.
+Under the **Education** category, search for **The Arqam Schools**.
+Enter the Voucher ID (as mentioned on the fee voucher).
+Verify your child's name and fee details.
+Click **Continue**, then select **Pay Now** to complete the transaction.
+After payment, please share the receipt on the school's WhatsApp number: **{whatsapp}**.""",
+        """بینک الفلاح موبائل بینکنگ ایپ کھولیں۔
+Bills & Payments کے آپشن پر جائیں۔
+Fees منتخب کریں، پھر New Payment پر کلک کریں۔
+Education کے سیکشن میں جا کر The Arqam Schools تلاش کریں۔
+Voucher ID درج کریں (جیسا کہ فیس واؤچر پر درج ہے)۔
+اپنے بچے کا نام اور فیس کی تفصیلات کی تصدیق کریں۔
+Continue پر کلک کریں، پھر Pay Now دبا کر ادائیگی مکمل کریں۔
+ادائیگی کے بعد، براہ کرم رسید اسکول کے واٹس ایپ نمبر {whatsapp} پر شیئر کریں۔""",
+        "Please note: Bank Alfalah charges a service fee of Rs. 40 per transaction for this facility.",
+        "براہ کرم نوٹ فرمائیں: اس سہولت کے استعمال پر بینک الفلاح کی جانب سے فی ٹرانزیکشن 40 روپے چارج کیے جاتے ہیں۔",
+    ),
 ]
 
 CONFIRMED_CURRICULUM = {"class-4": [code for code, *_rest in SUBJECTS]}
@@ -301,8 +438,61 @@ class Command(BaseCommand):
                     sort_order=order,
                 )
 
+        self.seed_fees()
+
         self.stdout.write(
             self.style.SUCCESS(
                 f"Seeded: 2 head offices, Samanabad campus, {len(ROLES)} roles, {len(CLASS_LEVELS)} class levels."
             )
         )
+
+    def seed_fees(self):
+        for order, (code, name, short, name_ur, kind, months, royalty) in enumerate(FEE_HEADS, start=1):
+            FeeHead.objects.get_or_create(
+                code=code,
+                defaults={
+                    "name": name,
+                    "short_name": short,
+                    "name_ur": name_ur,
+                    "kind": kind,
+                    "charge_months": months,
+                    "counts_for_royalty": royalty,
+                    "sort_order": order,
+                },
+            )
+        if not VoucherCounter.objects.exists():
+            VoucherCounter.objects.create()
+
+        samanabad = Branch.objects.get(code="fsd-samanabad")
+        # Rates and settings are created once; after that head office edits them in Setup.
+        if not FeeRate.objects.filter(branch=samanabad).exists():
+            for head, level, amount, sibling in SAMANABAD_RATES:
+                FeeRate.objects.create(
+                    branch=samanabad,
+                    head=FeeHead.objects.get(code=head),
+                    class_level=ClassLevel.objects.get(code=level) if level else None,
+                    amount=amount,
+                    sibling_amount=sibling,
+                    effective_from="2026-04-01",
+                )
+        # Bank name, account title and number are entered by head office in Setup, not kept in code.
+        BranchFeeSettings.objects.get_or_create(
+            branch=samanabad,
+            defaults={
+                "receipt_whatsapp": OFFICIAL_WHATSAPP,
+                "voucher_note": VOUCHER_NOTE,
+                "back_notes_ur": BACK_NOTES_UR,
+                "back_footer_ur": BACK_FOOTER_UR,
+            },
+        )
+        if not PaymentChannel.objects.exists():
+            for order, (method, title, steps_en, steps_ur, note_en, note_ur) in enumerate(PAYMENT_CHANNELS, 1):
+                PaymentChannel.objects.create(
+                    method=method,
+                    title=title,
+                    steps_en=steps_en,
+                    steps_ur=steps_ur,
+                    note_en=note_en,
+                    note_ur=note_ur,
+                    sort_order=order,
+                )

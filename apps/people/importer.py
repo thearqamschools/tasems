@@ -17,7 +17,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, PatternFill
 
 from apps.academics.models import ClassLevel, Section
-from apps.core.phone import normalize_mobile
+from apps.core.phone import normalize_cnic, normalize_mobile
 
 from .models import Student, StudentGuardian
 from .services import save_student
@@ -42,6 +42,8 @@ COLUMNS = [
     ("guardian_name_ur", "Parent Name (Urdu)", False),
     ("guardian_phone", "Parent Mobile", True),
     ("relationship", "Relationship", False),
+    ("father_name", "Father Name", False),
+    ("father_cnic", "Father CNIC", False),
 ]
 HEADER_TO_KEY = {re.sub(r"[^a-z]", "", h.lower()): k for k, h, _r in COLUMNS}
 
@@ -270,6 +272,13 @@ def check(file_bytes, *, branch, session):
         if data["relationship"] is None:
             err("relationship", _("Use Father, Mother, Guardian or Other"))
         data["is_hifz"] = data.get("is_hifz", "").lower() in YES
+        if data.get("father_cnic"):
+            cnic = normalize_cnic(data["father_cnic"])
+            if cnic is None:
+                err("father_cnic", _("A CNIC has 13 digits, e.g. 33100-1234567-1"))
+            data["father_cnic"] = cnic or ""
+        if not data.get("father_name") and data["relationship"] == "father":
+            data["father_name"] = data["guardian_name"]
 
         if level and data["section"] and data.get("gender"):
             key = (level.id, data["section"].lower())
@@ -331,6 +340,8 @@ def run_import(result, *, branch, session):
             admission_date=d["admission_date"],
             b_form_no=d["b_form_no"],
             is_hifz=d["is_hifz"],
+            father_name=d.get("father_name", ""),
+            father_cnic=d.get("father_cnic", ""),
         )
         save_student(
             student,

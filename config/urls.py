@@ -20,6 +20,7 @@ urlpatterns = [
     path("attendance/", include("apps.attendance.urls")),
     path("diary/", include("apps.diary.urls")),
     path("exams/", include("apps.exams.urls")),
+    path("fees/", include("apps.fees.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("admin/", admin.site.urls),
 ]
