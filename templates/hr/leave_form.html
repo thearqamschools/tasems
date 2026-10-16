@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Leave request" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Leave request" %}</h1>
+<p class="lede">{{ employee.full_name }} · {{ employee.designation }}. {% trans "Only working days are counted. The leave counts once the principal approves it." %}</p>
+<form method="post" class="card">{% csrf_token %}
+  {% for e in form.non_field_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Send request" %}</button><a class="button quiet" href="{{ back }}">{% trans "Back" %}</a></div>
+</form>
+{% endblock %}

@@ -20,6 +20,14 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 | 2a — Examinations and results | Approved result pattern (D-030/031) as editable data; exams and papers set up by head office; marks entry per paper with checks and audit; teacher ratings (discipline, neatness, summer work, class work); automatic attendance marks; section results with what is still missing; Mid-Term progress report and annual result card (one A4 page, PDF for one student or the whole section); remarks; row-level security on marks and ratings; 92 automated tests | **Done (16 Oct 2026), not deployed** |
 | 2b — Fees | Per-branch fee rates by class (Samanabad fees seeded); monthly vouchers for the whole branch or chosen classes, or one student (admission, several months together); sibling fee by father's CNIC; special discounts with approval; unpaid balance and Rs 200 fine carried to the next voucher; A4 voucher with School, Bank and Student copies, barcode and the payment-options back page (bank details editable in Setup); receive payment by scanning or typing the Voucher ID (cash, bank, transfer, JazzCash, Alfa) with receipt; JazzCash: monthly Excel list of unpaid vouchers and import of JazzCash's paid list (checked row by row); reversal and cancellation with reasons; student fee account; defaulters; daily collection; royalty statement (8% of all fees received); row-level security on fee tables; 121 automated tests | **Done (16 Oct 2026), not deployed** |
 
+## Phase 3 — Staff, Hifz, Admissions
+
+| Milestone | Contents | Status |
+| --- | --- | --- |
+| 3a — Staff (HR) and staff attendance | Staff register (add, edit, Excel import with row-by-row checks); biometric machine file import (Excel, CSV, .dat/.txt) matched by machine ID; daily status worked out (present, late, half day, absent, leave, holiday, off) from per-branch duty time and grace; principal corrections with reason; daily and monthly views, monthly Excel for payroll; leave requests with approval by someone else and balances per session; "My attendance" self-service for staff with a login; holidays; row-level security on staff tables; 133 automated tests | **Done (16 Oct 2026), not deployed** |
+| 3b — Hifz | Sabaq, Sabqi, Manzil, mistakes, milestones, parent reports | Next — needs the Hifz incharge's method (Mushaf, how Sabaq is measured, what is recorded daily) |
+| 3c — Admissions | Inquiries, follow-ups, visits, forms, conversion | Later |
+
 ## Known gaps and pending inputs
 
 - Production setup not yet run on a real server (no Docker available in the build environment); first install should be on a test server.
@@ -33,6 +41,8 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Fees: the JazzCash export and import use TASEMS's own column layout; a sample of the form JazzCash receives and sends back is needed to match it exactly.
 - Fees: opening balances (arrears) from the old software are not imported yet; needed before the first TASEMS vouchers so arrears are not lost.
 - Fees: bank name, account title and number to enter in Setup; the voucher counter to set above the old system's last Voucher ID.
+- Staff: duty time, grace minutes, half-day time and whether staff work on Saturday (Setup → HR settings); days allowed per leave type; the attendance machine brand/model and a sample export; the Samanabad staff list (Excel template in TASEMS).
+- Staff: no recruitment, appraisals or payroll yet (payroll gets the monthly Excel).
 - Exams: exam set-up and grading scheme edits are in Setup (admin) for now; a purpose-built head-office screen can follow.
 - Not yet provided: current software data export; biometric machine brand/model; academic session dates; subject list per class.
 - Hosting provider not chosen (no preference stated; shortlist in master plan Part 5).

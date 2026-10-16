@@ -2,7 +2,7 @@
 
 School management platform for **The Arqam Schools**, Pakistan. Private repository; owned by The Arqam Schools.
 
-Current status: **Phase 1 done except AI assistant (deferred); Phase 2a examinations and 2b fees done; not deployed.** Deployment: `docs/DEPLOYMENT.md`. See `docs/DEVELOPMENT_PROGRESS.md`.
+Current status: **Phase 1 done except AI assistant (deferred); Phase 2 (examinations, fees) and Phase 3a (staff) done; not deployed.** Deployment: `docs/DEPLOYMENT.md`. See `docs/DEVELOPMENT_PROGRESS.md`.
 
 ## Stack
 
@@ -56,6 +56,7 @@ The same checks run automatically on GitHub for every push.
 | `apps/attendance/` | Daily student attendance |
 | `apps/diary/` | Daily Diary, PDF and WhatsApp image |
 | `apps/exams/` | Exams, marks, result pattern, result cards |
+| `apps/hr/` | Staff records, biometric attendance import, leave, monthly sheet |
 | `apps/fees/` | Fee rates, vouchers (3 copies + payment options), payments, defaulters, discounts, royalty |
 | `static/fonts/` | Bundled Urdu and Latin fonts (Open Font License) |
 | `deploy/` | Production setup: HTTPS proxy, database role, backups |

@@ -190,3 +190,16 @@ def test_health_check_needs_no_login(client):
 def test_head_office_sees_todays_registers_per_branch(org, students, make_user, login_as):
     body = login_as(make_user("head_office_admin", Scope.HEAD_OFFICE, org["fsd"])).get("/").content.decode()
     assert "Registers taken today" in body and "Diaries published today" in body
+
+
+def test_father_cnic_typed_with_dashes(org, section, make_user, login_as):
+    from apps.people.models import Student
+
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    client.post(
+        "/students/new/",
+        student_post(admission_no="C-1", father_name="Abdul Rauf", father_cnic="33100-1234567-1", section=section.id),
+    )
+    assert Student.objects.get(admission_no="C-1").father_cnic == "3310012345671"
+    body = client.post("/students/new/", student_post(admission_no="C-2", father_cnic="1234")).content.decode()
+    assert "13 digits" in body

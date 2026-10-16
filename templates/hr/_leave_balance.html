@@ -1,0 +1,5 @@
+{% load i18n %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Leave" %}</th><th class="num">{% trans "Allowed" %}</th><th class="num">{% trans "Taken" %}</th><th class="num">{% trans "Waiting" %}</th><th class="num">{% trans "Left" %}</th></tr></thead>
+  <tbody>{% for t, allowed, used, pending, left in balance %}<tr><td>{{ t.name }}</td><td class="num">{{ allowed|default:"—" }}</td><td class="num">{{ used }}</td><td class="num">{{ pending }}</td><td class="num">{% if left is not None %}{{ left }}{% else %}—{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>

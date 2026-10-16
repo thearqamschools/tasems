@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Import machine file" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Import attendance machine file" %}</h1>
+<p class="lede">{% trans "Export the attendance log from the face-recognition machine (Excel, CSV or the machine's .dat/.txt log) and check it here. People are matched by their machine ID. Importing the same file again adds nothing twice." %}</p>
+{% if check %}
+<div class="card" style="margin-bottom:1rem">
+  {% for e in file.errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+  <div class="figures">
+    <div class="figure"><div class="value">{{ check.matched|length }}</div><div class="label">{% blocktrans with n=check.employees %}Punches for {{ n }} staff{% endblocktrans %}</div></div>
+    <div class="figure"><div class="value">{{ check.already }}</div><div class="label">{% trans "Already imported (skipped)" %}</div></div>
+    <div class="figure {% if check.unknown_ids %}attention{% endif %}"><div class="value">{{ check.unknown_ids|length }}</div><div class="label">{% trans "Machine IDs not matched to anyone" %}</div></div>
+    <div class="figure {% if file.bad_lines %}attention{% endif %}"><div class="value">{{ file.bad_lines }}</div><div class="label">{% trans "Lines not understood" %}</div></div>
+  </div>
+  {% if check.first %}<p>{% blocktrans with a=check.first|date:"d M Y" b=check.last|date:"d M Y" %}Dates in the file: {{ a }} to {{ b }}.{% endblocktrans %}</p>{% endif %}
+  {% if check.unknown_ids %}<p class="muted">{% trans "Unmatched machine IDs (add them to the staff records, then import again):" %} {% for id, n in check.unknown_ids.items %}<span class="num">{{ id }}</span> ({{ n }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+  {% if token %}<form method="post">{% csrf_token %}<input type="hidden" name="step" value="import"><input type="hidden" name="token" value="{{ token }}">
+    <button class="button" type="submit">{% trans "Save punches and work out attendance" %}</button></form>{% endif %}
+</div>
+{% endif %}
+<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}<input type="hidden" name="step" value="check">
+  <div class="field"><label for="file">{% trans "Machine export file" %}</label><input type="file" id="file" name="file" accept=".xlsx,.csv,.dat,.txt" required></div>
+  <button class="button" type="submit">{% trans "Check file" %}</button>
+</form>
+{% endblock %}

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.8.0 — 2026-10-16 — Milestone 3a: Staff (HR) and staff attendance
+
+Added
+- Staff register: add, edit, search; staff list import from Excel with row-by-row checks.
+- Attendance machine file import (Excel, CSV, or the machine's .dat/.txt log), matched by machine ID; the same file imported twice adds nothing.
+- Daily status per person: present, late, half day, absent, on leave, holiday, off day — from per-branch duty time, grace minutes and half-day time.
+- Principal corrections with a reason, kept and audited; daily and monthly views; monthly Excel for payroll.
+- Leave requests (by the person or the principal), approval by someone else, balances per session; "My attendance" for staff with a login.
+- Row-level security on staff tables; Urdu translations; 133 automated tests.
+
+Fixed
+- Father's CNIC typed with dashes (33100-1234567-1) was refused on the student form.
+
+Not deployed.
+
 ## 0.7.1 — 2026-10-16 — Fees: confirmed rules and JazzCash files
 
 Changed

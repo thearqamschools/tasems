@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ employee.full_name }}{% endblock %}
+{% block content %}
+<h1>{{ employee.full_name }}</h1>
+{% if employee.full_name_ur %}<p class="ur" lang="ur" dir="rtl" style="margin:0">{{ employee.full_name_ur }}</p>{% endif %}
+<p class="lede">{{ employee.designation }} · {{ employee.get_staff_type_display }} · <span class="num">{{ employee.code }}</span>{% if employee.status != "active" %} · {{ employee.get_status_display }}{% endif %}</p>
+<div class="actions">
+  {% if can_edit %}<a class="button" href="{% url 'hr:employee_edit' employee.id %}">{% trans "Edit" %}</a>{% endif %}
+  {% if can_leave %}<a class="button secondary" href="{% url 'hr:leave_new' employee.id %}">{% trans "Record leave" %}</a>{% endif %}
+</div>
+<div class="table-wrap"><table><tbody>
+  <tr><th>{% trans "Father's / husband's name" %}</th><td>{{ employee.father_name|default:"—" }}</td></tr>
+  <tr><th>{% trans "CNIC" %}</th><td class="num">{{ employee.cnic|cnic|default:"—" }}</td></tr>
+  <tr><th>{% trans "Mobile" %}</th><td>{% if employee.phone %}<a href="tel:{{ employee.phone }}" class="num">{{ employee.phone }}</a>{% else %}—{% endif %}</td></tr>
+  <tr><th>{% trans "Joining date" %}</th><td>{{ employee.joined_on|date:"d M Y" }}{% if employee.left_on %} – {{ employee.left_on|date:"d M Y" }}{% endif %}</td></tr>
+  <tr><th>{% trans "Campus" %}</th><td>{{ employee.campus|default:"—" }}</td></tr>
+  <tr><th>{% trans "Qualification" %}</th><td>{{ employee.qualification|default:"—" }}</td></tr>
+  <tr><th>{% trans "Biometric machine ID" %}</th><td class="num">{{ employee.machine_id|default:"—" }}</td></tr>
+  <tr><th>{% trans "TASEMS login" %}</th><td>{{ employee.user.username|default:"—" }}</td></tr>
+</tbody></table></div>
+
+<h2>{% trans "Leave this session" %}</h2>
+{% include "hr/_leave_balance.html" %}
+{% if leaves %}<div class="table-wrap" style="margin-top:.75rem"><table><tbody>{% for l in leaves %}<tr><td>{{ l.leave_type }}</td><td>{{ l.starts_on|date:"d M" }} – {{ l.ends_on|date:"d M Y" }}</td><td class="num">{{ l.days }}</td><td>{{ l.get_status_display }}</td><td class="muted">{{ l.reason }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+
+<h2>{% trans "Attendance" %} · {{ month|date:"F Y" }}</h2>
+<form method="get" class="actions"><input type="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
+{% include "hr/_days.html" %}
+{% endblock %}
