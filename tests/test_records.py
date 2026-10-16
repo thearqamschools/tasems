@@ -90,9 +90,9 @@ def test_passwords_never_reach_the_audit_log(make_user):
         assert "password" not in str(event.changes)
 
 
-def test_admin_list_shows_only_own_branch(client, org, students, make_user):
+def test_admin_list_shows_only_own_branch(org, students, make_user, login_as):
     principal = make_user("principal", Scope.BRANCH, org["samanabad"], is_staff=True)
-    client.force_login(principal)
+    client = login_as(principal)
     response = client.get("/admin/people/student/")
     assert response.status_code == 200
     body = response.content.decode()
@@ -100,9 +100,9 @@ def test_admin_list_shows_only_own_branch(client, org, students, make_user):
     assert "F-1" not in body and "L-1" not in body
 
 
-def test_admin_hides_other_branch_record(client, org, students, make_user):
+def test_admin_hides_other_branch_record(org, students, make_user, login_as):
     principal = make_user("principal", Scope.BRANCH, org["samanabad"], is_staff=True)
-    client.force_login(principal)
+    client = login_as(principal)
     other = students["lhr_franchise"]
     response = client.get(f"/admin/people/student/{other.pk}/change/")
     assert response.status_code == 302  # redirected away: record is not visible to this user
@@ -110,7 +110,7 @@ def test_admin_hides_other_branch_record(client, org, students, make_user):
 
 def test_failed_login_is_audited(client, make_user):
     make_user()
-    client.post("/admin/login/", {"username": "user1", "password": "wrong-password"})
+    client.post("/accounts/login/", {"identifier": "user1", "password": "wrong-password"})
     assert AuditEvent.objects.filter(action="login_failed").exists()
 
 

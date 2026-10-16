@@ -1,0 +1,41 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ student.full_name }}{% endblock %}
+{% block content %}
+<h1>{{ student.full_name }}</h1>
+{% if student.full_name_ur %}<p class="ur" lang="ur" dir="rtl" style="font-size:1.25rem;margin:0">{{ student.full_name_ur }}</p>{% endif %}
+<p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p>
+{% if can_edit %}<div class="actions"><a class="button" href="{% url 'people:student_edit' student.pk %}">{% trans "Edit student" %}</a></div>{% endif %}
+
+<div class="table-wrap"><table><tbody>
+  <tr><th>{% trans "Gender" %}</th><td>{{ student.get_gender_display }}</td></tr>
+  <tr><th>{% trans "Date of birth" %}</th><td>{{ student.date_of_birth|date:"d M Y"|default:"—" }}</td></tr>
+  <tr><th>{% trans "Admission date" %}</th><td>{{ student.admission_date|date:"d M Y" }}</td></tr>
+  <tr><th>{% trans "B-Form number" %}</th><td><span class="num">{{ student.b_form_no|default:"—" }}</span></td></tr>
+</tbody></table></div>
+
+<h2>{% trans "Parents and guardians" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Relationship" %}</th><th>{% trans "Mobile" %}</th><th></th></tr></thead>
+  <tbody>{% for l in links %}<tr>
+    <td>{{ l.guardian.full_name }}{% if l.guardian.full_name_ur %}<br><span class="ur" lang="ur" dir="rtl">{{ l.guardian.full_name_ur }}</span>{% endif %}</td>
+    <td>{{ l.get_relationship_display }}</td><td><span class="num">{{ l.guardian.phone }}</span></td>
+    <td>{% if l.is_primary_contact %}<span class="badge">{% trans "Primary contact" %}</span>{% endif %}</td>
+  </tr>{% empty %}<tr><td colspan="4"><span class="badge attention">{% trans "No parent contact recorded" %}</span></td></tr>{% endfor %}</tbody>
+</table></div>
+
+<h2>{% trans "Classes by session" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Class" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Roll no." %}</th></tr></thead>
+  <tbody>{% for e in enrolments %}<tr><td>{{ e.session }}</td><td>{{ e.section }}</td><td>{{ e.section.campus.name|default:"—" }}</td><td class="num">{{ e.roll_no|default:"—" }}</td></tr>
+  {% empty %}<tr><td colspan="4">{% trans "Not placed in any class yet." %}</td></tr>{% endfor %}</tbody>
+</table></div>
+
+{% if history %}
+<h2>{% trans "Record history" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "When" %}</th><th>{% trans "Who" %}</th><th>{% trans "What" %}</th></tr></thead>
+  <tbody>{% for h in history %}<tr><td>{{ h.occurred_at|date:"d M Y, H:i" }}</td><td>{{ h.actor|default:"—" }}</td>
+    <td>{{ h.get_action_display }}{% if h.action == "update" %}: {% for f in h.changes %}{{ f }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endblock %}

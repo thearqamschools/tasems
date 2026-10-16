@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Import students from Excel" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Import students from Excel" %}</h1>
+<p class="lede">{% blocktrans %}Fill the template, then check it here. Nothing is saved until every row is correct; then all rows are saved together. Up to {{ max_rows }} students per file.{% endblocktrans %}</p>
+
+{% if not session %}<ul class="messages"><li class="warning">{% trans "No current academic session is set. Ask head office to set it before importing." %}</li></ul>{% endif %}
+
+{% if result and result.ok %}
+<div class="card">
+  <h2 style="margin-top:0">{% blocktrans count n=result.rows|length %}{{ n }} student is ready to import{% plural %}{{ n }} students are ready to import{% endblocktrans %}</h2>
+  <p class="muted">{{ filename }}</p>
+  {% if result.new_sections %}
+  <p>{% trans "These sections will be created for this session:" %}</p>
+  <ul>{% for level, name, group in result.new_sections %}<li>{{ level }}-{{ name }}{% if group != "mixed" %} ({% if group == "boys" %}{% trans "Boys" %}{% else %}{% trans "Girls" %}{% endif %}){% endif %}</li>{% endfor %}</ul>
+  {% endif %}
+  <form method="post">{% csrf_token %}
+    <input type="hidden" name="step" value="import"><input type="hidden" name="token" value="{{ token }}">
+    <div class="actions"><button class="button" type="submit">{% blocktrans count n=result.rows|length %}Import {{ n }} student{% plural %}Import {{ n }} students{% endblocktrans %}</button>
+    <a class="button quiet" href="{% url 'people:student_import' %}">{% trans "Choose another file" %}</a></div>
+  </form>
+</div>
+{% else %}
+  {% if result %}
+  <div class="card" style="margin-bottom:1rem">
+    <h2 style="margin-top:0">{% blocktrans count n=result.errors|length %}{{ n }} problem to fix{% plural %}{{ n }} problems to fix{% endblocktrans %}</h2>
+    <p class="muted">{% trans "Correct these in your Excel file, save it, and check it again. Nothing has been saved." %}</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th class="num">{% trans "Row" %}</th><th>{% trans "Column" %}</th><th>{% trans "Problem" %}</th></tr></thead>
+      <tbody>{% for row, col, msg in shown_errors %}<tr><td class="num">{{ row|default:"—" }}</td><td>{{ col|default:"—" }}</td><td>{{ msg }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% if result.errors|length > shown_errors|length %}<p class="muted">{% trans "Only the first 300 problems are shown." %}</p>{% endif %}
+  </div>
+  {% endif %}
+  <form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
+    <input type="hidden" name="step" value="check">
+    <div class="field"><label for="file">{% trans "Excel file (.xlsx)" %}</label><input type="file" id="file" name="file" accept=".xlsx" required></div>
+    <div class="actions">
+      <button class="button" type="submit">{% trans "Check file" %}</button>
+      <a class="button secondary" href="{% url 'people:import_template' %}">{% trans "Download template" %}</a>
+    </div>
+  </form>
+{% endif %}
+{% endblock %}

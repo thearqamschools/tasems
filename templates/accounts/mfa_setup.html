@@ -1,0 +1,17 @@
+{% extends "accounts/auth_base.html" %}{% load i18n %}
+{% block title %}{% trans "Set up two-step sign-in" %}{% endblock %}
+{% block panel %}
+<h1>{% trans "Set up two-step sign-in" %}</h1>
+<p class="lede">{% trans "Your role can see sensitive student and staff records, so a code from your phone is needed at every sign-in." %}</p>
+<ol>
+  <li>{% trans "Install Google Authenticator or Microsoft Authenticator on your phone." %}</li>
+  <li>{% trans "In the app, tap + and scan this code." %}</li>
+</ol>
+<div class="qr" aria-label="{% trans 'QR code for your authenticator app' %}">{{ qr_svg|safe }}</div>
+<p class="muted">{% trans "Can't scan? Type this key into the app instead:" %}</p>
+<p class="secret">{{ secret }}</p>
+<form method="post" novalidate>{% csrf_token %}
+  {% with field=form.code %}{% include "includes_field.html" %}{% endwith %}
+  <button class="button" type="submit">{% trans "Turn on two-step sign-in" %}</button>
+</form>
+{% endblock %}

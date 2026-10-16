@@ -1,0 +1,43 @@
+{% load static i18n %}<!doctype html>
+{% get_current_language as LANG %}{% get_current_language_bidi as RTL %}
+<html lang="{{ LANG }}" dir="{% if RTL %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% trans "TASEMS" %}{% endblock %} · {% trans "The Arqam Schools" %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
+  {% if LANG == "ur" %}<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap">{% endif %}
+  <link rel="stylesheet" href="{% static 'css/tasems.css' %}">
+</head>
+<body>
+{% block body %}
+  <header class="topbar">
+    <a class="school" href="{% url 'home' %}">{% trans "The Arqam Schools" %}</a>
+    <span class="branch-name">{% if current_branch %}{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ current_branch.name }}{% endif %}{% endif %}</span>
+    {% if switchable_branches|length > 1 %}
+    <form method="post" action="{% url 'switch_branch' %}">{% csrf_token %}
+      <label class="visually-hidden" for="branch-switch">{% trans "Branch" %}</label>
+      <select id="branch-switch" name="branch" onchange="this.form.submit()">
+        {% for b in switchable_branches %}<option value="{{ b.id }}" {% if b.id == current_branch.id %}selected{% endif %}>{{ b.name }}</option>{% endfor %}
+      </select>
+      <noscript><button type="submit">{% trans "Switch" %}</button></noscript>
+    </form>
+    {% endif %}
+    <form method="post" action="{% url 'set_language' %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      {% if LANG == "ur" %}<button name="language" value="en">English</button>{% else %}<button name="language" value="ur" class="ur">اردو</button>{% endif %}
+    </form>
+    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button type="submit">{% trans "Sign out" %}</button></form>
+  </header>
+  <nav class="primary" aria-label="{% trans 'Main' %}">
+    {% for item in nav_items %}<a href="{{ item.url }}" {% if item.active %}aria-current="page"{% endif %}>{{ item.label }}</a>{% endfor %}
+  </nav>
+  <main>
+    {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+{% endblock %}
+</body>
+</html>

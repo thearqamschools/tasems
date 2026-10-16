@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% if student %}{% trans "Edit student" %}{% else %}{% trans "Add a student" %}{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if student %}{% blocktrans with n=student.full_name %}Edit {{ n }}{% endblocktrans %}{% else %}{% trans "Add a student" %}{% endif %}</h1>
+<p class="lede">{% trans "Fields without “optional” are required." %}</p>
+<form method="post" class="card" novalidate>{% csrf_token %}
+  {% for e in form.non_field_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+  <fieldset><legend>{% trans "Student" %}</legend><div class="form-grid">
+    {% for field in form %}{% if field.name in "admission_no first_name last_name full_name_ur gender date_of_birth admission_date b_form_no status" %}{% include "includes_field.html" %}{% endif %}{% endfor %}
+  </div>
+  {% with field=form.is_hifz %}<div class="field"><label>{{ field }} {{ field.label }}</label></div>{% endwith %}
+  </fieldset>
+  <fieldset><legend>{% trans "Class" %}{% if session %} · {{ session }}{% endif %}</legend><div class="form-grid">
+    {% with field=form.section %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.roll_no %}{% include "includes_field.html" %}{% endwith %}
+  </div></fieldset>
+  <fieldset><legend>{% trans "Primary contact" %}</legend><div class="form-grid">
+    {% with field=form.guardian_name %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.guardian_name_ur %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.guardian_phone %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.relationship %}{% include "includes_field.html" %}{% endwith %}
+  </div>
+  <p class="help muted">{% trans "If this mobile number already belongs to a parent in this branch, the student is linked to that parent (siblings share one contact)." %}</p>
+  </fieldset>
+  <div class="actions">
+    <button class="button" type="submit">{% trans "Save student" %}</button>
+    <a class="button quiet" href="{% if student %}{% url 'people:student_detail' student.pk %}{% else %}{% url 'people:student_list' %}{% endif %}">{% trans "Cancel" %}</a>
+  </div>
+</form>
+{% endblock %}

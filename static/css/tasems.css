@@ -1,0 +1,189 @@
+/* TASEMS staff interface.
+   Tokens are placeholders until the official The Arqam Schools brand colours are supplied;
+   swap the --brand values only. Logical properties (inline-start/end) keep Urdu RTL correct. */
+
+:root {
+  --ink: #1d2733;
+  --ink-soft: #55616e;
+  --paper: #f5f7f6;
+  --surface: #ffffff;
+  --line: #d9e0dc;
+  --brand: #0f5c4d;
+  --brand-ink: #ffffff;
+  --brand-soft: #e3efeb;
+  --attention: #b7791f;
+  --attention-soft: #fbf1e1;
+  --danger: #a8322a;
+  --danger-soft: #f9e5e3;
+  --ok: #2c6e3f;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
+  --font: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-ur: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", serif;
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.1rem;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* Urdu: Nastaliq needs generous line height or descenders collide. */
+html[lang="ur"] body { font-family: var(--font-ur), var(--font); line-height: 2.1; }
+html[lang="ur"] input, html[lang="ur"] select, html[lang="ur"] button, html[lang="ur"] textarea { font-family: inherit; }
+[dir="ltr"].keep-ltr, .num { direction: ltr; unicode-bidi: isolate; font-family: var(--font); }
+.ur { font-family: var(--font-ur); line-height: 2.1; }
+
+a { color: var(--brand); }
+:focus-visible { outline: 3px solid var(--attention); outline-offset: 2px; }
+
+/* ---------- Top bar: the branch you are working in is always visible ---------- */
+.topbar {
+  background: var(--brand);
+  color: var(--brand-ink);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+}
+.topbar a { color: inherit; text-decoration: none; }
+.topbar .school { font-weight: 700; font-size: var(--step-0); letter-spacing: 0.01em; }
+.topbar .branch-name { font-size: var(--step-1); font-weight: 600; flex: 1 1 16rem; }
+.topbar form { margin: 0; }
+.topbar select, .topbar button {
+  background: transparent;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  font-size: var(--step--1);
+}
+.topbar select option { color: var(--ink); }
+
+nav.primary {
+  background: var(--surface);
+  border-block-end: 1px solid var(--line);
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  padding: 0 0.5rem;
+}
+nav.primary a {
+  padding: 0.8rem 0.9rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  border-block-end: 3px solid transparent;
+}
+nav.primary a[aria-current="page"] { color: var(--ink); border-block-end-color: var(--brand); font-weight: 600; }
+
+main { max-width: 72rem; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+
+h1 { font-size: var(--step-2); line-height: 1.25; margin: 0 0 0.25rem; }
+h2 { font-size: var(--step-1); margin: 2rem 0 0.75rem; }
+html[lang="ur"] h1, html[lang="ur"] h2 { line-height: 2; }
+.lede { color: var(--ink-soft); margin: 0 0 1.5rem; }
+
+/* ---------- Figures: counts that answer "how is my branch today" ---------- */
+.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+.figure { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.85rem 1rem; }
+.figure .value { font-size: var(--step-3); font-weight: 700; line-height: 1.1; direction: ltr; unicode-bidi: isolate; font-family: var(--font); }
+.figure .label { color: var(--ink-soft); font-size: var(--step--1); }
+.figure.attention { border-color: var(--attention); background: var(--attention-soft); }
+
+/* ---------- Tables ---------- */
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
+th, td { padding: 0.6rem 0.75rem; text-align: start; border-block-end: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--ink-soft); background: #fafbfa; }
+tr:last-child td { border-block-end: 0; }
+td.num, th.num { text-align: end; }
+
+/* ---------- Forms ---------- */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.25rem; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.25rem 1rem; }
+.field { margin-block-end: 0.9rem; }
+.field label { display: block; font-weight: 600; font-size: var(--step--1); margin-block-end: 0.25rem; }
+.field .help { color: var(--ink-soft); font-size: var(--step--1); margin-block-start: 0.2rem; }
+.field .error, .errorlist { color: var(--danger); font-size: var(--step--1); margin: 0.25rem 0 0; padding: 0; list-style: none; }
+input[type="text"], input[type="password"], input[type="date"], input[type="tel"], input[type="email"],
+input[type="search"], input[type="file"], select, textarea {
+  width: 100%;
+  font-size: var(--step-0);
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #b9c4be;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--ink);
+  min-height: 2.75rem;
+}
+fieldset { border: 1px solid var(--line); border-radius: var(--radius-sm); margin: 1rem 0; padding: 0.75rem 1rem 0.25rem; }
+legend { font-weight: 600; padding: 0 0.4rem; }
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--brand);
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: var(--step-0);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.button.secondary { background: transparent; color: var(--brand); }
+.button.quiet { background: transparent; border-color: var(--line); color: var(--ink); font-weight: 400; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+
+/* ---------- Messages ---------- */
+.messages { list-style: none; padding: 0; margin: 0 0 1rem; }
+.messages li { padding: 0.7rem 0.9rem; border-radius: var(--radius-sm); margin-block-end: 0.5rem; background: var(--brand-soft); }
+.messages li.error { background: var(--danger-soft); color: var(--danger); }
+.messages li.warning { background: var(--attention-soft); }
+
+.badge { display: inline-block; padding: 0.05rem 0.5rem; border-radius: 999px; font-size: 0.8rem; background: var(--brand-soft); color: var(--brand); }
+.badge.muted { background: #eceeed; color: var(--ink-soft); }
+.badge.attention { background: var(--attention-soft); color: var(--attention); }
+.muted { color: var(--ink-soft); }
+
+/* ---------- Sign-in pages ---------- */
+.auth { min-height: 100vh; display: grid; place-items: center; padding: 1.5rem 1rem; }
+.auth-panel { width: 100%; max-width: 25rem; }
+.auth-brand { text-align: center; margin-block-end: 1.5rem; }
+.auth-brand .en { font-size: var(--step-2); font-weight: 700; color: var(--brand); margin: 0; }
+.auth-brand .urdu { font-family: var(--font-ur); font-size: var(--step-1); color: var(--ink-soft); margin: 0.25rem 0 0; line-height: 2; }
+.auth .button { width: 100%; }
+.lang-switch { text-align: center; margin-block-start: 1rem; }
+.lang-switch button { background: none; border: 0; color: var(--brand); text-decoration: underline; cursor: pointer; font-size: var(--step--1); }
+.qr { display: flex; justify-content: center; margin: 1rem 0; }
+.qr svg { width: 12rem; height: 12rem; }
+.codes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: var(--step-1); direction: ltr; font-family: var(--font); letter-spacing: 0.05em; }
+.secret { word-break: break-all; direction: ltr; font-family: var(--font); background: #f1f4f2; padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); }
+
+.pagination { display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; }
+
+@media print {
+  .topbar, nav.primary, .actions, .no-print { display: none !important; }
+  body { background: #fff; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

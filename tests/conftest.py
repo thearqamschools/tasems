@@ -87,3 +87,17 @@ def section(org):
     return Section.objects.create(
         branch=org["samanabad"], session=org["session"], class_level=ClassLevel.objects.get(code="class-5"), name="A"
     )
+
+
+@pytest.fixture
+def login_as(client):
+    """Signs a user in as if they had passed the two-step check."""
+
+    def _login(user):
+        client.force_login(user)
+        session = client.session
+        session["mfa_verified"] = True
+        session.save()
+        return client
+
+    return _login

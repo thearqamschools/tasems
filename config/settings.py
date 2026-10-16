@@ -21,6 +21,7 @@ env = environ.Env(
 environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
+FIELD_ENCRYPTION_KEY = env("FIELD_ENCRYPTION_KEY")  # encrypts two-factor secrets in the database
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.core.middleware.CurrentRequestMiddleware",
+    "apps.accounts.middleware.MFAEnforcementMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -64,6 +66,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.i18n",
+                "apps.accounts.context_processors.navigation",
             ],
         },
     },
@@ -96,6 +100,17 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+MEDIA_ROOT = env("MEDIA_ROOT", default=str(BASE_DIR / "media"))
+
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "home"
+
+# Login protection
+LOGIN_MAX_FAILURES = 5  # per username, within the window below
+LOGIN_MAX_FAILURES_PER_IP = 20
+LOGIN_LOCKOUT_MINUTES = 15
+MFA_ISSUER = "The Arqam Schools"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

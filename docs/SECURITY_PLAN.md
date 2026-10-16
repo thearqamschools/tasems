@@ -7,8 +7,9 @@
 | Role × scope authorisation; branch isolation in application code | Done (tested) |
 | Audit log of changes, logins and failed logins; passwords excluded | Done (tested) |
 | Secure cookies, no-sniff, clickjacking protection, HTTPS redirect and HSTS switchable per environment | Done (enable in production) |
-| Two-factor login for privileged roles (`requires_mfa`) | Milestone 1b |
-| Login rate limiting / lockout | Milestone 1b |
+| Two-step sign-in for privileged roles (authenticator app, encrypted keys, no code reuse, backup codes) | Done (tested) |
+| Login lockout: 5 failures per username or 20 per network address in 15 minutes | Done (tested) |
+| Admin site uses the same sign-in and two-step check | Done (tested) |
 | PostgreSQL row-level security | Before Gate 2 |
 | Encrypted backups, tested restores | Before pilot |
 | Independent penetration test | Before pilot and before national rollout |

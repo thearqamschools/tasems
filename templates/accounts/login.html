@@ -1,0 +1,12 @@
+{% extends "accounts/auth_base.html" %}{% load i18n %}
+{% block title %}{% trans "Sign in" %}{% endblock %}
+{% block panel %}
+<h1>{% trans "Sign in" %}</h1>
+<p class="lede">{% trans "Staff sign-in for TASEMS." %}</p>
+<form method="post" novalidate>{% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}">
+  {% for e in form.non_field_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+  {% for field in form %}{% include "includes_field.html" %}{% endfor %}
+  <button class="button" type="submit">{% trans "Sign in" %}</button>
+</form>
+{% endblock %}

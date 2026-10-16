@@ -7,7 +7,7 @@ RUN useradd --create-home tasems
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-RUN SECRET_KEY=build-only DATABASE_URL=postgres://x@localhost/x python manage.py collectstatic --noinput
+RUN SECRET_KEY=build-only FIELD_ENCRYPTION_KEY=Y2ktb25seS1ub3Qtc2VjcmV0LWtleS0zMmJ5dGVzISE= DATABASE_URL=postgres://x@localhost/x python manage.py collectstatic --noinput
 
 USER tasems
 EXPOSE 8000

@@ -1,0 +1,10 @@
+{% extends "accounts/auth_base.html" %}{% load i18n %}
+{% block title %}{% trans "Two-step check" %}{% endblock %}
+{% block panel %}
+<h1>{% trans "Two-step check" %}</h1>
+<p class="lede">{% trans "Enter the 6-digit code from your authenticator app." %}</p>
+<form method="post" novalidate>{% csrf_token %}
+  {% with field=form.code %}{% include "includes_field.html" %}{% endwith %}
+  <button class="button" type="submit">{% trans "Continue" %}</button>
+</form>
+{% endblock %}

@@ -78,6 +78,13 @@ class User(AbstractUser):
         cache[permission] = ids
         return ids
 
+    @property
+    def requires_mfa(self):
+        """Superusers and anyone holding a privileged role must use two-factor login."""
+        if self.is_superuser:
+            return True
+        return self.active_assignments().filter(role__requires_mfa=True).exists()
+
     def has_branch_perm(self, permission, branch_id):
         """True if the user holds `permission` through a role that covers this branch."""
         if self.is_superuser and self.is_active:
@@ -147,3 +154,27 @@ class RoleAssignment(TimeStampedModel):
             raise ValidationError({"scope": _("This role cannot be assigned at this scope.")})
         if self.starts_on and self.ends_on and self.ends_on < self.starts_on:
             raise ValidationError({"ends_on": _("End date is before start date.")})
+
+
+class MFADevice(TimeStampedModel):
+    """Authenticator-app (TOTP) key for two-factor login. The key is stored encrypted."""
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="mfa_device")
+    secret_encrypted = models.TextField()
+    confirmed_at = models.DateTimeField(null=True, blank=True)
+    last_used_step = models.BigIntegerField(default=0, help_text=_("Stops the same code being used twice."))
+
+    def __str__(self):
+        return f"Two-factor device for {self.user}"
+
+
+class RecoveryCode(models.Model):
+    """One-time backup codes for when the phone is lost. Only a hash is stored."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recovery_codes")
+    code_hash = models.CharField(max_length=128)
+    used_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Backup code for {self.user} ({'used' if self.used_at else 'unused'})"

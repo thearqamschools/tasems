@@ -2,7 +2,7 @@
 
 School management platform for **The Arqam Schools**, Pakistan. Private repository; owned by The Arqam Schools.
 
-Current status: **Milestone 1a (Foundation) done, not deployed.** See `docs/DEVELOPMENT_PROGRESS.md`.
+Current status: **Milestones 1a and 1b done, not deployed.** See `docs/DEVELOPMENT_PROGRESS.md`.
 
 ## Stack
 
@@ -18,19 +18,20 @@ docker compose up -d db
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
 
-# 3. Settings (edit SECRET_KEY)
+# 3. Settings: copy, then set SECRET_KEY and FIELD_ENCRYPTION_KEY (command is in the file)
 cp .env.example .env
 
 # 4. Tables and starting data
 python manage.py migrate
 python manage.py seed_tasems
 python manage.py createsuperuser
+python manage.py compilemessages -l ur   # Urdu screens (needs gettext installed)
 
 # 5. Start
 python manage.py runserver
 ```
 
-Open http://localhost:8000/admin/ and sign in with the superuser.
+Open http://localhost:8000/ and sign in. Superusers must set up two-step sign-in with an authenticator app on first sign-in.
 
 ## Tests and checks
 

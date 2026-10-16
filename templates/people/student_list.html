@@ -1,0 +1,64 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Students" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Students" %}</h1>
+<p class="lede">{% blocktrans count n=page.paginator.count %}{{ n }} student found{% plural %}{{ n }} students found{% endblocktrans %}</p>
+
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="q">{% trans "Search" %}</label>
+      <input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name, admission no. or parent mobile' %}"></div>
+    {% if sections %}
+    <div class="field"><label for="section">{% trans "Section" %}</label>
+      <select id="section" name="section"><option value="">{% trans "All sections" %}</option>
+        {% for s in sections %}<option value="{{ s.id }}" {% if section_id == s.id|stringformat:"s" %}selected{% endif %}>{{ s }}{% if s.gender_group != "mixed" %} ({{ s.get_gender_group_display }}){% endif %}</option>{% endfor %}
+      </select></div>
+    {% endif %}
+    <div class="field"><label for="class">{% trans "Class" %}</label>
+      <select id="class" name="class"><option value="">{% trans "All classes" %}</option>
+        {% for l in levels %}<option value="{{ l.id }}" {% if level_id == l.id|stringformat:"s" %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></div>
+    <div class="field"><label for="status">{% trans "Status" %}</label>
+      <select id="status" name="status">
+        {% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+        <option value="all" {% if status == "all" %}selected{% endif %}>{% trans "All statuses" %}</option>
+      </select></div>
+  </div>
+  <div class="actions" style="margin:0">
+    <button class="button" type="submit">{% trans "Show students" %}</button>
+    {% if can_add %}<a class="button secondary" href="{% url 'people:student_create' %}">{% trans "Add a student" %}</a>{% endif %}
+  </div>
+</form>
+
+{% if page.object_list %}
+<div class="table-wrap" style="margin-top:1rem"><table>
+  <thead><tr>
+    <th>{% trans "Admission no." %}</th><th>{% trans "Name" %}</th><th>{% trans "Class" %}</th>
+    <th>{% trans "Parent mobile" %}</th><th>{% trans "Status" %}</th>
+  </tr></thead>
+  <tbody>
+  {% for s in page.object_list %}
+    <tr>
+      <td class="num" style="text-align:start">{{ s.admission_no }}</td>
+      <td><a href="{% url 'people:student_detail' s.pk %}">{{ s.full_name }}</a>{% if s.full_name_ur %}<br><span class="ur" lang="ur" dir="rtl">{{ s.full_name_ur }}</span>{% endif %}{% if s.is_hifz %} <span class="badge">{% trans "Hifz" %}</span>{% endif %}</td>
+      <td>{% for e in s.current_enrolments %}{{ e.section }}{% empty %}<span class="badge attention">{% trans "Not placed" %}</span>{% endfor %}</td>
+      <td><span class="num">{% for l in s.primary_links %}{{ l.guardian.phone }}{% empty %}—{% endfor %}</span></td>
+      <td>{% if s.status == "active" %}<span class="badge">{{ s.get_status_display }}</span>{% else %}<span class="badge muted">{{ s.get_status_display }}</span>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% if page.has_other_pages %}
+<nav class="pagination" aria-label="{% trans 'Pages' %}">
+  {% if page.has_previous %}<a class="button quiet" href="?{{ querystring }}&page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %}
+  <span class="muted">{% blocktrans with a=page.number b=page.paginator.num_pages %}Page {{ a }} of {{ b }}{% endblocktrans %}</span>
+  {% if page.has_next %}<a class="button quiet" href="?{{ querystring }}&page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+<div class="card" style="margin-top:1rem">
+  <p>{% if q or section_id or level_id %}{% trans "No students match these filters. Clear the search or choose another class." %}{% else %}{% trans "No students yet in this branch." %}{% endif %}</p>
+  {% if can_add and not q %}<div class="actions"><a class="button" href="{% url 'people:student_import' %}">{% trans "Import from Excel" %}</a><a class="button secondary" href="{% url 'people:student_create' %}">{% trans "Add a student" %}</a></div>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

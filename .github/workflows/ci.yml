@@ -20,6 +20,7 @@ jobs:
           --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       SECRET_KEY: ci-only-not-secret
+      FIELD_ENCRYPTION_KEY: Y2ktb25seS1ub3Qtc2VjcmV0LWtleS0zMmJ5dGVzISE=
       DATABASE_URL: postgres://tasems:tasems@localhost:5432/tasems
     steps:
       - uses: actions/checkout@v4

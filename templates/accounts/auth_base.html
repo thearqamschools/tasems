@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load i18n %}
+{% block body %}
+<div class="auth">
+  <div class="auth-panel">
+    <div class="auth-brand">
+      <p class="en">{% trans "The Arqam Schools" %}</p>
+      <p class="urdu" lang="ur" dir="rtl">دی ارقم سکولز</p>
+    </div>
+    <div class="card">
+      {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+      {% block panel %}{% endblock %}
+    </div>
+    <form class="lang-switch" method="post" action="{% url 'set_language' %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      {% get_current_language as LANG %}
+      {% if LANG == "ur" %}<button name="language" value="en">English</button>{% else %}<button name="language" value="ur" class="ur">اردو میں دیکھیں</button>{% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

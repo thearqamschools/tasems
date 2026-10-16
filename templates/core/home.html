@@ -1,0 +1,39 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Home" %}{% endblock %}
+{% block content %}
+<h1>{% blocktrans with name=request.user.get_short_name|default:request.user.username %}Assalamualaikum, {{ name }}{% endblocktrans %}</h1>
+<p class="lede">{% if session %}{% blocktrans with s=session.name %}Academic session {{ s }}{% endblocktrans %}{% else %}{% trans "No current academic session is set. Head office sets it under Setup." %}{% endif %}</p>
+
+{% if active_count is not None %}
+<div class="figures">
+  <div class="figure"><div class="value">{{ active_count }}</div><div class="label">{% trans "Active students" %}</div></div>
+  <div class="figure"><div class="value">{{ hifz_count }}</div><div class="label">{% trans "Hifz students" %}</div></div>
+  <div class="figure {% if no_contact_count %}attention{% endif %}"><div class="value">{{ no_contact_count }}</div><div class="label">{% trans "Without a primary contact" %}</div></div>
+  {% if not_enrolled_count is not None %}<div class="figure {% if not_enrolled_count %}attention{% endif %}"><div class="value">{{ not_enrolled_count }}</div><div class="label">{% trans "Not placed in a class this session" %}</div></div>{% endif %}
+</div>
+{% if by_stage %}
+<h2>{% trans "Students by stage" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Stage" %}</th><th class="num">{% trans "Students" %}</th></tr></thead>
+  <tbody>{% for label, n in by_stage %}<tr><td>{{ label }}</td><td class="num">{{ n }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endif %}
+
+{% if my_sections %}
+<h2>{% trans "My classes" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Branch" %}</th><th class="num">{% trans "Students" %}</th></tr></thead>
+  <tbody>{% for s in my_sections %}<tr><td><a href="{% url 'people:student_list' %}?section={{ s.id }}">{{ s }}</a></td><td>{{ s.branch }}</td><td class="num">{{ s.n }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+
+{% if network %}
+<h2>{% blocktrans count n=network_total_branches %}Across your {{ n }} branch{% plural %}Across your {{ n }} branches{% endblocktrans %}</h2>
+<p class="muted">{% blocktrans with total=network_students %}{{ total }} active students. Largest branches first; choose a branch in the top bar to work in it.{% endblocktrans %}</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Head office" %}</th><th>{% trans "Region" %}</th><th class="num">{% trans "Active students" %}</th></tr></thead>
+  <tbody>{% for b, n in network %}<tr><td>{{ b.name }}</td><td>{{ b.head_office.city }}</td><td>{{ b.region|default:"—" }}</td><td class="num">{{ n }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endblock %}

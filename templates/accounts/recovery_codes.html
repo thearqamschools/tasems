@@ -1,0 +1,11 @@
+{% extends "accounts/auth_base.html" %}{% load i18n %}
+{% block title %}{% trans "Backup codes" %}{% endblock %}
+{% block panel %}
+<h1>{% trans "Two-step sign-in is on" %}</h1>
+<p class="lede">{% trans "Write down these backup codes and keep them safe. If you lose your phone, each code can be used once instead of the app. They will not be shown again." %}</p>
+<div class="codes">{% for c in codes %}<span>{{ c }}</span>{% endfor %}</div>
+<div class="actions">
+  <a class="button" href="{{ next }}">{% trans "I have saved my codes" %}</a>
+  <button class="button quiet no-print" type="button" onclick="window.print()">{% trans "Print" %}</button>
+</div>
+{% endblock %}

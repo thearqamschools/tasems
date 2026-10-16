@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0 — 2026-10-16 — Milestone 1b: Staff access and student register
+
+Added
+- Sign-in page (username or mobile number), lockout after 5 failed attempts in 15 minutes.
+- Two-step sign-in for privileged roles: authenticator app (QR set-up), encrypted keys, codes cannot be reused, 8 one-time backup codes. Admin site uses the same sign-in.
+- English and Urdu interface (Urdu right-to-left, Nastaliq font); language follows each user's preference.
+- Branch switcher for head office and regional staff.
+- Home screen: active students, Hifz students, missing parent contacts, unplaced students, students by stage, my classes, branch table for head office.
+- Student register: search by name, admission number or parent mobile; filters by class, section, status; add and edit with class and primary contact; siblings share a parent contact; record history.
+- Excel import: template download, row-by-row problem report, all-or-nothing save, sections created automatically (boys/girls from Class 6).
+- 49 automated tests.
+
+Not deployed.
+
 ## 0.1.0 — 2026-10-16 — Milestone 1a: Foundation
 
 Added
