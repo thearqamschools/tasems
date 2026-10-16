@@ -19,6 +19,6 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Screens tested by automated tests and a live server check; not yet reviewed on a real phone or by Samanabad staff.
 - Urdu translations written by Claude; a native-speaker review is needed before the pilot.
 - Fonts load from Google Fonts; self-host them before the pilot for slow connections.
-- Assumed for 1c, to confirm: Hifz classes take attendance once a day like other sections; no holiday calendar yet (registers can be taken any day of the session).
+- No public-holiday calendar yet: registers can be taken on any school day of the session (Sunday off; Saturday only Hifz, Pre-9, 9, 10).
 - Not yet provided: Daily Diary template; current software data export; biometric machine brand/model; academic session dates; subject list per class.
 - Hosting provider not chosen (no preference stated; shortlist in master plan Part 5).

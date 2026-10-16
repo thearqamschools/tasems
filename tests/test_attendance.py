@@ -14,6 +14,16 @@ from apps.people.models import Enrolment, Guardian, Student, StudentGuardian
 
 pytestmark = pytest.mark.django_db
 
+WEDNESDAY = dt.date(2026, 10, 14)
+SATURDAY = dt.date(2026, 10, 10)
+SUNDAY = dt.date(2026, 10, 11)
+
+
+@pytest.fixture(autouse=True)
+def fixed_today(monkeypatch):
+    """Tests run on any day of the week; pretend today is an ordinary Wednesday."""
+    monkeypatch.setattr(timezone, "localdate", lambda *args, **kwargs: WEDNESDAY)
+
 
 @pytest.fixture
 def klass(org, make_user):
@@ -136,3 +146,27 @@ def test_head_office_sees_branch_summary(org, klass, make_user, login_as):
 def test_accountant_cannot_take_register(org, klass, make_user, login_as):
     accountant = make_user("accountant", Scope.BRANCH, org["samanabad"])
     assert login_as(accountant).get("/attendance/").status_code == 403
+
+
+def test_sunday_is_closed(org, klass, make_user, login_as):
+    principal = make_user("principal", Scope.BRANCH, org["samanabad"])
+    client = login_as(principal)
+    assert client.get(url(klass["section"], SUNDAY)).status_code == 403
+    assert "school is closed" in client.get(f"/attendance/?date={SUNDAY}").content.decode()
+
+
+def test_saturday_only_for_hifz_pre9_9_and_10(org, klass, make_user, login_as):
+    principal = make_user("principal", Scope.BRANCH, org["samanabad"])
+    client = login_as(principal)
+    assert client.get(url(klass["section"], SATURDAY)).status_code == 403  # Class 5 does not come on Saturday
+    for code in ("hifz", "pre-9", "class-9", "class-10"):
+        section = Section.objects.create(
+            branch=org["samanabad"],
+            session=org["session"],
+            class_level=ClassLevel.objects.get(code=code),
+            name="S",
+            gender_group="mixed" if code == "hifz" else "boys",
+        )
+        assert client.get(url(section, SATURDAY)).status_code == 200, code
+    page = client.get(f"/attendance/?date={SATURDAY}").content.decode()
+    assert "0/4" in page and "Class 5-A" not in page

@@ -65,25 +65,25 @@ def _principal_with_device(client, org, make_user):
     sign_in(client, principal.username)
     client.get("/accounts/two-factor/setup/")
     secret = client.session["mfa_setup_secret"]
-    response = client.post("/accounts/two-factor/setup/", {"code": pyotp.TOTP(secret).now()})
+    setup_code = pyotp.TOTP(secret).now()
+    response = client.post("/accounts/two-factor/setup/", {"code": setup_code})
     codes = re.findall(r"<span>([0-9A-F]{5}-[0-9A-F]{5})</span>", response.content.decode())
     client.post("/accounts/logout/")
-    return principal, secret, codes
+    return principal, setup_code, codes
 
 
 def test_verify_code_and_block_reuse(client, org, make_user):
-    principal, secret, _codes = _principal_with_device(client, org, make_user)
+    principal, setup_code, _codes = _principal_with_device(client, org, make_user)
     assert sign_in(client, principal.username)["Location"] == "/accounts/verify/"
     bad = client.post("/accounts/verify/", {"code": "000000"})
     assert "not correct" in bad.content.decode()
-    # The code used during setup cannot be used again.
-    used = pyotp.TOTP(secret).now()
-    response = client.post("/accounts/verify/", {"code": used})
+    # The exact code used during setup cannot be used again, even within its time window.
+    response = client.post("/accounts/verify/", {"code": setup_code})
     assert response.status_code == 200 and "not correct" in response.content.decode()
 
 
 def test_backup_code_works_once(client, org, make_user):
-    principal, _secret, codes = _principal_with_device(client, org, make_user)
+    principal, _setup_code, codes = _principal_with_device(client, org, make_user)
     sign_in(client, principal.username)
     assert client.post("/accounts/verify/", {"code": codes[0]})["Location"] == "/"
     client.post("/accounts/logout/")

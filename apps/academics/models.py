@@ -31,6 +31,9 @@ class ClassLevel(TimeStampedModel):
     separate_by_gender = models.BooleanField(
         default=False, help_text=_("Boys and girls study in separate campuses/sections from this class onwards.")
     )
+    attends_on_saturday = models.BooleanField(
+        default=False, help_text=_("This class comes to school on Saturdays, so attendance is taken that day.")
+    )
     is_active = models.BooleanField(default=True)
 
     class Meta:

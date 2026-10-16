@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 14:48+0500\n"
+"POT-Creation-Date: 2026-10-16 15:03+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr "ہائی سکول / میٹرک"
 msgid "Hifz-e-Quran"
 msgstr "حفظ القرآن"
 
-#: apps/academics/models.py:28 apps/academics/models.py:47
+#: apps/academics/models.py:28 apps/academics/models.py:50
 #: apps/accounts/models.py:101 apps/organisation/models.py:21
 #: apps/organisation/models.py:41 apps/organisation/models.py:59
 #: apps/organisation/models.py:99
@@ -50,29 +50,34 @@ msgid ""
 "Boys and girls study in separate campuses/sections from this class onwards."
 msgstr "اس جماعت سے آگے لڑکے اور لڑکیاں الگ کیمپس/سیکشن میں پڑھتے ہیں۔"
 
-#: apps/academics/models.py:49
+#: apps/academics/models.py:35
+msgid ""
+"This class comes to school on Saturdays, so attendance is taken that day."
+msgstr "یہ جماعت ہفتے کو سکول آتی ہے، اس لیے اس دن حاضری لگتی ہے۔"
+
+#: apps/academics/models.py:52
 msgid "Content is written right-to-left (Urdu, Islamiat, Arabic, Nazra)."
 msgstr "مواد دائیں سے بائیں لکھا جاتا ہے (اردو، اسلامیات، عربی، ناظرہ)۔"
 
-#: apps/academics/models.py:79 apps/organisation/models.py:93
+#: apps/academics/models.py:82 apps/organisation/models.py:93
 msgid "Boys and girls"
 msgstr "لڑکے اور لڑکیاں"
 
-#: apps/academics/models.py:80 apps/organisation/models.py:94
+#: apps/academics/models.py:83 apps/organisation/models.py:94
 #: templates/people/student_import.html:15
 msgid "Boys"
 msgstr "لڑکے"
 
-#: apps/academics/models.py:81 apps/organisation/models.py:95
+#: apps/academics/models.py:84 apps/organisation/models.py:95
 #: templates/people/student_import.html:15
 msgid "Girls"
 msgstr "لڑکیاں"
 
-#: apps/academics/models.py:85
+#: apps/academics/models.py:88
 msgid "e.g. A, B, Rose, Jasmine"
 msgstr "مثلاً A، B، Rose، Jasmine"
 
-#: apps/academics/models.py:93
+#: apps/academics/models.py:96
 msgid ""
 "Building where this section studies. Leave empty if the branch has one "
 "building."
@@ -80,20 +85,20 @@ msgstr ""
 "وہ عمارت جہاں یہ سیکشن پڑھتا ہے۔ اگر برانچ کی ایک ہی عمارت ہے تو خالی چھوڑ "
 "دیں۔"
 
-#: apps/academics/models.py:114
+#: apps/academics/models.py:117
 msgid "Campus belongs to a different branch."
 msgstr "یہ کیمپس کسی اور برانچ کا ہے۔"
 
-#: apps/academics/models.py:117
+#: apps/academics/models.py:120
 #, python-format
 msgid "This campus is for %(g)s only."
 msgstr "یہ کیمپس صرف %(g)s کے لیے ہے۔"
 
-#: apps/academics/models.py:120
+#: apps/academics/models.py:123
 msgid "From this class onwards, sections are for boys or girls only."
 msgstr "اس جماعت سے آگے سیکشن صرف لڑکوں یا صرف لڑکیوں کے ہوتے ہیں۔"
 
-#: apps/academics/models.py:123
+#: apps/academics/models.py:126
 msgid "This teacher is not assigned to this branch."
 msgstr "یہ ٹیچر اس برانچ میں مقرر نہیں ہے۔"
 
@@ -109,7 +114,7 @@ msgstr "طلبہ"
 
 #: apps/accounts/context_processors.py:21 templates/attendance/branches.html:7
 #: templates/attendance/today.html:2 templates/attendance/today.html:4
-#: templates/attendance/today.html:18
+#: templates/attendance/today.html:20
 msgid "Attendance"
 msgstr "حاضری"
 
@@ -215,17 +220,17 @@ msgid ""
 "This code is not correct. Scan the QR code again and enter the new code."
 msgstr "یہ کوڈ درست نہیں۔ QR کوڈ دوبارہ اسکین کر کے نیا کوڈ درج کریں۔"
 
-#: apps/attendance/models.py:18 templates/attendance/today.html:39
+#: apps/attendance/models.py:18 templates/attendance/today.html:41
 msgid "Present"
 msgstr "حاضر"
 
 #: apps/attendance/models.py:19 templates/attendance/absentees.html:18
-#: templates/attendance/branches.html:7 templates/attendance/today.html:19
-#: templates/attendance/today.html:39
+#: templates/attendance/branches.html:7 templates/attendance/today.html:21
+#: templates/attendance/today.html:41
 msgid "Absent"
 msgstr "غیر حاضر"
 
-#: apps/attendance/models.py:20 templates/attendance/today.html:39
+#: apps/attendance/models.py:20 templates/attendance/today.html:41
 msgid "Leave"
 msgstr "چھٹی"
 
@@ -233,7 +238,7 @@ msgstr "چھٹی"
 msgid "Late"
 msgstr "دیر سے"
 
-#: apps/attendance/views.py:119
+#: apps/attendance/views.py:120
 #, python-format
 msgid ""
 "Register saved for %(section)s: %(present)s present, %(absent)s absent."
@@ -268,7 +273,7 @@ msgstr "لاگ اِن ناکام"
 msgid "Logged out"
 msgstr "لاگ آؤٹ ہوا"
 
-#: apps/core/views.py:95
+#: apps/core/views.py:98
 msgid "You do not have access to that branch."
 msgstr "آپ کو اس برانچ تک رسائی حاصل نہیں۔"
 
@@ -607,7 +612,7 @@ msgstr "جاری رکھیں"
 msgid "Student"
 msgstr "طالب علم"
 
-#: templates/attendance/_people.html:3 templates/attendance/today.html:39
+#: templates/attendance/_people.html:3 templates/attendance/today.html:41
 #: templates/people/student_list.html:12
 msgid "Section"
 msgstr "سیکشن"
@@ -626,7 +631,6 @@ msgstr "کوئی نہیں۔"
 
 #: templates/attendance/absentees.html:2 templates/attendance/absentees.html:4
 #: templates/attendance/today.html:10
-#| msgid "Active students"
 msgid "Absent students"
 msgstr "غیر حاضر طلبہ"
 
@@ -645,7 +649,7 @@ msgid_plural "%(n)s days"
 msgstr[0] "%(n)s دن"
 msgstr[1] "%(n)s دن"
 
-#: templates/attendance/absentees.html:19 templates/attendance/today.html:20
+#: templates/attendance/absentees.html:19 templates/attendance/today.html:22
 msgid "On leave"
 msgstr "چھٹی پر"
 
@@ -660,19 +664,17 @@ msgid_plural "%(n)s branches have not started"
 msgstr[0] "%(n)s برانچ نے ابھی حاضری شروع نہیں کی"
 msgstr[1] "%(n)s برانچوں نے ابھی حاضری شروع نہیں کی"
 
-#: templates/attendance/branches.html:7 templates/attendance/today.html:17
+#: templates/attendance/branches.html:7 templates/attendance/today.html:19
 msgid "Registers taken"
 msgstr "لگائی گئی حاضریاں"
 
-#: templates/attendance/take.html:2 templates/attendance/today.html:46
+#: templates/attendance/take.html:2 templates/attendance/today.html:48
 #: templates/core/home.html:28
 msgid "Take register"
 msgstr "حاضری لگائیں"
 
 #: templates/attendance/take.html:5
 #, python-format
-#| msgid "%(n)s student found"
-#| msgid_plural "%(n)s students found"
 msgid "%(n)s student"
 msgid_plural "%(n)s students"
 msgstr[0] "%(n)s طالب علم"
@@ -693,7 +695,6 @@ msgid "Note (optional)"
 msgstr "نوٹ (اختیاری)"
 
 #: templates/attendance/take.html:25
-#| msgid "Save student"
 msgid "Save register"
 msgstr "حاضری محفوظ کریں"
 
@@ -742,7 +743,6 @@ msgid "Choose day"
 msgstr "دن منتخب کریں"
 
 #: templates/attendance/today.html:7
-#| msgid "Previous"
 msgid "Previous day"
 msgstr "پچھلا دن"
 
@@ -762,49 +762,64 @@ msgstr "دیکھیں"
 msgid "All my branches"
 msgstr "میری تمام برانچیں"
 
-#: templates/attendance/today.html:14 templates/core/home.html:5
+#: templates/attendance/today.html:14
+msgid "Sunday: school is closed, so there is no attendance."
+msgstr "اتوار: سکول بند ہے، اس لیے حاضری نہیں لگتی۔"
+
+#: templates/attendance/today.html:15
+msgid ""
+"Saturday: only the classes that come on Saturdays (Hifz, Pre-9, Class 9 and "
+"Class 10) take attendance."
+msgstr ""
+"ہفتہ: صرف وہ جماعتیں جو ہفتے کو آتی ہیں (حفظ، پری نہم، جماعت نہم اور دہم) کی"
+" حاضری لگتی ہے۔"
+
+#: templates/attendance/today.html:16 templates/core/home.html:5
 msgid "No current academic session is set. Head office sets it under Setup."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ ہیڈ آفس اسے سیٹ اپ میں طے کرتا ہے۔"
 
-#: templates/attendance/today.html:24 templates/core/home.html:25
+#: templates/attendance/today.html:26 templates/core/home.html:25
 msgid "My classes"
 msgstr "میری جماعتیں"
 
-#: templates/attendance/today.html:29
+#: templates/attendance/today.html:31
 #, python-format
 msgid "%(p)s present · %(a)s absent"
 msgstr "%(p)s حاضر · %(a)s غیر حاضر"
 
-#: templates/attendance/today.html:30
+#: templates/attendance/today.html:32
 msgid "Not taken yet"
 msgstr "ابھی نہیں لگی"
 
-#: templates/attendance/today.html:36 templates/people/student_list.html:13
+#: templates/attendance/today.html:38 templates/people/student_list.html:13
 msgid "All sections"
 msgstr "تمام سیکشن"
 
-#: templates/attendance/today.html:39
+#: templates/attendance/today.html:41
 msgid "Class teacher"
 msgstr "کلاس ٹیچر"
 
-#: templates/attendance/today.html:39
+#: templates/attendance/today.html:41
 msgid "Register"
 msgstr "حاضری"
 
-#: templates/attendance/today.html:44
+#: templates/attendance/today.html:46
 msgid "Correct"
 msgstr "درست کریں"
 
-#: templates/attendance/today.html:44
+#: templates/attendance/today.html:46
 msgid "Taken"
 msgstr "لگ گئی"
 
-#: templates/attendance/today.html:46
-#| msgid "Not placed"
+#: templates/attendance/today.html:48
 msgid "Not taken"
 msgstr "نہیں لگی"
 
-#: templates/attendance/today.html:50
+#: templates/attendance/today.html:52
+msgid "No classes today."
+msgstr "آج کوئی جماعت نہیں۔"
+
+#: templates/attendance/today.html:52
 msgid ""
 "No sections for this session yet. Add students with their class, or import "
 "them from Excel."

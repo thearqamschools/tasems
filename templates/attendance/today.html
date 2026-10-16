@@ -11,6 +11,8 @@
   {% if multi_branch %}<a class="button secondary" href="{% url 'attendance:branches' %}?date={{ date|date:'Y-m-d' }}">{% trans "All my branches" %}</a>{% endif %}
 </nav>
 
+{% if weekday == 6 %}<ul class="messages"><li>{% trans "Sunday: school is closed, so there is no attendance." %}</li></ul>
+{% elif weekday == 5 %}<ul class="messages"><li>{% trans "Saturday: only the classes that come on Saturdays (Hifz, Pre-9, Class 9 and Class 10) take attendance." %}</li></ul>{% endif %}
 {% if not session %}<ul class="messages"><li class="warning">{% trans "No current academic session is set. Head office sets it under Setup." %}</li></ul>{% endif %}
 
 <div class="figures">
@@ -47,7 +49,7 @@
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}
-<div class="card"><p>{% trans "No sections for this session yet. Add students with their class, or import them from Excel." %}</p></div>
+<div class="card"><p>{% if weekday == 6 %}{% trans "No classes today." %}{% else %}{% trans "No sections for this session yet. Add students with their class, or import them from Excel." %}{% endif %}</p></div>
 {% endif %}
 
 <script>

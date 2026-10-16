@@ -128,6 +128,9 @@ CLASS_LEVELS += [
 CLASS_LEVELS += [("hifz", "Hifz-e-Quran", "حفظ القرآن", "hifz")]
 
 
+# Confirmed 16 Oct 2026: on Saturdays only Hifz, Pre-9, Class 9 and Class 10 attend. Sunday is off for all.
+SATURDAY_CLASSES = {"hifz", "pre-9", "class-9", "class-10"}
+
 # Daily attendance (Milestone 1c)
 ATT_VIEW = ["attendance.view_attendancerecord", "attendance.view_sectionattendance"]
 ATT_MARK = ATT_VIEW + ["attendance.add_attendancerecord"]
@@ -207,6 +210,7 @@ class Command(BaseCommand):
                     "stage": stage,
                     "sort_order": i * 10,
                     "separate_by_gender": stage in ("middle", "high"),
+                    "attends_on_saturday": code in SATURDAY_CLASSES,
                 },
             )
 

@@ -51,7 +51,7 @@ def today(request):
     sections = []
     if session:
         sections = list(
-            Section.objects.filter(branch=branch, session=session, is_active=True)
+            services.in_school(Section.objects.filter(branch=branch, session=session, is_active=True), date)
             .select_related("class_level", "class_teacher", "campus", "session")
             .order_by("class_level__sort_order", "name")
         )
@@ -83,6 +83,7 @@ def today(request):
             "totals": totals,
             "session": session,
             "previous_day": date - dt.timedelta(days=1),
+            "weekday": date.weekday(),
             "multi_branch": len(request.user.accessible_branch_ids(services.VIEW_PERM)) > 1,
             "next_day": date + dt.timedelta(days=1),
         },
@@ -190,7 +191,7 @@ def branches_summary(request):
     section_counts = {}
     if session:
         for row in (
-            Section.objects.filter(branch_id__in=branch_ids, session=session, is_active=True)
+            services.in_school(Section.objects.filter(branch_id__in=branch_ids, session=session, is_active=True), date)
             .values("branch_id")
             .annotate(n=Count("id"))
         ):

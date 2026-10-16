@@ -61,7 +61,10 @@ def home(request):
 
         today = timezone.localdate()
         context["registers_taken"] = SectionAttendance.objects.filter(branch=branch, date=today).count()
-        context["registers_total"] = Section.objects.filter(branch=branch, session=session, is_active=True).count()
+        from apps.attendance.services import in_school
+
+        sections_today = Section.objects.filter(branch=branch, session=session, is_active=True)
+        context["registers_total"] = in_school(sections_today, today).count()
     my_sections = Section.objects.filter(class_teacher=user, is_active=True)
     if session:
         my_sections = my_sections.filter(session=session)

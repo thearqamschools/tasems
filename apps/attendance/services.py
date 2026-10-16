@@ -25,11 +25,34 @@ def roster(section):
     )
 
 
+SATURDAY, SUNDAY = 5, 6
+
+
+def is_school_day(class_level, date):
+    """Sunday is off for everyone; on Saturday only classes marked `attends_on_saturday` come."""
+    if date.weekday() == SUNDAY:
+        return False
+    if date.weekday() == SATURDAY:
+        return class_level.attends_on_saturday
+    return True
+
+
+def in_school(sections, date):
+    """Filters a Section queryset to the sections that attend school on `date`."""
+    if date.weekday() == SUNDAY:
+        return sections.none()
+    if date.weekday() == SATURDAY:
+        return sections.filter(class_level__attends_on_saturday=True)
+    return sections
+
+
 def can_mark(user, section, date):
     """Teachers mark their own sections for today; principals and coordinators can mark or
-    correct any section of their branch for any past day of the session."""
+    correct any section of their branch for any past school day of the session."""
     today = timezone.localdate()
     if date > today or date < section.session.starts_on or date > section.session.ends_on:
+        return False
+    if not is_school_day(section.class_level, date):
         return False
     if user.has_branch_perm(CHANGE_PERM, section.branch_id):
         return True
