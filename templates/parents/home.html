@@ -1,0 +1,20 @@
+{% extends "parents/base_parent.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "My children" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Assalamualaikum" %}</h1>
+<p class="lede">{{ today|date:"l, d F Y" }}</p>
+{% for c in cards %}
+<a class="card child-card" href="{% url 'parents:child' c.child.id %}">
+  <div class="child-name">{% if LANG == "ur" and c.child.full_name_ur %}{{ c.child.full_name_ur }}{% else %}{{ c.child.full_name }}{% endif %}</div>
+  <div class="muted">{% if c.enrolment %}{{ c.enrolment.section }}{% endif %} · {{ c.child.branch.name }}</div>
+  <div class="child-facts">
+    <span>{% trans "Today" %}: {% if c.today %}<strong>{{ c.today.get_status_display }}</strong>{% else %}<span class="muted">{% trans "not marked yet" %}</span>{% endif %}</span>
+    <span>{% trans "Diary" %}: {% if c.diary %}<strong>{{ c.diary.date|date:"d M" }}</strong>{% else %}<span class="muted">—</span>{% endif %}</span>
+    <span>{% trans "Fee due" %}: <strong{% if c.balance > 0 %} class="due"{% endif %}>{% if c.balance > 0 %}Rs {{ c.balance|rupees }}{% else %}{% trans "nothing" %}{% endif %}</strong></span>
+  </div>
+</a>
+{% empty %}
+<div class="card"><p>{% trans "No children are linked to your mobile number. Please contact the school office." %}</p></div>
+{% endfor %}
+<p><a href="{% url 'parents:account' %}">{% trans "Change password" %}</a></p>
+{% endblock %}

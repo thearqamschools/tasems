@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Parent access codes" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Parent access codes" %}</h1>
+<p class="lede">{% blocktrans %}Parents sign in at the parent portal with their mobile number. To set their password the first time (or after forgetting it) they need a one-time code. Print the slips here and send them home with the children. {{ accounts }} parents have an account so far.{% endblocktrans %}</p>
+<form method="post" class="card">{% csrf_token %}
+  <div class="field"><label for="section">{% trans "Class" %}</label><select id="section" name="section" required>{% for s in sections %}<option value="{{ s.id }}">{{ s }}</option>{% endfor %}</select></div>
+  <div class="field"><label><input type="checkbox" name="only_new" checked> {% trans "Only families without an account" %}</label></div>
+  <button class="button" type="submit">{% trans "Make slips for this class" %}</button>
+</form>
+<p class="muted">{% trans "Each slip has a new code; any older unused code for that mobile number stops working. Codes are valid for 14 days. For one family, use “Parent login code” on the student's page." %}</p>
+{% endblock %}

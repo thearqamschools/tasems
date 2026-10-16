@@ -75,6 +75,10 @@ class RowLevelSecurityMiddleware:
         if user is None or not user.is_authenticated:
             branch_ids = set()
         else:
-            branch_ids = user.accessible_branch_ids()
+            from apps.parents.services import branch_ids_for
+
+            # A parent (who may also be staff) also reads their children's branches; the
+            # parent screens then narrow every query to their own children.
+            branch_ids = set(user.accessible_branch_ids()) | branch_ids_for(user)
         with branch_scope(branch_ids):
             return self.get_response(request)

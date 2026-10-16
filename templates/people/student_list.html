@@ -27,6 +27,7 @@
   <div class="actions" style="margin:0">
     <button class="button" type="submit">{% trans "Show students" %}</button>
     {% if can_add %}<a class="button secondary" href="{% url 'people:student_create' %}">{% trans "Add a student" %}</a>{% endif %}
+    {% if perms.people.change_guardian %}<a class="button quiet" href="{% url 'parents:codes' %}">{% trans "Parent access codes" %}</a>{% endif %}
   </div>
 </form>
 

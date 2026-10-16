@@ -1,0 +1,14 @@
+{% extends "parents/base_parent.html" %}{% load i18n %}
+{% block title %}{% trans "Parent sign-in" %}{% endblock %}
+{% block content %}
+<div class="card parent-auth">
+  <h1>{% trans "Parent sign-in" %}</h1>
+  <p class="lede">{% trans "See your children's daily diary, attendance, fee vouchers and results." %}</p>
+  <form method="post">{% csrf_token %}
+    {% for e in form.non_field_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+    {% for field in form %}{% include "includes_field.html" %}{% endfor %}
+    <button class="button" type="submit" style="width:100%">{% trans "Sign in" %}</button>
+  </form>
+  <p style="margin-top:1rem"><a href="{% url 'parents:start' %}">{% trans "First time, or forgot your password? Use the code from the school" %}</a></p>
+</div>
+{% endblock %}

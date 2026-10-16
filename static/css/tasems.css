@@ -228,3 +228,17 @@ textarea.ur { font-family: var(--font-ur); line-height: 2.1; }
 .diary-home { grid-template-columns: 1fr 11rem; }
 @media (max-width: 34rem) { .diary-home { grid-template-columns: 1fr; } }
 .diary-preview { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem; overflow-x: auto; }
+
+/* ---------- Parent portal ---------- */
+.parent-main { max-width: 40rem; }
+.parent-auth { max-width: 28rem; margin: 1rem auto; }
+.child-card { display: block; color: inherit; text-decoration: none; margin-block-end: 0.75rem; }
+.child-card:hover { border-color: var(--brand); }
+.child-name { font-size: var(--step-1); font-weight: 700; color: var(--brand); }
+.child-facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-top: 0.5rem; font-size: var(--step--1); }
+.child-facts .due { color: var(--attention); }
+.tabs { display: flex; gap: 0.25rem; overflow-x: auto; border-block-end: 1px solid var(--line); margin: 0.5rem 0 1rem; }
+.tabs a { padding: 0.6rem 0.9rem; text-decoration: none; color: var(--ink-soft); border-block-end: 3px solid transparent; white-space: nowrap; }
+.tabs a[aria-current="page"] { color: var(--ink); border-color: var(--brand); font-weight: 600; }
+.diary-item { margin-block-end: 0.75rem; }
+.diary-item summary { cursor: pointer; }
