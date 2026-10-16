@@ -1,0 +1,23 @@
+# HTTPS certificates are obtained and renewed automatically for TASEMS_DOMAIN.
+{$TASEMS_DOMAIN} {
+	encode zstd gzip
+
+	# Only brand files (logos) are public. Uploaded imports are never served.
+	handle /media/branding/* {
+		root * /srv
+		file_server
+	}
+	handle /media/* {
+		respond 404
+	}
+
+	handle {
+		reverse_proxy web:8000
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "same-origin"
+	}
+}

@@ -31,10 +31,20 @@
 
 {% if network %}
 <h2>{% blocktrans count n=network_total_branches %}Across your {{ n }} branch{% plural %}Across your {{ n }} branches{% endblocktrans %}</h2>
-<p class="muted">{% blocktrans with total=network_students %}{{ total }} active students. Largest branches first; choose a branch in the top bar to work in it.{% endblocktrans %}</p>
+<div class="figures">
+  <div class="figure"><div class="value">{{ network_students }}</div><div class="label">{% trans "Active students" %}</div></div>
+  <div class="figure {% if network_registers < network_sections %}attention{% endif %}"><div class="value">{{ network_registers }}/{{ network_sections }}</div><div class="label">{% trans "Registers taken today" %}</div></div>
+  <div class="figure"><div class="value">{{ network_diaries }}</div><div class="label">{% trans "Diaries published today" %}</div></div>
+</div>
+<p class="muted">{% trans "Branches still taking today's registers are listed first. Choose a branch in the top bar to work in it." %}</p>
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Head office" %}</th><th>{% trans "Region" %}</th><th class="num">{% trans "Active students" %}</th></tr></thead>
-  <tbody>{% for b, n in network %}<tr><td>{{ b.name }}</td><td>{{ b.head_office.city }}</td><td>{{ b.region|default:"—" }}</td><td class="num">{{ n }}</td></tr>{% endfor %}</tbody>
+  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Head office" %}</th><th>{% trans "Region" %}</th><th class="num">{% trans "Active students" %}</th><th class="num">{% trans "Registers today" %}</th><th class="num">{% trans "Diaries today" %}</th></tr></thead>
+  <tbody>{% for r in network %}<tr>
+    <td>{{ r.branch.name }}</td><td>{{ r.branch.head_office.city }}</td><td>{{ r.branch.region|default:"—" }}</td>
+    <td class="num">{{ r.students }}</td>
+    <td class="num">{% if r.sections and r.registers < r.sections %}<span class="badge attention">{{ r.registers }}/{{ r.sections }}</span>{% else %}{{ r.registers }}/{{ r.sections }}{% endif %}</td>
+    <td class="num">{{ r.diaries }}</td>
+  </tr>{% endfor %}</tbody>
 </table></div>
 {% endif %}
 {% endblock %}

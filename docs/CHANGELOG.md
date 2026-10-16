@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0 — 2026-10-16 — Milestone 1f: Pilot hardening and head office view
+
+Added
+- PostgreSQL row-level security on every branch-owned table; each signed-in request is limited to the user's branches inside the database too.
+- `manage.py check_security` for go-live (database role, row-level security, DEBUG, keys, HTTPS settings).
+- Fonts served from TASEMS itself as small WOFF2 files; no outside font service.
+- Head office home: today's registers taken and diaries published, per branch, with unfinished branches first.
+- `/healthz` for uptime monitoring.
+- Production setup: Docker Compose with Caddy (automatic HTTPS), ordinary `tasems_app` database role, WhiteNoise static files, only logo files publicly served.
+- Encrypted nightly backup script and restore-drill script; deployment guide.
+- Uploaded Excel files older than a day are removed automatically.
+- 79 automated tests.
+
+Not deployed.
+
 ## 0.4.0 — 2026-10-16 — Milestone 1d: Daily Diary
 
 Added

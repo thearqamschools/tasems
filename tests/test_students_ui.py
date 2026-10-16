@@ -180,3 +180,13 @@ def test_branch_switcher_refuses_other_branches(org, make_user, login_as):
     client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
     client.post("/branch/switch/", {"branch": org["lhr_franchise"].pk})
     assert client.session.get("current_branch_id") is None
+
+
+def test_health_check_needs_no_login(client):
+    response = client.get("/healthz")
+    assert response.status_code == 200 and response.json() == {"status": "ok"}
+
+
+def test_head_office_sees_todays_registers_per_branch(org, students, make_user, login_as):
+    body = login_as(make_user("head_office_admin", Scope.HEAD_OFFICE, org["fsd"])).get("/").content.decode()
+    assert "Registers taken today" in body and "Diaries published today" in body

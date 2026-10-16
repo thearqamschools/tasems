@@ -13,6 +13,7 @@ admin.site.login = admin_login_redirect  # one sign-in (with two-step check) for
 
 urlpatterns = [
     path("", core_views.home, name="home"),
+    path("healthz", core_views.health, name="health"),
     path("branch/switch/", core_views.switch_branch, name="switch_branch"),
     path("accounts/", include("apps.accounts.urls")),
     path("students/", include("apps.people.urls")),

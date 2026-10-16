@@ -80,12 +80,49 @@ def home(request):
             .annotate(n=Count("id"))
             .values_list("branch_id", "n")
         )
+        today = timezone.localdate()
+        registers, sections_due, diaries = {}, {}, {}
+        if session:
+            from apps.attendance.models import SectionAttendance
+            from apps.attendance.services import in_school
+            from apps.diary.models import Diary
+
+            registers = dict(
+                SectionAttendance.objects.filter(branch_id__in=branch_ids, date=today)
+                .values("branch_id")
+                .annotate(n=Count("id"))
+                .values_list("branch_id", "n")
+            )
+            sections_due = dict(
+                in_school(Section.objects.filter(branch_id__in=branch_ids, session=session, is_active=True), today)
+                .values("branch_id")
+                .annotate(n=Count("id"))
+                .values_list("branch_id", "n")
+            )
+            diaries = dict(
+                Diary.objects.filter(branch_id__in=branch_ids, date=today, status=Diary.Status.PUBLISHED)
+                .values("branch_id")
+                .annotate(n=Count("id"))
+                .values_list("branch_id", "n")
+            )
         rows = [
-            (b, counts.get(b.id, 0))
+            {
+                "branch": b,
+                "students": counts.get(b.id, 0),
+                "registers": registers.get(b.id, 0),
+                "sections": sections_due.get(b.id, 0),
+                "diaries": diaries.get(b.id, 0),
+            }
             for b in Branch.objects.filter(id__in=branch_ids).select_related("head_office", "region")
         ]
-        rows.sort(key=lambda r: (-r[1], r[0].name))
+        # Branches that have not started today's registers first, then the largest.
+        rows.sort(
+            key=lambda r: (not (r["sections"] and r["registers"] < r["sections"]), -r["students"], r["branch"].name)
+        )
         context["network"] = rows[:50]
+        context["network_registers"] = sum(registers.values())
+        context["network_sections"] = sum(sections_due.values())
+        context["network_diaries"] = sum(diaries.values())
         context["network_students"] = sum(counts.values())
         context["network_total_branches"] = len(branch_ids)
     return render(request, "core/home.html", context)
@@ -100,3 +137,16 @@ def switch_branch(request):
     if not url_has_allowed_host_and_scheme(back, allowed_hosts={request.get_host()}):
         back = "/"
     return redirect(back)
+
+
+def health(request):
+    """For uptime monitoring: 200 when the app and database answer, 503 otherwise. No login needed."""
+    from django.db import connection
+    from django.http import JsonResponse
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+    except Exception:  # noqa: BLE001
+        return JsonResponse({"status": "error", "database": "unreachable"}, status=503)
+    return JsonResponse({"status": "ok"})

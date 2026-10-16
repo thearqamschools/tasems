@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 MFA_SESSION_KEY = "mfa_verified"
-EXEMPT_PREFIXES = ("/accounts/", "/static/", "/i18n/")
+EXEMPT_PREFIXES = ("/accounts/", "/static/", "/i18n/", "/healthz")
 
 
 class MFAEnforcementMiddleware:

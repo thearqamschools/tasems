@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 15:12+0500\n"
+"POT-Creation-Date: 2026-10-16 17:25+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -155,17 +155,17 @@ msgid "Whole network"
 msgstr "پورا نیٹ ورک"
 
 #: apps/accounts/models.py:21 templates/attendance/branches.html:7
-#: templates/core/home.html:36
+#: templates/core/home.html:41
 msgid "Head office"
 msgstr "ہیڈ آفس"
 
-#: apps/accounts/models.py:22 templates/core/home.html:36
+#: apps/accounts/models.py:22 templates/core/home.html:41
 msgid "Region"
 msgstr "ریجن"
 
 #: apps/accounts/models.py:23 templates/attendance/branches.html:7
-#: templates/base.html:21 templates/core/home.html:27
-#: templates/core/home.html:36
+#: templates/base.html:17 templates/core/home.html:27
+#: templates/core/home.html:41
 msgid "Branch"
 msgstr "برانچ"
 
@@ -278,12 +278,11 @@ msgstr "لاگ اِن ناکام"
 msgid "Logged out"
 msgstr "لاگ آؤٹ ہوا"
 
-#: apps/core/views.py:98
+#: apps/core/views.py:135
 msgid "You do not have access to that branch."
 msgstr "آپ کو اس برانچ تک رسائی حاصل نہیں۔"
 
 #: apps/diary/models.py:22
-#| msgid "name (Urdu)"
 msgid "title (Urdu)"
 msgstr "عنوان (اردو)"
 
@@ -324,7 +323,6 @@ msgid "home learning task"
 msgstr "گھر کا کام"
 
 #: apps/diary/views.py:43
-#| msgid "Roll number"
 msgid "Week number"
 msgstr "ہفتہ نمبر"
 
@@ -561,28 +559,28 @@ msgstr "سیکشن کسی اور سیشن کا ہے۔"
 msgid "This section is for %(group)s only."
 msgstr "یہ سیکشن صرف %(group)s کے لیے ہے۔"
 
-#: apps/people/views.py:160
+#: apps/people/views.py:161
 #, python-format
 msgid "Saved %(name)s."
 msgstr "%(name)s محفوظ ہو گیا۔"
 
-#: apps/people/views.py:206
+#: apps/people/views.py:212
 msgid "Choose an Excel file (.xlsx)."
 msgstr "ایکسل فائل (.xlsx) منتخب کریں۔"
 
-#: apps/people/views.py:208
+#: apps/people/views.py:214
 msgid "The file is larger than 5 MB. Split it into smaller files."
 msgstr "فائل 5 MB سے بڑی ہے۔ اسے چھوٹی فائلوں میں تقسیم کریں۔"
 
-#: apps/people/views.py:223 apps/people/views.py:229
+#: apps/people/views.py:229 apps/people/views.py:235
 msgid "This import has expired. Please check the file again."
 msgstr "اس درآمد کی مدت ختم ہو گئی۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
-#: apps/people/views.py:235
+#: apps/people/views.py:241
 msgid "The data changed since the check. Please check the file again."
 msgstr "چیک کے بعد ڈیٹا بدل گیا ہے۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
-#: apps/people/views.py:238
+#: apps/people/views.py:244
 #, python-format
 msgid "%(n)s students imported."
 msgstr "%(n)s طلبہ درآمد ہو گئے۔"
@@ -592,7 +590,7 @@ msgid "TASEMS setup"
 msgstr "TASEMS سیٹ اپ"
 
 #: templates/accounts/auth_base.html:6 templates/base.html:7
-#: templates/base.html:17
+#: templates/base.html:13
 msgid "The Arqam Schools"
 msgstr "دی ارقم سکولز"
 
@@ -900,15 +898,15 @@ msgstr ""
 msgid "TASEMS"
 msgstr "TASEMS"
 
-#: templates/base.html:25
+#: templates/base.html:21
 msgid "Switch"
 msgstr "تبدیل کریں"
 
-#: templates/base.html:32
+#: templates/base.html:28
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
-#: templates/base.html:34
+#: templates/base.html:30
 msgid "Main"
 msgstr "مرکزی"
 
@@ -922,11 +920,12 @@ msgstr "السلام علیکم، %(name)s"
 msgid "Academic session %(s)s"
 msgstr "تعلیمی سیشن %(s)s"
 
-#: templates/core/home.html:9
+#: templates/core/home.html:9 templates/core/home.html:36
 msgid "Registers taken today"
 msgstr "آج لگائی گئی حاضریاں"
 
-#: templates/core/home.html:10 templates/core/home.html:36
+#: templates/core/home.html:10 templates/core/home.html:35
+#: templates/core/home.html:41
 msgid "Active students"
 msgstr "زیرِ تعلیم طلبہ"
 
@@ -963,14 +962,31 @@ msgid_plural "Across your %(n)s branches"
 msgstr[0] "آپ کی %(n)s برانچ میں"
 msgstr[1] "آپ کی %(n)s برانچوں میں"
 
-#: templates/core/home.html:34
-#, python-format
+#: templates/core/home.html:37
+#| msgid "Diary published."
+msgid "Diaries published today"
+msgstr "آج شائع ہونے والی ڈائریاں"
+
+#: templates/core/home.html:39
+#| msgid ""
+#| "%(total)s active students. Largest branches first; choose a branch in the "
+#| "top bar to work in it."
 msgid ""
-"%(total)s active students. Largest branches first; choose a branch in the "
-"top bar to work in it."
+"Branches still taking today's registers are listed first. Choose a branch in"
+" the top bar to work in it."
 msgstr ""
-"%(total)s زیرِ تعلیم طلبہ۔ بڑی برانچیں پہلے؛ کسی برانچ میں کام کے لیے اوپر "
-"سے برانچ منتخب کریں۔"
+"جن برانچوں کی آج کی حاضری ابھی مکمل نہیں وہ پہلے دکھائی گئی ہیں۔ کسی برانچ "
+"میں کام کے لیے اوپر سے برانچ منتخب کریں۔"
+
+#: templates/core/home.html:41
+#| msgid "Registers taken today"
+msgid "Registers today"
+msgstr "آج کی حاضری"
+
+#: templates/core/home.html:41
+#| msgid "No classes today."
+msgid "Diaries today"
+msgstr "آج کی ڈائریاں"
 
 #: templates/core/home_no_access.html:3
 msgid "No branch assigned yet"
@@ -986,7 +1002,6 @@ msgstr ""
 
 #: templates/diary/day.html:5
 #, python-format
-#| msgid "Edit %(n)s"
 msgid "Week %(n)s"
 msgstr "ہفتہ %(n)s"
 
@@ -995,24 +1010,18 @@ msgid "Theme"
 msgstr "موضوع"
 
 #: templates/diary/day.html:9
-#| msgid "Next"
 msgid "Next day"
 msgstr "اگلا دن"
 
 #: templates/diary/day.html:11
-#| msgid "Sunday: school is closed, so there is no attendance."
 msgid "Sunday: school is closed, so there is no diary."
 msgstr "اتوار: سکول بند ہے، اس لیے ڈائری نہیں۔"
 
 #: templates/diary/day.html:12
-#| msgid ""
-#| "Saturday: only the classes that come on Saturdays (Hifz, Pre-9, Class 9 and "
-#| "Class 10) take attendance."
 msgid "Saturday: only Hifz, Pre-9, Class 9 and Class 10 have a diary."
 msgstr "ہفتہ: صرف حفظ، پری نہم، نہم اور دہم کی ڈائری ہوتی ہے۔"
 
 #: templates/diary/day.html:20
-#| msgid "Not taken yet"
 msgid "Not written yet"
 msgstr "ابھی نہیں لکھی گئی"
 
@@ -1022,7 +1031,6 @@ msgid "Diary"
 msgstr "ڈائری"
 
 #: templates/diary/day.html:33
-#| msgid "Not taken"
 msgid "Not written"
 msgstr "نہیں لکھی گئی"
 
@@ -1035,7 +1043,6 @@ msgid "Write diary"
 msgstr "ڈائری لکھیں"
 
 #: templates/diary/day.html:37
-#| msgid "No classes today."
 msgid "No classes have a diary on this day."
 msgstr "اس دن کسی جماعت کی ڈائری نہیں۔"
 
@@ -1052,12 +1059,10 @@ msgstr ""
 "کرنے کے لیے خالی چھوڑ دیں۔"
 
 #: templates/diary/day.html:44
-#| msgid "Save student"
 msgid "Save theme"
 msgstr "موضوع محفوظ کریں"
 
 #: templates/diary/view.html:7
-#| msgid "Parent mobile / WhatsApp"
 msgid "Image for WhatsApp"
 msgstr "واٹس ایپ کے لیے تصویر"
 
@@ -1094,8 +1099,6 @@ msgid "Deadline"
 msgstr "آخری تاریخ"
 
 #: templates/diary/write.html:21
-#| msgid ""
-#| "No current academic session is set. Head office sets it under Setup."
 msgid "No subjects are set up yet. Head office adds subjects under Setup."
 msgstr ""
 "ابھی مضامین شامل نہیں کیے گئے۔ ہیڈ آفس سیٹ اپ میں مضامین شامل کرتا ہے۔"
@@ -1105,7 +1108,6 @@ msgid "Publish diary"
 msgstr "ڈائری شائع کریں"
 
 #: templates/diary/write.html:26
-#| msgid "Save student"
 msgid "Save draft"
 msgstr "مسودہ محفوظ کریں"
 

@@ -1,6 +1,7 @@
 """Student register: list, view, add, edit and Excel import for the current branch."""
 
 import secrets
+import time
 from pathlib import Path
 
 from django.conf import settings
@@ -178,8 +179,13 @@ def student_edit(request, pk):
 
 
 def _import_dir():
+    """Checked files wait here until imported. Files older than a day are removed."""
     path = Path(settings.MEDIA_ROOT) / "imports"
     path.mkdir(parents=True, exist_ok=True)
+    cutoff = time.time() - 24 * 3600
+    for old in path.glob("*.xlsx"):
+        if old.stat().st_mtime < cutoff:
+            old.unlink(missing_ok=True)
     return path
 
 

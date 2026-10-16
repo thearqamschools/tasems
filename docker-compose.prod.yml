@@ -1,0 +1,52 @@
+# Production / pilot server. Usage (see docs/DEPLOYMENT.md):
+#   cp deploy/env.prod.example .env.prod   # fill in real values, never commit it
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
+      TASEMS_DB_PASSWORD: ${TASEMS_DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 10
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env.prod
+    environment:
+      # The app connects as tasems_app: an ordinary role, so row-level security applies.
+      DATABASE_URL: postgres://tasems_app:${TASEMS_DB_PASSWORD}@db:5432/tasems
+      MEDIA_ROOT: /app/media
+    volumes:
+      - media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python manage.py migrate --noinput && python manage.py seed_tasems &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 60"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      TASEMS_DOMAIN: ${TASEMS_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - media:/srv/media:ro
+      - caddy_data:/data
+    depends_on: [web]
+
+volumes:
+  pgdata:
+  media:
+  caddy_data:

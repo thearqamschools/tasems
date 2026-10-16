@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.core.middleware.CurrentRequestMiddleware",
     "apps.accounts.middleware.MFAEnforcementMiddleware",
+    "apps.core.rls.RowLevelSecurityMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -103,6 +105,14 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        if DEBUG
+        else "whitenoise.storage.CompressedStaticFilesStorage"
+    },
+}
 MEDIA_ROOT = env("MEDIA_ROOT", default=str(BASE_DIR / "media"))
 MEDIA_URL = "media/"
 
@@ -123,7 +133,9 @@ SESSION_COOKIE_AGE = 60 * 60 * 8  # one school day
 SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT")
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
-SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=0)  # set in production once HTTPS is confirmed
+SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=0)
+# Behind the HTTPS proxy (Caddy) the original scheme arrives in this header.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # set in production once HTTPS is confirmed
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 

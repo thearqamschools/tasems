@@ -10,8 +10,10 @@
 | Two-step sign-in for privileged roles (authenticator app, encrypted keys, no code reuse, backup codes) | Done (tested) |
 | Login lockout: 5 failures per username or 20 per network address in 15 minutes | Done (tested) |
 | Admin site uses the same sign-in and two-step check | Done (tested) |
-| PostgreSQL row-level security | Before Gate 2 |
-| Encrypted backups, tested restores | Before pilot |
+| PostgreSQL row-level security on branch tables | Done (tested with an ordinary role) |
+| Pre-go-live check (`manage.py check_security --strict`) | Done |
+| Uploaded files never public; temporary imports removed after a day | Done |
+| Encrypted nightly backups and restore drill | Scripts done; to run on the pilot server |
 | Independent penetration test | Before pilot and before national rollout |
 
 ## Rules for everyone on the project
