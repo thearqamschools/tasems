@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ inquiry.child_name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'admissions:index' %}">‹ {% trans "Admissions" %}</a></p>
+<h1>{{ inquiry.child_name }}</h1>
+<p class="lede">{{ inquiry.class_level.name }}{% if inquiry.is_hifz %} · {% trans "Hifz" %}{% endif %} · <strong>{{ inquiry.get_status_display }}</strong>{% if inquiry.lost_reason %} ({{ inquiry.get_lost_reason_display }}){% endif %}</p>
+<div class="actions">
+  <a class="button" href="tel:{{ inquiry.phone }}">{% trans "Call" %} {{ inquiry.phone }}</a>
+  <a class="button secondary" href="{{ whatsapp }}" target="_blank" rel="noopener">{% trans "WhatsApp" %}</a>
+  {% if can_change %}<a class="button quiet" href="{% url 'admissions:edit' inquiry.id %}">{% trans "Edit" %}</a>{% endif %}
+  {% if inquiry.student %}<a class="button quiet" href="{% url 'people:student_detail' inquiry.student_id %}">{% trans "Student record" %}</a>
+  {% elif can_admit and inquiry.status != "lost" %}<a class="button quiet" href="{% url 'admissions:admit' inquiry.id %}">{% trans "Make student record" %}</a>{% endif %}
+</div>
+{% if at_school %}<ul class="messages"><li>{% trans "Brothers or sisters already at school with this mobile number:" %} {% for s in at_school %}<a href="{% url 'people:student_detail' s.id %}">{{ s.full_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</li></ul>{% endif %}
+{% if earlier %}<ul class="messages"><li class="warning">{% trans "Other inquiries from this mobile number:" %} {% for e in earlier %}<a href="{% url 'admissions:detail' e.id %}">{{ e.child_name }} ({{ e.class_level.name }}, {{ e.get_status_display }})</a>{% if not forloop.last %}, {% endif %}{% endfor %}</li></ul>{% endif %}
+
+<div class="table-wrap"><table><tbody>
+  <tr><th>{% trans "Parent" %}</th><td>{{ inquiry.parent_name }}{% if inquiry.alt_phone %} · {{ inquiry.alt_phone }}{% endif %}</td></tr>
+  <tr><th>{% trans "Gender" %}</th><td>{{ inquiry.get_gender_display }}{% if inquiry.date_of_birth %} · {% trans "born" %} {{ inquiry.date_of_birth|date:"d M Y" }}{% endif %}</td></tr>
+  <tr><th>{% trans "Area" %}</th><td>{{ inquiry.area|default:"—" }}</td></tr>
+  <tr><th>{% trans "Current school" %}</th><td>{{ inquiry.current_school|default:"—" }}</td></tr>
+  <tr><th>{% trans "Source" %}</th><td>{{ inquiry.get_source_display }}{% if inquiry.referred_by %} · {{ inquiry.referred_by }}{% endif %}</td></tr>
+  <tr><th>{% trans "Campus visit" %}</th><td>{{ inquiry.visit_at|date:"D d M Y, H:i"|default:"—" }}</td></tr>
+  <tr><th>{% trans "Next follow-up" %}</th><td>{{ inquiry.next_follow_up|date:"D d M Y"|default:"—" }}</td></tr>
+  <tr><th>{% trans "Follow-up by" %}</th><td>{{ inquiry.assigned_to.get_full_name|default:inquiry.assigned_to.username|default:"—" }}</td></tr>
+  <tr><th>{% trans "Received" %}</th><td>{{ inquiry.created_at|date:"d M Y" }}</td></tr>
+</tbody></table></div>
+
+{% if can_change and inquiry.is_open %}
+<h2>{% trans "Record a follow-up" %}</h2>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <button class="button" type="submit">{% trans "Save follow-up" %}</button>
+</form>
+{% endif %}
+
+<h2>{% trans "History" %}</h2>
+<div class="table-wrap"><table><tbody>{% for f in timeline %}<tr>
+  <td style="white-space:nowrap">{{ f.at|date:"d M Y, H:i" }}</td><td>{{ f.get_kind_display }}</td><td>{{ f.note|linebreaksbr }}</td><td class="muted">{{ f.by.get_full_name|default:f.by.username }}</td>
+</tr>{% endfor %}</tbody></table></div>
+{% endblock %}

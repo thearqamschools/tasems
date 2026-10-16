@@ -26,8 +26,8 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 | --- | --- | --- |
 | 3a — Staff (HR) and staff attendance | Staff register (add, edit, Excel import with row-by-row checks); biometric machine file import (Excel, CSV, .dat/.txt) matched by machine ID; daily status worked out (present, late, half day, absent, leave, holiday, off) from per-branch duty time and grace; principal corrections with reason; daily and monthly views, monthly Excel for payroll; leave requests with approval by someone else and balances per session; "My attendance" self-service for staff with a login; holidays; row-level security on staff tables; 133 automated tests | **Done (16 Oct 2026), not deployed** |
 | 3a+ — Parent portal | Parent sign-in by mobile number; first-time set-up and password reset with a printed one-time code from the school (per student or a whole class); each child's diary (image and PDF), monthly attendance, fee balance, vouchers (PDF) and payments, published result cards (PDF); English/Urdu, phone-sized; parents see only their own children; 140 automated tests | **Done (16 Oct 2026), not deployed** |
-| 3b — Hifz | Sabaq, Sabqi, Manzil, mistakes, milestones, parent reports | Next — needs the Hifz incharge's method (Mushaf, how Sabaq is measured, what is recorded daily) |
-| 3c — Admissions | Inquiries, follow-ups, visits, forms, conversion | Later |
+| 3b — Hifz | Sabaq, Sabqi, Manzil, mistakes, milestones, parent reports | **Deferred** by the project lead (D-050) |
+| 3c — Admissions | Inquiries from every source; pipeline with next follow-up date and person responsible; follow-ups due today and campus visits today; call and WhatsApp buttons (ready message, no API); brothers/sisters already at school and earlier inquiries shown by mobile number; "not joining" with reason; admit → student record → admission fee voucher; report by source, class, status and reasons; Excel; 146 automated tests | **Done (16 Oct 2026), not deployed** |
 
 ## Known gaps and pending inputs
 
@@ -43,6 +43,8 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Fees: opening balances (arrears) from the old software are not imported yet; needed before the first TASEMS vouchers so arrears are not lost.
 - Fees: bank name, account title and number to enter in Setup; the voucher counter to set above the old system's last Voucher ID.
 - Staff: grace minutes and half-day time if the school wants them (Setup → HR settings); whether a half day or late arrival also cuts salary; the attendance machine brand/model and a sample export; the Samanabad staff list (Excel template in TASEMS).
+- Admissions: no public online inquiry form on the website yet; no automatic WhatsApp messages (needs the WhatsApp Business API).
+- Fees: moving the JazzCash/Bank Alfalah connection to TASEMS deferred (D-050).
 - Parents: no SMS or WhatsApp alerts yet (needs a messaging provider / WhatsApp Business approval); online fee payment from the portal waits for the bank/JazzCash connection.
 - Staff: no recruitment, appraisals or payroll yet (payroll gets the monthly Excel).
 - Exams: exam set-up and grading scheme edits are in Setup (admin) for now; a purpose-built head-office screen can follow.
