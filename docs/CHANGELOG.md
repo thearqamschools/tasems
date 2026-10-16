@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0 — 2026-10-16 — Milestone 2a: Examinations and results
+
+Added
+- Approved result pattern stored as data: Final 50, Mid-Term 25, Attendance 5 (automatic), Discipline 5, Neatness 5, Summer vacation work 5, Class work & homework 5.
+- Exams (network-wide or per branch) with papers per class and subject, each with its own total.
+- Marks entry per paper and section: half marks, absent / absent with leave, checks against the paper total, nothing saved until all values are valid; corrections audited.
+- Teacher ratings screen for discipline (once per student) and neatness, summer work, class work (per subject).
+- Results per section: percentage, grade, pass, positions (1st–3rd), and exactly what is still missing per student.
+- Mid-Term progress report and annual result card: one A4 page per student, PDF for a student or the whole section; class teacher and principal remarks.
+- Row-level security on marks, ratings and remarks.
+- 92 automated tests.
+
+Not deployed.
+
 ## 0.5.0 — 2026-10-16 — Milestone 1f: Pilot hardening and head office view
 
 Added

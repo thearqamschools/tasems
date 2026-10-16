@@ -13,6 +13,13 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 | 1e — AI Teacher Assistant | Provider decided: Claude API (D-026). Deferred until textbook PDFs are collected and API billing is set up | **Deferred** |
 | 1f — Pilot hardening + head office view | PostgreSQL row-level security on all branch tables (tested with an ordinary role); `check_security` command; fonts served locally (~370 KB, no Google Fonts); head office home shows today's registers and diaries per branch; `/healthz`; production setup with automatic HTTPS (Caddy), ordinary database role, static files (WhiteNoise); encrypted nightly backup and restore-drill scripts; deployment guide; 79 automated tests | **Done (16 Oct 2026), not deployed** |
 
+## Phase 2 — Examinations and fees
+
+| Milestone | Contents | Status |
+| --- | --- | --- |
+| 2a — Examinations and results | Approved result pattern (D-030/031) as editable data; exams and papers set up by head office; marks entry per paper with checks and audit; teacher ratings (discipline, neatness, summer work, class work); automatic attendance marks; section results with what is still missing; Mid-Term progress report and annual result card (one A4 page, PDF for one student or the whole section); remarks; row-level security on marks and ratings; 92 automated tests | **Done (16 Oct 2026), not deployed** |
+| 2b — Fees | Fee structures, vouchers, payments (counter, bank, online), reconciliation, 8% royalty statements | Next — needs fee heads, concession rules and the bank(s) used |
+
 ## Known gaps and pending inputs
 
 - Production setup not yet run on a real server (no Docker available in the build environment); first install should be on a test server.
@@ -22,5 +29,6 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Urdu translations written by Claude; a native-speaker review is needed before the pilot.
 - No public-holiday calendar yet: registers can be taken on any school day of the session (Sunday off; Saturday only Hifz, Pre-9, 9, 10).
 - Diary: official logo files not yet uploaded (Setup → Diary layout); subject lists for classes other than Class 4; whether the principal must approve a diary before it is shared.
+- Exams: exam set-up and grading scheme edits are in Setup (admin) for now; a purpose-built head-office screen can follow.
 - Not yet provided: current software data export; biometric machine brand/model; academic session dates; subject list per class.
 - Hosting provider not chosen (no preference stated; shortlist in master plan Part 5).

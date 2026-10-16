@@ -11,6 +11,7 @@ from django.db import models, transaction
 
 from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
+from apps.exams.models import GradingComponent, GradingScheme
 from apps.organisation.models import Branch, HeadOffice
 
 VIEW_PEOPLE = ["people.view_student", "people.view_guardian", "people.view_enrolment", "people.view_studentguardian"]
@@ -147,16 +148,40 @@ DIARY_DESIGN = DIARY_VIEW + [
     "diary.change_diarylayout",
 ]
 
+# Examinations and results (Phase 2)
+EXAM_VIEW = [
+    "exams.view_exam",
+    "exams.view_paper",
+    "exams.view_mark",
+    "exams.view_rating",
+    "exams.view_resultremark",
+    "exams.view_gradingscheme",
+    "exams.view_gradingcomponent",
+]
+EXAM_ENTER = EXAM_VIEW + ["exams.add_mark", "exams.add_rating", "exams.add_resultremark", "exams.change_resultremark"]
+EXAM_MANAGE = EXAM_ENTER + ["exams.change_mark", "exams.change_rating"]
+EXAM_SETUP = EXAM_VIEW + [
+    "exams.add_exam",
+    "exams.change_exam",
+    "exams.add_paper",
+    "exams.change_paper",
+    "exams.delete_paper",
+    "exams.add_gradingscheme",
+    "exams.change_gradingscheme",
+    "exams.add_gradingcomponent",
+    "exams.change_gradingcomponent",
+]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW + DIARY_DESIGN,
-    "head_office_admin": ATT_VIEW + DIARY_DESIGN,
-    "regional_director": ATT_VIEW + DIARY_VIEW,
-    "branch_owner": ATT_VIEW + DIARY_VIEW,
-    "principal": ATT_MANAGE + DIARY_MANAGE,
-    "academic_coordinator": ATT_MANAGE + DIARY_MANAGE,
-    "class_teacher": ATT_MARK + DIARY_WRITE,
+    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP,
+    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP,
+    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
+    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
+    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": ATT_MARK + DIARY_WRITE,
-    "subject_teacher": ATT_VIEW + DIARY_VIEW,
+    "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
 }
 
 # Subjects and their order as they appear on the Class 4 diary shared on 16 Oct 2026.
@@ -170,6 +195,17 @@ SUBJECTS = [
     ("urdu", "Urdu", "اردو", True),
     ("al-quran", "Al-Quran", "القرآن", True),
 ]
+# Approved by the project lead on 16 Oct 2026. Seeded once; head office edits it in Setup afterwards.
+RESULT_PATTERN = [
+    ("final", "Final exam", "فائنل امتحان", "final", "subject", 50),
+    ("mid", "Mid-Term exam", "مڈ ٹرم امتحان", "mid", "subject", 25),
+    ("attendance", "Attendance", "حاضری", "attendance", "student", 5),
+    ("discipline", "Discipline", "نظم و ضبط", "rating", "student", 5),
+    ("neatness", "Neatness", "صفائی", "rating", "subject", 5),
+    ("summer_work", "Summer vacation work", "موسم گرما کا کام", "rating", "subject", 5),
+    ("class_work", "Class work & homework", "کلاس ورک اور ہوم ورک", "rating", "subject", 5),
+]
+
 CONFIRMED_CURRICULUM = {"class-4": [code for code, *_rest in SUBJECTS]}
 
 
@@ -246,6 +282,23 @@ class Command(BaseCommand):
             for order, subject_code in enumerate(subject_codes, start=1):
                 CurriculumSubject.objects.update_or_create(
                     class_level=level, subject=Subject.objects.get(code=subject_code), defaults={"sort_order": order}
+                )
+
+        # Approved result pattern (D-030): every subject out of 100.
+        scheme, created = GradingScheme.objects.get_or_create(
+            is_default=True, defaults={"name": "Arqam result pattern (Final 50 + Mid 25 + 25 continuous)"}
+        )
+        if created:
+            for order, (code, name, name_ur, source, scope, maximum) in enumerate(RESULT_PATTERN, start=1):
+                GradingComponent.objects.create(
+                    scheme=scheme,
+                    code=code,
+                    name=name,
+                    name_ur=name_ur,
+                    source=source,
+                    scope=scope,
+                    max_marks=maximum,
+                    sort_order=order,
                 )
 
         self.stdout.write(

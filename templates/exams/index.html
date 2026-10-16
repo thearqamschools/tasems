@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Exams & Results" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Exams & Results" %}</h1>
+<p class="lede">{% if session %}{% blocktrans with s=session.name %}Academic session {{ s }}{% endblocktrans %}{% else %}{% trans "No current academic session is set. Head office sets it under Setup." %}{% endif %}</p>
+
+{% if mine %}
+<h2>{% trans "My classes" %}</h2>
+<div class="register-list">{% for s in mine %}
+  <a class="register-card" href="{% url 'exams:section_results' s.id %}"><span class="register-name">{{ s }}</span><span>{% trans "Marks, ratings and result cards" %}</span></a>
+{% endfor %}</div>
+{% endif %}
+
+<h2>{% trans "Exams this session" %}</h2>
+{% if exams %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Exam" %}</th><th>{% trans "Type" %}</th><th>{% trans "Marks due" %}</th><th>{% trans "Results" %}</th></tr></thead>
+  <tbody>{% for e in exams %}<tr><td>{{ e.name }}</td><td>{{ e.get_kind_display }}</td><td>{{ e.marks_due_on|date:"d M Y"|default:"—" }}</td>
+    <td>{% if e.is_published %}<span class="badge">{% trans "Published" %}</span>{% else %}<span class="badge muted">{% trans "Not published" %}</span>{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card"><p>{% trans "No exams set up yet. Head office creates exams and their papers under Setup → Exams." %}</p></div>{% endif %}
+
+<h2>{% trans "All sections" %}</h2>
+{% if sections %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Section" %}</th>{% for e in exams %}<th>{{ e.get_kind_display }}</th>{% endfor %}<th>{% trans "Results" %}</th></tr></thead>
+  <tbody>{% for s in sections %}<tr><td>{{ s }}</td>
+    {% for e in exams %}<td><a href="{% url 'exams:section_exam' e.id s.id %}">{% trans "Marks" %}</a></td>{% endfor %}
+    <td><a href="{% url 'exams:section_results' s.id %}">{% trans "Results" %}</a></td></tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card"><p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Remarks" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Remarks" %} · {{ section }}</h1>
+<p class="lede">{{ exam.name }}</p>
+<form method="post">{% csrf_token %}
+{% for r in rows %}
+<fieldset class="card diary-subject"><legend>{{ r.enrolment.student.full_name }}</legend>
+  <div class="field"><label for="t{{ r.enrolment.student_id }}">{% trans "Class teacher's remarks" %}</label>
+    <textarea id="t{{ r.enrolment.student_id }}" name="t{{ r.enrolment.student_id }}" rows="2" dir="auto">{{ r.remark.teacher_remarks|default:"" }}</textarea></div>
+  {% if is_principal %}<div class="field"><label for="p{{ r.enrolment.student_id }}">{% trans "Principal's remarks" %}</label>
+    <textarea id="p{{ r.enrolment.student_id }}" name="p{{ r.enrolment.student_id }}" rows="2" dir="auto">{{ r.remark.principal_remarks|default:"" }}</textarea></div>{% endif %}
+</fieldset>
+{% endfor %}
+<div class="actions sticky-save"><button class="button" type="submit">{% trans "Save remarks" %}</button></div>
+</form>
+{% endblock %}

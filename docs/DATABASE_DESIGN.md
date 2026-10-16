@@ -20,6 +20,11 @@ PostgreSQL 16, one database, shared schema. Migrations are versioned in each app
 | people | Enrolment | Branch | One per student per session; roll number unique within a section |
 | attendance | AttendanceRecord | Branch | One per student per day (unique); indexed by branch+date+status and section+date; partition by month at national scale |
 | attendance | SectionAttendance | Branch | One per section per day with totals; what dashboards read |
+| exams | GradingScheme, GradingComponent | Network | The result pattern as data; one default scheme, optional per stage |
+| exams | Exam, Paper | Network or branch | Paper = class × subject × total marks |
+| exams | Mark | Branch | One per paper per student; corrections audited |
+| exams | Rating | Branch | Teacher marks for non-exam parts; subject empty for student-level parts |
+| exams | ResultRemark | Branch | Class teacher and principal remarks per exam |
 | core | AuditEvent | — | Append-only; read-only in admin |
 
 ## Isolation rules
