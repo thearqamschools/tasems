@@ -10,7 +10,7 @@ Added
 - Theme of the week, week number and quote: network-wide from head office, or per branch.
 - One-page A4 PDF and a 1080-px-wide image for WhatsApp; fonts bundled with the system.
 - Subjects of the Class 4 diary seeded; other classes' subjects entered by head office.
-- 0 automated tests.
+- 73 automated tests.
 
 Not deployed.
 

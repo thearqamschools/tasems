@@ -6,7 +6,7 @@ Current status: **Milestones 1a–1d done, not deployed.** See `docs/DEVELOPMENT
 
 ## Stack
 
-Python 3.12 · Django 5.2 LTS · PostgreSQL 16 · WeasyPrint (diary PDFs) · Docker · GitHub Actions. Diary PDFs need the Pango library (), already in the Dockerfile. Reasons: `docs/DECISIONS.md` (D-002).
+Python 3.12 · Django 5.2 LTS · PostgreSQL 16 · WeasyPrint (diary PDFs) · Docker · GitHub Actions. Diary PDFs need the Pango library (`libpango-1.0-0`), already in the Dockerfile. Reasons: `docs/DECISIONS.md` (D-002).
 
 ## Run it locally (about 5 minutes)
 
@@ -54,6 +54,8 @@ The same checks run automatically on GitHub for every push.
 | `apps/academics/` | Class levels, subjects, curriculum, sections |
 | `apps/people/` | Students, guardians, enrolments, Excel import |
 | `apps/attendance/` | Daily student attendance |
+| `apps/diary/` | Daily Diary, PDF and WhatsApp image |
+| `static/fonts/` | Bundled Urdu and Latin fonts (Open Font License) |
 | `tests/` | Automated tests |
 | `docs/` | Project source of truth: decisions, progress, design, security |
 
