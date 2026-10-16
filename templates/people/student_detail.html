@@ -5,7 +5,8 @@
 {% if student.full_name_ur %}<p class="ur" lang="ur" dir="rtl" style="font-size:1.25rem;margin:0">{{ student.full_name_ur }}</p>{% endif %}
 <p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p>
 <div class="actions">{% if can_edit %}<a class="button" href="{% url 'people:student_edit' student.pk %}">{% trans "Edit student" %}</a>{% endif %}
-{% if perms.fees.view_voucher %}<a class="button quiet" href="{% url 'fees:student' student.pk %}">{% trans "Fee account" %}</a>{% endif %}</div>
+{% if perms.fees.view_voucher %}<a class="button quiet" href="{% url 'fees:student' student.pk %}">{% trans "Fee account" %}</a>{% endif %}
+{% if perms.people.change_guardian %}<form method="post" action="{% url 'parents:codes' %}" style="display:inline">{% csrf_token %}<input type="hidden" name="student" value="{{ student.pk }}"><button class="button quiet" type="submit">{% trans "Parent login code" %}</button></form>{% endif %}</div>
 
 <div class="table-wrap"><table><tbody>
   <tr><th>{% trans "Gender" %}</th><td>{{ student.get_gender_display }}</td></tr>

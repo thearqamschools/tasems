@@ -42,6 +42,8 @@ PostgreSQL 16, one database, shared schema. Migrations are versioned in each app
 | hr | LeaveRequest | Branch | Request, approval by someone else, working days counted |
 | hr | Punch | Branch | One machine punch; unique per person and moment |
 | hr | StaffDay | Branch | One per person per day: first in, last out, status; hand corrections kept |
+| parents | ParentAccount | — | One login per parent mobile number; children found through guardian links |
+| parents | AccessCode | — | One-time set-up/reset code, hashed, 14 days |
 | core | AuditEvent | — | Append-only; read-only in admin |
 
 ## Isolation rules

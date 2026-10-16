@@ -1,0 +1,49 @@
+{% extends "parents/base_parent.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ child.full_name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'parents:home' %}">‹ {% trans "My children" %}</a></p>
+<h1>{% if LANG == "ur" and child.full_name_ur %}{{ child.full_name_ur }}{% else %}{{ child.full_name }}{% endif %}</h1>
+<p class="lede">{% if enrolment %}{{ enrolment.section }} · {% endif %}{% trans "Admission no." %} <span class="num">{{ child.admission_no }}</span></p>
+<nav class="tabs" aria-label="{% trans 'Sections' %}">
+  <a href="?tab=diary" {% if tab == "diary" %}aria-current="page"{% endif %}>{% trans "Diary" %}</a>
+  <a href="?tab=attendance" {% if tab == "attendance" %}aria-current="page"{% endif %}>{% trans "Attendance" %}</a>
+  <a href="?tab=fees" {% if tab == "fees" %}aria-current="page"{% endif %}>{% trans "Fees" %}</a>
+  <a href="?tab=results" {% if tab == "results" %}aria-current="page"{% endif %}>{% trans "Results" %}</a>
+</nav>
+
+{% if tab == "attendance" %}
+<div class="actions"><a class="button quiet" href="?tab=attendance&month={{ previous|date:'Y-m' }}">‹</a><strong>{{ month|date:"F Y" }}</strong>{% if next %}<a class="button quiet" href="?tab=attendance&month={{ next|date:'Y-m' }}">›</a>{% endif %}</div>
+<div class="figures">
+  <div class="figure"><div class="value">{% if percent is not None %}{{ percent }}%{% else %}—{% endif %}</div><div class="label">{% trans "Attendance" %}</div></div>
+  <div class="figure {% if counts.absent %}attention{% endif %}"><div class="value">{{ counts.absent|default:0 }}</div><div class="label">{% trans "Absent" %}</div></div>
+  <div class="figure"><div class="value">{{ counts.leave|default:0 }}</div><div class="label">{% trans "Leave" %}</div></div>
+  <div class="figure"><div class="value">{{ counts.late|default:0 }}</div><div class="label">{% trans "Late" %}</div></div>
+</div>
+<div class="table-wrap"><table><tbody>{% for r in records %}<tr><td>{{ r.date|date:"D d M" }}</td><td>{% if r.status == "absent" %}<span class="badge attention">{{ r.get_status_display }}</span>{% else %}<span class="badge{% if r.status != 'present' %} muted{% endif %}">{{ r.get_status_display }}</span>{% endif %}</td><td class="muted">{{ r.note }}</td></tr>{% empty %}<tr><td class="muted">{% trans "No attendance recorded for this month." %}</td></tr>{% endfor %}</tbody></table></div>
+
+{% elif tab == "fees" %}
+<div class="figures"><div class="figure {% if balance > 0 %}attention{% endif %}"><div class="value">Rs {{ balance|rupees }}</div><div class="label">{% if balance < 0 %}{% trans "Paid in advance" %}{% else %}{% trans "Fee due now" %}{% endif %}</div></div></div>
+<h2>{% trans "Fee vouchers" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Voucher ID" %}</th><th>{% trans "Months" %}</th><th>{% trans "Due date" %}</th><th class="num">Rs</th><th></th></tr></thead>
+  <tbody>{% for v in vouchers %}<tr><td class="num">{{ v.number }}</td><td>{{ v.first_month|date:"M Y" }}{% if v.last_month != v.first_month %} – {{ v.last_month|date:"M Y" }}{% endif %}</td><td>{{ v.due_on|date:"d M" }}</td><td class="num">{{ v.payable|rupees }}</td>
+    <td>{% if v.status == "paid" %}<span class="badge">{{ v.get_status_display }}</span>{% elif v.status == "open" %}<a href="{% url 'parents:voucher' child.id v.id %}" target="_blank" rel="noopener">{% trans "Voucher (PDF)" %}</a>{% else %}<span class="badge muted">{{ v.get_status_display }}</span>{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="5" class="muted">{% trans "No vouchers yet." %}</td></tr>{% endfor %}</tbody>
+</table></div>
+<p class="muted">{% trans "You can pay with JazzCash, the Bank Alfalah app, at any Askari Bank branch or at school. The ways to pay are on the back of the voucher." %}</p>
+{% if payments %}<h2>{% trans "Payments received" %}</h2>
+<div class="table-wrap"><table><tbody>{% for p in payments %}<tr><td>{{ p.paid_on|date:"d M Y" }}</td><td>{{ p.get_method_display }}</td><td class="num">Rs {{ p.amount|rupees }}</td><td class="num">{{ p.receipt_no }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+
+{% elif tab == "results" %}
+{% for e in exams %}<a class="card child-card" href="{% url 'parents:result' child.id e.id %}" target="_blank" rel="noopener"><div class="child-name">{{ e.name }}</div><div class="muted">{% if e.kind == "mid" %}{% trans "Progress report (PDF)" %}{% else %}{% trans "Result card (PDF)" %}{% endif %}</div></a>
+{% empty %}<div class="card"><p>{% trans "No results have been published yet." %}</p></div>{% endfor %}
+
+{% else %}
+{% for d in diaries %}<details class="card diary-item" {% if forloop.first %}open{% endif %}>
+  <summary><strong>{{ d.date|date:"l, d M Y" }}</strong></summary>
+  <img src="{% url 'parents:diary' child.id d.id 'png' %}" alt="{% trans 'Daily diary' %} {{ d.date|date:'d M Y' }}" loading="lazy" style="width:100%;height:auto;margin-top:.5rem;border:1px solid var(--line)">
+  <p><a href="{% url 'parents:diary' child.id d.id 'pdf' %}" target="_blank" rel="noopener">{% trans "Open as PDF" %}</a></p>
+</details>
+{% empty %}<div class="card"><p>{% trans "No diary has been shared yet." %}</p></div>{% endfor %}
+{% endif %}
+{% endblock %}

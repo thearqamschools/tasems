@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.0 — 2026-10-16 — Parent portal
+
+Added
+- Parent sign-in with mobile number and password; lockout after repeated failures.
+- First-time set-up and password reset with a one-time code printed by the school (one family or a whole class).
+- Each child: daily diary (image and PDF), monthly attendance, fee balance, vouchers (PDF) and payments, published result cards (PDF).
+- Parents see only their own children, in any branch; staff screens refuse them.
+- English and Urdu, phone-sized; 140 automated tests.
+
+Not deployed.
+
 ## 0.8.1 — 2026-10-16 — Staff: confirmed timings and unpaid leave
 
 Changed

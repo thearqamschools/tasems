@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 20:45+0500\n"
+"POT-Creation-Date: 2026-10-16 20:56+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,6 +116,7 @@ msgstr "طلبہ"
 #: apps/accounts/context_processors.py:21 templates/attendance/branches.html:7
 #: templates/attendance/today.html:2 templates/attendance/today.html:4
 #: templates/attendance/today.html:20 templates/hr/employee.html:26
+#: templates/parents/child.html:9 templates/parents/child.html:17
 msgid "Attendance"
 msgstr "حاضری"
 
@@ -130,7 +131,7 @@ msgid "Exams & Results"
 msgstr "امتحانات اور نتائج"
 
 #: apps/accounts/context_processors.py:30 templates/fees/index.html:2
-#: templates/fees/index.html:4
+#: templates/fees/index.html:4 templates/parents/child.html:10
 msgid "Fees"
 msgstr "فیس"
 
@@ -150,7 +151,7 @@ msgid "My attendance"
 msgstr "میری حاضری"
 
 #: apps/accounts/context_processors.py:42
-#: templates/people/student_list.html:61
+#: templates/people/student_list.html:62
 msgid "Import from Excel"
 msgstr "ایکسل سے درآمد"
 
@@ -162,7 +163,7 @@ msgstr "سیٹ اپ"
 msgid "Username or mobile number"
 msgstr "یوزر نیم یا موبائل نمبر"
 
-#: apps/accounts/forms.py:12
+#: apps/accounts/forms.py:12 apps/parents/forms.py:24
 msgid "Password"
 msgstr "پاس ورڈ"
 
@@ -225,7 +226,7 @@ msgstr "آخری تاریخ شروع کی تاریخ سے پہلے ہے۔"
 msgid "Stops the same code being used twice."
 msgstr "ایک ہی کوڈ دو بار استعمال ہونے سے روکتا ہے۔"
 
-#: apps/accounts/views.py:79
+#: apps/accounts/views.py:79 apps/parents/views.py:69 apps/parents/views.py:90
 msgid "Too many failed attempts. Please wait 15 minutes and try again."
 msgstr ""
 "بہت زیادہ ناکام کوششیں۔ براہ کرم 15 منٹ انتظار کر کے دوبارہ کوشش کریں۔"
@@ -259,19 +260,20 @@ msgstr "حاضر"
 #: apps/attendance/models.py:19 apps/exams/models.py:192 apps/hr/models.py:231
 #: templates/attendance/absentees.html:18 templates/attendance/branches.html:7
 #: templates/attendance/today.html:21 templates/attendance/today.html:41
-#: templates/hr/day.html:14
+#: templates/hr/day.html:14 templates/parents/child.html:18
 msgid "Absent"
 msgstr "غیر حاضر"
 
 #: apps/attendance/models.py:20 templates/attendance/today.html:41
 #: templates/hr/_leave_balance.html:3 templates/hr/index.html:19
 #: templates/hr/leaves.html:2 templates/hr/leaves.html:8
-#: templates/hr/leaves.html:22
+#: templates/hr/leaves.html:22 templates/parents/child.html:19
 msgid "Leave"
 msgstr "چھٹی"
 
 #: apps/attendance/models.py:21 apps/hr/models.py:229
 #: templates/attendance/absentees.html:20 templates/hr/day.html:13
+#: templates/parents/child.html:20
 msgid "Late"
 msgstr "دیر سے"
 
@@ -310,7 +312,7 @@ msgstr "لاگ اِن ناکام"
 msgid "Logged out"
 msgstr "لاگ آؤٹ ہوا"
 
-#: apps/core/views.py:135
+#: apps/core/views.py:137
 msgid "You do not have access to that branch."
 msgstr "آپ کو اس برانچ تک رسائی حاصل نہیں۔"
 
@@ -572,7 +574,7 @@ msgstr "کس مہینے تک"
 msgid "Same as 'From' for one month. E.g. June to July in July."
 msgstr "ایک مہینے کے لیے وہی مہینہ چنیں۔ مثلاً جولائی میں: جون سے جولائی۔"
 
-#: apps/fees/forms.py:30
+#: apps/fees/forms.py:30 templates/parents/child.html:28
 msgid "Due date"
 msgstr "آخری تاریخ"
 
@@ -1418,6 +1420,69 @@ msgstr "یہ ریجن کسی اور ہیڈ آفس کا ہے۔"
 msgid "e.g. Boys Campus, Girls Campus, Main Building"
 msgstr "مثلاً بوائز کیمپس، گرلز کیمپس، مین بلڈنگ"
 
+#: apps/parents/forms.py:17
+msgid "Enter your mobile number, e.g. 0300-1234567."
+msgstr "اپنا موبائل نمبر درج کریں، مثلاً 0300-1234567۔"
+
+#: apps/parents/forms.py:22 apps/parents/forms.py:52
+#: templates/parents/account.html:6
+msgid "Mobile number"
+msgstr "موبائل نمبر"
+
+#: apps/parents/forms.py:30
+msgid "New password"
+msgstr "نیا پاس ورڈ"
+
+#: apps/parents/forms.py:32
+msgid "At least 10 characters, not only numbers."
+msgstr "کم از کم 10 حروف، صرف نمبر نہیں۔"
+
+#: apps/parents/forms.py:35
+msgid "New password again"
+msgstr "نیا پاس ورڈ دوبارہ"
+
+#: apps/parents/forms.py:42
+msgid "The two passwords are not the same."
+msgstr "دونوں پاس ورڈ ایک جیسے نہیں۔"
+
+#: apps/parents/forms.py:54
+msgid "Access code from the school"
+msgstr "سکول کی طرف سے دیا گیا کوڈ"
+
+#: apps/parents/forms.py:66
+msgid "Current password"
+msgstr "موجودہ پاس ورڈ"
+
+#: apps/parents/views.py:73
+msgid "Mobile number or password is not correct."
+msgstr "موبائل نمبر یا پاس ورڈ درست نہیں۔"
+
+#: apps/parents/views.py:96
+msgid ""
+"This code is not correct or has expired. Ask the school office for a new "
+"one."
+msgstr "یہ کوڈ درست نہیں یا اس کی مدت ختم ہو چکی ہے۔ سکول آفس سے نیا کوڈ لیں۔"
+
+#: apps/parents/views.py:102
+msgid "Your password is set. Welcome!"
+msgstr "آپ کا پاس ورڈ بن گیا۔ خوش آمدید!"
+
+#: apps/parents/views.py:280
+msgid "The current password is not correct."
+msgstr "موجودہ پاس ورڈ درست نہیں۔"
+
+#: apps/parents/views.py:285
+msgid "Password changed."
+msgstr "پاس ورڈ تبدیل ہو گیا۔"
+
+#: apps/parents/views.py:331
+msgid ""
+"No families to print: no primary contact mobile, or all already have an "
+"account."
+msgstr ""
+"پرنٹ کے لیے کوئی خاندان نہیں: یا تو موبائل نمبر درج نہیں یا سب کا اکاؤنٹ "
+"پہلے سے موجود ہے۔"
+
 #: apps/people/forms.py:16
 msgid "Class and section (this session)"
 msgstr "جماعت اور سیکشن (اس سیشن میں)"
@@ -1442,7 +1507,7 @@ msgstr "والدین کا موبائل / واٹس ایپ"
 msgid "e.g. 0300-1234567"
 msgstr "مثلاً 0300-1234567"
 
-#: apps/people/forms.py:27 templates/people/student_detail.html:21
+#: apps/people/forms.py:27 templates/people/student_detail.html:22
 msgid "Relationship"
 msgstr "رشتہ"
 
@@ -1528,7 +1593,7 @@ msgstr "منتقل ہو گیا"
 msgid "Graduated"
 msgstr "فارغ التحصیل"
 
-#: apps/people/models.py:53 templates/people/student_detail.html:14
+#: apps/people/models.py:53 templates/people/student_detail.html:15
 msgid "B-Form number"
 msgstr "ب فارم نمبر"
 
@@ -1599,12 +1664,13 @@ msgid "TASEMS setup"
 msgstr "TASEMS سیٹ اپ"
 
 #: templates/accounts/auth_base.html:6 templates/base.html:7
-#: templates/base.html:13
+#: templates/base.html:13 templates/parents/base_parent.html:8
+#: templates/parents/base_parent.html:13
 msgid "The Arqam Schools"
 msgstr "دی ارقم سکولز"
 
 #: templates/accounts/login.html:2 templates/accounts/login.html:4
-#: templates/accounts/login.html:10
+#: templates/accounts/login.html:10 templates/parents/login.html:10
 msgid "Sign in"
 msgstr "سائن اِن"
 
@@ -1669,7 +1735,7 @@ msgstr "میں نے کوڈ محفوظ کر لیے"
 #: templates/attendance/absentees.html:8 templates/fees/collections.html:9
 #: templates/fees/defaulters.html:11 templates/fees/receipt.html:21
 #: templates/fees/royalty.html:9 templates/fees/student.html:43
-#: templates/fees/vouchers.html:29
+#: templates/fees/vouchers.html:29 templates/parents/slips.html:18
 msgid "Print"
 msgstr "پرنٹ"
 
@@ -1702,7 +1768,7 @@ msgid "Section"
 msgstr "سیکشن"
 
 #: templates/attendance/_people.html:3 templates/fees/defaulters.html:16
-#: templates/people/student_list.html:37
+#: templates/people/student_list.html:38
 msgid "Parent mobile"
 msgstr "والدین کا موبائل"
 
@@ -1825,6 +1891,7 @@ msgid "Previous day"
 msgstr "پچھلا دن"
 
 #: templates/attendance/today.html:8 templates/diary/day.html:8
+#: templates/parents/home.html:11
 msgid "Today"
 msgstr "آج"
 
@@ -1918,7 +1985,7 @@ msgstr "TASEMS"
 msgid "Switch"
 msgstr "تبدیل کریں"
 
-#: templates/base.html:28
+#: templates/base.html:28 templates/parents/base_parent.html:19
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
@@ -1967,9 +2034,9 @@ msgstr "مرحلہ"
 
 #: templates/core/home.html:27 templates/fees/defaulters.html:16
 #: templates/fees/vouchers.html:8 templates/fees/vouchers.html:20
-#: templates/people/student_detail.html:31
+#: templates/parents/codes.html:7 templates/people/student_detail.html:32
 #: templates/people/student_form.html:13 templates/people/student_list.html:17
-#: templates/people/student_list.html:36
+#: templates/people/student_list.html:37
 msgid "Class"
 msgstr "جماعت"
 
@@ -2039,6 +2106,7 @@ msgstr "ابھی نہیں لکھی گئی"
 
 #: templates/diary/day.html:29 templates/diary/view.html:2
 #: templates/diary/view.html:4 templates/diary/write.html:4
+#: templates/parents/child.html:8 templates/parents/home.html:12
 msgid "Diary"
 msgstr "ڈائری"
 
@@ -2150,7 +2218,7 @@ msgstr ""
 
 #: templates/exams/enter_marks.html:9 templates/exams/ratings.html:19
 #: templates/exams/section_results.html:14
-#: templates/people/student_detail.html:31
+#: templates/people/student_detail.html:32
 msgid "Roll no."
 msgstr "رول نمبر"
 
@@ -2194,7 +2262,7 @@ msgstr "نمبر جمع کرانے کی تاریخ"
 
 #: templates/exams/index.html:17 templates/exams/index.html:26
 #: templates/exams/index.html:29 templates/exams/section_results.html:2
-#: templates/exams/section_results.html:4
+#: templates/exams/section_results.html:4 templates/parents/child.html:11
 msgid "Results"
 msgstr "نتائج"
 
@@ -2436,6 +2504,7 @@ msgstr "منظوری کے لیے بھیجیں"
 
 #: templates/fees/concession_form.html:10 templates/fees/issue.html:27
 #: templates/hr/employee_form.html:9 templates/hr/leave_form.html:9
+#: templates/parents/account.html:10 templates/parents/slips.html:18
 msgid "Back"
 msgstr "واپس"
 
@@ -2456,7 +2525,7 @@ msgid "Discount"
 msgstr "رعایت"
 
 #: templates/fees/concessions.html:8 templates/fees/student.html:36
-#: templates/fees/vouchers.html:20
+#: templates/fees/vouchers.html:20 templates/parents/child.html:28
 msgid "Months"
 msgstr "مہینے"
 
@@ -2485,7 +2554,7 @@ msgstr "فیصلہ شدہ"
 #: templates/fees/vouchers.html:20 templates/hr/_days.html:3
 #: templates/hr/day.html:20 templates/hr/index.html:28
 #: templates/hr/leaves.html:22 templates/people/student_list.html:21
-#: templates/people/student_list.html:37
+#: templates/people/student_list.html:38
 msgid "Status"
 msgstr "حیثیت"
 
@@ -2555,8 +2624,8 @@ msgid "Students matching “%(q)s”"
 msgstr "“%(q)s” سے ملتے طلبہ"
 
 #: templates/fees/find.html:6 templates/fees/student.html:5
-#: templates/people/student_detail.html:6
-#: templates/people/student_list.html:36
+#: templates/parents/child.html:6 templates/people/student_detail.html:6
+#: templates/people/student_list.html:37
 msgid "Admission no."
 msgstr "داخلہ نمبر"
 
@@ -2726,7 +2795,7 @@ msgstr "فائل کی سطریں"
 msgid "Row"
 msgstr "قطار"
 
-#: templates/fees/payments_import.html:29
+#: templates/fees/payments_import.html:29 templates/parents/child.html:28
 msgid "Voucher ID"
 msgstr "واؤچر آئی ڈی"
 
@@ -2948,7 +3017,7 @@ msgstr "وصول کریں"
 msgid "Cancel voucher"
 msgstr "واؤچر منسوخ کریں"
 
-#: templates/fees/student.html:47
+#: templates/fees/student.html:47 templates/parents/child.html:31
 msgid "No vouchers yet."
 msgstr "ابھی کوئی واؤچر نہیں۔"
 
@@ -2983,11 +3052,11 @@ msgid_plural "Print %(n)s vouchers (PDF)"
 msgstr[0] "%(n)s واؤچر پرنٹ کریں (PDF)"
 msgstr[1] "%(n)s واؤچر پرنٹ کریں (PDF)"
 
-#: templates/fees/vouchers.html:32 templates/people/student_list.html:53
+#: templates/fees/vouchers.html:32 templates/people/student_list.html:54
 msgid "Previous"
 msgstr "پچھلا"
 
-#: templates/fees/vouchers.html:32 templates/people/student_list.html:55
+#: templates/fees/vouchers.html:32 templates/people/student_list.html:56
 msgid "Next"
 msgstr "اگلا"
 
@@ -3041,8 +3110,8 @@ msgstr "کوئی اندراج نہیں"
 
 #: templates/hr/day.html:20 templates/hr/index.html:36
 #: templates/hr/leaves.html:8 templates/hr/leaves.html:22
-#: templates/hr/month.html:9 templates/people/student_detail.html:21
-#: templates/people/student_list.html:36
+#: templates/hr/month.html:9 templates/people/student_detail.html:22
+#: templates/people/student_list.html:37
 msgid "Name"
 msgstr "نام"
 
@@ -3071,7 +3140,7 @@ msgid "Father's / husband's name"
 msgstr "والد / شوہر کا نام"
 
 #: templates/hr/employee.html:14 templates/hr/index.html:36
-#: templates/people/student_detail.html:21
+#: templates/people/student_detail.html:22
 msgid "Mobile"
 msgstr "موبائل"
 
@@ -3079,7 +3148,7 @@ msgstr "موبائل"
 msgid "Joining date"
 msgstr "تاریخِ تقرری"
 
-#: templates/hr/employee.html:16 templates/people/student_detail.html:31
+#: templates/hr/employee.html:16 templates/people/student_detail.html:32
 msgid "Campus"
 msgstr "کیمپس"
 
@@ -3364,73 +3433,256 @@ msgstr "مسئلہ"
 msgid "Download template"
 msgstr "ٹیمپلیٹ ڈاؤن لوڈ کریں"
 
+#: templates/parents/account.html:2 templates/parents/account.html:5
+#: templates/parents/account.html:9 templates/parents/home.html:19
+msgid "Change password"
+msgstr "پاس ورڈ تبدیل کریں"
+
+#: templates/parents/base_parent.html:8 templates/parents/base_parent.html:14
+msgid "Parents"
+msgstr "والدین"
+
+#: templates/parents/child.html:4 templates/parents/home.html:2
+msgid "My children"
+msgstr "میرے بچے"
+
+#: templates/parents/child.html:7
+msgid "Sections"
+msgstr "حصے"
+
+#: templates/parents/child.html:22
+msgid "No attendance recorded for this month."
+msgstr "اس مہینے کی حاضری ابھی درج نہیں۔"
+
+#: templates/parents/child.html:25
+msgid "Paid in advance"
+msgstr "پیشگی ادا شدہ"
+
+#: templates/parents/child.html:25
+msgid "Fee due now"
+msgstr "اس وقت واجب الادا فیس"
+
+#: templates/parents/child.html:26
+msgid "Fee vouchers"
+msgstr "فیس واؤچر"
+
+#: templates/parents/child.html:30
+msgid "Voucher (PDF)"
+msgstr "واؤچر (PDF)"
+
+#: templates/parents/child.html:33
+msgid ""
+"You can pay with JazzCash, the Bank Alfalah app, at any Askari Bank branch "
+"or at school. The ways to pay are on the back of the voucher."
+msgstr ""
+"فیس جاز کیش، بینک الفلاح ایپ، عسکری بینک کی کسی بھی برانچ یا سکول میں جمع "
+"کروائی جا سکتی ہے۔ ادائیگی کے طریقے واؤچر کی پچھلی طرف درج ہیں۔"
+
+#: templates/parents/child.html:34
+msgid "Payments received"
+msgstr "وصول شدہ ادائیگیاں"
+
+#: templates/parents/child.html:38
+msgid "Progress report (PDF)"
+msgstr "پراگریس رپورٹ (PDF)"
+
+#: templates/parents/child.html:38
+msgid "Result card (PDF)"
+msgstr "رزلٹ کارڈ (PDF)"
+
+#: templates/parents/child.html:39
+msgid "No results have been published yet."
+msgstr "ابھی کوئی رزلٹ جاری نہیں ہوا۔"
+
+#: templates/parents/child.html:44
+msgid "Daily diary"
+msgstr "روزانہ ڈائری"
+
+#: templates/parents/child.html:45
+msgid "Open as PDF"
+msgstr "PDF میں کھولیں"
+
+#: templates/parents/child.html:47
+msgid "No diary has been shared yet."
+msgstr "ابھی کوئی ڈائری جاری نہیں ہوئی۔"
+
+#: templates/parents/codes.html:2 templates/parents/codes.html:4
+#: templates/people/student_list.html:30
+msgid "Parent access codes"
+msgstr "والدین کے لاگ اِن کوڈ"
+
+#: templates/parents/codes.html:5
+#, python-format
+msgid ""
+"Parents sign in at the parent portal with their mobile number. To set their "
+"password the first time (or after forgetting it) they need a one-time code. "
+"Print the slips here and send them home with the children. %(accounts)s "
+"parents have an account so far."
+msgstr ""
+"والدین اپنے موبائل نمبر سے پیرنٹ پورٹل میں لاگ اِن کرتے ہیں۔ پہلی بار (یا "
+"پاس ورڈ بھول جانے پر) پاس ورڈ بنانے کے لیے انہیں ایک بار استعمال ہونے والا "
+"کوڈ چاہیے۔ یہاں سلپس پرنٹ کریں اور بچوں کے ہاتھ گھر بھیجیں۔ اب تک "
+"%(accounts)s والدین کا اکاؤنٹ بن چکا ہے۔"
+
+#: templates/parents/codes.html:8
+msgid "Only families without an account"
+msgstr "صرف وہ خاندان جن کا اکاؤنٹ نہیں"
+
+#: templates/parents/codes.html:9
+msgid "Make slips for this class"
+msgstr "اس کلاس کی سلپس بنائیں"
+
+#: templates/parents/codes.html:11
+msgid ""
+"Each slip has a new code; any older unused code for that mobile number stops"
+" working. Codes are valid for 14 days. For one family, use “Parent login "
+"code” on the student's page."
+msgstr ""
+"ہر سلپ پر نیا کوڈ ہوتا ہے؛ اس موبائل نمبر کا پرانا غیر استعمال شدہ کوڈ ختم "
+"ہو جاتا ہے۔ کوڈ 14 دن کے لیے کارآمد ہے۔ ایک خاندان کے لیے طالب علم کے صفحے "
+"پر “والدین کا لاگ اِن کوڈ” استعمال کریں۔"
+
+#: templates/parents/home.html:4
+msgid "Assalamualaikum"
+msgstr "السلام علیکم"
+
+#: templates/parents/home.html:11
+msgid "not marked yet"
+msgstr "ابھی درج نہیں"
+
+#: templates/parents/home.html:13
+msgid "Fee due"
+msgstr "واجب الادا فیس"
+
+#: templates/parents/home.html:13
+msgid "nothing"
+msgstr "کچھ نہیں"
+
+#: templates/parents/home.html:17
+msgid ""
+"No children are linked to your mobile number. Please contact the school "
+"office."
+msgstr ""
+"آپ کے موبائل نمبر سے کوئی بچہ منسلک نہیں۔ براہ کرم سکول آفس سے رابطہ کریں۔"
+
+#: templates/parents/login.html:2 templates/parents/login.html:5
+msgid "Parent sign-in"
+msgstr "والدین کا لاگ اِن"
+
+#: templates/parents/login.html:6
+msgid "See your children's daily diary, attendance, fee vouchers and results."
+msgstr "اپنے بچوں کی روزانہ ڈائری، حاضری، فیس واؤچر اور رزلٹ دیکھیں۔"
+
+#: templates/parents/login.html:12
+msgid "First time, or forgot your password? Use the code from the school"
+msgstr "پہلی بار، یا پاس ورڈ بھول گئے؟ سکول کا دیا ہوا کوڈ استعمال کریں"
+
+#: templates/parents/slips.html:18
+#, python-format
+msgid "%(n)s slip ready"
+msgid_plural "%(n)s slips ready"
+msgstr[0] "%(n)s سلپ تیار ہے"
+msgstr[1] "%(n)s سلپس تیار ہیں"
+
+#: templates/parents/start.html:2 templates/parents/start.html:5
+msgid "Set your password"
+msgstr "اپنا پاس ورڈ بنائیں"
+
+#: templates/parents/start.html:6
+msgid ""
+"Enter the mobile number the school has for you and the access code on the "
+"slip from the school office. Then choose your own password."
+msgstr ""
+"سکول میں درج اپنا موبائل نمبر اور سکول آفس کی سلپ پر لکھا کوڈ درج کریں۔ پھر "
+"اپنا پاس ورڈ بنائیں۔"
+
+#: templates/parents/start.html:10
+msgid "Set password and sign in"
+msgstr "پاس ورڈ بنائیں اور لاگ اِن کریں"
+
+#: templates/parents/start.html:12
+msgid ""
+"No code, or it has expired? Ask the school office for a new one: 041-2660265"
+" · WhatsApp 0339-2406479."
+msgstr ""
+"کوڈ نہیں ملا یا مدت ختم ہو گئی؟ سکول آفس سے نیا کوڈ لیں: 041-2660265 · واٹس "
+"ایپ 0339-2406479۔"
+
+#: templates/parents/start.html:13
+msgid "Back to sign-in"
+msgstr "لاگ اِن پر واپس"
+
 #: templates/people/student_detail.html:7 templates/people/student_form.html:2
 msgid "Edit student"
 msgstr "طالب علم میں ترمیم"
 
-#: templates/people/student_detail.html:11
+#: templates/people/student_detail.html:9
+msgid "Parent login code"
+msgstr "والدین کا لاگ اِن کوڈ"
+
+#: templates/people/student_detail.html:12
 msgid "Gender"
 msgstr "جنس"
 
-#: templates/people/student_detail.html:12
+#: templates/people/student_detail.html:13
 msgid "Date of birth"
 msgstr "تاریخ پیدائش"
 
-#: templates/people/student_detail.html:13
+#: templates/people/student_detail.html:14
 msgid "Admission date"
 msgstr "تاریخ داخلہ"
 
-#: templates/people/student_detail.html:15
+#: templates/people/student_detail.html:16
 msgid "Father's name"
 msgstr "والد کا نام"
 
-#: templates/people/student_detail.html:16
+#: templates/people/student_detail.html:17
 msgid "Father's CNIC"
 msgstr "والد کا شناختی کارڈ نمبر"
 
-#: templates/people/student_detail.html:19
+#: templates/people/student_detail.html:20
 msgid "Parents and guardians"
 msgstr "والدین اور سرپرست"
 
-#: templates/people/student_detail.html:25
+#: templates/people/student_detail.html:26
 #: templates/people/student_form.html:17
 msgid "Primary contact"
 msgstr "بنیادی رابطہ"
 
-#: templates/people/student_detail.html:26
+#: templates/people/student_detail.html:27
 msgid "No parent contact recorded"
 msgstr "والدین کا کوئی رابطہ درج نہیں"
 
-#: templates/people/student_detail.html:29
+#: templates/people/student_detail.html:30
 msgid "Classes by session"
 msgstr "سیشن وار جماعتیں"
 
-#: templates/people/student_detail.html:31
+#: templates/people/student_detail.html:32
 msgid "Session"
 msgstr "سیشن"
 
-#: templates/people/student_detail.html:33
+#: templates/people/student_detail.html:34
 msgid "Not placed in any class yet."
 msgstr "ابھی کسی جماعت میں نہیں۔"
 
-#: templates/people/student_detail.html:37
+#: templates/people/student_detail.html:38
 msgid "Record history"
 msgstr "ریکارڈ کی تاریخ"
 
-#: templates/people/student_detail.html:39
+#: templates/people/student_detail.html:40
 msgid "When"
 msgstr "کب"
 
-#: templates/people/student_detail.html:39
+#: templates/people/student_detail.html:40
 msgid "Who"
 msgstr "کس نے"
 
-#: templates/people/student_detail.html:39
+#: templates/people/student_detail.html:40
 msgid "What"
 msgstr "کیا"
 
 #: templates/people/student_form.html:2 templates/people/student_form.html:4
-#: templates/people/student_list.html:29 templates/people/student_list.html:61
+#: templates/people/student_list.html:29 templates/people/student_list.html:62
 msgid "Add a student"
 msgstr "طالب علم شامل کریں"
 
@@ -3526,30 +3778,30 @@ msgstr "تمام حیثیتیں"
 msgid "Show students"
 msgstr "طلبہ دکھائیں"
 
-#: templates/people/student_list.html:43
+#: templates/people/student_list.html:44
 msgid "Hifz"
 msgstr "حفظ"
 
-#: templates/people/student_list.html:44
+#: templates/people/student_list.html:45
 msgid "Not placed"
 msgstr "جماعت میں نہیں"
 
-#: templates/people/student_list.html:52
+#: templates/people/student_list.html:53
 msgid "Pages"
 msgstr "صفحات"
 
-#: templates/people/student_list.html:54
+#: templates/people/student_list.html:55
 #, python-format
 msgid "Page %(a)s of %(b)s"
 msgstr "صفحہ %(a)s از %(b)s"
 
-#: templates/people/student_list.html:60
+#: templates/people/student_list.html:61
 msgid ""
 "No students match these filters. Clear the search or choose another class."
 msgstr ""
 "ان فلٹرز سے کوئی طالب علم نہیں ملا۔ تلاش صاف کریں یا کوئی اور جماعت منتخب "
 "کریں۔"
 
-#: templates/people/student_list.html:60
+#: templates/people/student_list.html:61
 msgid "No students yet in this branch."
 msgstr "اس برانچ میں ابھی کوئی طالب علم نہیں۔"

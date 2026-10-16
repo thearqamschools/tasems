@@ -57,6 +57,7 @@ The same checks run automatically on GitHub for every push.
 | `apps/diary/` | Daily Diary, PDF and WhatsApp image |
 | `apps/exams/` | Exams, marks, result pattern, result cards |
 | `apps/hr/` | Staff records, biometric attendance import, leave, monthly sheet |
+| `apps/parents/` | Parent portal: diary, attendance, fees, results; access codes |
 | `apps/fees/` | Fee rates, vouchers (3 copies + payment options), payments, defaulters, discounts, royalty |
 | `static/fonts/` | Bundled Urdu and Latin fonts (Open Font License) |
 | `deploy/` | Production setup: HTTPS proxy, database role, backups |

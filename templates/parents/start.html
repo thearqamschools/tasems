@@ -1,0 +1,15 @@
+{% extends "parents/base_parent.html" %}{% load i18n %}
+{% block title %}{% trans "Set your password" %}{% endblock %}
+{% block content %}
+<div class="card parent-auth">
+  <h1>{% trans "Set your password" %}</h1>
+  <p class="lede">{% trans "Enter the mobile number the school has for you and the access code on the slip from the school office. Then choose your own password." %}</p>
+  <form method="post">{% csrf_token %}
+    {% for e in form.non_field_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+    {% for field in form %}{% include "includes_field.html" %}{% endfor %}
+    <button class="button" type="submit" style="width:100%">{% trans "Set password and sign in" %}</button>
+  </form>
+  <p class="muted" style="margin-top:1rem">{% trans "No code, or it has expired? Ask the school office for a new one: 041-2660265 · WhatsApp 0339-2406479." %}</p>
+  <p><a href="{% url 'parents:login' %}">{% trans "Back to sign-in" %}</a></p>
+</div>
+{% endblock %}

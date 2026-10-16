@@ -1,0 +1,13 @@
+{% extends "parents/base_parent.html" %}{% load i18n %}
+{% block title %}{% trans "Change password" %}{% endblock %}
+{% block content %}
+<div class="card parent-auth">
+  <h1>{% trans "Change password" %}</h1>
+  <p class="lede">{% trans "Mobile number" %}: <span class="num">{{ request.parent.phone }}</span></p>
+  <form method="post">{% csrf_token %}
+    {% for field in form %}{% include "includes_field.html" %}{% endfor %}
+    <button class="button" type="submit">{% trans "Change password" %}</button>
+    <a class="button quiet" href="{% url 'parents:home' %}">{% trans "Back" %}</a>
+  </form>
+</div>
+{% endblock %}

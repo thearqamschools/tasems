@@ -17,6 +17,8 @@ from .branch import current_branch, set_current_branch
 @login_required
 def home(request):
     user = request.user
+    if not user.accessible_branch_ids() and hasattr(user, "parent_account"):
+        return redirect("parents:home")
     branch = current_branch(request)
     session = AcademicSession.objects.filter(is_current=True).first()
     context = {

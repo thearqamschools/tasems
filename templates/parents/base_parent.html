@@ -1,0 +1,26 @@
+{% load static i18n %}<!doctype html>
+{% get_current_language as LANG %}{% get_current_language_bidi as RTL %}
+<html lang="{{ LANG }}" dir="{% if RTL %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f5e4f">
+  <title>{% block title %}{% trans "Parents" %}{% endblock %} · {% trans "The Arqam Schools" %}</title>
+  <link rel="stylesheet" href="{% static 'css/tasems.css' %}">
+</head>
+<body class="parent">
+  <header class="topbar">
+    <a class="school" href="{% url 'parents:home' %}">{% trans "The Arqam Schools" %}</a>
+    <span class="branch-name">{% trans "Parents" %}</span>
+    <form method="post" action="{% url 'set_language' %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      {% if LANG == "ur" %}<button name="language" value="en">English</button>{% else %}<button name="language" value="ur" class="ur">اردو</button>{% endif %}
+    </form>
+    {% if request.user.is_authenticated %}<form method="post" action="{% url 'parents:logout' %}">{% csrf_token %}<button type="submit">{% trans "Sign out" %}</button></form>{% endif %}
+  </header>
+  <main class="parent-main">
+    {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
