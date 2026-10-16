@@ -14,6 +14,8 @@
 <div class="actions">
   {% if can.generate %}<a class="button" href="{% url 'fees:generate' %}">{% trans "Make monthly vouchers" %}</a>{% endif %}
   <a class="button secondary" href="{% url 'fees:vouchers' %}?month={{ month|date:'Y-m' }}">{% trans "Vouchers" %}</a>
+  {% if can.pay %}<a class="button quiet" href="{% url 'fees:payments_import' %}">{% trans "Payments from a file (JazzCash)" %}</a>{% endif %}
+  <a class="button quiet" href="{% url 'fees:jazzcash_export' %}?month={{ month|date:'Y-m' }}">{% trans "Voucher list for JazzCash (Excel)" %}</a>
   <a class="button quiet" href="{% url 'fees:defaulters' %}">{% trans "Defaulters" %}</a>
   <a class="button quiet" href="{% url 'fees:collections' %}">{% trans "Daily collection" %}</a>
   <a class="button quiet" href="{% url 'fees:concessions' %}">{% trans "Special discounts" %}{% if pending %} ({{ pending }}){% endif %}</a>

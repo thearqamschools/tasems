@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.1 — 2026-10-16 — Fees: confirmed rules and JazzCash files
+
+Changed
+- Royalty is 8% of all fees received in the month (confirmed).
+- Re-admission column removed from the voucher (there is no re-admission fee).
+
+Added
+- Voucher list for JazzCash: unpaid vouchers of a month as an Excel file.
+- Payments from a file: JazzCash's (or a bank's) paid list imported by Voucher ID; every row checked first (unknown or cancelled vouchers, repeats, already recorded), then recorded with the normal rules.
+- 121 automated tests.
+
+Not deployed.
+
 ## 0.7.0 — 2026-10-16 — Milestone 2b: Fees
 
 Added

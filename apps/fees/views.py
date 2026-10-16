@@ -1,6 +1,7 @@
 """Fee screens for accountants, principals and head office."""
 
 import datetime as dt
+import secrets
 
 from django.conf import settings
 from django.contrib import messages
@@ -17,12 +18,13 @@ from django.views.decorators.http import require_POST
 
 from apps.academics.models import Section
 from apps.core.branch import current_branch
+from apps.core.models import AuditEvent
 from apps.core.templatetags.tasems_tags import rupees
 from apps.diary.models import DiaryLayout
 from apps.organisation.models import AcademicSession, Branch
 from apps.people.models import Enrolment, Student
 
-from . import reports
+from . import exchange, reports
 from . import services as S
 from .barcode import voucher_barcode
 from .forms import ConcessionForm, GenerateForm, IssueForm, MonthField, PaymentForm, ReasonForm
@@ -32,6 +34,7 @@ from .models import (
     Concession,
     FeeHead,
     FeeRate,
+    Method,
     Payment,
     PaymentChannel,
     Voucher,
@@ -704,6 +707,96 @@ def royalty(request):
             "month": month,
             "rows": rows,
             "total_royalty": sum((r.royalty for r in franchise), S.ZERO),
-            "total_base": sum((r.royalty_base for r in franchise), S.ZERO),
+            "total_base": sum((r.collected for r in franchise), S.ZERO),
         },
     )
+
+
+# --- Files exchanged with JazzCash and banks -------------------------------------------------
+
+
+@login_required
+def jazzcash_export(request):
+    """Unpaid vouchers of a month as an Excel file, to give to JazzCash."""
+    branch = _branch(request)
+    month = _month(request)
+    content, count = exchange.export_open_vouchers(branch, month)
+    AuditEvent.objects.create(
+        actor=request.user,
+        action=AuditEvent.Action.UPDATE,
+        model_label="fees.Voucher",
+        object_id=f"export:{month:%Y-%m}",
+        object_repr=f"Voucher list for JazzCash {month:%b %Y} ({count} vouchers)",
+        branch_id=branch.id,
+        changes={"exported": count},
+    )
+    response = HttpResponse(content, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = f'attachment; filename="Vouchers-{branch.code}-{month:%Y-%m}.xlsx"'
+    return response
+
+
+IMPORT_METHODS = [Method.JAZZCASH, Method.BANK_BRANCH, Method.BANK_TRANSFER, Method.ALFA]
+
+
+@login_required
+def payments_import(request):
+    """Step 1: upload the paid list (e.g. from JazzCash) and see every row checked.
+    Step 2: record the good rows. Nothing is saved before step 2."""
+    from apps.people.views import _import_dir
+
+    branch = _branch(request, S.PAY_PERM)
+    today = timezone.localdate()
+    methods = [(m.value, m.label) for m in IMPORT_METHODS]
+    method = request.POST.get("method") if request.POST.get("method") in dict(methods) else "jazzcash"
+    try:
+        default_date = dt.date.fromisoformat(request.POST.get("paid_on", "")) if request.POST.get("paid_on") else today
+    except ValueError:
+        default_date = today
+    context = {"methods": methods, "method": method, "paid_on": default_date, "max_rows": exchange.MAX_ROWS}
+
+    def check(content):
+        return exchange.read_paid_file(content, branch=branch, method=method, default_date=default_date, today=today)
+
+    if request.method == "POST" and request.POST.get("step") == "check":
+        upload = request.FILES.get("file")
+        if upload is None or not upload.name.lower().endswith(".xlsx"):
+            messages.error(request, _("Choose an Excel file (.xlsx)."))
+        elif upload.size > exchange.MAX_BYTES:
+            messages.error(request, _("The file is larger than 5 MB. Split it into smaller files."))
+        else:
+            content = upload.read()
+            result = check(content)
+            token = ""
+            if result.good:
+                token = secrets.token_hex(16)
+                (_import_dir() / f"{token}.xlsx").write_bytes(content)
+                request.session["payments_import"] = {"token": token, "branch": branch.id, "name": upload.name}
+            context.update(result=result, token=token, filename=upload.name)
+
+    elif request.method == "POST" and request.POST.get("step") == "import":
+        pending = request.session.pop("payments_import", None)
+        token = request.POST.get("token", "")
+        if not pending or pending["token"] != token or pending["branch"] != branch.id or not token.isalnum():
+            messages.error(request, _("This import has expired. Please check the file again."))
+            return redirect("fees:payments_import")
+        path = _import_dir() / f"{token}.xlsx"
+        try:
+            content = path.read_bytes()
+        except FileNotFoundError:
+            messages.error(request, _("This import has expired. Please check the file again."))
+            return redirect("fees:payments_import")
+        finally:
+            path.unlink(missing_ok=True)
+        result = check(content)  # checked again: someone may have recorded a payment meanwhile
+        payments = exchange.record_paid_rows(
+            result.rows, method=method, user=request.user, note=f"Imported from {pending['name']}"
+        )
+        messages.success(
+            request,
+            _("%(n)s payments recorded, Rs %(t)s in total. %(s)s rows skipped.")
+            % {"n": len(payments), "t": rupees(result.total), "s": len(result.rows) - len(payments)},
+        )
+        first = min((p.paid_on for p in payments), default=today)
+        return redirect(f"{_url('fees:collections')}?from={first:%Y-%m-%d}&to={today:%Y-%m-%d}")
+
+    return render(request, "fees/payments_import.html", context)

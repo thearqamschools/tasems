@@ -25,7 +25,7 @@ PostgreSQL 16, one database, shared schema. Migrations are versioned in each app
 | exams | Mark | Branch | One per paper per student; corrections audited |
 | exams | Rating | Branch | Teacher marks for non-exam parts; subject empty for student-level parts |
 | exams | ResultRemark | Branch | Class teacher and principal remarks per exam |
-| fees | FeeHead | Network | Voucher columns: Admission, Re Admission, Reg., Tuition, Annual, S.V.W., Gen. Exp., Others, Fine |
+| fees | FeeHead | Network | Voucher columns: Admission, Reg., Tuition, Annual, S.V.W., Gen. Exp., Others, Fine |
 | fees | FeeRate | Branch | Amount per head, class (or all classes) and start date; sibling amount |
 | fees | BranchFeeSettings | Branch | Due day, late fine, bank details and printed text |
 | fees | PaymentChannel | Network or branch | Payment options printed on the back of the voucher |

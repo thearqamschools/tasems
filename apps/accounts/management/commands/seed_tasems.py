@@ -254,17 +254,16 @@ RESULT_PATTERN = [
 ]
 
 # Voucher columns, in the order of the school's current fee voucher (shared 16 Oct 2026).
-# code, name, short name, Urdu, kind, charge months, counts for royalty
+# code, name, short name, Urdu, kind, charge months. No re-admission fee (confirmed 16 Oct 2026).
 FEE_HEADS = [
-    ("admission", "Admission fee", "Admission", "داخلہ فیس", "one_time", [], False),
-    ("re_admission", "Re-admission fee", "Re Admission", "دوبارہ داخلہ فیس", "one_time", [], False),
-    ("registration", "Registration fee", "Reg.", "رجسٹریشن فیس", "one_time", [], False),
-    ("tuition", "Monthly (tuition) fee", "Tuition", "ماہانہ فیس", "monthly", [], True),
-    ("annual", "Annual charges", "Annual", "سالانہ چارجز", "yearly", [4], False),
-    ("summer_work", "Summer vacation work", "S.V.W.", "سمر ویکیشن ورک", "seasonal", [7], False),
-    ("general", "General expenses", "Gen. Exp.", "متفرق اخراجات", "other", [], False),
-    ("others", "Other charges", "Others", "دیگر", "other", [], False),
-    ("fine", "Late fee fine", "Fine", "جرمانہ", "fine", [], False),
+    ("admission", "Admission fee", "Admission", "داخلہ فیس", "one_time", []),
+    ("registration", "Registration fee", "Reg.", "رجسٹریشن فیس", "one_time", []),
+    ("tuition", "Monthly (tuition) fee", "Tuition", "ماہانہ فیس", "monthly", []),
+    ("annual", "Annual charges", "Annual", "سالانہ چارجز", "yearly", [4]),
+    ("summer_work", "Summer vacation work", "S.V.W.", "سمر ویکیشن ورک", "seasonal", [7]),
+    ("general", "General expenses", "Gen. Exp.", "متفرق اخراجات", "other", []),
+    ("others", "Other charges", "Others", "دیگر", "other", []),
+    ("fine", "Late fee fine", "Fine", "جرمانہ", "fine", []),
 ]
 # Samanabad campus fees confirmed by the project lead on 16 Oct 2026. Each franchise sets its own.
 # head, class level code (None = all classes), amount, sibling amount
@@ -447,7 +446,7 @@ class Command(BaseCommand):
         )
 
     def seed_fees(self):
-        for order, (code, name, short, name_ur, kind, months, royalty) in enumerate(FEE_HEADS, start=1):
+        for order, (code, name, short, name_ur, kind, months) in enumerate(FEE_HEADS, start=1):
             FeeHead.objects.get_or_create(
                 code=code,
                 defaults={
@@ -456,7 +455,6 @@ class Command(BaseCommand):
                     "name_ur": name_ur,
                     "kind": kind,
                     "charge_months": months,
-                    "counts_for_royalty": royalty,
                     "sort_order": order,
                 },
             )

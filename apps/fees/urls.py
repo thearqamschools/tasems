@@ -22,4 +22,6 @@ urlpatterns = [
     path("defaulters/", views.defaulters, name="defaulters"),
     path("collections/", views.collections, name="collections"),
     path("royalty/", views.royalty, name="royalty"),
+    path("jazzcash/vouchers.xlsx", views.jazzcash_export, name="jazzcash_export"),
+    path("payments/import/", views.payments_import, name="payments_import"),
 ]
