@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Enter marks" %}{% endblock %}
+{% block content %}
+<h1>{{ paper.subject.name }} · {{ section }}</h1>
+<p class="lede">{{ paper.exam.name }} · {% blocktrans with t=paper.total_marks %}out of {{ t }}{% endblocktrans %}</p>
+<p class="muted">{% trans "Enter the marks written on the paper. Leave a box empty if the paper is not checked yet. Half marks are allowed." %}</p>
+<form method="post" novalidate>{% csrf_token %}
+<div class="table-wrap"><table>
+  <thead><tr><th class="num">{% trans "Roll no." %}</th><th>{% trans "Student" %}</th><th>{% trans "Marks" %}</th><th>{% trans "Attendance in exam" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td class="num">{{ r.enrolment.roll_no|default:"" }}</td>
+    <td>{{ r.enrolment.student.full_name }}</td>
+    <td style="width:8rem"><input type="text" inputmode="decimal" dir="ltr" name="m{{ r.enrolment.student_id }}" value="{{ r.value }}" aria-label="{% trans 'Marks' %} {{ r.enrolment.student.full_name }}" style="min-height:2.5rem">
+      {% if r.error %}<p class="error">{{ r.error }}</p>{% endif %}</td>
+    <td><select name="st{{ r.enrolment.student_id }}" aria-label="{% trans 'Attendance in exam' %}">{% for v, l in statuses %}<option value="{{ v }}" {% if r.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+<div class="actions sticky-save"><button class="button" type="submit">{% trans "Save marks" %}</button>
+  <a class="button quiet" href="{% url 'exams:section_exam' paper.exam_id section.id %}">{% trans "Cancel" %}</a></div>
+</form>
+{% endblock %}

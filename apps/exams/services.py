@@ -8,7 +8,7 @@ from django.utils import timezone
 from apps.core.models import AuditEvent
 from apps.people.models import Enrolment, Student
 
-from .models import Mark
+from .models import Mark, Rating
 
 ADD_PERM = "exams.add_mark"
 CHANGE_PERM = "exams.change_mark"
@@ -96,3 +96,61 @@ def save_marks(paper, section, entries, user):
             changes=changes,
         )
     return len(rows)
+
+
+def parse_rating(raw, maximum):
+    text = (raw or "").strip()
+    if text == "":
+        return None
+    try:
+        value = Decimal(text)
+    except InvalidOperation as exc:
+        raise ValueError("not a number") from exc
+    if value < 0 or value > maximum:
+        raise ValueError(f"must be between 0 and {format(maximum.normalize(), 'f')}")
+    if value * 2 != (value * 2).to_integral_value():
+        raise ValueError("use whole or half marks")
+    return value
+
+
+@transaction.atomic
+def save_ratings(section, component, subject, values, user):
+    """`values` maps student id → Decimal (None = leave unchanged). Changes are audited."""
+    existing = {
+        r.student_id: r
+        for r in Rating.objects.filter(
+            student_id__in=values, session=section.session, component=component, subject=subject
+        )
+    }
+    changes, saved = {}, 0
+    for student_id, value in values.items():
+        if value is None:
+            continue
+        old = existing.get(student_id)
+        if old:
+            if old.value != value:
+                changes[str(student_id)] = {"from": str(old.value), "to": str(value)}
+                old.value, old.entered_by = value, user
+                old.save(update_fields=["value", "entered_by", "updated_at"])
+        else:
+            Rating.objects.create(
+                branch_id=section.branch_id,
+                student_id=student_id,
+                session=section.session,
+                component=component,
+                subject=subject,
+                value=value,
+                entered_by=user,
+            )
+        saved += 1
+    if changes:
+        AuditEvent.objects.create(
+            actor=user,
+            action=AuditEvent.Action.UPDATE,
+            model_label="exams.Rating",
+            object_id=f"{section.pk}:{component.code}:{subject.pk if subject else '-'}",
+            object_repr=f"{component.name} {section} {subject or ''}",
+            branch_id=section.branch_id,
+            changes=changes,
+        )
+    return saved

@@ -26,6 +26,7 @@ RLS_TABLES = [
     "diary_diary",
     "exams_mark",
     "exams_resultremark",
+    "exams_rating",
 ]
 
 # Policies are created by migrations: core/0002_row_level_security.py and exams/0002_row_level_security.py.

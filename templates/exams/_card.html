@@ -1,4 +1,4 @@
-{% load i18n %}<style>
+{% load exams_tags %}{% load i18n %}<style>
   @font-face { font-family: "CardSerif"; src: url("{{ font_base }}NotoSerif-Regular.ttf"); font-weight: 400; }
   @font-face { font-family: "CardSerif"; src: url("{{ font_base }}NotoSerif-Bold.ttf"); font-weight: 700; }
   @font-face { font-family: "CardUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Regular.ttf"); font-weight: 400; }
@@ -20,7 +20,7 @@
   .rc .info td.v { font-weight: 700; }
   .rc .info .ur { font-family: "CardUrdu"; font-weight: 400; font-size: 9pt; }
   .rc .marks { margin-top: 3mm; }
-  .rc .marks th { background: #1d2b6b; color: #fff; font-size: 8.5pt; padding: 1.6mm 1.5mm; border: 0.6pt solid #1d2b6b; }
+  .rc .marks th { background: #1d2b6b; color: #fff; font-size: 7.5pt; line-height: 1.2; padding: 1.6mm 1mm; border: 0.6pt solid #1d2b6b; overflow-wrap: normal; hyphens: none; }
   .rc .marks td { border: 0.6pt solid #c9cfdf; padding: 1.4mm 1.5mm; text-align: center; }
   .rc .marks td.subject { text-align: left; font-weight: 700; }
   .rc .marks tr:nth-child(even) td { background: #f7f8fc; }
@@ -40,7 +40,8 @@
   .rc .bands th { background: #eef1f8; }
   .rc .signs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8mm; margin-top: 12mm; text-align: center; font-size: 8.5pt; }
   .rc .signs div { border-top: 0.6pt solid #14182b; padding-top: 1mm; }
-  .rc .foot { margin-top: 3mm; font-size: 7.5pt; color: #5a6075; display: flex; justify-content: space-between; }
+  .rc .foot { margin-top: 3mm; font-size: 7.5pt; color: #5a6075; display: flex; justify-content: space-between; gap: 4mm; }
+  .rc .foot span:last-child { white-space: nowrap; }
 </style>
 {% for r in results %}
 <div class="rc">
@@ -64,39 +65,37 @@
     <tr><td class="k">Parent / Guardian</td><td class="v">{{ r.guardian.full_name|default:"—" }}</td>
         <td class="k">Class</td><td class="v">{{ section }}</td></tr>
     <tr><td class="k">Roll No.</td><td class="v">{{ r.enrolment.roll_no|default:"—" }}</td>
-        <td class="k">Attendance</td><td class="v">{% if r.attendance_days %}{{ r.present_days }} / {{ r.attendance_days }} days{% else %}—{% endif %}</td></tr>
+        <td class="k">Attendance</td><td class="v">{% if r.attendance_days %}{{ r.present_days }} / {{ r.attendance_days }} days ({{ r.attendance_percent|floatformat:0 }}%){% else %}—{% endif %}</td></tr>
   </table>
 
   <table class="marks">
     {% if card == "mid" %}
-    <thead><tr><th style="width:34%">Subject</th><th>Total Marks</th><th>Marks Obtained</th><th>Percentage</th><th>Grade</th></tr></thead>
-    <tbody>{% for s in r.subjects %}<tr>
+    <thead><tr><th style="width:38%">Subject</th><th>Marks<span class="small" style="color:#cfd6ee">obtained / total</span></th><th>Percentage</th><th>Grade</th></tr></thead>
+    <tbody>{% for s in r.subjects %}{% with p=s.parts.mid %}<tr>
       <td class="subject">{{ s.subject.name }}</td>
-      <td>{{ s.mid_paper.total_marks|default:"—" }}</td>
-      <td>{% if s.mid.status == "present" %}{{ s.mid.obtained.normalize }}{% elif s.note %}{{ s.note }}{% else %}—{% endif %}</td>
+      <td>{% if p.raw %}{{ p.raw }}{% elif p.note %}{{ p.note }}{% else %}—{% endif %}</td>
       <td class="{% if s.passed is False %}fail{% endif %}">{% if s.score is not None %}{{ s.score|floatformat:1 }}%{% else %}—{% endif %}</td>
       <td class="{% if s.passed is False %}fail{% endif %}">{{ s.grade|default:"—" }}</td>
-    </tr>{% endfor %}</tbody>
+    </tr>{% endwith %}{% endfor %}</tbody>
     {% else %}
-    <thead><tr><th style="width:28%">Subject</th><th>Mid-Term<span class="small" style="color:#cfd6ee">obtained / total</span></th><th>Final<span class="small" style="color:#cfd6ee">obtained / total</span></th><th>Score<span class="small" style="color:#cfd6ee">out of 100</span></th><th>Grade</th></tr></thead>
+    <thead><tr><th style="width:17%">Subject</th>{% for c in components %}<th>{{ c.name }}<span class="small" style="color:#cfd6ee">{{ c.max_marks|floatformat:"-1" }}</span></th>{% endfor %}<th>Total<span class="small" style="color:#cfd6ee">100</span></th><th style="width:8%">Grade</th></tr></thead>
     <tbody>{% for s in r.subjects %}<tr>
       <td class="subject">{{ s.subject.name }}</td>
-      <td>{% if s.mid.status == "present" %}{{ s.mid.obtained.normalize }} / {{ s.mid_paper.total_marks }}{% elif s.mid %}{{ s.mid.get_status_display }}{% else %}—{% endif %}</td>
-      <td>{% if s.final.status == "present" %}{{ s.final.obtained.normalize }} / {{ s.final_paper.total_marks }}{% elif s.final %}{{ s.final.get_status_display }}{% else %}—{% endif %}</td>
-      <td class="{% if s.passed is False %}fail{% endif %}">{% if s.score is not None %}{{ s.score|floatformat:1 }}{% else %}—{% endif %}</td>
+      {% for c in components %}{% with p=s.parts|get_part:c.code %}<td>{% if p.value is not None %}{{ p.value|floatformat:"-1" }}{% if p.raw %}<span class="small">{{ p.raw }}</span>{% endif %}{% elif p.note %}<span class="small">{{ p.note }}</span>{% else %}—{% endif %}</td>{% endwith %}{% endfor %}
+      <td class="{% if s.passed is False %}fail{% endif %}" style="width:9%"><strong>{% if s.score is not None %}{{ s.score|floatformat:"-1" }}{% else %}—{% endif %}</strong></td>
       <td class="{% if s.passed is False %}fail{% endif %}">{{ s.grade|default:"—" }}</td>
     </tr>{% endfor %}</tbody>
     {% endif %}
   </table>
 
   <div class="summary">
-    <div><span class="k">Total</span><span class="v">{% if r.complete %}{{ r.obtained|floatformat:1 }}<span style="font-size:9pt"> / {{ r.maximum|floatformat:0 }}</span>{% else %}—{% endif %}</span></div>
+    <div><span class="k">Total</span><span class="v">{% if r.complete %}{{ r.obtained|floatformat:"-1" }}<span style="font-size:9pt"> / {{ r.maximum|floatformat:0 }}</span>{% else %}—{% endif %}</span></div>
     <div><span class="k">Percentage</span><span class="v">{% if r.complete %}{{ r.percent|floatformat:2 }}%{% else %}—{% endif %}</span></div>
     <div><span class="k">Grade</span><span class="v">{{ r.grade|default:"—" }}</span></div>
     <div><span class="k">Result</span><span class="v {% if r.complete and not r.passed %}fail{% endif %}">{% if not r.complete %}Incomplete{% elif r.passed %}{% if card == "mid" %}Pass{% else %}Promoted{% endif %}{% else %}Needs improvement{% endif %}</span></div>
     <div><span class="k">Class position</span><span class="v">{% if r.position %}{{ r.position }}{% if r.position == 1 %}st{% elif r.position == 2 %}nd{% elif r.position == 3 %}rd{% else %}th{% endif %}{% else %}—{% endif %}</span></div>
   </div>
-  {% if r.complete and r.failed_subjects %}<p style="margin:1.5mm 0 0;color:#a8322a;font-size:8.5pt">Below the pass mark ({{ scheme.pass_percent|floatformat:0 }}%) in: {% for s in r.failed_subjects %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}.</p>{% endif %}
+  {% if r.complete and r.failed_subjects %}<p style="margin:1.5mm 0 0;color:#a8322a;font-size:8.5pt">Below the pass mark in: {% for s in r.failed_subjects %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}.</p>{% endif %}
 
   <div class="lower">
     <div>
@@ -113,7 +112,7 @@
 
   <div class="signs"><div>Class Teacher</div><div>Principal</div><div>Parent / Guardian</div></div>
   <div class="foot">
-    <span>{% if card == "annual" %}Score = Mid-Term {{ scheme.mid_weight|floatformat:0 }}% + Final {{ scheme.final_weight|floatformat:0 }}%{% if scheme.test_weight %} + Class tests {{ scheme.test_weight|floatformat:0 }}%{% endif %}. Pass mark {{ scheme.pass_percent|floatformat:0 }}% in each subject.{% else %}Pass mark {{ scheme.pass_percent|floatformat:0 }}% in each subject.{% endif %}</span>
+    <span>{% if card == "annual" %}Each subject is out of 100: {% for c in components %}{{ c.name }} {{ c.max_marks|floatformat:"-1" }}{% if not forloop.last %}, {% endif %}{% endfor %}. Pass: {{ scheme.pass_percent|floatformat:0 }}% of the subject and {{ scheme.exam_pass_percent|floatformat:0 }}% of exam marks.{% else %}Pass mark {{ scheme.pass_percent|floatformat:0 }}% in each subject.{% if r.discipline.value is not None %} Discipline: {{ r.discipline.value|floatformat:"-1" }}.{% endif %}{% endif %}</span>
     <span>Issued {% now "d M Y" %}</span>
   </div>
 </div>

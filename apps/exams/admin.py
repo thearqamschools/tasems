@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from apps.core.admin_mixins import ScopedAdminMixin
 
-from .models import Exam, GradingScheme, Mark, Paper
+from .models import Exam, GradingComponent, GradingScheme, Mark, Paper, Rating
 
 
 class PaperInline(admin.TabularInline):
@@ -17,15 +17,30 @@ class ExamAdmin(admin.ModelAdmin):
     inlines = [PaperInline]
 
 
+class ComponentInline(admin.TabularInline):
+    model = GradingComponent
+    extra = 0
+
+
 @admin.register(GradingScheme)
 class GradingSchemeAdmin(admin.ModelAdmin):
-    list_display = ("name", "test_weight", "mid_weight", "final_weight", "pass_percent", "positions", "is_default")
+    list_display = ("name", "total", "pass_percent", "exam_pass_percent", "positions", "is_default")
+    inlines = [ComponentInline]
 
 
 @admin.register(Mark)
 class MarkAdmin(ScopedAdminMixin, admin.ModelAdmin):
     list_display = ("student", "paper", "obtained", "status", "branch")
     list_filter = ("paper__exam", "status")
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(Rating)
+class RatingAdmin(ScopedAdminMixin, admin.ModelAdmin):
+    list_display = ("student", "component", "subject", "value", "branch")
+    list_filter = ("component",)
 
     def has_add_permission(self, request):
         return False

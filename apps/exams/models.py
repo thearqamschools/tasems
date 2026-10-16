@@ -1,13 +1,16 @@
-"""Examinations, marks and grading.
+"""Examinations, marks and the result pattern.
 
-Grading (proposed default, DECISIONS D-030): each paper is marked out of its own total.
-The annual result converts each exam to a percentage and combines them by weight:
+Approved pattern (16 Oct 2026, DECISIONS D-030). Every subject is out of 100:
 
-    subject score (out of 100) = Mid-Term % × 30% + Final % × 70%
+    Final exam 50 · Mid-Term exam 25 · Attendance 5 (automatic) · Discipline 5
+    Neatness 5 · Summer vacation work 5 · Class work & homework 5
 
-Class tests are recorded for progress but carry 0% weight by default. Weights, pass
-mark, grade bands and position rules live in GradingScheme rows, so head office can
-change them without code changes.
+Exam papers are marked out of their own totals and converted to their share
+(e.g. 60/80 in the Final = 37.5 of 50). Attendance and discipline belong to the
+student and count the same in every subject; the other ratings are per subject.
+A student passes a subject with 33% overall AND 33% of the exam marks, so
+non-exam marks cannot carry a failed paper. Everything here is data that head
+office can change in Setup.
 """
 
 from decimal import Decimal
@@ -28,14 +31,19 @@ PERCENT = [MinValueValidator(Decimal("0")), MaxValueValidator(Decimal("100"))]
 def default_bands():
     # Same bands as the Punjab boards use for Matric, so parents read them the same way.
     return [
-        {"grade": "A+", "min": 80, "remark": "Outstanding"},
-        {"grade": "A", "min": 70, "remark": "Excellent"},
-        {"grade": "B", "min": 60, "remark": "Very good"},
-        {"grade": "C", "min": 50, "remark": "Good"},
-        {"grade": "D", "min": 40, "remark": "Fair"},
-        {"grade": "E", "min": 33, "remark": "Satisfactory"},
-        {"grade": "F", "min": 0, "remark": "Needs improvement"},
+        {"grade": "A+", "min": 80},
+        {"grade": "A", "min": 70},
+        {"grade": "B", "min": 60},
+        {"grade": "C", "min": 50},
+        {"grade": "D", "min": 40},
+        {"grade": "E", "min": 33},
+        {"grade": "F", "min": 0},
     ]
+
+
+def default_attendance_points():
+    # [minimum attendance %, points out of the component's maximum]
+    return [[95, 5], [90, 4], [85, 3], [80, 2], [75, 1], [0, 0]]
 
 
 @audited
@@ -46,20 +54,25 @@ class GradingScheme(TimeStampedModel):
         ALL = "all", _("Show every student's position")
 
     class AbsentMid(models.TextChoices):
-        ZERO = "zero", _("Absent in Mid-Term counts as zero")
-        FINAL_ONLY = "final_only", _("Excused absence: Final counts for 100%")
+        ZERO = "zero", _("Any absence in the Mid-Term counts as zero")
+        FINAL_COVERS = "final_covers", _("Absence with leave: the Final covers the Mid-Term's share")
 
     name = models.CharField(max_length=80, unique=True)
     stages = models.JSONField(
-        default=list, help_text=_("Stages this scheme applies to, e.g. ['primary', 'middle']. Empty = all stages.")
+        default=list,
+        blank=True,
+        help_text=_("Stages this scheme applies to, e.g. ['early_years']. Empty with 'default' = all others."),
     )
-    test_weight = models.DecimalField(max_digits=5, decimal_places=2, default=0, validators=PERCENT)
-    mid_weight = models.DecimalField(max_digits=5, decimal_places=2, default=30, validators=PERCENT)
-    final_weight = models.DecimalField(max_digits=5, decimal_places=2, default=70, validators=PERCENT)
-    pass_percent = models.DecimalField(max_digits=5, decimal_places=2, default=33, validators=PERCENT)
+    pass_percent = models.DecimalField(
+        max_digits=5, decimal_places=2, default=33, validators=PERCENT, help_text=_("Of the subject total")
+    )
+    exam_pass_percent = models.DecimalField(
+        max_digits=5, decimal_places=2, default=33, validators=PERCENT, help_text=_("Of the exam marks alone")
+    )
     bands = models.JSONField(default=default_bands)
+    attendance_points = models.JSONField(default=default_attendance_points)
     positions = models.CharField(max_length=10, choices=Positions.choices, default=Positions.TOP3)
-    absent_mid_rule = models.CharField(max_length=12, choices=AbsentMid.choices, default=AbsentMid.FINAL_ONLY)
+    absent_mid_rule = models.CharField(max_length=14, choices=AbsentMid.choices, default=AbsentMid.FINAL_COVERS)
     is_default = models.BooleanField(default=False)
 
     class Meta:
@@ -70,16 +83,55 @@ class GradingScheme(TimeStampedModel):
     def __str__(self):
         return self.name
 
-    def clean(self):
-        if self.test_weight + self.mid_weight + self.final_weight != 100:
-            raise ValidationError(_("Test, Mid-Term and Final weights must add up to 100."))
-
     @classmethod
     def for_stage(cls, stage):
         for scheme in cls.objects.exclude(is_default=True):
             if stage in (scheme.stages or []):
                 return scheme
-        return cls.objects.filter(is_default=True).first() or cls(name="Default")
+        return cls.objects.filter(is_default=True).first()
+
+    @property
+    def total(self):
+        return sum(c.max_marks for c in self.components.all())
+
+
+@audited
+class GradingComponent(TimeStampedModel):
+    class Source(models.TextChoices):
+        FINAL = "final", _("Final exam paper")
+        MID = "mid", _("Mid-Term exam paper")
+        ATTENDANCE = "attendance", _("Attendance (automatic)")
+        RATING = "rating", _("Teacher's rating")
+
+    class Scope(models.TextChoices):
+        SUBJECT = "subject", _("Per subject")
+        STUDENT = "student", _("Same for all subjects")
+
+    scheme = models.ForeignKey(GradingScheme, on_delete=models.CASCADE, related_name="components")
+    code = models.SlugField(max_length=30)
+    name = models.CharField(max_length=60)
+    name_ur = models.CharField(_("name (Urdu)"), max_length=60, blank=True)
+    source = models.CharField(max_length=12, choices=Source.choices)
+    scope = models.CharField(max_length=10, choices=Scope.choices, default=Scope.SUBJECT)
+    max_marks = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(Decimal("0.5"))])
+    sort_order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order"]
+        constraints = [models.UniqueConstraint(fields=["scheme", "code"], name="unique_component_code")]
+
+    def __str__(self):
+        return f"{self.name} ({self.max_marks})"
+
+    def clean(self):
+        if self.source in (self.Source.FINAL, self.Source.MID) and self.scope != self.Scope.SUBJECT:
+            raise ValidationError(_("Exam papers are always per subject."))
+        if self.source == self.Source.ATTENDANCE and self.scope != self.Scope.STUDENT:
+            raise ValidationError(_("Attendance belongs to the student, not to a subject."))
+
+    @property
+    def is_exam(self):
+        return self.source in (self.Source.FINAL, self.Source.MID)
 
 
 @audited
@@ -159,6 +211,31 @@ class Mark(BranchOwnedModel):
 
     def __str__(self):
         return f"{self.student} {self.paper}: {self.obtained}"
+
+
+class Rating(BranchOwnedModel):
+    """A teacher's marks for a non-exam component (discipline, neatness, summer work, class work).
+    `subject` is empty for components that belong to the student (e.g. discipline)."""
+
+    student = models.ForeignKey("people.Student", on_delete=models.PROTECT, related_name="ratings")
+    session = models.ForeignKey("organisation.AcademicSession", on_delete=models.PROTECT, related_name="+")
+    component = models.ForeignKey(GradingComponent, on_delete=models.PROTECT, related_name="ratings")
+    subject = models.ForeignKey("academics.Subject", on_delete=models.PROTECT, null=True, blank=True, related_name="+")
+    value = models.DecimalField(max_digits=5, decimal_places=2)
+    entered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["student", "session", "component", "subject"],
+                name="one_rating_per_subject",
+                nulls_distinct=False,
+            )
+        ]
+        indexes = [models.Index(fields=["branch", "session", "component"])]
+
+    def __str__(self):
+        return f"{self.student} {self.component} {self.subject or ''}: {self.value}"
 
 
 @audited

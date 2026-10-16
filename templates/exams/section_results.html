@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Results" %} {{ section }}{% endblock %}
+{% block content %}
+<h1>{% trans "Results" %} · {{ section }}</h1>
+<nav class="actions" aria-label="{% trans 'Result type' %}">
+  <a class="button {% if card == 'mid' %}secondary{% else %}quiet{% endif %}" href="?card=mid">{% trans "Mid-Term progress report" %}</a>
+  <a class="button {% if card == 'annual' %}secondary{% else %}quiet{% endif %}" href="?card=annual">{% trans "Annual result" %}</a>
+  <a class="button quiet" href="{% url 'exams:ratings' section.id %}">{% trans "Enter teacher ratings" %}</a>
+</nav>
+{% if not scheme %}<div class="card"><p>{% trans "No result pattern is set up. Head office sets it under Setup → Grading schemes." %}</p></div>
+{% elif not subjects %}<div class="card"><p>{% trans "No exam papers for this class yet." %}</p></div>
+{% else %}
+<div class="table-wrap"><table>
+  <thead><tr><th class="num">{% trans "Roll no." %}</th><th>{% trans "Student" %}</th><th class="num">%</th><th>{% trans "Grade" %}</th><th>{% trans "Result" %}</th><th>{% trans "Position" %}</th><th>{% trans "Still missing" %}</th><th></th></tr></thead>
+  <tbody>{% for r in results %}<tr>
+    <td class="num">{{ r.enrolment.roll_no|default:"" }}</td>
+    <td>{{ r.student.full_name }}</td>
+    <td class="num">{% if r.complete %}{{ r.percent|floatformat:2 }}{% else %}—{% endif %}</td>
+    <td>{{ r.grade|default:"—" }}</td>
+    <td>{% if not r.complete %}<span class="badge muted">{% trans "Incomplete" %}</span>{% elif r.passed %}<span class="badge">{% trans "Pass" %}</span>{% else %}<span class="badge attention">{% blocktrans count n=r.failed_subjects|length %}Below pass in {{ n }} subject{% plural %}Below pass in {{ n }} subjects{% endblocktrans %}</span>{% endif %}</td>
+    <td>{{ r.position|default:"" }}</td>
+    <td class="muted">{% for s in r.subjects %}{% if s.missing %}{{ s.subject.name }}: {{ s.missing|join:", " }}{% if not forloop.last %}; {% endif %}{% endif %}{% endfor %}</td>
+    <td><a href="{% url 'exams:card' section.id r.student.id %}?card={{ card }}">{% trans "Card" %}</a></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+<div class="actions">
+  <a class="button" href="{% url 'exams:cards' section.id %}?card={{ card }}&format=pdf" target="_blank" rel="noopener">{% trans "All result cards (PDF)" %}</a>
+</div>
+{% endif %}
+{% endblock %}

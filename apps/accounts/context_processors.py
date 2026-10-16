@@ -22,6 +22,9 @@ def navigation(request):
     if branch and user.has_branch_perm("diary.view_diary", branch.id):
         url = reverse("diary:day")
         items.append((url, _("Daily Diary"), path.startswith(url)))
+    if branch and user.has_branch_perm("exams.view_mark", branch.id):
+        url = reverse("exams:index")
+        items.append((url, _("Exams & Results"), path.startswith(url)))
     if branch and user.has_branch_perm("people.add_student", branch.id):
         url = reverse("people:student_import")
         items.append((url, _("Import from Excel"), path.startswith(url)))

@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-TABLES = ["exams_mark", "exams_resultremark"]
+TABLES = ["exams_mark", "exams_rating", "exams_resultremark"]
 
 
 def enable(table):

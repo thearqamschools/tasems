@@ -16,7 +16,7 @@ from apps.organisation.models import AcademicSession
 
 from . import results as R
 from . import services
-from .models import Exam, Mark, Paper, ResultRemark
+from .models import Exam, GradingComponent, GradingScheme, Mark, Paper, Rating, ResultRemark
 
 
 def _branch(request):
@@ -124,7 +124,7 @@ def enter_marks(request, paper_id, section_id):
         rows.append(
             {
                 "enrolment": e,
-                "value": raw if raw is not None else (m.obtained.normalize() if m and m.obtained is not None else ""),
+                "value": raw if raw is not None else (R.plain(m.obtained) if m and m.obtained is not None else ""),
                 "status": request.POST.get(f"st{e.student_id}") if errors else (m.status if m else "present"),
                 "error": error,
             }
@@ -168,7 +168,8 @@ def _card_context(section, card, results_data, for_file):
     for r in results_data["results"]:
         r.remark = remarks.get(r.student.id)
         r.guardian = guardians.get(r.student.id)
-    bands = sorted(results_data["scheme"].bands, key=lambda b: b["min"], reverse=True)
+    scheme = results_data["scheme"]
+    bands = sorted(scheme.bands, key=lambda b: b["min"], reverse=True) if scheme else []
     band_rows = [(b["grade"], b["min"], None if i == 0 else bands[i - 1]["min"] - 1) for i, b in enumerate(bands)]
     return {
         **results_data,
@@ -238,3 +239,81 @@ def remarks(request, section_id, exam_id):
     return render(
         request, "exams/remarks.html", {"section": section, "exam": exam, "rows": rows, "is_principal": is_principal}
     )
+
+
+@login_required
+def ratings(request, section_id):
+    """Teacher's marks for discipline, neatness, summer work and class work."""
+    branch = _branch(request)
+    section = _section(request, branch, section_id)
+    is_principal = request.user.has_branch_perm("exams.change_rating", branch.id)
+    if not is_principal and not (
+        section.class_teacher_id == request.user.id and request.user.has_branch_perm("exams.add_rating", branch.id)
+    ):
+        raise PermissionDenied
+    scheme = GradingScheme.for_stage(section.class_level.stage)
+    components = list(scheme.components.filter(source=GradingComponent.Source.RATING)) if scheme else []
+    if not components:
+        raise Http404
+    component = next((c for c in components if c.code == request.GET.get("component")), components[0])
+    subjects = [s for s, _o in _class_subjects(section)]
+    subject = None
+    if component.scope == GradingComponent.Scope.SUBJECT:
+        subject = next(
+            (s for s in subjects if str(s.id) == request.GET.get("subject")), subjects[0] if subjects else None
+        )
+        if subject is None:
+            raise Http404
+    entries = services.roster(section)
+    existing = {
+        r.student_id: r.value
+        for r in Rating.objects.filter(
+            student_id__in=[e.student_id for e in entries],
+            session=section.session,
+            component=component,
+            subject=subject,
+        )
+    }
+    errors = {}
+    if request.method == "POST":
+        values = {}
+        for e in entries:
+            raw = request.POST.get(f"r{e.student_id}", "")
+            try:
+                values[e.student_id] = services.parse_rating(raw, component.max_marks)
+            except ValueError as exc:
+                errors[e.student_id] = (raw, str(exc))
+        if not errors:
+            services.save_ratings(section, component, subject, values, request.user)
+            messages.success(request, _("%(name)s saved.") % {"name": component.name})
+            return redirect(request.get_full_path())
+        messages.error(request, _("Some values need correcting. Nothing was saved."))
+    rows = []
+    for e in entries:
+        raw, error = errors.get(e.student_id, (None, ""))
+        value = existing.get(e.student_id)
+        rows.append(
+            {
+                "enrolment": e,
+                "value": raw if raw is not None else (R.plain(value) if value is not None else ""),
+                "error": error,
+            }
+        )
+    return render(
+        request,
+        "exams/ratings.html",
+        {
+            "section": section,
+            "components": components,
+            "component": component,
+            "subjects": subjects,
+            "subject": subject,
+            "rows": rows,
+        },
+    )
+
+
+def _class_subjects(section):
+    from apps.diary.services import subjects_for
+
+    return subjects_for(section)

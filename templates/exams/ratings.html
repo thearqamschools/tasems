@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ component.name }}{% endblock %}
+{% block content %}
+<h1>{{ component.name }} · {{ section }}</h1>
+<p class="lede">{% blocktrans with m=component.max_marks|floatformat:"-1" %}Marks out of {{ m }}{% endblocktrans %}{% if subject %} · {{ subject.name }}{% else %} · {% trans "same in every subject" %}{% endif %}</p>
+<nav class="actions" aria-label="{% trans 'Choose what to mark' %}">
+  {% for c in components %}<a class="button {% if c.id == component.id %}secondary{% else %}quiet{% endif %}" href="?component={{ c.code }}">{{ c.name }}</a>{% endfor %}
+</nav>
+{% if subject %}
+<form method="get" class="actions"><input type="hidden" name="component" value="{{ component.code }}">
+  <label for="subj" class="visually-hidden">{% trans "Subject" %}</label>
+  <select id="subj" name="subject" onchange="this.form.submit()" style="width:auto">{% for s in subjects %}<option value="{{ s.id }}" {% if s.id == subject.id %}selected{% endif %}>{{ s.name }}</option>{% endfor %}</select>
+  <noscript><button class="button quiet" type="submit">{% trans "Go" %}</button></noscript>
+</form>
+{% endif %}
+<p class="muted">{% trans "Guide: full marks = excellent, about half = needs effort, 1 = needs a lot of improvement. Empty boxes are not saved." %}</p>
+<form method="post" novalidate>{% csrf_token %}
+<div class="table-wrap"><table>
+  <thead><tr><th class="num">{% trans "Roll no." %}</th><th>{% trans "Student" %}</th><th>{% trans "Marks" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td class="num">{{ r.enrolment.roll_no|default:"" }}</td><td>{{ r.enrolment.student.full_name }}</td>
+    <td style="width:8rem"><input type="text" inputmode="decimal" dir="ltr" name="r{{ r.enrolment.student_id }}" value="{{ r.value }}" aria-label="{{ component.name }} {{ r.enrolment.student.full_name }}" style="min-height:2.5rem">{% if r.error %}<p class="error">{{ r.error }}</p>{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+<div class="actions sticky-save"><button class="button" type="submit">{% trans "Save" %}</button>
+<a class="button quiet" href="{% url 'exams:section_results' section.id %}">{% trans "Back to results" %}</a></div>
+</form>
+{% endblock %}

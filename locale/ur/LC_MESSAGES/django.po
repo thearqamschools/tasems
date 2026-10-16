@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:25+0500\n"
+"POT-Creation-Date: 2026-10-16 18:15+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,8 @@ msgid "Hifz-e-Quran"
 msgstr "حفظ القرآن"
 
 #: apps/academics/models.py:28 apps/academics/models.py:50
-#: apps/accounts/models.py:101 apps/organisation/models.py:21
+#: apps/accounts/models.py:101 apps/exams/models.py:113
+#: apps/exams/models.py:147 apps/organisation/models.py:21
 #: apps/organisation/models.py:41 apps/organisation/models.py:59
 #: apps/organisation/models.py:99
 msgid "name (Urdu)"
@@ -123,12 +124,17 @@ msgstr "حاضری"
 msgid "Daily Diary"
 msgstr "روزانہ ڈائری"
 
-#: apps/accounts/context_processors.py:27
+#: apps/accounts/context_processors.py:27 templates/exams/index.html:2
+#: templates/exams/index.html:4
+msgid "Exams & Results"
+msgstr "امتحانات اور نتائج"
+
+#: apps/accounts/context_processors.py:30
 #: templates/people/student_list.html:61
 msgid "Import from Excel"
 msgstr "ایکسل سے درآمد"
 
-#: apps/accounts/context_processors.py:29
+#: apps/accounts/context_processors.py:32
 msgid "Setup"
 msgstr "سیٹ اپ"
 
@@ -225,13 +231,14 @@ msgid ""
 "This code is not correct. Scan the QR code again and enter the new code."
 msgstr "یہ کوڈ درست نہیں۔ QR کوڈ دوبارہ اسکین کر کے نیا کوڈ درج کریں۔"
 
-#: apps/attendance/models.py:18 templates/attendance/today.html:41
+#: apps/attendance/models.py:18 apps/exams/models.py:191
+#: templates/attendance/today.html:41
 msgid "Present"
 msgstr "حاضر"
 
-#: apps/attendance/models.py:19 templates/attendance/absentees.html:18
-#: templates/attendance/branches.html:7 templates/attendance/today.html:21
-#: templates/attendance/today.html:41
+#: apps/attendance/models.py:19 apps/exams/models.py:192
+#: templates/attendance/absentees.html:18 templates/attendance/branches.html:7
+#: templates/attendance/today.html:21 templates/attendance/today.html:41
 msgid "Absent"
 msgstr "غیر حاضر"
 
@@ -311,6 +318,7 @@ msgid "Draft"
 msgstr "مسودہ"
 
 #: apps/diary/models.py:67 templates/diary/view.html:5
+#: templates/exams/index.html:19
 msgid "Published"
 msgstr "شائع شدہ"
 
@@ -341,6 +349,144 @@ msgstr "ڈائری شائع ہو گئی۔"
 #: apps/diary/views.py:122
 msgid "Diary saved as a draft."
 msgstr "ڈائری مسودے کے طور پر محفوظ ہو گئی۔"
+
+#: apps/exams/models.py:52
+msgid "Do not show positions"
+msgstr "پوزیشن نہ دکھائیں"
+
+#: apps/exams/models.py:53
+msgid "Show 1st, 2nd and 3rd only"
+msgstr "صرف اول، دوم اور سوم دکھائیں"
+
+#: apps/exams/models.py:54
+#| msgid "Show students"
+msgid "Show every student's position"
+msgstr "ہر طالب علم کی پوزیشن دکھائیں"
+
+#: apps/exams/models.py:57
+msgid "Any absence in the Mid-Term counts as zero"
+msgstr "مڈ ٹرم میں ہر غیر حاضری صفر شمار ہو گی"
+
+#: apps/exams/models.py:58
+msgid "Absence with leave: the Final covers the Mid-Term's share"
+msgstr "رخصت کے ساتھ غیر حاضری: فائنل مڈ ٹرم کا حصہ بھی پورا کرے گا"
+
+#: apps/exams/models.py:64
+msgid ""
+"Stages this scheme applies to, e.g. ['early_years']. Empty with 'default' = "
+"all others."
+msgstr "وہ مراحل جن پر یہ طریقہ لاگو ہے، مثلاً ['early_years']۔"
+
+#: apps/exams/models.py:67
+msgid "Of the subject total"
+msgstr "مضمون کے کل نمبروں میں سے"
+
+#: apps/exams/models.py:70
+msgid "Of the exam marks alone"
+msgstr "صرف امتحانی نمبروں میں سے"
+
+#: apps/exams/models.py:101
+msgid "Final exam paper"
+msgstr "فائنل امتحان کا پرچہ"
+
+#: apps/exams/models.py:102
+msgid "Mid-Term exam paper"
+msgstr "مڈ ٹرم امتحان کا پرچہ"
+
+#: apps/exams/models.py:103
+#| msgid "Attendance"
+msgid "Attendance (automatic)"
+msgstr "حاضری (خودکار)"
+
+#: apps/exams/models.py:104
+msgid "Teacher's rating"
+msgstr "استاد کی درجہ بندی"
+
+#: apps/exams/models.py:107
+msgid "Per subject"
+msgstr "ہر مضمون کے لیے"
+
+#: apps/exams/models.py:108
+msgid "Same for all subjects"
+msgstr "تمام مضامین میں یکساں"
+
+#: apps/exams/models.py:128
+msgid "Exam papers are always per subject."
+msgstr "امتحانی پرچے ہمیشہ مضمون وار ہوتے ہیں۔"
+
+#: apps/exams/models.py:130
+msgid "Attendance belongs to the student, not to a subject."
+msgstr "حاضری طالب علم کی ہوتی ہے، کسی مضمون کی نہیں۔"
+
+#: apps/exams/models.py:140
+#| msgid "Class teacher"
+msgid "Class test"
+msgstr "کلاس ٹیسٹ"
+
+#: apps/exams/models.py:141
+msgid "Mid-Term"
+msgstr "مڈ ٹرم"
+
+#: apps/exams/models.py:142
+msgid "Final"
+msgstr "فائنل"
+
+#: apps/exams/models.py:146
+msgid "e.g. Mid-Term Examination 2026-27"
+msgstr "مثلاً مڈ ٹرم امتحان 2026-27"
+
+#: apps/exams/models.py:154
+msgid "Leave empty for an exam held across the whole network."
+msgstr "پورے نیٹ ورک کے امتحان کے لیے خالی چھوڑ دیں۔"
+
+#: apps/exams/models.py:158
+msgid "After this date only principals can change marks."
+msgstr "اس تاریخ کے بعد صرف پرنسپل نمبر بدل سکتے ہیں۔"
+
+#: apps/exams/models.py:160
+msgid "Result cards can be shared with parents."
+msgstr "رزلٹ کارڈ والدین کو دیے جا سکتے ہیں۔"
+
+#: apps/exams/models.py:193
+msgid "Absent with leave"
+msgstr "رخصت کے ساتھ غیر حاضر"
+
+#: apps/exams/results.py:213
+msgid "Mid-Term marks"
+msgstr "مڈ ٹرم کے نمبر"
+
+#: apps/exams/results.py:234
+msgid "No Mid-Term paper"
+msgstr "مڈ ٹرم کا پرچہ نہیں"
+
+#: apps/exams/results.py:242
+msgid "Leave — Final counts"
+msgstr "رخصت — فائنل شمار ہو گا"
+
+#: apps/exams/views.py:116
+#, python-format
+#| msgid "Import %(n)s student"
+#| msgid_plural "Import %(n)s students"
+msgid "Marks saved for %(n)s students."
+msgstr "%(n)s طلبہ کے نمبر محفوظ ہو گئے۔"
+
+#: apps/exams/views.py:118
+msgid "Some marks need correcting. Nothing was saved."
+msgstr "کچھ نمبر درست کرنے ہیں۔ کچھ بھی محفوظ نہیں ہوا۔"
+
+#: apps/exams/views.py:236
+msgid "Remarks saved."
+msgstr "تاثرات محفوظ ہو گئے۔"
+
+#: apps/exams/views.py:288
+#, python-format
+#| msgid "Saved %(name)s."
+msgid "%(name)s saved."
+msgstr "%(name)s محفوظ ہو گیا۔"
+
+#: apps/exams/views.py:290
+msgid "Some values need correcting. Nothing was saved."
+msgstr "کچھ اندراجات درست کرنے ہیں۔ کچھ بھی محفوظ نہیں ہوا۔"
 
 #: apps/organisation/models.py:54
 msgid "Company-owned"
@@ -673,12 +819,15 @@ msgstr "اپنی تصدیقی ایپ سے 6 ہندسوں کا کوڈ درج کر
 msgid "Continue"
 msgstr "جاری رکھیں"
 
-#: templates/attendance/_people.html:3 templates/people/student_form.html:8
+#: templates/attendance/_people.html:3 templates/exams/enter_marks.html:9
+#: templates/exams/ratings.html:19 templates/exams/section_results.html:14
+#: templates/people/student_form.html:8
 msgid "Student"
 msgstr "طالب علم"
 
 #: templates/attendance/_people.html:3 templates/attendance/today.html:41
-#: templates/diary/day.html:29 templates/people/student_list.html:12
+#: templates/diary/day.html:29 templates/exams/index.html:26
+#: templates/people/student_list.html:12
 msgid "Section"
 msgstr "سیکشن"
 
@@ -738,7 +887,7 @@ msgstr "لگائی گئی حاضریاں"
 msgid "Take register"
 msgstr "حاضری لگائیں"
 
-#: templates/attendance/take.html:5
+#: templates/attendance/take.html:5 templates/exams/section_exam.html:5
 #, python-format
 msgid "%(n)s student"
 msgid_plural "%(n)s students"
@@ -819,7 +968,7 @@ msgstr "آج"
 msgid "Date"
 msgstr "تاریخ"
 
-#: templates/attendance/today.html:9
+#: templates/attendance/today.html:9 templates/exams/ratings.html:13
 msgid "Go"
 msgstr "دیکھیں"
 
@@ -840,11 +989,12 @@ msgstr ""
 " حاضری لگتی ہے۔"
 
 #: templates/attendance/today.html:16 templates/core/home.html:5
+#: templates/exams/index.html:5
 msgid "No current academic session is set. Head office sets it under Setup."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ ہیڈ آفس اسے سیٹ اپ میں طے کرتا ہے۔"
 
 #: templates/attendance/today.html:26 templates/core/home.html:25
-#: templates/diary/day.html:15
+#: templates/diary/day.html:15 templates/exams/index.html:8
 msgid "My classes"
 msgstr "میری جماعتیں"
 
@@ -858,7 +1008,7 @@ msgid "Not taken yet"
 msgstr "ابھی نہیں لگی"
 
 #: templates/attendance/today.html:38 templates/diary/day.html:26
-#: templates/people/student_list.html:13
+#: templates/exams/index.html:23 templates/people/student_list.html:13
 msgid "All sections"
 msgstr "تمام سیکشن"
 
@@ -915,7 +1065,7 @@ msgstr "مرکزی"
 msgid "Assalamualaikum, %(name)s"
 msgstr "السلام علیکم، %(name)s"
 
-#: templates/core/home.html:5
+#: templates/core/home.html:5 templates/exams/index.html:5
 #, python-format
 msgid "Academic session %(s)s"
 msgstr "تعلیمی سیشن %(s)s"
@@ -963,14 +1113,10 @@ msgstr[0] "آپ کی %(n)s برانچ میں"
 msgstr[1] "آپ کی %(n)s برانچوں میں"
 
 #: templates/core/home.html:37
-#| msgid "Diary published."
 msgid "Diaries published today"
 msgstr "آج شائع ہونے والی ڈائریاں"
 
 #: templates/core/home.html:39
-#| msgid ""
-#| "%(total)s active students. Largest branches first; choose a branch in the "
-#| "top bar to work in it."
 msgid ""
 "Branches still taking today's registers are listed first. Choose a branch in"
 " the top bar to work in it."
@@ -979,12 +1125,10 @@ msgstr ""
 "میں کام کے لیے اوپر سے برانچ منتخب کریں۔"
 
 #: templates/core/home.html:41
-#| msgid "Registers taken today"
 msgid "Registers today"
 msgstr "آج کی حاضری"
 
 #: templates/core/home.html:41
-#| msgid "No classes today."
 msgid "Diaries today"
 msgstr "آج کی ڈائریاں"
 
@@ -1066,7 +1210,7 @@ msgstr "موضوع محفوظ کریں"
 msgid "Image for WhatsApp"
 msgstr "واٹس ایپ کے لیے تصویر"
 
-#: templates/diary/view.html:8
+#: templates/diary/view.html:8 templates/exams/card_page.html:5
 msgid "PDF for printing"
 msgstr "پرنٹ کے لیے PDF"
 
@@ -1110,6 +1254,249 @@ msgstr "ڈائری شائع کریں"
 #: templates/diary/write.html:26
 msgid "Save draft"
 msgstr "مسودہ محفوظ کریں"
+
+#: templates/exams/card_page.html:2
+msgid "Result card"
+msgstr "رزلٹ کارڈ"
+
+#: templates/exams/card_page.html:6 templates/exams/ratings.html:24
+msgid "Back to results"
+msgstr "نتائج پر واپس"
+
+#: templates/exams/enter_marks.html:2 templates/exams/section_exam.html:11
+msgid "Enter marks"
+msgstr "نمبر درج کریں"
+
+#: templates/exams/enter_marks.html:5
+#, python-format
+msgid "out of %(t)s"
+msgstr "%(t)s میں سے"
+
+#: templates/exams/enter_marks.html:6
+msgid ""
+"Enter the marks written on the paper. Leave a box empty if the paper is not "
+"checked yet. Half marks are allowed."
+msgstr ""
+"پرچے پر لکھے نمبر درج کریں۔ اگر پرچہ ابھی چیک نہیں ہوا تو خانہ خالی چھوڑ "
+"دیں۔ آدھے نمبر دیے جا سکتے ہیں۔"
+
+#: templates/exams/enter_marks.html:9 templates/exams/ratings.html:19
+#: templates/exams/section_results.html:14
+#: templates/people/student_detail.html:28
+msgid "Roll no."
+msgstr "رول نمبر"
+
+#: templates/exams/enter_marks.html:9 templates/exams/enter_marks.html:13
+#: templates/exams/index.html:28 templates/exams/ratings.html:19
+msgid "Marks"
+msgstr "نمبر"
+
+#: templates/exams/enter_marks.html:9 templates/exams/enter_marks.html:15
+#| msgid "Attendance"
+msgid "Attendance in exam"
+msgstr "امتحان میں حاضری"
+
+#: templates/exams/enter_marks.html:18
+#| msgid "Save register"
+msgid "Save marks"
+msgstr "نمبر محفوظ کریں"
+
+#: templates/exams/enter_marks.html:19 templates/people/student_form.html:27
+msgid "Cancel"
+msgstr "منسوخ"
+
+#: templates/exams/index.html:10
+msgid "Marks, ratings and result cards"
+msgstr "نمبر، درجہ بندی اور رزلٹ کارڈ"
+
+#: templates/exams/index.html:14
+#| msgid "Classes by session"
+msgid "Exams this session"
+msgstr "اس سیشن کے امتحانات"
+
+#: templates/exams/index.html:17
+msgid "Exam"
+msgstr "امتحان"
+
+#: templates/exams/index.html:17
+msgid "Type"
+msgstr "قسم"
+
+#: templates/exams/index.html:17
+msgid "Marks due"
+msgstr "نمبر جمع کرانے کی تاریخ"
+
+#: templates/exams/index.html:17 templates/exams/index.html:26
+#: templates/exams/index.html:29 templates/exams/section_results.html:2
+#: templates/exams/section_results.html:4
+msgid "Results"
+msgstr "نتائج"
+
+#: templates/exams/index.html:19
+#| msgid "Published"
+msgid "Not published"
+msgstr "شائع نہیں ہوا"
+
+#: templates/exams/index.html:21
+#| msgid ""
+#| "No subjects are set up yet. Head office adds subjects under Setup."
+msgid ""
+"No exams set up yet. Head office creates exams and their papers under Setup "
+"→ Exams."
+msgstr ""
+"ابھی کوئی امتحان نہیں بنایا گیا۔ ہیڈ آفس سیٹ اپ میں امتحانات اور پرچے بناتا "
+"ہے۔"
+
+#: templates/exams/index.html:31
+#| msgid "Class and section (this session)"
+msgid "No sections for this session yet."
+msgstr "اس سیشن میں ابھی کوئی سیکشن نہیں۔"
+
+#: templates/exams/ratings.html:5
+#, python-format
+msgid "Marks out of %(m)s"
+msgstr "%(m)s میں سے نمبر"
+
+#: templates/exams/ratings.html:5
+msgid "same in every subject"
+msgstr "ہر مضمون میں یکساں"
+
+#: templates/exams/ratings.html:6
+msgid "Choose what to mark"
+msgstr "منتخب کریں کس چیز کے نمبر دینے ہیں"
+
+#: templates/exams/ratings.html:11 templates/exams/section_exam.html:8
+msgid "Subject"
+msgstr "مضمون"
+
+#: templates/exams/ratings.html:16
+msgid ""
+"Guide: full marks = excellent, about half = needs effort, 1 = needs a lot of"
+" improvement. Empty boxes are not saved."
+msgstr ""
+"رہنمائی: پورے نمبر = بہترین، تقریباً آدھے = محنت کی ضرورت، 1 = بہت بہتری کی "
+"ضرورت۔ خالی خانے محفوظ نہیں ہوتے۔"
+
+#: templates/exams/ratings.html:23
+msgid "Save"
+msgstr "محفوظ کریں"
+
+#: templates/exams/remarks.html:2 templates/exams/remarks.html:4
+msgid "Remarks"
+msgstr "تاثرات"
+
+#: templates/exams/remarks.html:9
+#| msgid "Class teacher"
+msgid "Class teacher's remarks"
+msgstr "کلاس ٹیچر کے تاثرات"
+
+#: templates/exams/remarks.html:11
+msgid "Principal's remarks"
+msgstr "پرنسپل کے تاثرات"
+
+#: templates/exams/remarks.html:15
+#| msgid "Save register"
+msgid "Save remarks"
+msgstr "تاثرات محفوظ کریں"
+
+#: templates/exams/section_exam.html:5
+#, python-format
+msgid "Marks due %(d)s"
+msgstr "نمبر جمع کرانے کی آخری تاریخ %(d)s"
+
+#: templates/exams/section_exam.html:8
+msgid "Total marks"
+msgstr "کل نمبر"
+
+#: templates/exams/section_exam.html:8
+msgid "Entered"
+msgstr "درج شدہ"
+
+#: templates/exams/section_exam.html:13
+msgid ""
+"This exam has no papers for this class yet. Head office adds them under "
+"Setup → Exams."
+msgstr ""
+"اس امتحان میں ابھی اس جماعت کے پرچے نہیں۔ ہیڈ آفس انہیں سیٹ اپ میں شامل کرتا"
+" ہے۔"
+
+#: templates/exams/section_exam.html:15
+msgid "See results"
+msgstr "نتائج دیکھیں"
+
+#: templates/exams/section_exam.html:16
+msgid "Remarks for result cards"
+msgstr "رزلٹ کارڈ کے تاثرات"
+
+#: templates/exams/section_results.html:5
+msgid "Result type"
+msgstr "نتیجے کی قسم"
+
+#: templates/exams/section_results.html:6
+msgid "Mid-Term progress report"
+msgstr "مڈ ٹرم پراگریس رپورٹ"
+
+#: templates/exams/section_results.html:7
+msgid "Annual result"
+msgstr "سالانہ نتیجہ"
+
+#: templates/exams/section_results.html:8
+msgid "Enter teacher ratings"
+msgstr "استاد کی درجہ بندی درج کریں"
+
+#: templates/exams/section_results.html:10
+#| msgid ""
+#| "No current academic session is set. Head office sets it under Setup."
+msgid ""
+"No result pattern is set up. Head office sets it under Setup → Grading "
+"schemes."
+msgstr "نتیجے کا طریقہ کار طے نہیں۔ ہیڈ آفس اسے سیٹ اپ میں طے کرتا ہے۔"
+
+#: templates/exams/section_results.html:11
+#| msgid "Not placed in any class yet."
+msgid "No exam papers for this class yet."
+msgstr "اس جماعت کے ابھی کوئی امتحانی پرچے نہیں۔"
+
+#: templates/exams/section_results.html:14
+#| msgid "Graduated"
+msgid "Grade"
+msgstr "گریڈ"
+
+#: templates/exams/section_results.html:14
+msgid "Result"
+msgstr "نتیجہ"
+
+#: templates/exams/section_results.html:14
+msgid "Position"
+msgstr "پوزیشن"
+
+#: templates/exams/section_results.html:14
+msgid "Still missing"
+msgstr "ابھی باقی"
+
+#: templates/exams/section_results.html:20
+msgid "Incomplete"
+msgstr "نامکمل"
+
+#: templates/exams/section_results.html:20
+#| msgid "Password"
+msgid "Pass"
+msgstr "پاس"
+
+#: templates/exams/section_results.html:20
+#, python-format
+msgid "Below pass in %(n)s subject"
+msgid_plural "Below pass in %(n)s subjects"
+msgstr[0] "%(n)s مضمون میں پاسنگ سے کم"
+msgstr[1] "%(n)s مضامین میں پاسنگ سے کم"
+
+#: templates/exams/section_results.html:23
+msgid "Card"
+msgstr "کارڈ"
+
+#: templates/exams/section_results.html:27
+msgid "All result cards (PDF)"
+msgstr "تمام رزلٹ کارڈ (PDF)"
 
 #: templates/people/student_detail.html:6
 #: templates/people/student_list.html:36
@@ -1166,10 +1553,6 @@ msgstr "سیشن"
 msgid "Campus"
 msgstr "کیمپس"
 
-#: templates/people/student_detail.html:28
-msgid "Roll no."
-msgstr "رول نمبر"
-
 #: templates/people/student_detail.html:30
 msgid "Not placed in any class yet."
 msgstr "ابھی کسی جماعت میں نہیں۔"
@@ -1215,10 +1598,6 @@ msgstr ""
 #: templates/people/student_form.html:26
 msgid "Save student"
 msgstr "طالب علم محفوظ کریں"
-
-#: templates/people/student_form.html:27
-msgid "Cancel"
-msgstr "منسوخ"
 
 #: templates/people/student_import.html:2
 #: templates/people/student_import.html:4
