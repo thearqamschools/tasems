@@ -110,9 +110,14 @@ CLASS_LEVELS = [
     ("nursery", "Nursery", "نرسری", "early_years"),
     ("prep", "Prep", "پریپ", "early_years"),
 ]
+# Confirmed by the project lead on 16 Oct 2026. Boys and girls are separated from Middle School (Class 6) onwards.
+CLASS_LEVELS += [(f"class-{n}", f"Class {n}", f"جماعت {n}", "primary") for n in range(1, 6)]
+CLASS_LEVELS += [(f"class-{n}", f"Class {n}", f"جماعت {n}", "middle") for n in (6, 7)]
 CLASS_LEVELS += [
-    (f"class-{n}", f"Class {n}", f"جماعت {n}", "primary" if n <= 5 else "middle" if n <= 8 else "secondary")
-    for n in range(1, 11)
+    ("class-8", "Class 8", "جماعت 8", "high"),
+    ("pre-9", "Class Pre-9", "پری نہم", "high"),
+    ("class-9", "Class 9", "جماعت 9", "high"),
+    ("class-10", "Class 10", "جماعت 10", "high"),
 ]
 CLASS_LEVELS += [("hifz", "Hifz-e-Quran", "حفظ القرآن", "hifz")]
 
@@ -172,7 +177,14 @@ class Command(BaseCommand):
         ClassLevel.objects.update(sort_order=models.F("sort_order") + 10000)
         for i, (code, name, name_ur, stage) in enumerate(CLASS_LEVELS, start=1):
             ClassLevel.objects.update_or_create(
-                code=code, defaults={"name": name, "name_ur": name_ur, "stage": stage, "sort_order": i * 10}
+                code=code,
+                defaults={
+                    "name": name,
+                    "name_ur": name_ur,
+                    "stage": stage,
+                    "sort_order": i * 10,
+                    "separate_by_gender": stage in ("middle", "high"),
+                },
             )
 
         self.stdout.write(

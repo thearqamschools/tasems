@@ -19,8 +19,8 @@ class ClassLevel(TimeStampedModel):
     class Stage(models.TextChoices):
         EARLY_YEARS = "early_years", _("Early Years")
         PRIMARY = "primary", _("Primary")
-        MIDDLE = "middle", _("Middle")
-        SECONDARY = "secondary", _("Secondary / Matric")
+        MIDDLE = "middle", _("Middle School")
+        HIGH = "high", _("High School / Matric")
         HIFZ = "hifz", _("Hifz-e-Quran")
 
     code = models.SlugField(max_length=30, unique=True)
@@ -28,6 +28,9 @@ class ClassLevel(TimeStampedModel):
     name_ur = models.CharField(_("name (Urdu)"), max_length=60, blank=True)
     stage = models.CharField(max_length=20, choices=Stage.choices)
     sort_order = models.PositiveSmallIntegerField(unique=True)
+    separate_by_gender = models.BooleanField(
+        default=False, help_text=_("Boys and girls study in separate campuses/sections from this class onwards.")
+    )
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -72,9 +75,15 @@ class CurriculumSubject(TimeStampedModel):
 
 @audited
 class Section(BranchOwnedModel):
+    class GenderGroup(models.TextChoices):
+        MIXED = "mixed", _("Boys and girls")
+        BOYS = "boys", _("Boys")
+        GIRLS = "girls", _("Girls")
+
     session = models.ForeignKey("organisation.AcademicSession", on_delete=models.PROTECT, related_name="sections")
     class_level = models.ForeignKey(ClassLevel, on_delete=models.PROTECT, related_name="sections")
     name = models.CharField(max_length=20, help_text=_("e.g. A, B, Rose, Jasmine"))
+    gender_group = models.CharField(max_length=10, choices=GenderGroup.choices, default=GenderGroup.MIXED)
     class_teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="class_sections"
     )
@@ -92,6 +101,8 @@ class Section(BranchOwnedModel):
         return f"{self.class_level}-{self.name}"
 
     def clean(self):
+        if self.class_level_id and self.class_level.separate_by_gender and self.gender_group == self.GenderGroup.MIXED:
+            raise ValidationError({"gender_group": _("From this class onwards, sections are for boys or girls only.")})
         if self.class_teacher_id and self.branch_id:
             if self.branch_id not in self.class_teacher.accessible_branch_ids():
                 raise ValidationError({"class_teacher": _("This teacher is not assigned to this branch.")})

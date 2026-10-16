@@ -122,3 +122,47 @@ def test_section_name_unique_per_branch_session_class(org, section):
             class_level=ClassLevel.objects.get(code="class-5"),
             name="A",
         )
+
+
+def test_class_structure_matches_school(seeded):
+    stages = {}
+    for level in ClassLevel.objects.exclude(stage="hifz"):
+        stages.setdefault(level.stage, []).append(level.code)
+    assert stages == {
+        "early_years": ["play-group", "nursery", "prep"],
+        "primary": ["class-1", "class-2", "class-3", "class-4", "class-5"],
+        "middle": ["class-6", "class-7"],
+        "high": ["class-8", "pre-9", "class-9", "class-10"],
+    }
+    assert not ClassLevel.objects.get(code="class-5").separate_by_gender
+    assert ClassLevel.objects.get(code="class-6").separate_by_gender
+
+
+def test_middle_school_sections_must_be_boys_or_girls(org):
+    section = Section(
+        branch=org["samanabad"], session=org["session"], class_level=ClassLevel.objects.get(code="class-6"), name="A"
+    )
+    with pytest.raises(ValidationError):
+        section.full_clean()
+    section.gender_group = Section.GenderGroup.GIRLS
+    section.full_clean()
+
+
+def test_student_gender_must_match_section(org, students):
+    boys = Section.objects.create(
+        branch=org["samanabad"],
+        session=org["session"],
+        class_level=ClassLevel.objects.get(code="class-7"),
+        name="A",
+        gender_group=Section.GenderGroup.BOYS,
+    )
+    girl = Student.objects.create(
+        branch=org["samanabad"],
+        admission_no="G-1",
+        first_name="Girl",
+        gender="female",
+        admission_date=dt.date(2026, 4, 1),
+    )
+    with pytest.raises(ValidationError):
+        Enrolment(branch=girl.branch, student=girl, session=org["session"], section=boys).full_clean()
+    Enrolment(branch=girl.branch, student=students["samanabad"], session=org["session"], section=boys).full_clean()

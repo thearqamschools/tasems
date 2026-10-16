@@ -10,7 +10,8 @@ Added
 - Academics: class levels, subjects, curriculum mapping, sections.
 - People: students, guardians, student–guardian links, enrolments.
 - Append-only audit log.
-- `seed_tasems` command (confirmed facts only).
-- 23 automated tests; GitHub Actions CI (lint, checks, migrations, tests); Dockerfile and docker-compose.
+- `seed_tasems` command (confirmed facts only): 15 class levels incl. Prep and Pre-9.
+- Boys/girls separation from Class 6: section gender group and enrolment check.
+- 26 automated tests; GitHub Actions CI (lint, checks, migrations, tests); Dockerfile and docker-compose.
 
 Not deployed.

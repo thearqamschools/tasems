@@ -142,5 +142,14 @@ class Enrolment(BranchOwnedModel):
                 errors["section"] = _("Section belongs to a different branch.")
             if self.session_id and self.section.session_id != self.session_id:
                 errors["section"] = _("Section belongs to a different session.")
+            group = self.section.gender_group
+            if (
+                self.student_id
+                and group != "mixed"
+                and {"boys": "male", "girls": "female"}[group] != self.student.gender
+            ):
+                errors["section"] = _("This section is for %(group)s only.") % {
+                    "group": self.section.get_gender_group_display()
+                }
         if errors:
             raise ValidationError(errors)
