@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.0 — 2026-10-16 — Milestone 3c: Admissions
+
+Added
+- Inquiry form (only the essentials required), from any source; follow-up person and next follow-up date.
+- Pipeline: due today, open, all; filters by class, source, status, "only mine"; campus visits today.
+- Inquiry page: call and WhatsApp buttons (ready message, opens the parent's chat), siblings at school and earlier inquiries by mobile number, follow-up with status change, full history.
+- Admit: student record made from the inquiry, then straight to the admission fee voucher.
+- Report by source, class, status and reasons for not joining; Excel download.
+- Row-level security on admissions tables; Urdu; 146 automated tests.
+
+Not deployed.
+
 ## 0.9.0 — 2026-10-16 — Parent portal
 
 Added

@@ -58,6 +58,7 @@ The same checks run automatically on GitHub for every push.
 | `apps/exams/` | Exams, marks, result pattern, result cards |
 | `apps/hr/` | Staff records, biometric attendance import, leave, monthly sheet |
 | `apps/parents/` | Parent portal: diary, attendance, fees, results; access codes |
+| `apps/admissions/` | Inquiries, follow-ups, campus visits, admit to student, reports |
 | `apps/fees/` | Fee rates, vouchers (3 copies + payment options), payments, defaulters, discounts, royalty |
 | `static/fonts/` | Bundled Urdu and Latin fonts (Open Font License) |
 | `deploy/` | Production setup: HTTPS proxy, database role, backups |

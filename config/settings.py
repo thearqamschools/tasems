@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "apps.fees",
     "apps.hr",
     "apps.parents",
+    "apps.admissions",
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% if inquiry %}{% trans "Edit inquiry" %}{% else %}{% trans "New inquiry" %}{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if inquiry %}{{ inquiry.child_name }}{% else %}{% trans "New inquiry" %}{% endif %}</h1>
+<p class="lede">{% trans "Only the child's name, class, parent's name, mobile and source are needed; the rest can be added later." %}</p>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button>
+  <a class="button quiet" href="{% if inquiry %}{% url 'admissions:detail' inquiry.id %}{% else %}{% url 'admissions:index' %}{% endif %}">{% trans "Back" %}</a></div>
+</form>
+{% endblock %}

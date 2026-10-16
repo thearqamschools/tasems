@@ -37,9 +37,11 @@ RLS_TABLES = [
     "hr_leaverequest",
     "hr_punch",
     "hr_staffday",
+    "admissions_inquiry",
+    "admissions_followup",
 ]
 
-# Policies are created by migrations: core/, exams/, fees/ and hr/0002_row_level_security.py.
+# Policies are created by migrations: core/, exams/, fees/, hr/ and admissions/0002_row_level_security.py.
 
 
 @contextmanager

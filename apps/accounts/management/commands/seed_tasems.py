@@ -243,15 +243,33 @@ HR_MANAGE = HR_VIEW + [
 ]
 HR_SETUP = HR_MANAGE + ["hr.add_leavetype", "hr.change_leavetype"]
 
+# Admissions (Phase 3c)
+ADM_VIEW = ["admissions.view_inquiry", "admissions.view_followup"]
+ADM_WORK = ADM_VIEW + ["admissions.add_inquiry", "admissions.change_inquiry", "admissions.add_followup"]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP,
-    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP,
-    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"] + HR_VIEW,
-    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ["fees.view_royalty"] + HR_VIEW,
-    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE + FEE_MANAGE + HR_MANAGE,
+    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP + ADM_VIEW,
+    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP + ADM_VIEW,
+    "regional_director": ATT_VIEW
+    + DIARY_VIEW
+    + EXAM_VIEW
+    + FEE_VIEW
+    + FEE_APPROVE
+    + ["fees.view_royalty"]
+    + HR_VIEW
+    + ADM_VIEW,
+    "branch_owner": ATT_VIEW
+    + DIARY_VIEW
+    + EXAM_VIEW
+    + FEE_VIEW
+    + FEE_APPROVE
+    + ["fees.view_royalty"]
+    + HR_VIEW
+    + ADM_VIEW,
+    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE + FEE_MANAGE + HR_MANAGE + ADM_WORK,
     "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
     "accountant": FEE_COLLECT + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
-    "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"],
+    "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"] + ADM_WORK,
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": ATT_MARK + DIARY_WRITE,
     "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,

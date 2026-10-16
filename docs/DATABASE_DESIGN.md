@@ -44,6 +44,8 @@ PostgreSQL 16, one database, shared schema. Migrations are versioned in each app
 | hr | StaffDay | Branch | One per person per day: first in, last out, status; hand corrections kept |
 | parents | ParentAccount | — | One login per parent mobile number; children found through guardian links |
 | parents | AccessCode | — | One-time set-up/reset code, hashed, 14 days |
+| admissions | Inquiry | Branch | One family's inquiry for one child; status, next follow-up, person responsible; link to the student once admitted |
+| admissions | FollowUp | Branch | Calls, messages, visits, notes and status changes on an inquiry's timeline |
 | core | AuditEvent | — | Append-only; read-only in admin |
 
 ## Isolation rules

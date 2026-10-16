@@ -31,6 +31,9 @@ def navigation(request):
     elif user.accessible_branch_ids("fees.view_royalty"):
         url = reverse("fees:royalty")
         items.append((url, _("Royalty"), path.startswith(url)))
+    if branch and user.has_branch_perm("admissions.view_inquiry", branch.id):
+        url = reverse("admissions:index")
+        items.append((url, _("Admissions"), path.startswith(url)))
     if branch and user.has_branch_perm("hr.view_employee", branch.id):
         url = reverse("hr:index")
         items.append((url, _("Staff"), path.startswith(url) and not path.startswith(reverse("hr:mine"))))

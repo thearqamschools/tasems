@@ -1,0 +1,51 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Admissions" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Admissions" %}</h1>
+<p class="lede">{% trans "Every inquiry in one place, with the next follow-up date so no family is forgotten." %}</p>
+<div class="figures">
+  <a class="figure {% if figures.due %}attention{% endif %}" href="?view=due" style="color:inherit;text-decoration:none"><div class="value">{{ figures.due }}</div><div class="label">{% trans "Follow-ups due today" %}</div></a>
+  <a class="figure" href="?view=open" style="color:inherit;text-decoration:none"><div class="value">{{ figures.open }}</div><div class="label">{% trans "Open inquiries" %}</div></a>
+  <div class="figure"><div class="value">{{ figures.month }}</div><div class="label">{% trans "New this month" %}</div></div>
+  <div class="figure"><div class="value">{{ figures.admitted }}</div><div class="label">{% trans "Admitted this month" %}</div></div>
+</div>
+<div class="actions">
+  {% if can_add %}<a class="button" href="{% url 'admissions:new' %}">{% trans "New inquiry" %}</a>{% endif %}
+  <a class="button quiet" href="{% url 'admissions:report' %}">{% trans "Report" %}</a>
+  <a class="button quiet" href="?{{ query }}&format=xlsx">{% trans "Download Excel" %}</a>
+</div>
+{% if visits %}
+<h2>{% trans "Campus visits today" %}</h2>
+<div class="table-wrap"><table><tbody>{% for i in visits %}<tr><td class="num">{{ i.visit_at|time:"H:i" }}</td><td><a href="{% url 'admissions:detail' i.id %}">{{ i.child_name }}</a> · {{ i.class_level }}</td><td>{{ i.parent_name }}</td><td><a href="tel:{{ i.phone }}" class="num">{{ i.phone }}</a></td></tr>{% endfor %}</tbody></table></div>
+{% endif %}
+<nav class="tabs" aria-label="{% trans 'Inquiries' %}">
+  <a href="?view=due" {% if view == "due" %}aria-current="page"{% endif %}>{% trans "Due today" %}</a>
+  <a href="?view=open" {% if view == "open" %}aria-current="page"{% endif %}>{% trans "Open" %}</a>
+  <a href="?view=all" {% if view == "all" %}aria-current="page"{% endif %}>{% trans "All" %}</a>
+</nav>
+<form method="get" class="card">
+  <input type="hidden" name="view" value="{{ view }}">
+  <div class="form-grid">
+    <div class="field"><label for="q">{% trans "Search" %}</label><input type="search" id="q" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Child, parent or mobile' %}"></div>
+    <div class="field"><label for="class">{% trans "Class" %}</label><select id="class" name="class"><option value="">{% trans "All" %}</option>{% for c in classes %}<option value="{{ c.id }}" {% if request.GET.class == c.id|stringformat:"d" %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="source">{% trans "Source" %}</label><select id="source" name="source"><option value="">{% trans "All" %}</option>{% for v, l in sources %}<option value="{{ v }}" {% if request.GET.source == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="status">{% trans "Status" %}</label><select id="status" name="status"><option value="">{% trans "All" %}</option>{% for v, l in statuses %}<option value="{{ v }}" {% if request.GET.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  </div>
+  <div class="field"><label><input type="checkbox" name="mine" value="1" {% if request.GET.mine %}checked{% endif %}> {% trans "Only mine" %}</label></div>
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+</form>
+{% if page.object_list %}
+<div class="table-wrap" style="margin-top:1rem"><table>
+  <thead><tr><th>{% trans "Child" %}</th><th>{% trans "Class" %}</th><th>{% trans "Parent" %}</th><th>{% trans "Mobile" %}</th><th>{% trans "Status" %}</th><th>{% trans "Next follow-up" %}</th><th>{% trans "Source" %}</th></tr></thead>
+  <tbody>{% for i in page.object_list %}<tr>
+    <td><a href="{% url 'admissions:detail' i.id %}">{{ i.child_name }}</a>{% if i.is_hifz %} <span class="badge muted">{% trans "Hifz" %}</span>{% endif %}</td>
+    <td>{{ i.class_level.name }}</td><td>{{ i.parent_name }}</td>
+    <td><a href="tel:{{ i.phone }}" class="num">{{ i.phone }}</a></td>
+    <td>{% if i.status == "admitted" %}<span class="badge">{{ i.get_status_display }}</span>{% elif i.status == "lost" %}<span class="badge muted">{{ i.get_status_display }}</span>{% else %}{{ i.get_status_display }}{% endif %}</td>
+    <td>{% if i.next_follow_up %}{% if i.next_follow_up <= today %}<span class="badge attention">{{ i.next_follow_up|date:"d M" }}</span>{% else %}{{ i.next_follow_up|date:"d M" }}{% endif %}{% else %}—{% endif %}</td>
+    <td class="muted">{{ i.get_source_display }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="?{{ query }}&page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %} {{ page.number }} / {{ page.paginator.num_pages }} {% if page.has_next %}<a href="?{{ query }}&page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
+{% else %}<div class="card" style="margin-top:1rem"><p>{% if view == "due" %}{% trans "No follow-ups due. Well done." %}{% else %}{% trans "No inquiries here yet." %}{% endif %}</p></div>{% endif %}
+{% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 20:56+0500\n"
+"POT-Creation-Date: 2026-10-16 23:47+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,22 +140,27 @@ msgstr "فیس"
 msgid "Royalty"
 msgstr "رائلٹی"
 
-#: apps/accounts/context_processors.py:36 templates/hr/index.html:2
+#: apps/accounts/context_processors.py:36 templates/admissions/detail.html:4
+#: templates/admissions/index.html:2 templates/admissions/index.html:4
+msgid "Admissions"
+msgstr "داخلے"
+
+#: apps/accounts/context_processors.py:39 templates/hr/index.html:2
 #: templates/hr/index.html:4
 msgid "Staff"
 msgstr "عملہ"
 
-#: apps/accounts/context_processors.py:39 templates/hr/mine.html:2
+#: apps/accounts/context_processors.py:42 templates/hr/mine.html:2
 #: templates/hr/mine.html:4
 msgid "My attendance"
 msgstr "میری حاضری"
 
-#: apps/accounts/context_processors.py:42
+#: apps/accounts/context_processors.py:45
 #: templates/people/student_list.html:62
 msgid "Import from Excel"
 msgstr "ایکسل سے درآمد"
 
-#: apps/accounts/context_processors.py:44
+#: apps/accounts/context_processors.py:47
 msgid "Setup"
 msgstr "سیٹ اپ"
 
@@ -251,6 +256,234 @@ msgstr "یہ کوڈ درست نہیں۔ اپنے فون کا وقت چیک کر 
 msgid ""
 "This code is not correct. Scan the QR code again and enter the new code."
 msgstr "یہ کوڈ درست نہیں۔ QR کوڈ دوبارہ اسکین کر کے نیا کوڈ درج کریں۔"
+
+#: apps/admissions/forms.py:52 templates/admissions/detail.html:25
+msgid "Follow-up by"
+msgstr "فالو اپ کرنے والا"
+
+#: apps/admissions/forms.py:60 apps/hr/forms.py:98 apps/people/forms.py:96
+msgid "Enter a Pakistani mobile number, e.g. 0300-1234567."
+msgstr "پاکستانی موبائل نمبر درج کریں، مثلاً 0300-1234567۔"
+
+#: apps/admissions/forms.py:66 apps/people/importer.py:258
+msgid "Date of birth is in the future"
+msgstr "تاریخ پیدائش آنے والے وقت کی ہے"
+
+#: apps/admissions/forms.py:72
+msgid "What happened"
+msgstr "کیا ہوا"
+
+#: apps/admissions/forms.py:74 apps/admissions/models.py:100
+#: apps/fees/forms.py:101 templates/attendance/_people.html:3
+#: templates/attendance/take.html:20 templates/fees/student.html:71
+#: templates/hr/_days.html:3 templates/hr/day.html:20
+msgid "Note"
+msgstr "نوٹ"
+
+#: apps/admissions/forms.py:76
+msgid "— no change —"
+msgstr "— کوئی تبدیلی نہیں —"
+
+#: apps/admissions/forms.py:76
+msgid "Move to"
+msgstr "نئی حیثیت"
+
+#: apps/admissions/forms.py:79
+msgid "Reason (if not joining)"
+msgstr "وجہ (اگر داخلہ نہیں لے رہے)"
+
+#: apps/admissions/forms.py:83
+msgid "Campus visit on"
+msgstr "کیمپس وزٹ کی تاریخ"
+
+#: apps/admissions/forms.py:87 templates/admissions/detail.html:24
+#: templates/admissions/index.html:39
+msgid "Next follow-up"
+msgstr "اگلا فالو اپ"
+
+#: apps/admissions/forms.py:93
+msgid "Choose why the family is not joining."
+msgstr "وجہ چنیں کہ خاندان داخلہ کیوں نہیں لے رہا۔"
+
+#: apps/admissions/forms.py:95
+msgid "Use “Make student record” to admit the child."
+msgstr "داخلے کے لیے “طالب علم کا ریکارڈ بنائیں” استعمال کریں۔"
+
+#: apps/admissions/forms.py:97
+msgid "Enter the date and time of the visit."
+msgstr "وزٹ کی تاریخ اور وقت درج کریں۔"
+
+#: apps/admissions/forms.py:99
+msgid "Choose when to follow up next."
+msgstr "اگلا فالو اپ کب ہو، تاریخ چنیں۔"
+
+#: apps/admissions/forms.py:101
+msgid "Write what was discussed."
+msgstr "کیا بات ہوئی، لکھیں۔"
+
+#: apps/admissions/models.py:19
+msgid "Walk-in"
+msgstr "خود تشریف لائے"
+
+#: apps/admissions/models.py:20 apps/admissions/models.py:96
+msgid "Phone call"
+msgstr "فون کال"
+
+#: apps/admissions/models.py:21 templates/admissions/detail.html:9
+msgid "WhatsApp"
+msgstr "واٹس ایپ"
+
+#: apps/admissions/models.py:22
+msgid "Facebook"
+msgstr "فیس بک"
+
+#: apps/admissions/models.py:23
+msgid "Website"
+msgstr "ویب سائٹ"
+
+#: apps/admissions/models.py:24
+msgid "Referred by a parent"
+msgstr "کسی والدین کے حوالے سے"
+
+#: apps/admissions/models.py:25
+msgid "Banner / flex / pamphlet"
+msgstr "بینر / فلیکس / پمفلٹ"
+
+#: apps/admissions/models.py:26
+msgid "School event"
+msgstr "سکول کی تقریب"
+
+#: apps/admissions/models.py:27 apps/admissions/models.py:49
+#: apps/fees/models.py:177 apps/people/models.py:98
+msgid "Other"
+msgstr "دیگر"
+
+#: apps/admissions/models.py:33
+msgid "New"
+msgstr "نئی"
+
+#: apps/admissions/models.py:34
+msgid "Contacted"
+msgstr "رابطہ ہو گیا"
+
+#: apps/admissions/models.py:35
+msgid "Visit booked"
+msgstr "وزٹ طے"
+
+#: apps/admissions/models.py:36
+msgid "Visited"
+msgstr "وزٹ ہو گیا"
+
+#: apps/admissions/models.py:37 apps/admissions/models.py:99
+msgid "Assessment / interview"
+msgstr "ٹیسٹ / انٹرویو"
+
+#: apps/admissions/models.py:38
+msgid "Seat offered"
+msgstr "سیٹ کی پیشکش"
+
+#: apps/admissions/models.py:39 templates/admissions/report.html:13
+#: templates/admissions/report.html:17 templates/admissions/report.html:20
+msgid "Admitted"
+msgstr "داخلہ ہو گیا"
+
+#: apps/admissions/models.py:40
+msgid "Not joining"
+msgstr "داخلہ نہیں لے رہے"
+
+#: apps/admissions/models.py:43
+msgid "Fee too high"
+msgstr "فیس زیادہ"
+
+#: apps/admissions/models.py:44
+msgid "Too far / transport"
+msgstr "فاصلہ / ٹرانسپورٹ"
+
+#: apps/admissions/models.py:45
+msgid "Chose another school"
+msgstr "دوسرا سکول چن لیا"
+
+#: apps/admissions/models.py:46
+msgid "No seat in the class"
+msgstr "کلاس میں سیٹ نہیں"
+
+#: apps/admissions/models.py:47
+msgid "No response"
+msgstr "جواب نہیں ملا"
+
+#: apps/admissions/models.py:48
+msgid "Child not ready / too young"
+msgstr "بچہ ابھی تیار نہیں / عمر کم"
+
+#: apps/admissions/models.py:53
+msgid "child's name"
+msgstr "بچے کا نام"
+
+#: apps/admissions/models.py:54
+msgid "Boy"
+msgstr "لڑکا"
+
+#: apps/admissions/models.py:54
+msgid "Girl"
+msgstr "لڑکی"
+
+#: apps/admissions/models.py:57
+msgid "class applying for"
+msgstr "کس کلاس میں داخلہ"
+
+#: apps/admissions/models.py:59
+msgid "interested in Hifz"
+msgstr "حفظ میں دلچسپی"
+
+#: apps/admissions/models.py:60
+msgid "parent's name"
+msgstr "والد / والدہ کا نام"
+
+#: apps/admissions/models.py:61 apps/hr/models.py:60
+msgid "mobile"
+msgstr "موبائل"
+
+#: apps/admissions/models.py:62 apps/hr/models.py:61
+msgid "other phone"
+msgstr "دوسرا فون"
+
+#: apps/admissions/models.py:63
+msgid "area / address"
+msgstr "علاقہ / پتہ"
+
+#: apps/admissions/models.py:70
+msgid "campus visit"
+msgstr "کیمپس وزٹ"
+
+#: apps/admissions/models.py:97
+msgid "WhatsApp message"
+msgstr "واٹس ایپ پیغام"
+
+#: apps/admissions/models.py:98 templates/admissions/detail.html:23
+msgid "Campus visit"
+msgstr "کیمپس وزٹ"
+
+#: apps/admissions/models.py:101
+msgid "Status change"
+msgstr "حیثیت میں تبدیلی"
+
+#: apps/admissions/views.py:118
+#, python-format
+msgid "Inquiry saved for %(n)s."
+msgstr "%(n)s کی انکوائری محفوظ ہو گئی۔"
+
+#: apps/admissions/views.py:130 apps/hr/views.py:111
+msgid "Saved."
+msgstr "محفوظ ہو گیا۔"
+
+#: apps/admissions/views.py:160
+msgid "Follow-up saved."
+msgstr "فالو اپ محفوظ ہو گیا۔"
+
+#: apps/admissions/views.py:219
+#, python-format
+msgid "%(n)s is now a student. Make the admission fee voucher next."
+msgstr "%(n)s اب طالب علم ہے۔ اب داخلہ فیس کا واؤچر بنائیں۔"
 
 #: apps/attendance/models.py:18 apps/exams/models.py:191 apps/hr/models.py:228
 #: templates/attendance/today.html:41
@@ -630,12 +863,6 @@ msgstr "ٹرانزیکشن آئی ڈی / سلپ نمبر"
 msgid "Needed for bank, JazzCash and Alfa payments."
 msgstr "بینک، جاز کیش اور الفا ادائیگیوں کے لیے ضروری ہے۔"
 
-#: apps/fees/forms.py:101 templates/attendance/_people.html:3
-#: templates/attendance/take.html:20 templates/fees/student.html:71
-#: templates/hr/_days.html:3 templates/hr/day.html:20
-msgid "Note"
-msgstr "نوٹ"
-
 #: apps/fees/forms.py:110
 msgid "The date is in the future."
 msgstr "یہ تاریخ آنے والی ہے۔"
@@ -766,10 +993,6 @@ msgstr "جاز کیش"
 #: apps/fees/models.py:176
 msgid "Bank Alfalah (Alfa app)"
 msgstr "بینک الفلاح (الفا ایپ)"
-
-#: apps/fees/models.py:177 apps/people/models.py:98
-msgid "Other"
-msgstr "دیگر"
 
 #: apps/fees/models.py:191
 msgid "Leave empty to show for every branch that has none of its own."
@@ -1031,20 +1254,17 @@ msgstr "اس برانچ میں یہ مشین آئی ڈی کسی اور کی ہے
 msgid "A CNIC has 13 digits, e.g. 33100-1234567-1."
 msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مثلاً 33100-1234567-1۔"
 
-#: apps/hr/forms.py:98 apps/people/forms.py:96
-msgid "Enter a Pakistani mobile number, e.g. 0300-1234567."
-msgstr "پاکستانی موبائل نمبر درج کریں، مثلاً 0300-1234567۔"
-
 #: apps/hr/forms.py:103
 msgid "Type of leave"
 msgstr "رخصت کی قسم"
 
-#: apps/hr/forms.py:104 templates/fees/collections.html:6
-#: templates/fees/student.html:64
+#: apps/hr/forms.py:104 templates/admissions/report.html:6
+#: templates/fees/collections.html:6 templates/fees/student.html:64
 msgid "From"
 msgstr "سے"
 
-#: apps/hr/forms.py:105 templates/fees/collections.html:7
+#: apps/hr/forms.py:105 templates/admissions/report.html:7
+#: templates/fees/collections.html:7
 msgid "To"
 msgstr "تک"
 
@@ -1215,14 +1435,6 @@ msgstr "لڑکی"
 msgid "CNIC"
 msgstr "شناختی کارڈ نمبر"
 
-#: apps/hr/models.py:60
-msgid "mobile"
-msgstr "موبائل"
-
-#: apps/hr/models.py:61
-msgid "other phone"
-msgstr "دوسرا فون"
-
 #: apps/hr/models.py:64
 msgid "e.g. Senior Teacher, Accountant, Qari, Guard"
 msgstr "مثلاً سینئر ٹیچر، اکاؤنٹنٹ، قاری، گارڈ"
@@ -1341,10 +1553,6 @@ msgstr ""
 msgid ""
 "No punches found. Export the attendance log from the machine and try again."
 msgstr "کوئی اندراج نہیں ملا۔ مشین سے حاضری لاگ نکال کر دوبارہ کوشش کریں۔"
-
-#: apps/hr/views.py:111
-msgid "Saved."
-msgstr "محفوظ ہو گیا۔"
 
 #: apps/hr/views.py:157
 msgid "Choose an Excel file (.xlsx) smaller than 5 MB."
@@ -1543,10 +1751,6 @@ msgstr ""
 msgid "Not a date. Use day/month/year, e.g. 15/04/2026"
 msgstr "یہ تاریخ نہیں۔ دن/مہینہ/سال لکھیں، مثلاً 15/04/2026"
 
-#: apps/people/importer.py:258
-msgid "Date of birth is in the future"
-msgstr "تاریخ پیدائش آنے والے وقت کی ہے"
-
 #: apps/people/importer.py:262
 msgid "Unknown class. See the 'How to fill' sheet"
 msgstr "نامعلوم جماعت۔ 'How to fill' شیٹ دیکھیں"
@@ -1731,7 +1935,7 @@ msgstr ""
 msgid "I have saved my codes"
 msgstr "میں نے کوڈ محفوظ کر لیے"
 
-#: templates/accounts/recovery_codes.html:9
+#: templates/accounts/recovery_codes.html:9 templates/admissions/report.html:9
 #: templates/attendance/absentees.html:8 templates/fees/collections.html:9
 #: templates/fees/defaulters.html:11 templates/fees/receipt.html:21
 #: templates/fees/royalty.html:9 templates/fees/student.html:43
@@ -1750,6 +1954,280 @@ msgstr "اپنی تصدیقی ایپ سے 6 ہندسوں کا کوڈ درج کر
 #: templates/accounts/verify.html:8
 msgid "Continue"
 msgstr "جاری رکھیں"
+
+#: templates/admissions/admit.html:2 templates/admissions/admit.html:4
+#: templates/admissions/detail.html:12
+msgid "Make student record"
+msgstr "طالب علم کا ریکارڈ بنائیں"
+
+#: templates/admissions/admit.html:5
+#, python-format
+msgid ""
+"%(c)s — %(l)s. Check the details, give an admission number and choose the "
+"section. After saving you can make the admission fee voucher."
+msgstr ""
+"%(c)s — %(l)s۔ تفصیل چیک کریں، داخلہ نمبر دیں اور سیکشن چنیں۔ محفوظ کرنے کے "
+"بعد داخلہ فیس کا واؤچر بنا سکتے ہیں۔"
+
+#: templates/admissions/admit.html:6
+msgid "No current academic session is set, so the class cannot be chosen yet."
+msgstr "موجودہ تعلیمی سیشن مقرر نہیں، اس لیے ابھی کلاس نہیں چنی جا سکتی۔"
+
+#: templates/admissions/admit.html:10 templates/people/student_form.html:26
+msgid "Save student"
+msgstr "طالب علم محفوظ کریں"
+
+#: templates/admissions/admit.html:11 templates/admissions/form.html:10
+#: templates/fees/concession_form.html:10 templates/fees/issue.html:27
+#: templates/hr/employee_form.html:9 templates/hr/leave_form.html:9
+#: templates/parents/account.html:10 templates/parents/slips.html:18
+msgid "Back"
+msgstr "واپس"
+
+#: templates/admissions/detail.html:6 templates/admissions/index.html:41
+#: templates/people/student_list.html:44
+msgid "Hifz"
+msgstr "حفظ"
+
+#: templates/admissions/detail.html:8
+msgid "Call"
+msgstr "کال کریں"
+
+#: templates/admissions/detail.html:10 templates/diary/day.html:34
+#: templates/hr/employee.html:8
+msgid "Edit"
+msgstr "ترمیم"
+
+#: templates/admissions/detail.html:11 templates/fees/student.html:16
+msgid "Student record"
+msgstr "طالب علم کا ریکارڈ"
+
+#: templates/admissions/detail.html:14
+msgid "Brothers or sisters already at school with this mobile number:"
+msgstr "اس موبائل نمبر سے سکول میں پہلے سے موجود بہن بھائی:"
+
+#: templates/admissions/detail.html:15
+msgid "Other inquiries from this mobile number:"
+msgstr "اس موبائل نمبر سے دوسری انکوائریاں:"
+
+#: templates/admissions/detail.html:18 templates/admissions/index.html:39
+msgid "Parent"
+msgstr "والدین"
+
+#: templates/admissions/detail.html:19 templates/people/student_detail.html:12
+msgid "Gender"
+msgstr "جنس"
+
+#: templates/admissions/detail.html:19
+msgid "born"
+msgstr "پیدائش"
+
+#: templates/admissions/detail.html:20
+msgid "Area"
+msgstr "علاقہ"
+
+#: templates/admissions/detail.html:21
+msgid "Current school"
+msgstr "موجودہ سکول"
+
+#: templates/admissions/detail.html:22 templates/admissions/index.html:31
+#: templates/admissions/index.html:39 templates/admissions/report.html:17
+msgid "Source"
+msgstr "ذریعہ"
+
+#: templates/admissions/detail.html:26
+msgid "Received"
+msgstr "موصول"
+
+#: templates/admissions/detail.html:30
+msgid "Record a follow-up"
+msgstr "فالو اپ درج کریں"
+
+#: templates/admissions/detail.html:34
+msgid "Save follow-up"
+msgstr "فالو اپ محفوظ کریں"
+
+#: templates/admissions/detail.html:38
+msgid "History"
+msgstr "تاریخچہ"
+
+#: templates/admissions/form.html:2
+msgid "Edit inquiry"
+msgstr "انکوائری تبدیل کریں"
+
+#: templates/admissions/form.html:2 templates/admissions/form.html:4
+#: templates/admissions/index.html:13
+msgid "New inquiry"
+msgstr "نئی انکوائری"
+
+#: templates/admissions/form.html:5
+msgid ""
+"Only the child's name, class, parent's name, mobile and source are needed; "
+"the rest can be added later."
+msgstr ""
+"صرف بچے کا نام، کلاس، والدین کا نام، موبائل اور ذریعہ ضروری ہے؛ باقی بعد میں"
+" درج ہو سکتا ہے۔"
+
+#: templates/admissions/form.html:9 templates/exams/ratings.html:23
+#: templates/hr/employee_form.html:8
+msgid "Save"
+msgstr "محفوظ کریں"
+
+#: templates/admissions/index.html:5
+msgid ""
+"Every inquiry in one place, with the next follow-up date so no family is "
+"forgotten."
+msgstr ""
+"ہر انکوائری ایک جگہ، اگلے فالو اپ کی تاریخ کے ساتھ تاکہ کوئی خاندان رہ نہ "
+"جائے۔"
+
+#: templates/admissions/index.html:7
+msgid "Follow-ups due today"
+msgstr "آج کے فالو اپ"
+
+#: templates/admissions/index.html:8
+msgid "Open inquiries"
+msgstr "زیرِ عمل انکوائریاں"
+
+#: templates/admissions/index.html:9
+msgid "New this month"
+msgstr "اس مہینے نئی"
+
+#: templates/admissions/index.html:10
+msgid "Admitted this month"
+msgstr "اس مہینے داخلے"
+
+#: templates/admissions/index.html:14
+msgid "Report"
+msgstr "رپورٹ"
+
+#: templates/admissions/index.html:15
+msgid "Download Excel"
+msgstr "ایکسل ڈاؤن لوڈ کریں"
+
+#: templates/admissions/index.html:18
+msgid "Campus visits today"
+msgstr "آج کے کیمپس وزٹ"
+
+#: templates/admissions/index.html:21 templates/admissions/report.html:17
+#: templates/admissions/report.html:20
+msgid "Inquiries"
+msgstr "انکوائریاں"
+
+#: templates/admissions/index.html:22
+msgid "Due today"
+msgstr "آج کے"
+
+#: templates/admissions/index.html:23
+msgid "Open"
+msgstr "زیرِ عمل"
+
+#: templates/admissions/index.html:24 templates/admissions/index.html:30
+#: templates/admissions/index.html:31 templates/admissions/index.html:32
+#: templates/hr/index.html:27 templates/hr/index.html:28
+msgid "All"
+msgstr "سب"
+
+#: templates/admissions/index.html:29 templates/hr/index.html:26
+#: templates/people/student_list.html:9
+msgid "Search"
+msgstr "تلاش"
+
+#: templates/admissions/index.html:29
+msgid "Child, parent or mobile"
+msgstr "بچہ، والدین یا موبائل"
+
+#: templates/admissions/index.html:30 templates/admissions/index.html:39
+#: templates/admissions/report.html:20 templates/core/home.html:27
+#: templates/fees/defaulters.html:16 templates/fees/vouchers.html:8
+#: templates/fees/vouchers.html:20 templates/parents/codes.html:7
+#: templates/people/student_detail.html:32
+#: templates/people/student_form.html:13 templates/people/student_list.html:17
+#: templates/people/student_list.html:37
+msgid "Class"
+msgstr "جماعت"
+
+#: templates/admissions/index.html:32 templates/admissions/index.html:39
+#: templates/fees/concessions.html:23 templates/fees/student.html:36
+#: templates/fees/student.html:64 templates/fees/vouchers.html:10
+#: templates/fees/vouchers.html:20 templates/hr/_days.html:3
+#: templates/hr/day.html:20 templates/hr/index.html:28
+#: templates/hr/leaves.html:22 templates/people/student_list.html:21
+#: templates/people/student_list.html:38
+msgid "Status"
+msgstr "حیثیت"
+
+#: templates/admissions/index.html:34
+msgid "Only mine"
+msgstr "صرف میری"
+
+#: templates/admissions/index.html:35 templates/admissions/report.html:8
+#: templates/fees/collections.html:8 templates/fees/defaulters.html:10
+#: templates/fees/index.html:27 templates/fees/royalty.html:8
+#: templates/fees/vouchers.html:13 templates/hr/day.html:7
+#: templates/hr/employee.html:27 templates/hr/index.html:30
+#: templates/hr/mine.html:12 templates/hr/month.html:5
+msgid "Show"
+msgstr "دکھائیں"
+
+#: templates/admissions/index.html:39
+msgid "Child"
+msgstr "بچہ"
+
+#: templates/admissions/index.html:39 templates/hr/employee.html:14
+#: templates/hr/index.html:36 templates/people/student_detail.html:22
+msgid "Mobile"
+msgstr "موبائل"
+
+#: templates/admissions/index.html:49 templates/fees/vouchers.html:32
+#: templates/people/student_list.html:54
+msgid "Previous"
+msgstr "پچھلا"
+
+#: templates/admissions/index.html:49 templates/fees/vouchers.html:32
+#: templates/people/student_list.html:56
+msgid "Next"
+msgstr "اگلا"
+
+#: templates/admissions/index.html:50
+msgid "No follow-ups due. Well done."
+msgstr "کوئی فالو اپ باقی نہیں۔ شاباش۔"
+
+#: templates/admissions/index.html:50
+msgid "No inquiries here yet."
+msgstr "ابھی یہاں کوئی انکوائری نہیں۔"
+
+#: templates/admissions/report.html:2 templates/admissions/report.html:4
+msgid "Admissions report"
+msgstr "داخلہ رپورٹ"
+
+#: templates/admissions/report.html:12
+msgid "Inquiries received"
+msgstr "موصول انکوائریاں"
+
+#: templates/admissions/report.html:14
+msgid "Joined (of those inquiries)"
+msgstr "داخلہ لیا (ان انکوائریوں میں سے)"
+
+#: templates/admissions/report.html:16
+msgid "Where inquiries came from"
+msgstr "انکوائریاں کہاں سے آئیں"
+
+#: templates/admissions/report.html:18 templates/admissions/report.html:21
+msgid "None in these dates."
+msgstr "ان تاریخوں میں کوئی نہیں۔"
+
+#: templates/admissions/report.html:19
+msgid "By class"
+msgstr "کلاس کے لحاظ سے"
+
+#: templates/admissions/report.html:22
+msgid "Where they stand now"
+msgstr "اب کس مرحلے پر ہیں"
+
+#: templates/admissions/report.html:24
+msgid "Why families did not join"
+msgstr "خاندانوں نے داخلہ کیوں نہیں لیا"
 
 #: templates/attendance/_people.html:3 templates/exams/enter_marks.html:9
 #: templates/exams/ratings.html:19 templates/exams/section_results.html:14
@@ -2032,14 +2510,6 @@ msgstr "مرحلہ وار طلبہ"
 msgid "Stage"
 msgstr "مرحلہ"
 
-#: templates/core/home.html:27 templates/fees/defaulters.html:16
-#: templates/fees/vouchers.html:8 templates/fees/vouchers.html:20
-#: templates/parents/codes.html:7 templates/people/student_detail.html:32
-#: templates/people/student_form.html:13 templates/people/student_list.html:17
-#: templates/people/student_list.html:37
-msgid "Class"
-msgstr "جماعت"
-
 #: templates/core/home.html:33
 #, python-format
 msgid "Across your %(n)s branch"
@@ -2113,10 +2583,6 @@ msgstr "ڈائری"
 #: templates/diary/day.html:33
 msgid "Not written"
 msgstr "نہیں لکھی گئی"
-
-#: templates/diary/day.html:34 templates/hr/employee.html:8
-msgid "Edit"
-msgstr "ترمیم"
 
 #: templates/diary/day.html:34 templates/diary/write.html:2
 msgid "Write diary"
@@ -2307,10 +2773,6 @@ msgstr ""
 "رہنمائی: پورے نمبر = بہترین، تقریباً آدھے = محنت کی ضرورت، 1 = بہت بہتری کی "
 "ضرورت۔ خالی خانے محفوظ نہیں ہوتے۔"
 
-#: templates/exams/ratings.html:23 templates/hr/employee_form.html:8
-msgid "Save"
-msgstr "محفوظ کریں"
-
 #: templates/exams/remarks.html:2 templates/exams/remarks.html:4
 msgid "Remarks"
 msgstr "تاثرات"
@@ -2429,14 +2891,6 @@ msgstr "روزانہ وصولی"
 msgid "Fee collection"
 msgstr "فیس وصولی"
 
-#: templates/fees/collections.html:8 templates/fees/defaulters.html:10
-#: templates/fees/index.html:27 templates/fees/royalty.html:8
-#: templates/fees/vouchers.html:13 templates/hr/day.html:7
-#: templates/hr/employee.html:27 templates/hr/index.html:30
-#: templates/hr/mine.html:12 templates/hr/month.html:5
-msgid "Show"
-msgstr "دکھائیں"
-
 #: templates/fees/collections.html:12
 msgid "Received (Rs)"
 msgstr "وصول (روپے)"
@@ -2502,12 +2956,6 @@ msgstr ""
 msgid "Send for approval"
 msgstr "منظوری کے لیے بھیجیں"
 
-#: templates/fees/concession_form.html:10 templates/fees/issue.html:27
-#: templates/hr/employee_form.html:9 templates/hr/leave_form.html:9
-#: templates/parents/account.html:10 templates/parents/slips.html:18
-msgid "Back"
-msgstr "واپس"
-
 #: templates/fees/concessions.html:2 templates/fees/concessions.html:4
 #: templates/fees/index.html:21 templates/fees/student.html:62
 msgid "Special discounts"
@@ -2548,15 +2996,6 @@ msgstr "کچھ زیرِ انتظار نہیں۔"
 #: templates/fees/concessions.html:20
 msgid "Decided"
 msgstr "فیصلہ شدہ"
-
-#: templates/fees/concessions.html:23 templates/fees/student.html:36
-#: templates/fees/student.html:64 templates/fees/vouchers.html:10
-#: templates/fees/vouchers.html:20 templates/hr/_days.html:3
-#: templates/hr/day.html:20 templates/hr/index.html:28
-#: templates/hr/leaves.html:22 templates/people/student_list.html:21
-#: templates/people/student_list.html:38
-msgid "Status"
-msgstr "حیثیت"
 
 #: templates/fees/concessions.html:23 templates/hr/leaves.html:22
 msgid "Decided by"
@@ -2981,10 +3420,6 @@ msgstr ""
 msgid "Add it"
 msgstr "درج کریں"
 
-#: templates/fees/student.html:16
-msgid "Student record"
-msgstr "طالب علم کا ریکارڈ"
-
 #: templates/fees/student.html:20
 msgid "Brothers and sisters in this branch"
 msgstr "اس برانچ میں بہن بھائی"
@@ -3051,14 +3486,6 @@ msgid "Print %(n)s voucher (PDF)"
 msgid_plural "Print %(n)s vouchers (PDF)"
 msgstr[0] "%(n)s واؤچر پرنٹ کریں (PDF)"
 msgstr[1] "%(n)s واؤچر پرنٹ کریں (PDF)"
-
-#: templates/fees/vouchers.html:32 templates/people/student_list.html:54
-msgid "Previous"
-msgstr "پچھلا"
-
-#: templates/fees/vouchers.html:32 templates/people/student_list.html:56
-msgid "Next"
-msgstr "اگلا"
 
 #: templates/fees/vouchers.html:33
 msgid "No vouchers for this month yet."
@@ -3139,11 +3566,6 @@ msgstr "رخصت درج کریں"
 msgid "Father's / husband's name"
 msgstr "والد / شوہر کا نام"
 
-#: templates/hr/employee.html:14 templates/hr/index.html:36
-#: templates/people/student_detail.html:22
-msgid "Mobile"
-msgstr "موبائل"
-
 #: templates/hr/employee.html:15
 msgid "Joining date"
 msgstr "تاریخِ تقرری"
@@ -3223,10 +3645,6 @@ msgstr "ماہانہ شیٹ"
 msgid "Import staff from Excel"
 msgstr "ایکسل سے عملہ درج کریں"
 
-#: templates/hr/index.html:26 templates/people/student_list.html:9
-msgid "Search"
-msgstr "تلاش"
-
 #: templates/hr/index.html:26
 msgid "Name, code, mobile or designation"
 msgstr "نام، کوڈ، موبائل یا عہدہ"
@@ -3234,10 +3652,6 @@ msgstr "نام، کوڈ، موبائل یا عہدہ"
 #: templates/hr/index.html:27
 msgid "Staff type"
 msgstr "عملے کی قسم"
-
-#: templates/hr/index.html:27 templates/hr/index.html:28
-msgid "All"
-msgstr "سب"
 
 #: templates/hr/index.html:33
 #, python-format
@@ -3620,10 +4034,6 @@ msgstr "طالب علم میں ترمیم"
 msgid "Parent login code"
 msgstr "والدین کا لاگ اِن کوڈ"
 
-#: templates/people/student_detail.html:12
-msgid "Gender"
-msgstr "جنس"
-
 #: templates/people/student_detail.html:13
 msgid "Date of birth"
 msgstr "تاریخ پیدائش"
@@ -3703,10 +4113,6 @@ msgstr ""
 "اگر یہ موبائل نمبر اس برانچ میں پہلے سے کسی والد/والدہ کا ہے تو طالب علم "
 "انہی سے جوڑ دیا جاتا ہے (بہن بھائیوں کا ایک ہی رابطہ)۔"
 
-#: templates/people/student_form.html:26
-msgid "Save student"
-msgstr "طالب علم محفوظ کریں"
-
 #: templates/people/student_import.html:2
 #: templates/people/student_import.html:4
 msgid "Import students from Excel"
@@ -3777,10 +4183,6 @@ msgstr "تمام حیثیتیں"
 #: templates/people/student_list.html:28
 msgid "Show students"
 msgstr "طلبہ دکھائیں"
-
-#: templates/people/student_list.html:44
-msgid "Hifz"
-msgstr "حفظ"
 
 #: templates/people/student_list.html:45
 msgid "Not placed"
