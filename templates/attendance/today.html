@@ -1,0 +1,58 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Attendance" %}{% endblock %}
+{% block content %}
+<h1>{% if is_today %}{% trans "Today's attendance" %}{% else %}{% trans "Attendance" %}{% endif %}</h1>
+<p class="lede">{{ date|date:"l, d F Y" }}</p>
+<nav class="actions" aria-label="{% trans 'Choose day' %}">
+  <a class="button quiet" href="?date={{ previous_day|date:'Y-m-d' }}">{% trans "Previous day" %}</a>
+  {% if not is_today %}<a class="button quiet" href="?">{% trans "Today" %}</a>{% endif %}
+  <form method="get" style="display:flex;gap:.5rem"><label class="visually-hidden" for="d">{% trans "Date" %}</label><input type="date" id="d" name="date" value="{{ date|date:'Y-m-d' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Go" %}</button></form>
+  <a class="button secondary" href="{% url 'attendance:absentees' %}?date={{ date|date:'Y-m-d' }}">{% trans "Absent students" %}</a>
+  {% if multi_branch %}<a class="button secondary" href="{% url 'attendance:branches' %}?date={{ date|date:'Y-m-d' }}">{% trans "All my branches" %}</a>{% endif %}
+</nav>
+
+{% if not session %}<ul class="messages"><li class="warning">{% trans "No current academic session is set. Head office sets it under Setup." %}</li></ul>{% endif %}
+
+<div class="figures">
+  <div class="figure {% if totals.taken < totals.sections %}attention{% endif %}"><div class="value">{{ totals.taken }}/{{ totals.sections }}</div><div class="label">{% trans "Registers taken" %}</div></div>
+  <div class="figure"><div class="value">{% if totals.rate is not None %}{{ totals.rate }}%{% else %}—{% endif %}</div><div class="label">{% trans "Attendance" %}</div></div>
+  <div class="figure"><div class="value">{{ totals.absent }}</div><div class="label">{% trans "Absent" %}</div></div>
+  <div class="figure"><div class="value">{{ totals.leave }}</div><div class="label">{% trans "On leave" %}</div></div>
+</div>
+
+{% if mine %}
+<h2>{% trans "My classes" %}</h2>
+<div class="register-list">
+{% for r in mine %}
+  <a class="register-card {% if r.register %}done{% endif %}" href="{% if r.can_mark %}{% url 'attendance:take' r.section.id date|date:'Y-m-d' %}{% else %}#{% endif %}" {% if not r.can_mark %}aria-disabled="true"{% endif %}>
+    <span class="register-name">{{ r.section }}</span>
+    {% if r.register %}<span>{% blocktrans with p=r.register.attended a=r.register.absent %}{{ p }} present · {{ a }} absent{% endblocktrans %}</span>
+    {% else %}<span class="badge attention">{% trans "Not taken yet" %}</span>{% endif %}
+  </a>
+{% endfor %}
+</div>
+{% endif %}
+
+<h2>{% trans "All sections" %}</h2>
+{% if rows %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Section" %}</th><th>{% trans "Class teacher" %}</th><th class="num">{% trans "Present" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Leave" %}</th><th>{% trans "Register" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td>{{ r.section }}{% if r.section.campus %} <span class="muted">· {{ r.section.campus.name }}</span>{% endif %}</td>
+    <td>{{ r.section.class_teacher.get_full_name|default:r.section.class_teacher|default:"—" }}</td>
+    {% if r.register %}<td class="num">{{ r.register.attended }}</td><td class="num">{{ r.register.absent }}</td><td class="num">{{ r.register.leave }}</td>
+    <td>{% if r.can_mark %}<a href="{% url 'attendance:take' r.section.id date|date:'Y-m-d' %}">{% trans "Correct" %}</a>{% else %}<span class="badge">{% trans "Taken" %}</span>{% endif %}</td>
+    {% else %}<td class="num">—</td><td class="num">—</td><td class="num">—</td>
+    <td>{% if r.can_mark %}<a href="{% url 'attendance:take' r.section.id date|date:'Y-m-d' %}">{% trans "Take register" %}</a>{% else %}<span class="badge attention">{% trans "Not taken" %}</span>{% endif %}</td>{% endif %}
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}
+<div class="card"><p>{% trans "No sections for this session yet. Add students with their class, or import them from Excel." %}</p></div>
+{% endif %}
+
+<script>
+  /* Registers already saved on the server: remove any draft kept on this phone. */
+  {% for r in rows %}{% if r.register %}try { localStorage.removeItem("tasems-att-{{ r.section.id }}-{{ date|date:'Y-m-d' }}"); } catch (e) {}
+  {% endif %}{% endfor %}
+</script>
+{% endblock %}

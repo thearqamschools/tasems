@@ -128,6 +128,23 @@ CLASS_LEVELS += [
 CLASS_LEVELS += [("hifz", "Hifz-e-Quran", "حفظ القرآن", "hifz")]
 
 
+# Daily attendance (Milestone 1c)
+ATT_VIEW = ["attendance.view_attendancerecord", "attendance.view_sectionattendance"]
+ATT_MARK = ATT_VIEW + ["attendance.add_attendancerecord"]
+ATT_MANAGE = ATT_MARK + ["attendance.change_attendancerecord"]
+EXTRA_PERMISSIONS = {
+    "network_admin": ATT_VIEW,
+    "head_office_admin": ATT_VIEW,
+    "regional_director": ATT_VIEW,
+    "branch_owner": ATT_VIEW,
+    "principal": ATT_MANAGE,
+    "academic_coordinator": ATT_MANAGE,
+    "class_teacher": ATT_MARK,
+    "hifz_teacher": ATT_MARK,
+    "subject_teacher": ATT_VIEW,
+}
+
+
 def perms(names):
     result = []
     for name in names:
@@ -177,7 +194,7 @@ class Command(BaseCommand):
                     "is_system": True,
                 },
             )
-            role.permissions.set(perms(perm_names))
+            role.permissions.set(perms(perm_names + EXTRA_PERMISSIONS.get(code, [])))
 
         # Move existing levels out of the way first so re-ordering never hits the unique sort_order rule.
         ClassLevel.objects.update(sort_order=models.F("sort_order") + 10000)

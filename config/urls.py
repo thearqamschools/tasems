@@ -14,6 +14,7 @@ urlpatterns = [
     path("branch/switch/", core_views.switch_branch, name="switch_branch"),
     path("accounts/", include("apps.accounts.urls")),
     path("students/", include("apps.people.urls")),
+    path("attendance/", include("apps.attendance.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("admin/", admin.site.urls),
 ]

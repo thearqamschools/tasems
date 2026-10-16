@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Absent students" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Absent students" %}</h1>
+<p class="lede">{{ date|date:"l, d F Y" }}</p>
+<div class="actions no-print">
+  <a class="button quiet" href="{% url 'attendance:today' %}?date={{ date|date:'Y-m-d' }}">{% trans "Back to attendance" %}</a>
+  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
+</div>
+
+{% if long_absences %}
+<div class="card" style="border-color:var(--attention);margin-bottom:1rem">
+  <h2 style="margin-top:0">{% trans "Absent 3 or more days in a row" %}</h2>
+  <ul>{% for a in long_absences %}<li>{{ a.record.student.full_name }} ({{ a.record.section }}) — {% blocktrans count n=a.streak %}{{ n }} day{% plural %}{{ n }} days{% endblocktrans %}{% if a.contact %} · <a href="tel:{{ a.contact.phone }}" class="num">{{ a.contact.phone }}</a>{% endif %}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+{% with items=absent %}<h2>{% trans "Absent" %} ({{ items|length }})</h2>{% include "attendance/_people.html" %}{% endwith %}
+{% with items=leave %}<h2>{% trans "On leave" %} ({{ items|length }})</h2>{% include "attendance/_people.html" %}{% endwith %}
+{% with items=late %}<h2>{% trans "Late" %} ({{ items|length }})</h2>{% include "attendance/_people.html" %}{% endwith %}
+{% endblock %}

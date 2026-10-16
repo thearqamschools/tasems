@@ -16,6 +16,9 @@ def navigation(request):
     if branch and user.has_branch_perm("people.view_student", branch.id):
         url = reverse("people:student_list")
         items.append((url, _("Students"), path.startswith(url) and "import" not in path))
+    if branch and user.has_branch_perm("attendance.view_attendancerecord", branch.id):
+        url = reverse("attendance:today")
+        items.append((url, _("Attendance"), path.startswith(url)))
     if branch and user.has_branch_perm("people.add_student", branch.id):
         url = reverse("people:student_import")
         items.append((url, _("Import from Excel"), path.startswith(url)))

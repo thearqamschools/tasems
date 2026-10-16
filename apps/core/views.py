@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
@@ -18,7 +19,12 @@ def home(request):
     user = request.user
     branch = current_branch(request)
     session = AcademicSession.objects.filter(is_current=True).first()
-    context = {"branch": branch, "session": session, "active_count": None}
+    context = {
+        "branch": branch,
+        "session": session,
+        "active_count": None,
+        "today_iso": timezone.localdate().isoformat(),
+    }
 
     if branch is None:
         return render(request, "core/home_no_access.html", context)
@@ -50,6 +56,12 @@ def home(request):
                 ],
             }
         )
+    if session and user.has_branch_perm("attendance.view_attendancerecord", branch.id):
+        from apps.attendance.models import SectionAttendance
+
+        today = timezone.localdate()
+        context["registers_taken"] = SectionAttendance.objects.filter(branch=branch, date=today).count()
+        context["registers_total"] = Section.objects.filter(branch=branch, session=session, is_active=True).count()
     my_sections = Section.objects.filter(class_teacher=user, is_active=True)
     if session:
         my_sections = my_sections.filter(session=session)

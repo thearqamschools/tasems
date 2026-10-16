@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 — 2026-10-16 — Milestone 1c: Student attendance
+
+Added
+- Daily register per section (once a day): present by default; absent, leave and late with an optional note.
+- Who can mark: class teacher for own sections, today only; principal and academic coordinator for any section and any past day of the session. Corrections are written to the audit log student by student.
+- Draft kept on the phone if the connection drops; restored when the page is opened again.
+- Absent students page with parent mobile (tap to call) and students absent 3 or more days in a row; printable.
+- Today page: registers taken, attendance %, absent and leave counts, my classes; head office branch summary.
+- 60 automated tests.
+
+Not deployed.
+
 ## 0.2.0 — 2026-10-16 — Milestone 1b: Staff access and student register
 
 Added

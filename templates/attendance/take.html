@@ -1,0 +1,89 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Take register" %}{% endblock %}
+{% block content %}
+<h1>{{ section }}</h1>
+<p class="lede">{{ date|date:"l, d F Y" }} · {% blocktrans count n=rows|length %}{{ n }} student{% plural %}{{ n }} students{% endblocktrans %}</p>
+{% if already_taken %}<ul class="messages"><li class="warning">{% trans "This register was already taken. Changes you save are recorded in the history." %}</li></ul>{% endif %}
+<p id="draft-note" class="messages" hidden></p>
+
+{% if rows %}
+<form method="post" id="register" novalidate>{% csrf_token %}
+  <p class="muted">{% trans "Everyone starts as present. Tap only the students who are not." %}</p>
+  <ol class="register">
+  {% for r in rows %}
+    <li class="register-row" data-status="{{ r.status }}">
+      <span class="who"><span class="roll num">{{ r.enrolment.roll_no|default:"" }}</span>
+        <span>{{ r.enrolment.student.full_name }}{% if r.enrolment.student.full_name_ur %}<br><span class="ur muted" lang="ur" dir="rtl">{{ r.enrolment.student.full_name_ur }}</span>{% endif %}</span></span>
+      <fieldset class="toggle"><legend class="visually-hidden">{{ r.enrolment.student.full_name }}</legend>
+        {% for value, label in statuses %}<label class="opt-{{ value }}"><input type="radio" name="s{{ r.enrolment.student_id }}" value="{{ value }}" {% if r.status == value %}checked{% endif %}><span>{{ label }}</span></label>{% endfor %}
+      </fieldset>
+      <input type="text" class="note" name="n{{ r.enrolment.student_id }}" value="{{ r.note }}" placeholder="{% trans 'Note (optional)' %}" aria-label="{% trans 'Note' %}" {% if r.status == "present" %}hidden{% endif %}>
+    </li>
+  {% endfor %}
+  </ol>
+  <div class="actions sticky-save">
+    <button class="button" type="submit">{% trans "Save register" %}</button>
+    <span id="summary" class="muted" aria-live="polite"></span>
+  </div>
+</form>
+{% else %}
+<div class="card"><p>{% trans "No students are placed in this section for the current session." %}</p></div>
+{% endif %}
+
+<script>
+(function () {
+  var form = document.getElementById("register");
+  if (!form) return;
+  var key = "{{ draft_key }}";
+  var note = document.getElementById("draft-note");
+  var summary = document.getElementById("summary");
+  var labels = { present: "{% trans 'present' %}", absent: "{% trans 'absent' %}", leave: "{% trans 'on leave' %}", late: "{% trans 'late' %}" };
+
+  function state() {
+    var data = {};
+    form.querySelectorAll("input[type=radio]:checked, input.note").forEach(function (el) { data[el.name] = el.value; });
+    return data;
+  }
+  function refresh() {
+    var counts = { present: 0, absent: 0, leave: 0, late: 0 };
+    form.querySelectorAll(".register-row").forEach(function (row) {
+      var checked = row.querySelector("input[type=radio]:checked");
+      var value = checked ? checked.value : "present";
+      row.dataset.status = value;
+      row.querySelector("input.note").hidden = value === "present";
+      counts[value] += 1;
+    });
+    summary.textContent = Object.keys(counts).filter(function (k) { return counts[k]; })
+      .map(function (k) { return counts[k] + " " + labels[k]; }).join(" · ");
+  }
+  function save() { try { localStorage.setItem(key, JSON.stringify(state())); } catch (e) {} }
+
+  try {
+    var draft = JSON.parse(localStorage.getItem(key) || "null");
+    if (draft) {
+      Object.keys(draft).forEach(function (name) {
+        var radio = form.querySelector('input[type=radio][name="' + name + '"][value="' + draft[name] + '"]');
+        if (radio) radio.checked = true;
+        var text = form.querySelector('input.note[name="' + name + '"]');
+        if (text) text.value = draft[name];
+      });
+      note.hidden = false;
+      note.textContent = "{% trans 'Your unsaved register from this phone has been restored. Check it and press Save register.' %}";
+    }
+  } catch (e) {}
+
+  form.addEventListener("change", function () { refresh(); save(); });
+  form.addEventListener("input", save);
+  form.addEventListener("submit", function (event) {
+    save();
+    if (!navigator.onLine) {
+      event.preventDefault();
+      note.hidden = false;
+      note.textContent = "{% trans 'No internet connection. The register is kept on this phone. Press Save register again when you are connected.' %}";
+      window.scrollTo(0, 0);
+    }
+  });
+  refresh();
+})();
+</script>
+{% endblock %}

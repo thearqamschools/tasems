@@ -2,7 +2,7 @@
 
 School management platform for **The Arqam Schools**, Pakistan. Private repository; owned by The Arqam Schools.
 
-Current status: **Milestones 1a and 1b done, not deployed.** See `docs/DEVELOPMENT_PROGRESS.md`.
+Current status: **Milestones 1a, 1b and 1c done, not deployed.** See `docs/DEVELOPMENT_PROGRESS.md`.
 
 ## Stack
 
@@ -52,7 +52,8 @@ The same checks run automatically on GitHub for every push.
 | `apps/organisation/` | Head offices, regions, branches, sessions |
 | `apps/accounts/` | Users, roles, scoped role assignments, seed command |
 | `apps/academics/` | Class levels, subjects, curriculum, sections |
-| `apps/people/` | Students, guardians, enrolments |
+| `apps/people/` | Students, guardians, enrolments, Excel import |
+| `apps/attendance/` | Daily student attendance |
 | `tests/` | Automated tests |
 | `docs/` | Project source of truth: decisions, progress, design, security |
 

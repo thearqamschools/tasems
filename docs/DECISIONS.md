@@ -26,3 +26,6 @@ Decision authority: the project lead at The Arqam Schools (Samanabad head office
 | D-017 | 2026-10-16 | Two-step sign-in uses authenticator apps (TOTP) with backup codes, not SMS codes | Free, works without mobile signal, no SMS gateway contract; SMS can be added later if staff need it | Approved |
 | D-018 | 2026-10-16 | Lockout is counted from the audit log rather than server memory | Works correctly when several server processes run; no extra service needed | Approved |
 | D-019 | 2026-10-16 | Staff screens are server-rendered pages with one small stylesheet and no JavaScript framework | Fast on slow connections, easy for one developer to maintain | Approved |
+| D-020 | 2026-10-16 | Student attendance is taken once a day per section (confirmed by the project lead). Statuses: present, absent, leave, late; late counts as attended | Matches current practice | Approved |
+| D-021 | 2026-10-16 | Class teachers can mark only their own sections and only for today; principals and academic coordinators correct past days, and every correction is audited | Keeps registers honest while allowing genuine corrections | Proposed |
+| D-022 | 2026-10-16 | Attendance rows are written in bulk; the section register (with totals) is what dashboards read | One row per student per day is ~50 million rows a year nationally; dashboards must not scan it | Approved |

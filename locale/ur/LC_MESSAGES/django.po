@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 13:18+0500\n"
+"POT-Creation-Date: 2026-10-16 14:48+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,18 +101,24 @@ msgstr "یہ ٹیچر اس برانچ میں مقرر نہیں ہے۔"
 msgid "Home"
 msgstr "ہوم"
 
-#: apps/accounts/context_processors.py:18 templates/core/home.html:17
-#: templates/core/home.html:26 templates/people/student_list.html:2
+#: apps/accounts/context_processors.py:18 templates/core/home.html:18
+#: templates/core/home.html:27 templates/people/student_list.html:2
 #: templates/people/student_list.html:4
 msgid "Students"
 msgstr "طلبہ"
 
-#: apps/accounts/context_processors.py:21
+#: apps/accounts/context_processors.py:21 templates/attendance/branches.html:7
+#: templates/attendance/today.html:2 templates/attendance/today.html:4
+#: templates/attendance/today.html:18
+msgid "Attendance"
+msgstr "حاضری"
+
+#: apps/accounts/context_processors.py:24
 #: templates/people/student_list.html:61
 msgid "Import from Excel"
 msgstr "ایکسل سے درآمد"
 
-#: apps/accounts/context_processors.py:23
+#: apps/accounts/context_processors.py:26
 msgid "Setup"
 msgstr "سیٹ اپ"
 
@@ -138,16 +144,18 @@ msgstr ""
 msgid "Whole network"
 msgstr "پورا نیٹ ورک"
 
-#: apps/accounts/models.py:21 templates/core/home.html:35
+#: apps/accounts/models.py:21 templates/attendance/branches.html:7
+#: templates/core/home.html:36
 msgid "Head office"
 msgstr "ہیڈ آفس"
 
-#: apps/accounts/models.py:22 templates/core/home.html:35
+#: apps/accounts/models.py:22 templates/core/home.html:36
 msgid "Region"
 msgstr "ریجن"
 
-#: apps/accounts/models.py:23 templates/base.html:21
-#: templates/core/home.html:26 templates/core/home.html:35
+#: apps/accounts/models.py:23 templates/attendance/branches.html:7
+#: templates/base.html:21 templates/core/home.html:27
+#: templates/core/home.html:36
 msgid "Branch"
 msgstr "برانچ"
 
@@ -207,6 +215,31 @@ msgid ""
 "This code is not correct. Scan the QR code again and enter the new code."
 msgstr "یہ کوڈ درست نہیں۔ QR کوڈ دوبارہ اسکین کر کے نیا کوڈ درج کریں۔"
 
+#: apps/attendance/models.py:18 templates/attendance/today.html:39
+msgid "Present"
+msgstr "حاضر"
+
+#: apps/attendance/models.py:19 templates/attendance/absentees.html:18
+#: templates/attendance/branches.html:7 templates/attendance/today.html:19
+#: templates/attendance/today.html:39
+msgid "Absent"
+msgstr "غیر حاضر"
+
+#: apps/attendance/models.py:20 templates/attendance/today.html:39
+msgid "Leave"
+msgstr "چھٹی"
+
+#: apps/attendance/models.py:21 templates/attendance/absentees.html:20
+msgid "Late"
+msgstr "دیر سے"
+
+#: apps/attendance/views.py:119
+#, python-format
+msgid ""
+"Register saved for %(section)s: %(present)s present, %(absent)s absent."
+msgstr ""
+"%(section)s کی حاضری محفوظ ہو گئی: %(present)s حاضر، %(absent)s غیر حاضر۔"
+
 #: apps/core/models.py:35
 msgid "branch"
 msgstr "برانچ"
@@ -235,7 +268,7 @@ msgstr "لاگ اِن ناکام"
 msgid "Logged out"
 msgstr "لاگ آؤٹ ہوا"
 
-#: apps/core/views.py:83
+#: apps/core/views.py:95
 msgid "You do not have access to that branch."
 msgstr "آپ کو اس برانچ تک رسائی حاصل نہیں۔"
 
@@ -554,6 +587,7 @@ msgid "I have saved my codes"
 msgstr "میں نے کوڈ محفوظ کر لیے"
 
 #: templates/accounts/recovery_codes.html:9
+#: templates/attendance/absentees.html:8
 msgid "Print"
 msgstr "پرنٹ"
 
@@ -568,6 +602,215 @@ msgstr "اپنی تصدیقی ایپ سے 6 ہندسوں کا کوڈ درج کر
 #: templates/accounts/verify.html:8
 msgid "Continue"
 msgstr "جاری رکھیں"
+
+#: templates/attendance/_people.html:3 templates/people/student_form.html:8
+msgid "Student"
+msgstr "طالب علم"
+
+#: templates/attendance/_people.html:3 templates/attendance/today.html:39
+#: templates/people/student_list.html:12
+msgid "Section"
+msgstr "سیکشن"
+
+#: templates/attendance/_people.html:3 templates/people/student_list.html:37
+msgid "Parent mobile"
+msgstr "والدین کا موبائل"
+
+#: templates/attendance/_people.html:3 templates/attendance/take.html:20
+msgid "Note"
+msgstr "نوٹ"
+
+#: templates/attendance/_people.html:11
+msgid "None."
+msgstr "کوئی نہیں۔"
+
+#: templates/attendance/absentees.html:2 templates/attendance/absentees.html:4
+#: templates/attendance/today.html:10
+#| msgid "Active students"
+msgid "Absent students"
+msgstr "غیر حاضر طلبہ"
+
+#: templates/attendance/absentees.html:7
+msgid "Back to attendance"
+msgstr "حاضری پر واپس"
+
+#: templates/attendance/absentees.html:13
+msgid "Absent 3 or more days in a row"
+msgstr "مسلسل 3 یا زیادہ دن سے غیر حاضر"
+
+#: templates/attendance/absentees.html:14
+#, python-format
+msgid "%(n)s day"
+msgid_plural "%(n)s days"
+msgstr[0] "%(n)s دن"
+msgstr[1] "%(n)s دن"
+
+#: templates/attendance/absentees.html:19 templates/attendance/today.html:20
+msgid "On leave"
+msgstr "چھٹی پر"
+
+#: templates/attendance/branches.html:2 templates/attendance/branches.html:4
+msgid "Attendance by branch"
+msgstr "برانچ وار حاضری"
+
+#: templates/attendance/branches.html:5
+#, python-format
+msgid "%(n)s branch has not started"
+msgid_plural "%(n)s branches have not started"
+msgstr[0] "%(n)s برانچ نے ابھی حاضری شروع نہیں کی"
+msgstr[1] "%(n)s برانچوں نے ابھی حاضری شروع نہیں کی"
+
+#: templates/attendance/branches.html:7 templates/attendance/today.html:17
+msgid "Registers taken"
+msgstr "لگائی گئی حاضریاں"
+
+#: templates/attendance/take.html:2 templates/attendance/today.html:46
+#: templates/core/home.html:28
+msgid "Take register"
+msgstr "حاضری لگائیں"
+
+#: templates/attendance/take.html:5
+#, python-format
+#| msgid "%(n)s student found"
+#| msgid_plural "%(n)s students found"
+msgid "%(n)s student"
+msgid_plural "%(n)s students"
+msgstr[0] "%(n)s طالب علم"
+msgstr[1] "%(n)s طلبہ"
+
+#: templates/attendance/take.html:6
+msgid ""
+"This register was already taken. Changes you save are recorded in the "
+"history."
+msgstr "یہ حاضری پہلے لگ چکی ہے۔ آپ کی تبدیلیاں ریکارڈ میں محفوظ ہوں گی۔"
+
+#: templates/attendance/take.html:11
+msgid "Everyone starts as present. Tap only the students who are not."
+msgstr "سب حاضر سے شروع ہوتے ہیں۔ صرف انہی طلبہ پر ٹیپ کریں جو حاضر نہیں۔"
+
+#: templates/attendance/take.html:20
+msgid "Note (optional)"
+msgstr "نوٹ (اختیاری)"
+
+#: templates/attendance/take.html:25
+#| msgid "Save student"
+msgid "Save register"
+msgstr "حاضری محفوظ کریں"
+
+#: templates/attendance/take.html:30
+msgid "No students are placed in this section for the current session."
+msgstr "موجودہ سیشن میں اس سیکشن میں کوئی طالب علم نہیں۔"
+
+#: templates/attendance/take.html:40
+msgid "present"
+msgstr "حاضر"
+
+#: templates/attendance/take.html:40
+msgid "absent"
+msgstr "غیر حاضر"
+
+#: templates/attendance/take.html:40
+msgid "on leave"
+msgstr "چھٹی پر"
+
+#: templates/attendance/take.html:40
+msgid "late"
+msgstr "دیر سے"
+
+#: templates/attendance/take.html:71
+msgid ""
+"Your unsaved register from this phone has been restored. Check it and press "
+"Save register."
+msgstr ""
+"اس فون پر محفوظ نہ ہونے والی حاضری واپس آ گئی ہے۔ چیک کر کے \"حاضری محفوظ "
+"کریں\" دبائیں۔"
+
+#: templates/attendance/take.html:82
+msgid ""
+"No internet connection. The register is kept on this phone. Press Save "
+"register again when you are connected."
+msgstr ""
+"انٹرنیٹ نہیں ہے۔ حاضری اسی فون پر محفوظ ہے۔ انٹرنیٹ آنے پر \"حاضری محفوظ "
+"کریں\" دوبارہ دبائیں۔"
+
+#: templates/attendance/today.html:4
+msgid "Today's attendance"
+msgstr "آج کی حاضری"
+
+#: templates/attendance/today.html:6
+msgid "Choose day"
+msgstr "دن منتخب کریں"
+
+#: templates/attendance/today.html:7
+#| msgid "Previous"
+msgid "Previous day"
+msgstr "پچھلا دن"
+
+#: templates/attendance/today.html:8
+msgid "Today"
+msgstr "آج"
+
+#: templates/attendance/today.html:9
+msgid "Date"
+msgstr "تاریخ"
+
+#: templates/attendance/today.html:9
+msgid "Go"
+msgstr "دیکھیں"
+
+#: templates/attendance/today.html:11
+msgid "All my branches"
+msgstr "میری تمام برانچیں"
+
+#: templates/attendance/today.html:14 templates/core/home.html:5
+msgid "No current academic session is set. Head office sets it under Setup."
+msgstr "موجودہ تعلیمی سیشن طے نہیں۔ ہیڈ آفس اسے سیٹ اپ میں طے کرتا ہے۔"
+
+#: templates/attendance/today.html:24 templates/core/home.html:25
+msgid "My classes"
+msgstr "میری جماعتیں"
+
+#: templates/attendance/today.html:29
+#, python-format
+msgid "%(p)s present · %(a)s absent"
+msgstr "%(p)s حاضر · %(a)s غیر حاضر"
+
+#: templates/attendance/today.html:30
+msgid "Not taken yet"
+msgstr "ابھی نہیں لگی"
+
+#: templates/attendance/today.html:36 templates/people/student_list.html:13
+msgid "All sections"
+msgstr "تمام سیکشن"
+
+#: templates/attendance/today.html:39
+msgid "Class teacher"
+msgstr "کلاس ٹیچر"
+
+#: templates/attendance/today.html:39
+msgid "Register"
+msgstr "حاضری"
+
+#: templates/attendance/today.html:44
+msgid "Correct"
+msgstr "درست کریں"
+
+#: templates/attendance/today.html:44
+msgid "Taken"
+msgstr "لگ گئی"
+
+#: templates/attendance/today.html:46
+#| msgid "Not placed"
+msgid "Not taken"
+msgstr "نہیں لگی"
+
+#: templates/attendance/today.html:50
+msgid ""
+"No sections for this session yet. Add students with their class, or import "
+"them from Excel."
+msgstr ""
+"اس سیشن میں ابھی کوئی سیکشن نہیں۔ طلبہ کو ان کی جماعت کے ساتھ شامل کریں یا "
+"ایکسل سے درآمد کریں۔"
 
 #: templates/base.html:7
 msgid "TASEMS"
@@ -595,52 +838,48 @@ msgstr "السلام علیکم، %(name)s"
 msgid "Academic session %(s)s"
 msgstr "تعلیمی سیشن %(s)s"
 
-#: templates/core/home.html:5
-msgid "No current academic session is set. Head office sets it under Setup."
-msgstr "موجودہ تعلیمی سیشن طے نہیں۔ ہیڈ آفس اسے سیٹ اپ میں طے کرتا ہے۔"
+#: templates/core/home.html:9
+msgid "Registers taken today"
+msgstr "آج لگائی گئی حاضریاں"
 
-#: templates/core/home.html:9 templates/core/home.html:35
+#: templates/core/home.html:10 templates/core/home.html:36
 msgid "Active students"
 msgstr "زیرِ تعلیم طلبہ"
 
-#: templates/core/home.html:10
+#: templates/core/home.html:11
 msgid "Hifz students"
 msgstr "حفظ کے طلبہ"
 
-#: templates/core/home.html:11
+#: templates/core/home.html:12
 msgid "Without a primary contact"
 msgstr "بنیادی رابطے کے بغیر"
 
-#: templates/core/home.html:12
+#: templates/core/home.html:13
 msgid "Not placed in a class this session"
 msgstr "اس سیشن میں کسی جماعت میں نہیں"
 
-#: templates/core/home.html:15
+#: templates/core/home.html:16
 msgid "Students by stage"
 msgstr "مرحلہ وار طلبہ"
 
-#: templates/core/home.html:17
+#: templates/core/home.html:18
 msgid "Stage"
 msgstr "مرحلہ"
 
-#: templates/core/home.html:24
-msgid "My classes"
-msgstr "میری جماعتیں"
-
-#: templates/core/home.html:26 templates/people/student_detail.html:28
+#: templates/core/home.html:27 templates/people/student_detail.html:28
 #: templates/people/student_form.html:13 templates/people/student_list.html:17
 #: templates/people/student_list.html:36
 msgid "Class"
 msgstr "جماعت"
 
-#: templates/core/home.html:32
+#: templates/core/home.html:33
 #, python-format
 msgid "Across your %(n)s branch"
 msgid_plural "Across your %(n)s branches"
 msgstr[0] "آپ کی %(n)s برانچ میں"
 msgstr[1] "آپ کی %(n)s برانچوں میں"
 
-#: templates/core/home.html:33
+#: templates/core/home.html:34
 #, python-format
 msgid ""
 "%(total)s active students. Largest branches first; choose a branch in the "
@@ -753,10 +992,6 @@ msgstr "%(n)s میں ترمیم"
 #: templates/people/student_form.html:5
 msgid "Fields without “optional” are required."
 msgstr "جن خانوں پر “اختیاری” نہیں لکھا وہ لازمی ہیں۔"
-
-#: templates/people/student_form.html:8
-msgid "Student"
-msgstr "طالب علم"
 
 #: templates/people/student_form.html:23
 msgid ""
@@ -876,14 +1111,6 @@ msgstr "تلاش"
 msgid "Name, admission no. or parent mobile"
 msgstr "نام، داخلہ نمبر یا والدین کا موبائل"
 
-#: templates/people/student_list.html:12
-msgid "Section"
-msgstr "سیکشن"
-
-#: templates/people/student_list.html:13
-msgid "All sections"
-msgstr "تمام سیکشن"
-
 #: templates/people/student_list.html:18
 msgid "All classes"
 msgstr "تمام جماعتیں"
@@ -899,10 +1126,6 @@ msgstr "تمام حیثیتیں"
 #: templates/people/student_list.html:28
 msgid "Show students"
 msgstr "طلبہ دکھائیں"
-
-#: templates/people/student_list.html:37
-msgid "Parent mobile"
-msgstr "والدین کا موبائل"
 
 #: templates/people/student_list.html:43
 msgid "Hifz"

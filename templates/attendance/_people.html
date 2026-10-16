@@ -1,0 +1,11 @@
+{% load i18n %}{% if items %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Section" %}</th><th>{% trans "Parent mobile" %}</th><th>{% trans "Note" %}</th></tr></thead>
+  <tbody>{% for a in items %}<tr>
+    <td><a href="{% url 'people:student_detail' a.record.student_id %}">{{ a.record.student.full_name }}</a></td>
+    <td>{{ a.record.section }}</td>
+    <td>{% if a.contact %}<a class="num" href="tel:{{ a.contact.phone }}">{{ a.contact.phone }}</a>{% else %}—{% endif %}</td>
+    <td>{{ a.record.note|default:"" }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<p class="muted">{% trans "None." %}</p>{% endif %}

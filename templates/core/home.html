@@ -6,6 +6,7 @@
 
 {% if active_count is not None %}
 <div class="figures">
+  {% if registers_total %}<a class="figure {% if registers_taken < registers_total %}attention{% endif %}" href="{% url 'attendance:today' %}" style="color:inherit;text-decoration:none"><div class="value">{{ registers_taken }}/{{ registers_total }}</div><div class="label">{% trans "Registers taken today" %}</div></a>{% endif %}
   <div class="figure"><div class="value">{{ active_count }}</div><div class="label">{% trans "Active students" %}</div></div>
   <div class="figure"><div class="value">{{ hifz_count }}</div><div class="label">{% trans "Hifz students" %}</div></div>
   <div class="figure {% if no_contact_count %}attention{% endif %}"><div class="value">{{ no_contact_count }}</div><div class="label">{% trans "Without a primary contact" %}</div></div>
@@ -24,7 +25,7 @@
 <h2>{% trans "My classes" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Branch" %}</th><th class="num">{% trans "Students" %}</th></tr></thead>
-  <tbody>{% for s in my_sections %}<tr><td><a href="{% url 'people:student_list' %}?section={{ s.id }}">{{ s }}</a></td><td>{{ s.branch }}</td><td class="num">{{ s.n }}</td></tr>{% endfor %}</tbody>
+  <tbody>{% for s in my_sections %}<tr><td><a href="{% url 'people:student_list' %}?section={{ s.id }}">{{ s }}</a> · <a href="{% url 'attendance:take' s.id today_iso %}">{% trans "Take register" %}</a></td><td>{{ s.branch }}</td><td class="num">{{ s.n }}</td></tr>{% endfor %}</tbody>
 </table></div>
 {% endif %}
 
