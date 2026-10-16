@@ -1,8 +1,9 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load static i18n %}
 {% block body %}
 <div class="auth">
   <div class="auth-panel">
     <div class="auth-brand">
+      <img class="auth-logo" src="{% static 'img/arqam-logo-192.png' %}" alt="" width="96" height="96">
       <p class="en">{% trans "The Arqam Schools" %}</p>
       <p class="urdu" lang="ur" dir="rtl">دی ارقم سکولز</p>
     </div>

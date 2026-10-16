@@ -1,4 +1,4 @@
-{% load exams_tags %}{% load i18n %}<style>
+{% load tasems_tags exams_tags %}{% load i18n %}<style>
   @font-face { font-family: "CardSerif"; src: url("{{ font_base }}NotoSerif-Regular.ttf"); font-weight: 400; }
   @font-face { font-family: "CardSerif"; src: url("{{ font_base }}NotoSerif-Bold.ttf"); font-weight: 700; }
   @font-face { font-family: "CardUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Regular.ttf"); font-weight: 400; }
@@ -46,7 +46,7 @@
 {% for r in results %}
 <div class="rc">
   <div class="head">
-    <div>{% if layout.left_logo %}<img src="{{ media_base }}{{ layout.left_logo.name }}" alt="The Arqam Schools">{% endif %}</div>
+    <div><img src="{% official_logo layout media_base font_base %}" alt="The Arqam Schools"></div>
     <div>
       <p class="school">THE ARQAM SCHOOLS</p>
       <p class="school-ur" lang="ur" dir="rtl">دی ارقم سکولز</p>
