@@ -13,7 +13,7 @@ from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
 from apps.exams.models import GradingComponent, GradingScheme
 from apps.fees.models import BranchFeeSettings, FeeHead, FeeRate, PaymentChannel, VoucherCounter
-from apps.hr.models import LeaveType
+from apps.hr.models import HRSettings, LeaveType
 from apps.organisation.models import Branch, HeadOffice
 
 VIEW_PEOPLE = ["people.view_student", "people.view_guardian", "people.view_enrolment", "people.view_studentguardian"]
@@ -530,5 +530,14 @@ class Command(BaseCommand):
                 )
 
     def seed_hr(self):
+        # No fixed leave allowance: any leave is unpaid (confirmed 16 Oct 2026).
         for code, name, name_ur in LEAVE_TYPES:
-            LeaveType.objects.get_or_create(code=code, defaults={"name": name, "name_ur": name_ur})
+            LeaveType.objects.update_or_create(
+                code=code, defaults={"name": name, "name_ur": name_ur, "is_paid": False, "days_per_year": None}
+            )
+        # Samanabad staff duty 07:45–13:45, Monday to Saturday (confirmed 16 Oct 2026). Created once;
+        # head office changes it in Setup afterwards.
+        HRSettings.objects.get_or_create(
+            branch=Branch.objects.get(code="fsd-samanabad"),
+            defaults={"duty_starts": "07:45", "duty_ends": "13:45", "working_days": [0, 1, 2, 3, 4, 5]},
+        )

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 20:31+0500\n"
+"POT-Creation-Date: 2026-10-16 20:45+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -994,7 +994,7 @@ msgstr ""
 msgid "Someone else must approve a discount you asked for."
 msgstr "آپ کی مانگی ہوئی رعایت کوئی دوسرا منظور کرے گا۔"
 
-#: apps/fees/views.py:606 apps/hr/views.py:358
+#: apps/fees/views.py:606 apps/hr/views.py:360
 msgid "Decision saved."
 msgstr "فیصلہ محفوظ ہو گیا۔"
 
@@ -1388,11 +1388,11 @@ msgstr "%(n)s کی حاضری درست کر دی گئی۔"
 msgid "Choose a status and write the reason."
 msgstr "حیثیت چنیں اور وجہ لکھیں۔"
 
-#: apps/hr/views.py:382
+#: apps/hr/views.py:384
 msgid "Leave request saved. It counts once the principal approves it."
 msgstr "رخصت کی درخواست محفوظ ہو گئی۔ پرنسپل کی منظوری کے بعد شمار ہو گی۔"
 
-#: apps/hr/views.py:437
+#: apps/hr/views.py:439
 msgid "Leave request withdrawn."
 msgstr "رخصت کی درخواست واپس لے لی گئی۔"
 
@@ -3254,6 +3254,21 @@ msgid ""
 msgstr ""
 "P حاضر · L دیر · H آدھا دن · A غیر حاضر · LV رخصت · HD چھٹی · – ہفتہ وار "
 "چھٹی"
+
+#: templates/hr/month.html:7
+msgid ""
+"Unpaid = absent days + days of unpaid leave; salary is deducted for these."
+msgstr ""
+"بلا تنخواہ = غیر حاضری کے دن + بلا تنخواہ رخصت کے دن؛ ان دنوں کی تنخواہ کٹتی"
+" ہے۔"
+
+#: templates/hr/month.html:9
+msgid "Absent + unpaid leave"
+msgstr "غیر حاضری + بلا تنخواہ رخصت"
+
+#: templates/hr/month.html:9
+msgid "Unpaid"
+msgstr "بلا تنخواہ"
 
 #: templates/hr/punches_import.html:4
 msgid "Import attendance machine file"

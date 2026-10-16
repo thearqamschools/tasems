@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.1 — 2026-10-16 — Staff: confirmed timings and unpaid leave
+
+Changed
+- Samanabad staff duty time 07:45–13:45, Monday to Saturday (seeded; editable in Setup).
+- Leave has no fixed allowance and is unpaid; the monthly sheet and its Excel show "unpaid days" (absent + unpaid leave) for salary deduction.
+
+Not deployed.
+
 ## 0.8.0 — 2026-10-16 — Milestone 3a: Staff (HR) and staff attendance
 
 Added

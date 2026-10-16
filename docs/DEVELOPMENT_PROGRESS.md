@@ -41,7 +41,7 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Fees: the JazzCash export and import use TASEMS's own column layout; a sample of the form JazzCash receives and sends back is needed to match it exactly.
 - Fees: opening balances (arrears) from the old software are not imported yet; needed before the first TASEMS vouchers so arrears are not lost.
 - Fees: bank name, account title and number to enter in Setup; the voucher counter to set above the old system's last Voucher ID.
-- Staff: duty time, grace minutes, half-day time and whether staff work on Saturday (Setup → HR settings); days allowed per leave type; the attendance machine brand/model and a sample export; the Samanabad staff list (Excel template in TASEMS).
+- Staff: grace minutes and half-day time if the school wants them (Setup → HR settings); whether a half day or late arrival also cuts salary; the attendance machine brand/model and a sample export; the Samanabad staff list (Excel template in TASEMS).
 - Staff: no recruitment, appraisals or payroll yet (payroll gets the monthly Excel).
 - Exams: exam set-up and grading scheme edits are in Setup (admin) for now; a purpose-built head-office screen can follow.
 - Not yet provided: current software data export; biometric machine brand/model; academic session dates; subject list per class.

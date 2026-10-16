@@ -299,6 +299,7 @@ TOTAL_COLUMNS = [
     ("half_day", "H"),
     ("absent", "A"),
     ("leave", "LV"),
+    ("unpaid", "Unpaid days"),
 ]
 
 
@@ -323,6 +324,7 @@ def _month_xlsx(branch, first, dates, rows):
         )
     ws.append([])
     ws.append(["P = present, L = late, H = half day, A = absent, LV = leave, HD = holiday, – = off day"])
+    ws.append(["Unpaid days = absent days + days of unpaid leave (salary is deducted for these)."])
     ws.column_dimensions["B"].width = 24
     ws.column_dimensions["C"].width = 18
     ws.freeze_panes = "D3"

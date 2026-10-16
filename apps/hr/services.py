@@ -519,7 +519,9 @@ def month_sheet(branch, month_start_date):
     last = (first.replace(day=28) + dt.timedelta(days=4)).replace(day=1) - dt.timedelta(days=1)
     dates = list(dates_between(first, last))
     days = defaultdict(dict)
-    for d in StaffDay.objects.filter(branch=branch, date__gte=first, date__lte=last):
+    for d in StaffDay.objects.filter(branch=branch, date__gte=first, date__lte=last).select_related(
+        "leave__leave_type"
+    ):
         days[d.employee_id][d.date] = d
     employees = [
         e
@@ -534,5 +536,10 @@ def month_sheet(branch, month_start_date):
         for c in cells:
             if c:
                 totals[c.status] += 1
+                # Salary is deducted for absence and for unpaid leave (confirmed 16 Oct 2026).
+                if c.status == StaffDay.Status.ABSENT or (
+                    c.status == StaffDay.Status.LEAVE and not (c.leave and c.leave.leave_type.is_paid)
+                ):
+                    totals["unpaid"] += 1
         rows.append({"employee": e, "cells": cells, "totals": dict(totals)})
     return dates, rows

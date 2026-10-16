@@ -26,9 +26,7 @@ def fixed_today(monkeypatch):
 @pytest.fixture
 def hr(org, make_user):
     branch = org["samanabad"]
-    HRSettings.objects.create(
-        branch=branch, duty_starts=dt.time(7, 45), grace_minutes=10, half_day_after=dt.time(10, 0)
-    )
+    HRSettings.objects.filter(branch=branch).update(grace_minutes=10, half_day_after=dt.time(10, 0))
     principal = make_user("principal", Scope.BRANCH, branch)
     counter = {"n": 0}
 
@@ -147,12 +145,25 @@ def test_machine_files_in_three_formats(hr):
     assert again.already == 2  # importing the same file twice adds nothing
 
 
-def test_month_sheet(hr):
+def test_samanabad_settings_are_seeded(seeded):
+    hr = HRSettings.objects.get(branch__code="fsd-samanabad")
+    assert (hr.duty_starts, hr.duty_ends, hr.working_days) == (dt.time(7, 45), dt.time(13, 45), [0, 1, 2, 3, 4, 5])
+    assert not LeaveType.objects.filter(is_paid=True).exists()
+
+
+def test_month_sheet_counts_unpaid_days(hr):
     e = hr["employee"]()
     punch(e, WED, 7, 30, hr["principal"])
+    req = S.request_leave(e, LeaveType.objects.get(code="casual"), MON, TUE, "Family", e.branch and hr["principal"])
+    from apps.accounts.models import User
+
+    S.decide_leave(req, User.objects.create_superuser("hr-admin", password="x-Unused-123"), approve=True)
     S.rebuild_days(hr["branch"], dt.date(2026, 10, 1), TODAY)
     dates, rows = S.month_sheet(hr["branch"], dt.date(2026, 10, 1))
-    assert len(dates) == 31 and rows[0]["totals"]["present"] == 1
+    totals = rows[0]["totals"]
+    assert len(dates) == 31 and totals["present"] == 1 and totals["leave"] == 2
+    # absent on every other working day up to Thursday 15th, plus 2 days of unpaid leave
+    assert totals["unpaid"] == totals["absent"] + 2
 
 
 # --- Screens ---------------------------------------------------------------------------------
