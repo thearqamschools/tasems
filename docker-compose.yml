@@ -1,0 +1,23 @@
+# Local development: database in Docker, app on your machine or in Docker.
+#   docker compose up -d db
+#   cp .env.example .env
+#   python manage.py migrate && python manage.py seed_tasems
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: tasems
+      POSTGRES_PASSWORD: tasems
+      POSTGRES_DB: tasems
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  web:
+    build: .
+    profiles: ["app"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://tasems:tasems@db:5432/tasems
+    ports: ["8000:8000"]
+    depends_on: [db]
+volumes:
+  pgdata:
