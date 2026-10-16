@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Write diary" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Diary" %}: {{ section }}</h1>
+<p class="lede">{{ date|date:"l, d F Y" }}</p>
+<p class="muted">{% trans "Write only the subjects taught today. Empty subjects are left out of the diary automatically. Urdu text is set right-to-left by itself." %}</p>
+<form method="post" novalidate>{% csrf_token %}
+  {% for r in rows %}
+  <fieldset class="card diary-subject">
+    <legend>{{ r.subject.name }}{% if r.subject.name_ur %} · <span class="ur" lang="ur">{{ r.subject.name_ur }}</span>{% endif %}</legend>
+    <div class="field"><label for="c{{ r.subject.id }}">{% trans "In class learning" %}</label>
+      <textarea id="c{{ r.subject.id }}" name="c{{ r.subject.id }}" rows="2" dir="auto" {% if r.subject.is_rtl %}class="ur" lang="ur"{% endif %}>{{ r.in_class }}</textarea></div>
+    <div class="form-grid diary-home">
+      <div class="field"><label for="h{{ r.subject.id }}">{% trans "Home learning task" %}</label>
+        <textarea id="h{{ r.subject.id }}" name="h{{ r.subject.id }}" rows="2" dir="auto" {% if r.subject.is_rtl %}class="ur" lang="ur"{% endif %}>{{ r.home_task }}</textarea></div>
+      <div class="field"><label for="d{{ r.subject.id }}">{% trans "Deadline" %}</label>
+        <input type="date" id="d{{ r.subject.id }}" name="d{{ r.subject.id }}" value="{{ r.deadline }}"></div>
+    </div>
+  </fieldset>
+  {% empty %}
+  <div class="card"><p>{% trans "No subjects are set up yet. Head office adds subjects under Setup." %}</p></div>
+  {% endfor %}
+  {% if rows %}
+  <div class="actions sticky-save">
+    <button class="button" type="submit" name="publish" value="1">{% trans "Publish diary" %}</button>
+    <button class="button secondary" type="submit">{% trans "Save draft" %}</button>
+  </div>
+  {% endif %}
+</form>
+{% endblock %}

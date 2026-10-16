@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "apps.academics",
     "apps.people",
     "apps.attendance",
+    "apps.diary",
 ]
 
 MIDDLEWARE = [
@@ -103,6 +104,7 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_ROOT = env("MEDIA_ROOT", default=str(BASE_DIR / "media"))
+MEDIA_URL = "media/"
 
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "home"

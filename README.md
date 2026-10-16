@@ -2,11 +2,11 @@
 
 School management platform for **The Arqam Schools**, Pakistan. Private repository; owned by The Arqam Schools.
 
-Current status: **Milestones 1a, 1b and 1c done, not deployed.** See `docs/DEVELOPMENT_PROGRESS.md`.
+Current status: **Milestones 1a–1d done, not deployed.** See `docs/DEVELOPMENT_PROGRESS.md`.
 
 ## Stack
 
-Python 3.12 · Django 5.2 LTS · PostgreSQL 16 · Docker · GitHub Actions. Reasons: `docs/DECISIONS.md` (D-002).
+Python 3.12 · Django 5.2 LTS · PostgreSQL 16 · WeasyPrint (diary PDFs) · Docker · GitHub Actions. Diary PDFs need the Pango library (), already in the Dockerfile. Reasons: `docs/DECISIONS.md` (D-002).
 
 ## Run it locally (about 5 minutes)
 

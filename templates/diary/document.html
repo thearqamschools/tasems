@@ -1,0 +1,10 @@
+{% load i18n %}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ layout.title }} — {{ diary.section }} — {{ diary.date|date:"d-m-Y" }}</title>
+</head>
+<body>
+{% include "diary/_sheet.html" %}
+</body>
+</html>

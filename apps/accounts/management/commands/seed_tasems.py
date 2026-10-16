@@ -9,7 +9,7 @@ from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
 from django.db import models, transaction
 
-from apps.academics.models import ClassLevel
+from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
 from apps.organisation.models import Branch, HeadOffice
 
@@ -135,17 +135,42 @@ SATURDAY_CLASSES = {"hifz", "pre-9", "class-9", "class-10"}
 ATT_VIEW = ["attendance.view_attendancerecord", "attendance.view_sectionattendance"]
 ATT_MARK = ATT_VIEW + ["attendance.add_attendancerecord"]
 ATT_MANAGE = ATT_MARK + ["attendance.change_attendancerecord"]
+# Daily Diary (Milestone 1d)
+DIARY_VIEW = ["diary.view_diary", "diary.view_diaryweek"]
+DIARY_WRITE = DIARY_VIEW + ["diary.add_diary"]
+DIARY_MANAGE = DIARY_WRITE + ["diary.change_diary", "diary.add_diaryweek", "diary.change_diaryweek"]
+DIARY_DESIGN = DIARY_VIEW + [
+    "diary.add_diaryweek",
+    "diary.change_diaryweek",
+    "diary.view_diarylayout",
+    "diary.add_diarylayout",
+    "diary.change_diarylayout",
+]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW,
-    "head_office_admin": ATT_VIEW,
-    "regional_director": ATT_VIEW,
-    "branch_owner": ATT_VIEW,
-    "principal": ATT_MANAGE,
-    "academic_coordinator": ATT_MANAGE,
-    "class_teacher": ATT_MARK,
-    "hifz_teacher": ATT_MARK,
-    "subject_teacher": ATT_VIEW,
+    "network_admin": ATT_VIEW + DIARY_DESIGN,
+    "head_office_admin": ATT_VIEW + DIARY_DESIGN,
+    "regional_director": ATT_VIEW + DIARY_VIEW,
+    "branch_owner": ATT_VIEW + DIARY_VIEW,
+    "principal": ATT_MANAGE + DIARY_MANAGE,
+    "academic_coordinator": ATT_MANAGE + DIARY_MANAGE,
+    "class_teacher": ATT_MARK + DIARY_WRITE,
+    "hifz_teacher": ATT_MARK + DIARY_WRITE,
+    "subject_teacher": ATT_VIEW + DIARY_VIEW,
 }
+
+# Subjects and their order as they appear on the Class 4 diary shared on 16 Oct 2026.
+# Other classes' subject lists are to be entered by head office (Setup → Class levels).
+SUBJECTS = [
+    ("english", "English", "انگریزی", False),
+    ("science", "Science", "سائنس", False),
+    ("mathematics", "Mathematics", "ریاضی", False),
+    ("computer", "Computer", "کمپیوٹر", False),
+    ("islamiyat", "Islamiyat", "اسلامیات", True),
+    ("urdu", "Urdu", "اردو", True),
+    ("al-quran", "Al-Quran", "القرآن", True),
+]
+CONFIRMED_CURRICULUM = {"class-4": [code for code, *_rest in SUBJECTS]}
 
 
 def perms(names):
@@ -213,6 +238,15 @@ class Command(BaseCommand):
                     "attends_on_saturday": code in SATURDAY_CLASSES,
                 },
             )
+
+        for code, name, name_ur, rtl in SUBJECTS:
+            Subject.objects.update_or_create(code=code, defaults={"name": name, "name_ur": name_ur, "is_rtl": rtl})
+        for level_code, subject_codes in CONFIRMED_CURRICULUM.items():
+            level = ClassLevel.objects.get(code=level_code)
+            for order, subject_code in enumerate(subject_codes, start=1):
+                CurriculumSubject.objects.update_or_create(
+                    class_level=level, subject=Subject.objects.get(code=subject_code), defaults={"sort_order": order}
+                )
 
         self.stdout.write(
             self.style.SUCCESS(

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0 — 2026-10-16 — Milestone 1d: Daily Diary
+
+Added
+- Daily Learning Overview per section and school day, matching the school's current diary layout.
+- In Class Learning and Home Learning Tasks per subject, with deadline defaulting to the next school day of that class.
+- Subjects with nothing in a part of the diary are left out of that part; Urdu text detected and set right-to-left in Nastaliq.
+- Draft and publish; class teacher writes own sections (today and up to 7 days ahead); principal and coordinator any day.
+- Theme of the week, week number and quote: network-wide from head office, or per branch.
+- One-page A4 PDF and a 1080-px-wide image for WhatsApp; fonts bundled with the system.
+- Subjects of the Class 4 diary seeded; other classes' subjects entered by head office.
+- 0 automated tests.
+
+Not deployed.
+
 ## 0.3.0 — 2026-10-16 — Milestone 1c: Student attendance
 
 Added

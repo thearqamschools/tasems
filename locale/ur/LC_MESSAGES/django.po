@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 15:03+0500\n"
+"POT-Creation-Date: 2026-10-16 15:12+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,12 +118,17 @@ msgstr "طلبہ"
 msgid "Attendance"
 msgstr "حاضری"
 
-#: apps/accounts/context_processors.py:24
+#: apps/accounts/context_processors.py:24 templates/diary/day.html:2
+#: templates/diary/day.html:4
+msgid "Daily Diary"
+msgstr "روزانہ ڈائری"
+
+#: apps/accounts/context_processors.py:27
 #: templates/people/student_list.html:61
 msgid "Import from Excel"
 msgstr "ایکسل سے درآمد"
 
-#: apps/accounts/context_processors.py:26
+#: apps/accounts/context_processors.py:29
 msgid "Setup"
 msgstr "سیٹ اپ"
 
@@ -276,6 +281,68 @@ msgstr "لاگ آؤٹ ہوا"
 #: apps/core/views.py:98
 msgid "You do not have access to that branch."
 msgstr "آپ کو اس برانچ تک رسائی حاصل نہیں۔"
+
+#: apps/diary/models.py:22
+#| msgid "name (Urdu)"
+msgid "title (Urdu)"
+msgstr "عنوان (اردو)"
+
+#: apps/diary/models.py:24
+msgid "Official logo file (PNG or SVG). Never redrawn or recoloured."
+msgstr "سرکاری لوگو فائل (PNG یا SVG)۔ لوگو میں کبھی تبدیلی نہیں کی جاتی۔"
+
+#: apps/diary/models.py:27
+msgid "Table heading colour, e.g. #cdbfe4"
+msgstr "جدول کی سرخی کا رنگ، مثلاً #cdbfe4"
+
+#: apps/diary/models.py:44
+msgid "Monday of the week"
+msgstr "ہفتے کا پیر"
+
+#: apps/diary/models.py:46
+msgid "theme of the week"
+msgstr "ہفتے کا موضوع"
+
+#: apps/diary/models.py:47
+msgid "theme of the week (Urdu)"
+msgstr "ہفتے کا موضوع (اردو)"
+
+#: apps/diary/models.py:66 templates/diary/view.html:5
+msgid "Draft"
+msgstr "مسودہ"
+
+#: apps/diary/models.py:67 templates/diary/view.html:5
+msgid "Published"
+msgstr "شائع شدہ"
+
+#: apps/diary/models.py:89
+msgid "in class learning"
+msgstr "کلاس میں سیکھا گیا"
+
+#: apps/diary/models.py:90
+msgid "home learning task"
+msgstr "گھر کا کام"
+
+#: apps/diary/views.py:43
+#| msgid "Roll number"
+msgid "Week number"
+msgstr "ہفتہ نمبر"
+
+#: apps/diary/views.py:73
+msgid "Theme of the week saved."
+msgstr "ہفتے کا موضوع محفوظ ہو گیا۔"
+
+#: apps/diary/views.py:120
+msgid "The diary is empty. Write at least one subject."
+msgstr "ڈائری خالی ہے۔ کم از کم ایک مضمون لکھیں۔"
+
+#: apps/diary/views.py:122
+msgid "Diary published."
+msgstr "ڈائری شائع ہو گئی۔"
+
+#: apps/diary/views.py:122
+msgid "Diary saved as a draft."
+msgstr "ڈائری مسودے کے طور پر محفوظ ہو گئی۔"
 
 #: apps/organisation/models.py:54
 msgid "Company-owned"
@@ -520,7 +587,7 @@ msgstr "چیک کے بعد ڈیٹا بدل گیا ہے۔ براہ کرم فائ�
 msgid "%(n)s students imported."
 msgstr "%(n)s طلبہ درآمد ہو گئے۔"
 
-#: config/urls.py:8 config/urls.py:9
+#: config/urls.py:10 config/urls.py:11
 msgid "TASEMS setup"
 msgstr "TASEMS سیٹ اپ"
 
@@ -613,7 +680,7 @@ msgid "Student"
 msgstr "طالب علم"
 
 #: templates/attendance/_people.html:3 templates/attendance/today.html:41
-#: templates/people/student_list.html:12
+#: templates/diary/day.html:29 templates/people/student_list.html:12
 msgid "Section"
 msgstr "سیکشن"
 
@@ -738,15 +805,15 @@ msgstr ""
 msgid "Today's attendance"
 msgstr "آج کی حاضری"
 
-#: templates/attendance/today.html:6
+#: templates/attendance/today.html:6 templates/diary/day.html:6
 msgid "Choose day"
 msgstr "دن منتخب کریں"
 
-#: templates/attendance/today.html:7
+#: templates/attendance/today.html:7 templates/diary/day.html:7
 msgid "Previous day"
 msgstr "پچھلا دن"
 
-#: templates/attendance/today.html:8
+#: templates/attendance/today.html:8 templates/diary/day.html:8
 msgid "Today"
 msgstr "آج"
 
@@ -779,6 +846,7 @@ msgid "No current academic session is set. Head office sets it under Setup."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ ہیڈ آفس اسے سیٹ اپ میں طے کرتا ہے۔"
 
 #: templates/attendance/today.html:26 templates/core/home.html:25
+#: templates/diary/day.html:15
 msgid "My classes"
 msgstr "میری جماعتیں"
 
@@ -791,11 +859,12 @@ msgstr "%(p)s حاضر · %(a)s غیر حاضر"
 msgid "Not taken yet"
 msgstr "ابھی نہیں لگی"
 
-#: templates/attendance/today.html:38 templates/people/student_list.html:13
+#: templates/attendance/today.html:38 templates/diary/day.html:26
+#: templates/people/student_list.html:13
 msgid "All sections"
 msgstr "تمام سیکشن"
 
-#: templates/attendance/today.html:41
+#: templates/attendance/today.html:41 templates/diary/day.html:29
 msgid "Class teacher"
 msgstr "کلاس ٹیچر"
 
@@ -914,6 +983,131 @@ msgid ""
 msgstr ""
 "آپ کا اکاؤنٹ درست ہے لیکن آپ کو کوئی برانچ نہیں دی گئی۔ اپنے پرنسپل یا ہیڈ "
 "آفس سے اپنا کردار تفویض کروائیں۔"
+
+#: templates/diary/day.html:5
+#, python-format
+#| msgid "Edit %(n)s"
+msgid "Week %(n)s"
+msgstr "ہفتہ %(n)s"
+
+#: templates/diary/day.html:5
+msgid "Theme"
+msgstr "موضوع"
+
+#: templates/diary/day.html:9
+#| msgid "Next"
+msgid "Next day"
+msgstr "اگلا دن"
+
+#: templates/diary/day.html:11
+#| msgid "Sunday: school is closed, so there is no attendance."
+msgid "Sunday: school is closed, so there is no diary."
+msgstr "اتوار: سکول بند ہے، اس لیے ڈائری نہیں۔"
+
+#: templates/diary/day.html:12
+#| msgid ""
+#| "Saturday: only the classes that come on Saturdays (Hifz, Pre-9, Class 9 and "
+#| "Class 10) take attendance."
+msgid "Saturday: only Hifz, Pre-9, Class 9 and Class 10 have a diary."
+msgstr "ہفتہ: صرف حفظ، پری نہم، نہم اور دہم کی ڈائری ہوتی ہے۔"
+
+#: templates/diary/day.html:20
+#| msgid "Not taken yet"
+msgid "Not written yet"
+msgstr "ابھی نہیں لکھی گئی"
+
+#: templates/diary/day.html:29 templates/diary/view.html:2
+#: templates/diary/view.html:4 templates/diary/write.html:4
+msgid "Diary"
+msgstr "ڈائری"
+
+#: templates/diary/day.html:33
+#| msgid "Not taken"
+msgid "Not written"
+msgstr "نہیں لکھی گئی"
+
+#: templates/diary/day.html:34
+msgid "Edit"
+msgstr "ترمیم"
+
+#: templates/diary/day.html:34 templates/diary/write.html:2
+msgid "Write diary"
+msgstr "ڈائری لکھیں"
+
+#: templates/diary/day.html:37
+#| msgid "No classes today."
+msgid "No classes have a diary on this day."
+msgstr "اس دن کسی جماعت کی ڈائری نہیں۔"
+
+#: templates/diary/day.html:40
+msgid "Theme of the week"
+msgstr "ہفتے کا موضوع"
+
+#: templates/diary/day.html:42
+msgid ""
+"Shown on every diary of this branch for the week. Leave empty to use head "
+"office's theme."
+msgstr ""
+"یہ اس ہفتے برانچ کی ہر ڈائری پر دکھایا جائے گا۔ ہیڈ آفس کا موضوع استعمال "
+"کرنے کے لیے خالی چھوڑ دیں۔"
+
+#: templates/diary/day.html:44
+#| msgid "Save student"
+msgid "Save theme"
+msgstr "موضوع محفوظ کریں"
+
+#: templates/diary/view.html:7
+#| msgid "Parent mobile / WhatsApp"
+msgid "Image for WhatsApp"
+msgstr "واٹس ایپ کے لیے تصویر"
+
+#: templates/diary/view.html:8
+msgid "PDF for printing"
+msgstr "پرنٹ کے لیے PDF"
+
+#: templates/diary/view.html:9
+msgid "Edit diary"
+msgstr "ڈائری میں ترمیم"
+
+#: templates/diary/view.html:10
+msgid "All diaries for this day"
+msgstr "اس دن کی تمام ڈائریاں"
+
+#: templates/diary/write.html:6
+msgid ""
+"Write only the subjects taught today. Empty subjects are left out of the "
+"diary automatically. Urdu text is set right-to-left by itself."
+msgstr ""
+"صرف آج پڑھائے گئے مضامین لکھیں۔ خالی مضامین ڈائری میں خود بخود شامل نہیں "
+"ہوتے۔ اردو متن خود بخود دائیں سے بائیں ہو جاتا ہے۔"
+
+#: templates/diary/write.html:11
+msgid "In class learning"
+msgstr "کلاس میں سیکھا گیا"
+
+#: templates/diary/write.html:14
+msgid "Home learning task"
+msgstr "گھر کا کام"
+
+#: templates/diary/write.html:16
+msgid "Deadline"
+msgstr "آخری تاریخ"
+
+#: templates/diary/write.html:21
+#| msgid ""
+#| "No current academic session is set. Head office sets it under Setup."
+msgid "No subjects are set up yet. Head office adds subjects under Setup."
+msgstr ""
+"ابھی مضامین شامل نہیں کیے گئے۔ ہیڈ آفس سیٹ اپ میں مضامین شامل کرتا ہے۔"
+
+#: templates/diary/write.html:25
+msgid "Publish diary"
+msgstr "ڈائری شائع کریں"
+
+#: templates/diary/write.html:26
+#| msgid "Save student"
+msgid "Save draft"
+msgstr "مسودہ محفوظ کریں"
 
 #: templates/people/student_detail.html:6
 #: templates/people/student_list.html:36

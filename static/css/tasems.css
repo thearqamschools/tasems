@@ -212,3 +212,12 @@ ol.register { list-style: none; margin: 0; padding: 0; background: var(--surface
 .toggle .opt-leave input:checked + span, .toggle .opt-late input:checked + span { background: var(--attention); border-color: var(--attention); color: #fff; }
 .sticky-save { position: sticky; bottom: 0; background: var(--paper); padding: 0.75rem 0; margin: 0; }
 @media (max-width: 34rem) { .register-row { grid-template-columns: 1fr; } .toggle span { min-width: 0; width: 100%; } .toggle { display: grid; grid-template-columns: repeat(4, 1fr); } }
+
+/* ---------- Daily Diary ---------- */
+textarea { width: 100%; font-size: var(--step-0); padding: 0.6rem 0.7rem; border: 1px solid #b9c4be; border-radius: var(--radius-sm); font-family: inherit; resize: vertical; }
+textarea.ur { font-family: var(--font-ur); line-height: 2.1; }
+.diary-subject { margin: 0 0 0.75rem; }
+.diary-subject legend { font-size: var(--step-1); }
+.diary-home { grid-template-columns: 1fr 11rem; }
+@media (max-width: 34rem) { .diary-home { grid-template-columns: 1fr; } }
+.diary-preview { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem; overflow-x: auto; }

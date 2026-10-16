@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Diary" %} {{ diary.section }}{% endblock %}
+{% block content %}
+<h1>{% trans "Diary" %}: {{ diary.section }}</h1>
+<p class="lede">{{ diary.date|date:"l, d F Y" }} · {% if diary.status == "published" %}<span class="badge">{% trans "Published" %}</span>{% else %}<span class="badge attention">{% trans "Draft" %}</span>{% endif %}</p>
+<div class="actions no-print">
+  <a class="button" href="{% url 'diary:image' diary.pk %}">{% trans "Image for WhatsApp" %}</a>
+  <a class="button secondary" href="{% url 'diary:pdf' diary.pk %}" target="_blank" rel="noopener">{% trans "PDF for printing" %}</a>
+  {% if can_edit %}<a class="button quiet" href="{% url 'diary:write' diary.section_id diary.date|date:'Y-m-d' %}">{% trans "Edit diary" %}</a>{% endif %}
+  <a class="button quiet" href="{% url 'diary:day' %}?date={{ diary.date|date:'Y-m-d' }}">{% trans "All diaries for this day" %}</a>
+</div>
+<div class="diary-preview">{% include "diary/_sheet.html" %}</div>
+{% endblock %}

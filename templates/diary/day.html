@@ -1,0 +1,47 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Daily Diary" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Daily Diary" %}</h1>
+<p class="lede">{{ date|date:"l, d F Y" }}{% if week.week_number %} · {% blocktrans with n=week.week_number %}Week {{ n }}{% endblocktrans %}{% endif %}{% if week.theme %} · {% trans "Theme" %}: {{ week.theme }}{% endif %}</p>
+<nav class="actions" aria-label="{% trans 'Choose day' %}">
+  <a class="button quiet" href="?date={{ previous_day|date:'Y-m-d' }}">{% trans "Previous day" %}</a>
+  {% if not is_today %}<a class="button quiet" href="?">{% trans "Today" %}</a>{% endif %}
+  <a class="button quiet" href="?date={{ next_day|date:'Y-m-d' }}">{% trans "Next day" %}</a>
+</nav>
+{% if weekday == 6 %}<ul class="messages"><li>{% trans "Sunday: school is closed, so there is no diary." %}</li></ul>
+{% elif weekday == 5 %}<ul class="messages"><li>{% trans "Saturday: only Hifz, Pre-9, Class 9 and Class 10 have a diary." %}</li></ul>{% endif %}
+
+{% if mine %}
+<h2>{% trans "My classes" %}</h2>
+<div class="register-list">
+{% for r in mine %}
+  <a class="register-card {% if r.diary.status == 'published' %}done{% endif %}" href="{% if r.diary and not r.can_edit %}{% url 'diary:view' r.diary.pk %}{% elif r.can_edit %}{% url 'diary:write' r.section.id date|date:'Y-m-d' %}{% else %}#{% endif %}" {% if not r.can_edit and not r.diary %}aria-disabled="true"{% endif %}>
+    <span class="register-name">{{ r.section }}</span>
+    {% if r.diary %}<span class="badge {% if r.diary.status != 'published' %}attention{% endif %}">{{ r.diary.get_status_display }}</span>{% else %}<span class="badge attention">{% trans "Not written yet" %}</span>{% endif %}
+  </a>
+{% endfor %}
+</div>
+{% endif %}
+
+<h2>{% trans "All sections" %}</h2>
+{% if rows %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Section" %}</th><th>{% trans "Class teacher" %}</th><th>{% trans "Diary" %}</th><th></th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td>{{ r.section }}</td>
+    <td>{{ r.section.class_teacher.get_full_name|default:r.section.class_teacher|default:"—" }}</td>
+    <td>{% if r.diary %}<a href="{% url 'diary:view' r.diary.pk %}">{{ r.diary.get_status_display }}</a>{% else %}<span class="badge attention">{% trans "Not written" %}</span>{% endif %}</td>
+    <td>{% if r.can_edit %}<a href="{% url 'diary:write' r.section.id date|date:'Y-m-d' %}">{% if r.diary %}{% trans "Edit" %}{% else %}{% trans "Write diary" %}{% endif %}</a>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card"><p>{% trans "No classes have a diary on this day." %}</p></div>{% endif %}
+
+{% if week_form %}
+<h2>{% trans "Theme of the week" %}</h2>
+<form method="post" class="card">{% csrf_token %}
+  <p class="muted">{% trans "Shown on every diary of this branch for the week. Leave empty to use head office's theme." %}</p>
+  <div class="form-grid">{% for field in week_form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <button class="button secondary" type="submit">{% trans "Save theme" %}</button>
+</form>
+{% endif %}
+{% endblock %}

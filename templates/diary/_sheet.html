@@ -1,0 +1,67 @@
+{% load i18n %}<style>
+  @font-face { font-family: "DiarySerif"; src: url("{{ font_base }}NotoSerif-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "DiarySerif"; src: url("{{ font_base }}NotoSerif-Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "DiaryUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "DiaryUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Bold.ttf"); font-weight: 700; }
+  @page { size: A4; margin: 8mm 9mm 10mm; {% if layout.footer_text %}@bottom-center { content: "{{ layout.footer_text|escapejs }}"; font-family: "DiarySerif"; font-size: 8pt; color: #555; }{% endif %} }
+  .sheet, .sheet * { box-sizing: border-box; }
+  .sheet { font-family: "DiarySerif", "DiaryUrdu", serif; font-size: 9.5pt; color: #111; max-width: 190mm; margin: 0 auto; background: #fff; line-height: 1.35; direction: ltr; }
+  .sheet header { display: grid; grid-template-columns: 22mm 1fr 22mm; align-items: center; text-align: center; }
+  .sheet header img { max-width: 22mm; max-height: 22mm; }
+  .sheet .school { font-size: 20pt; font-weight: 700; color: #1d2b6b; letter-spacing: 0.02em; margin: 0; line-height: 1.1; }
+  .sheet .school-ur { font-family: "DiaryUrdu"; color: #c8102e; font-size: 12pt; line-height: 1.6; margin: 0; }
+  .sheet h1 { font-size: 15pt; text-decoration: underline; margin: 1mm 0 0.5mm; text-align: center; }
+  .sheet .meta, .sheet .quote { text-align: center; font-weight: 700; margin: 0.3mm 0; font-size: 10.5pt; }
+  .sheet table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 1mm; }
+  .sheet th, .sheet td { border: 0.6pt solid #333; padding: 1mm 1.8mm; vertical-align: middle; overflow-wrap: break-word; }
+  .sheet thead { display: table-header-group; }
+  .sheet tr { page-break-inside: avoid; break-inside: avoid; }
+  .sheet th { background: {{ layout.header_colour|default:"#cdbfe4" }}; font-size: 11pt; text-align: center; padding: 1.4mm 1.8mm; }
+  .sheet td.subject { text-align: center; font-weight: 700; font-size: 10.5pt; overflow-wrap: normal; hyphens: none; }
+  .sheet td.deadline { text-align: center; white-space: nowrap; }
+  .sheet td.text { text-align: left; line-height: 1.3; }
+  .sheet td.rtl { direction: rtl; text-align: right; font-family: "DiaryUrdu", "DiarySerif"; line-height: 1.85; font-size: 9pt; }
+  .sheet .theme td { font-weight: 700; font-size: 11pt; background: {{ layout.header_colour|default:"#cdbfe4" }}; }
+  .sheet .theme td:first-child { width: 52mm; }
+  .sheet .theme .ur { font-family: "DiaryUrdu"; font-weight: 400; }
+  .sheet h2 { text-align: center; font-size: 13pt; margin: 1.5mm 0 0.8mm; }
+</style>
+<div class="sheet">
+  <header>
+    <div>{% if layout.left_logo %}<img src="{{ media_base }}{{ layout.left_logo.name }}" alt="The Arqam Schools">{% endif %}</div>
+    <div>
+      <p class="school">THE ARQAM SCHOOLS</p>
+      <p class="school-ur" lang="ur" dir="rtl">دی ارقم سکولز</p>
+    </div>
+    <div>{% if layout.right_logo %}<img src="{{ media_base }}{{ layout.right_logo.name }}" alt="">{% endif %}</div>
+  </header>
+  <h1>{{ layout.title }}</h1>
+  <p class="meta">{{ diary.section }}&nbsp;&nbsp;{{ diary.date|date:"l, F j, Y" }}{% if week.week_number %}, Week: {{ week.week_number|stringformat:"02d" }}{% endif %}</p>
+  {% if week.quote %}<p class="quote">"{{ week.quote }}"</p>{% endif %}
+  {% if week.theme or week.theme_ur %}
+  <table class="theme"><tr><td>Theme of the Week:</td><td style="text-align:center">{{ week.theme }}{% if week.theme and week.theme_ur %} · {% endif %}{% if week.theme_ur %}<span class="ur" lang="ur">{{ week.theme_ur }}</span>{% endif %}</td></tr></table>
+  {% endif %}
+
+  {% if in_class %}
+  <h2>In Class Learning</h2>
+  <table>
+    <thead><tr><th style="width:31mm">Course</th><th>In Class Learning</th></tr></thead>
+    <tbody>{% for e in in_class %}<tr>
+      <td class="subject">{{ e.subject.name }}</td>
+      <td class="text {% if e.in_class_rtl %}rtl{% endif %}" {% if e.in_class_rtl %}dir="rtl" lang="ur"{% endif %}>{{ e.in_class|linebreaksbr }}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+  {% endif %}
+
+  {% if home %}
+  <h2>Home Learning Tasks</h2>
+  <table>
+    <thead><tr><th style="width:31mm">Course</th><th>Tasks</th><th style="width:23mm">Deadline</th></tr></thead>
+    <tbody>{% for e in home %}<tr>
+      <td class="subject">{{ e.subject.name }}</td>
+      <td class="text {% if e.home_task_rtl %}rtl{% endif %}" {% if e.home_task_rtl %}dir="rtl" lang="ur"{% endif %}>{{ e.home_task|linebreaksbr }}</td>
+      <td class="deadline">{{ e.deadline|date:"d-m-y"|default:"" }}</td>
+    </tr>{% endfor %}</tbody>
+  </table>
+  {% endif %}
+</div>
