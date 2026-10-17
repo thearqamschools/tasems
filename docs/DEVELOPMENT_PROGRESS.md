@@ -33,7 +33,7 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 
 Brief received 17 Oct 2026: upgrade TASEMS into a full multi-branch ERP with a modern interface, using a reference
 demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_ANALYSIS.md`, `FEATURE_GAP_MATRIX.md`,
-`UI_UX_REDESIGN_PLAN.md`, `INTEGRATION_ROADMAP.md`. Starting point tagged `checkpoint/before-erp-upgrade`.
+`UI_UX_REDESIGN_PLAN.md`, `INTEGRATION_ROADMAP.md`. Rollback point: commit `4b1ac5b` on `main`.
 
 | Milestone | Contents | Status |
 | --- | --- | --- |

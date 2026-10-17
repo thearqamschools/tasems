@@ -1,7 +1,7 @@
 # Existing system audit
 
 Audit of TASEMS before the ERP upgrade (Phase 4). Done 17 Oct 2026 against `main` at commit `4b1ac5b`
-(Git tag `checkpoint/before-erp-upgrade`). Facts below were checked in the code, by running the test
+(the rollback point for the upgrade). Facts below were checked in the code, by running the test
 suite and by signing in to a running copy with every demo account.
 
 ## 1. Health check
