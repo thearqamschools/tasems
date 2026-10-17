@@ -14,6 +14,7 @@
   <p>{% trans "These sections will be created for this session:" %}</p>
   <ul>{% for level, name, group in result.new_sections %}<li>{{ level }}-{{ name }}{% if group != "mixed" %} ({% if group == "boys" %}{% trans "Boys" %}{% else %}{% trans "Girls" %}{% endif %}){% endif %}</li>{% endfor %}</ul>
   {% endif %}
+  {% if result.defaulted_admission_dates %}<p class="muted">{% blocktrans count n=result.defaulted_admission_dates %}{{ n }} student has no admission date in the file; the first day of the session will be used and can be corrected later.{% plural %}{{ n }} students have no admission date in the file; the first day of the session will be used and can be corrected later.{% endblocktrans %}</p>{% endif %}
   <form method="post">{% csrf_token %}
     <input type="hidden" name="step" value="import"><input type="hidden" name="token" value="{{ token }}">
     <div class="actions"><button class="button" type="submit">{% blocktrans count n=result.rows|length %}Import {{ n }} student{% plural %}Import {{ n }} students{% endblocktrans %}</button>
@@ -34,7 +35,7 @@
   {% endif %}
   <form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
     <input type="hidden" name="step" value="check">
-    <div class="field"><label for="file">{% trans "Excel file (.xlsx)" %}</label><input type="file" id="file" name="file" accept=".xlsx" required></div>
+    <div class="field"><label for="file">{% trans "Excel template (.xlsx) or the old software's “Student Data” PDF" %}</label><input type="file" id="file" name="file" accept=".xlsx,.pdf" required></div>
     <div class="actions">
       <button class="button" type="submit">{% trans "Check file" %}</button>
       <a class="button secondary" href="{% url 'people:import_template' %}">{% trans "Download template" %}</a>

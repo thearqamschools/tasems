@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.10.2 — 2026-10-17 — Import from the previous software
+
+Added
+- Student import accepts the previous software's "Student Data" PDF report as it is, besides the Excel template.
+- New import columns: Other Mobile, Father Occupation, Monthly Fee; Admission Date optional (session start used, shown before import).
+- "Agreed fee" special discount type: the student pays exactly this monthly fee; carried over from the old software on import.
+- 147 automated tests.
+
+Not deployed.
+
 ## 0.10.1 — 2026-10-17 — Official logo
 
 Added

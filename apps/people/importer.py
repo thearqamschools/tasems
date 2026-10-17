@@ -4,6 +4,10 @@ Step 1 (check): read the file, report every problem by row, and list the section
 that will be created. Nothing is saved.
 Step 2 (import): only when the check finds no problems; everything is saved in one
 transaction, so either all rows go in or none do.
+
+Two kinds of file are accepted: the TASEMS Excel template, and the "Student Data" PDF report
+printed by the school's previous software (one class/section per page, with Comp. Code,
+Student Name, Father Name, Class, Section, Mon. Fee, Mobile, Other Number, CNIC/Occupation).
 """
 
 import datetime as dt
@@ -33,7 +37,7 @@ COLUMNS = [
     ("full_name_ur", "Name (Urdu)", False),
     ("gender", "Gender", True),
     ("date_of_birth", "Date of Birth", False),
-    ("admission_date", "Admission Date", True),
+    ("admission_date", "Admission Date", False),
     ("b_form_no", "B-Form No", False),
     ("class", "Class", True),
     ("section", "Section", True),
@@ -44,6 +48,9 @@ COLUMNS = [
     ("relationship", "Relationship", False),
     ("father_name", "Father Name", False),
     ("father_cnic", "Father CNIC", False),
+    ("alt_phone", "Other Mobile", False),
+    ("occupation", "Father Occupation", False),
+    ("monthly_fee", "Monthly Fee", False),
 ]
 HEADER_TO_KEY = {re.sub(r"[^a-z]", "", h.lower()): k for k, h, _r in COLUMNS}
 
@@ -68,6 +75,17 @@ RELATIONSHIPS = {
     "other": "other",
 }
 CLASS_ALIASES = {
+    "one": "class-1",
+    "two": "class-2",
+    "three": "class-3",
+    "four": "class-4",
+    "five": "class-5",
+    "six": "class-6",
+    "seven": "class-7",
+    "eight": "class-8",
+    "nine": "class-9",
+    "ten": "class-10",
+    "matric": "class-10",
     "pg": "play-group",
     "playgroup": "play-group",
     "nur": "nursery",
@@ -131,6 +149,7 @@ class Row:
 
 @dataclass
 class CheckResult:
+    defaulted_admission_dates: int = 0
     rows: list = field(default_factory=list)
     errors: list = field(default_factory=list)  # (row number or None, column header or "", message)
     new_sections: list = field(default_factory=list)  # (level, name, gender_group)
@@ -162,6 +181,9 @@ def template_workbook():
         ("Parent Mobile", "Pakistani mobile, e.g. 0300-1234567"),
         ("Relationship", "Father, Mother, Guardian or Other (empty = Guardian)"),
         ("From Class 6", "Boys and girls must be in separate sections"),
+        ("Admission Date", "If empty, the first day of the session is used (correct it later)"),
+        ("Monthly Fee", "The child's agreed monthly fee, if different families pay different amounts"),
+        ("Old software", "The previous software's 'Student Data' PDF can also be uploaded as it is"),
     ]
     for line in lines:
         guide.append(list(line))
@@ -172,21 +194,105 @@ def template_workbook():
     return buffer.getvalue()
 
 
+OLD_REPORT_COLUMNS = [
+    "Admission No",
+    "First Name",
+    "Gender",
+    "Class",
+    "Section",
+    "Parent Name",
+    "Parent Mobile",
+    "Relationship",
+    "Father Name",
+    "Father CNIC",
+    "Other Mobile",
+    "Father Occupation",
+    "Monthly Fee",
+]
+
+
+def _old_report_rows(file_bytes):
+    """Rows of the previous software's "Student Data" PDF, in TASEMS column names."""
+    import pdfplumber
+
+    rows, gender = [], ""
+    with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+        for page in pdf.pages:
+            text = page.extract_text() or ""
+            campus = re.search(r"Campus\s*\((\w+)\)", text)
+            if campus:  # a class continued on the next page keeps the campus of its first page
+                gender = {"boys": "Male", "girls": "Female"}.get(campus.group(1).lower(), "")
+            for table in page.extract_tables():
+                head = [re.sub(r"[^a-z]", "", str(c or "").lower()) for c in table[0]]
+                if "compcode" not in head:
+                    continue
+                col = {name: head.index(name) for name in head}
+                for raw in table[1:]:
+
+                    def cell(name, _raw=raw, _col=col):
+                        i = _col.get(name)
+                        return str(_raw[i] or "").strip() if i is not None and i < len(_raw) else ""
+
+                    code = cell("compcode")
+                    if not code:
+                        continue
+                    numbers = [
+                        n for n in re.split(r"[\n,/]+", cell("mobile") + "\n" + cell("othernumber")) if n.strip()
+                    ]
+                    mobile = next((n for n in numbers if normalize_mobile(n)), numbers[0] if numbers else "")
+                    others = [n.strip() for n in numbers if n != mobile]
+                    cnic_text = cell("cnicoccupation")
+                    found = re.search(r"\d{5}-?\d{7}-?\d", cnic_text)
+                    occupation = re.sub(
+                        r"\s+", " ", cnic_text.replace(found.group(0), "") if found else cnic_text
+                    ).strip()
+                    father = re.sub(r"\s+", " ", cell("fathername"))
+                    rows.append(
+                        [
+                            code,
+                            re.sub(r"\s+", " ", cell("studentname")),
+                            gender,
+                            re.sub(r"\s+", " ", cell("class")),
+                            re.sub(r"\s+", " ", cell("section")),
+                            father,
+                            mobile,
+                            "Father",
+                            father,
+                            found.group(0) if found else "",
+                            (others[0] if others else "")[:20],
+                            occupation[:100],
+                            cell("monfee"),
+                        ]
+                    )
+    return OLD_REPORT_COLUMNS, rows
+
+
+def _table(file_bytes):
+    """(header, rows) from an Excel template or the previous software's PDF report."""
+    if file_bytes[:4] == b"%PDF":
+        header, rows = _old_report_rows(file_bytes)
+        return header, iter(rows)
+    wb = load_workbook(io.BytesIO(file_bytes), read_only=True, data_only=True)
+    rows = wb.worksheets[0].iter_rows(values_only=True)
+    return next(rows, None) or (), rows
+
+
 def check(file_bytes, *, branch, session):
     result = CheckResult()
     if session is None:
         result.errors.append((None, "", _("No current academic session is set. Ask head office to set it first.")))
         return result
     try:
-        wb = load_workbook(io.BytesIO(file_bytes), read_only=True, data_only=True)
-    except Exception:
+        header, rows = _table(file_bytes)
+    except Exception:  # noqa: BLE001 - any unreadable file gets the same message
         result.errors.append(
-            (None, "", _("This file could not be opened. Save it as an Excel .xlsx file and try again."))
+            (
+                None,
+                "",
+                _("This file could not be opened. Use the Excel template (.xlsx) or the old software's PDF report."),
+            )
         )
         return result
-    ws = wb.worksheets[0]
-    rows = ws.iter_rows(values_only=True)
-    header = next(rows, None) or ()
     positions = {}
     for index, title in enumerate(header):
         key = HEADER_TO_KEY.get(re.sub(r"[^a-z]", "", str(title or "").lower()))
@@ -253,7 +359,9 @@ def check(file_bytes, *, branch, session):
                 err(key, _("Not a date. Use day/month/year, e.g. 15/04/2026"))
             else:
                 if key == "admission_date" and data[key] is None:
-                    err(key, _("Required"))
+                    # Not in the old software's report: the session's first day, to correct later.
+                    data[key] = session.starts_on
+                    result.defaulted_admission_dates += 1
         if data.get("date_of_birth") and data["date_of_birth"] > dt.date.today():
             err("date_of_birth", _("Date of birth is in the future"))
 
@@ -272,6 +380,17 @@ def check(file_bytes, *, branch, session):
         if data["relationship"] is None:
             err("relationship", _("Use Father, Mother, Guardian or Other"))
         data["is_hifz"] = data.get("is_hifz", "").lower() in YES
+        fee = data.get("monthly_fee", "").replace(",", "")
+        if fee:
+            try:
+                data["monthly_fee"] = int(float(fee))
+                if data["monthly_fee"] < 0:
+                    raise ValueError
+            except ValueError:
+                err("monthly_fee", _("Not an amount"))
+                data["monthly_fee"] = None
+        else:
+            data["monthly_fee"] = None
         if data.get("father_cnic"):
             cnic = normalize_cnic(data["father_cnic"])
             if cnic is None:
@@ -318,7 +437,7 @@ def check(file_bytes, *, branch, session):
 
 
 @transaction.atomic
-def run_import(result, *, branch, session):
+def run_import(result, *, branch, session, user=None):
     if not result.ok:
         raise ValueError("Import called on a file with problems")
     sections = {(s.class_level_id, s.name.lower()): s for s in Section.objects.filter(branch=branch, session=session)}
@@ -353,4 +472,14 @@ def run_import(result, *, branch, session):
             guardian_phone=d["guardian_phone"],
             relationship=d["relationship"] or StudentGuardian.Relationship.GUARDIAN,
         )
+        link = student.guardian_links.filter(is_primary_contact=True).select_related("guardian").first()
+        if link and (d.get("alt_phone") or d.get("occupation")):
+            g = link.guardian
+            g.alt_phone = g.alt_phone or d.get("alt_phone", "")
+            g.occupation = g.occupation or d.get("occupation", "")
+            g.save()
+        if d.get("monthly_fee") is not None and user is not None:
+            from apps.fees.services import set_agreed_fee
+
+            set_agreed_fee(student, d["monthly_fee"], user, session=session)
     return len(result.rows)

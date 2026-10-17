@@ -37,7 +37,7 @@ def voucher_table(voucher, heads=None):
     discounts = defaultdict(lambda: ZERO)
     for c in voucher.charges.filter(is_cancelled=False).select_related("head"):
         by_month[c.month][c.head_id] += c.amount
-        if c.discount:
+        if c.discount and c.discount_reason != "Agreed fee":  # an agreed fee is the child's fee, not a discount
             discounts[c.discount_reason or "Discount"] += c.discount
     months = sorted(by_month)
     if len(months) > MAX_ROWS:

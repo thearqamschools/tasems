@@ -208,8 +208,8 @@ def student_import(request):
 
     if request.method == "POST" and request.POST.get("step") == "check":
         upload = request.FILES.get("file")
-        if upload is None or not upload.name.lower().endswith(".xlsx"):
-            messages.error(request, _("Choose an Excel file (.xlsx)."))
+        if upload is None or not upload.name.lower().endswith((".xlsx", ".pdf")):
+            messages.error(request, _("Choose the Excel template (.xlsx) or the old software's PDF report."))
         elif upload.size > importer.MAX_BYTES:
             messages.error(request, _("The file is larger than 5 MB. Split it into smaller files."))
         else:
@@ -240,7 +240,7 @@ def student_import(request):
         if not result.ok:
             messages.error(request, _("The data changed since the check. Please check the file again."))
             return redirect("people:student_import")
-        count = importer.run_import(result, branch=branch, session=session)
+        count = importer.run_import(result, branch=branch, session=session, user=request.user)
         messages.success(request, _("%(n)s students imported.") % {"n": count})
         return redirect("people:student_list")
 

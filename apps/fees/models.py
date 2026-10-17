@@ -360,6 +360,7 @@ class Concession(BranchOwnedModel):
     class Kind(models.TextChoices):
         PERCENT = "percent", _("Percentage off")
         AMOUNT = "amount", _("Fixed amount off")
+        FIXED = "fixed", _("Agreed fee (pays this amount)")
 
     class Status(models.TextChoices):
         PENDING = "pending", _("Waiting for approval")
@@ -370,7 +371,7 @@ class Concession(BranchOwnedModel):
     student = models.ForeignKey("people.Student", on_delete=models.PROTECT, related_name="concessions")
     head = models.ForeignKey(FeeHead, on_delete=models.PROTECT, related_name="+")
     kind = models.CharField(max_length=10, choices=Kind.choices)
-    value = models.DecimalField(**MONEY, validators=[MinValueValidator(Decimal("0.01"))])
+    value = models.DecimalField(**MONEY, validators=[MinValueValidator(Decimal("0"))])
     starts_on = models.DateField(help_text=_("First month"))
     ends_on = models.DateField(null=True, blank=True, help_text=_("Last month; empty = until stopped"))
     reason = models.CharField(max_length=200)
@@ -399,6 +400,8 @@ class Concession(BranchOwnedModel):
         return month_start(self.starts_on) <= month and (self.ends_on is None or month <= month_start(self.ends_on))
 
     def discount_on(self, gross):
+        if self.kind == self.Kind.FIXED:
+            return max(gross - self.value, Decimal(0))
         if self.kind == self.Kind.PERCENT:
             off = (gross * self.value / Decimal(100)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
         else:

@@ -112,6 +112,10 @@ def price(head, rate, month, sibling, concessions):
     if rate is None or rate.amount <= 0:
         return None
     gross, discount, reason = rate.amount, ZERO, ""
+    # An agreed fee (e.g. carried over from the previous software) replaces every other rule.
+    agreed = next((c for c in concessions if c.head_id == head.id and c.kind == "fixed" and c.covers(month)), None)
+    if agreed is not None:
+        return gross, agreed.discount_on(gross), "Agreed fee"
     if sibling and rate.sibling_amount is not None and rate.sibling_amount < gross:
         discount, reason = gross - rate.sibling_amount, "Sibling"
     for c in concessions:
@@ -556,6 +560,30 @@ def reverse_payment(payment, user, reason):
 
 
 # --- Special discounts -----------------------------------------------------------------------
+
+
+@transaction.atomic
+def set_agreed_fee(student, amount, user, session=None):
+    """Records a student's agreed monthly fee (e.g. from the previous software) as an approved
+    'agreed fee' on the monthly fee head. It replaces the sibling rule for this student."""
+    tuition = FeeHead.objects.get(code="tuition")
+    start = session.starts_on if session else month_start(timezone.localdate())
+    Concession.objects.filter(student=student, head=tuition, kind="fixed", status=Concession.Status.APPROVED).update(
+        status=Concession.Status.ENDED
+    )
+    return Concession.objects.create(
+        branch_id=student.branch_id,
+        student=student,
+        head=tuition,
+        kind="fixed",
+        value=amount,
+        starts_on=start,
+        reason="Monthly fee from the previous software",
+        status=Concession.Status.APPROVED,
+        requested_by=user,
+        decided_by=user,
+        decided_at=timezone.now(),
+    )
 
 
 @transaction.atomic
