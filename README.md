@@ -2,7 +2,7 @@
 
 School management platform for **The Arqam Schools**, Pakistan. Private repository; owned by The Arqam Schools.
 
-Current status: **Phase 1 done except AI assistant (deferred); Phase 2 (examinations, fees) and Phase 3a (staff) done; not deployed.** Deployment: `docs/DEPLOYMENT.md`. See `docs/DEVELOPMENT_PROGRESS.md`.
+Current status: **Phase 1 done except AI assistant (deferred); Phase 2 (examinations, fees) and Phase 3a (staff) done; not deployed.** Deployment: `docs/DEPLOYMENT.md`. Try it with fictional data: `docs/DEMO.md`. See `docs/DEVELOPMENT_PROGRESS.md`.
 
 ## Stack
 

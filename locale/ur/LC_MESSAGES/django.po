@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-17 08:42+0500\n"
+"POT-Creation-Date: 2026-10-17 09:21+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgid "Hifz-e-Quran"
 msgstr "حفظ القرآن"
 
 #: apps/academics/models.py:28 apps/academics/models.py:50
-#: apps/accounts/models.py:101 apps/exams/models.py:113
+#: apps/accounts/models.py:105 apps/exams/models.py:113
 #: apps/exams/models.py:147 apps/fees/models.py:67 apps/hr/models.py:157
 #: apps/organisation/models.py:21 apps/organisation/models.py:41
 #: apps/organisation/models.py:59 apps/organisation/models.py:99
@@ -182,7 +182,7 @@ msgid ""
 msgstr ""
 "اپنی تصدیقی ایپ کھولیں۔ فون گم ہو گیا ہے؟ اس کی جگہ بیک اپ کوڈ درج کریں۔"
 
-#: apps/accounts/models.py:20 apps/accounts/models.py:149
+#: apps/accounts/models.py:20 apps/accounts/models.py:153
 msgid "Whole network"
 msgstr "پورا نیٹ ورک"
 
@@ -196,7 +196,7 @@ msgid "Region"
 msgstr "ریجن"
 
 #: apps/accounts/models.py:23 templates/attendance/branches.html:7
-#: templates/base.html:18 templates/core/home.html:27
+#: templates/base.html:19 templates/core/home.html:27
 #: templates/core/home.html:41 templates/fees/royalty.html:15
 msgid "Branch"
 msgstr "برانچ"
@@ -206,28 +206,28 @@ msgstr "برانچ"
 msgid "full name (Urdu)"
 msgstr "پورا نام (اردو)"
 
-#: apps/accounts/models.py:104
+#: apps/accounts/models.py:108
 msgid "Scopes this role may be assigned at, e.g. ['branch']."
 msgstr "وہ سطحیں جن پر یہ کردار دیا جا سکتا ہے، مثلاً ['branch']۔"
 
-#: apps/accounts/models.py:108
+#: apps/accounts/models.py:112
 msgid ""
 "Privileged roles must use two-factor login (enforced from Milestone 1b)."
 msgstr "اہم کرداروں کے لیے دو مرحلہ لاگ اِن لازمی ہے۔"
 
-#: apps/accounts/models.py:110
+#: apps/accounts/models.py:114
 msgid "Created by TASEMS; edit with care."
 msgstr "TASEMS نے بنایا ہے؛ احتیاط سے تبدیل کریں۔"
 
-#: apps/accounts/models.py:154
+#: apps/accounts/models.py:158
 msgid "This role cannot be assigned at this scope."
 msgstr "یہ کردار اس سطح پر نہیں دیا جا سکتا۔"
 
-#: apps/accounts/models.py:156
+#: apps/accounts/models.py:160
 msgid "End date is before start date."
 msgstr "آخری تاریخ شروع کی تاریخ سے پہلے ہے۔"
 
-#: apps/accounts/models.py:165
+#: apps/accounts/models.py:169
 msgid "Stops the same code being used twice."
 msgstr "ایک ہی کوڈ دو بار استعمال ہونے سے روکتا ہے۔"
 
@@ -1886,8 +1886,8 @@ msgid "TASEMS setup"
 msgstr "TASEMS سیٹ اپ"
 
 #: templates/accounts/auth_base.html:7 templates/base.html:7
-#: templates/base.html:14 templates/parents/base_parent.html:8
-#: templates/parents/base_parent.html:14
+#: templates/base.html:15 templates/parents/base_parent.html:8
+#: templates/parents/base_parent.html:15
 msgid "The Arqam Schools"
 msgstr "دی ارقم سکولز"
 
@@ -2477,15 +2477,20 @@ msgstr ""
 msgid "TASEMS"
 msgstr "TASEMS"
 
-#: templates/base.html:22
+#: templates/base.html:12 templates/parents/base_parent.html:13
+msgid ""
+"DEMO — fictional data for testing. Do not enter real student information."
+msgstr "ڈیمو — آزمائش کے لیے فرضی ڈیٹا۔ یہاں بچوں کی اصل معلومات درج نہ کریں۔"
+
+#: templates/base.html:23
 msgid "Switch"
 msgstr "تبدیل کریں"
 
-#: templates/base.html:29 templates/parents/base_parent.html:20
+#: templates/base.html:30 templates/parents/base_parent.html:21
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
-#: templates/base.html:31
+#: templates/base.html:32
 msgid "Main"
 msgstr "مرکزی"
 
@@ -3869,7 +3874,7 @@ msgstr "ٹیمپلیٹ ڈاؤن لوڈ کریں"
 msgid "Change password"
 msgstr "پاس ورڈ تبدیل کریں"
 
-#: templates/parents/base_parent.html:8 templates/parents/base_parent.html:15
+#: templates/parents/base_parent.html:8 templates/parents/base_parent.html:16
 msgid "Parents"
 msgstr "والدین"
 

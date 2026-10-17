@@ -9,6 +9,7 @@
   <link rel="icon" href="{% static 'img/arqam-logo-192.png' %}">
 </head>
 <body>
+{% if DEMO_MODE %}<div class="demo-banner" role="note">{% trans "DEMO — fictional data for testing. Do not enter real student information." %}</div>{% endif %}
 {% block body %}
   <header class="topbar">
     <a class="school" href="{% url 'home' %}"><img src="{% static 'img/arqam-logo-192.png' %}" alt="" width="32" height="32">{% trans "The Arqam Schools" %}</a>
