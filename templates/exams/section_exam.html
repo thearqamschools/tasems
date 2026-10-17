@@ -13,6 +13,6 @@
 {% else %}<div class="card"><p>{% trans "This exam has no papers for this class yet. Head office adds them under Setup → Exams." %}</p></div>{% endif %}
 <div class="actions">
   <a class="button secondary" href="{% url 'exams:section_results' section.id %}{% if exam.kind == 'mid' %}?card=mid{% endif %}">{% trans "See results" %}</a>
-  <a class="button quiet" href="{% url 'exams:remarks' exam.id section.id %}">{% trans "Remarks for result cards" %}</a>
+  {% if can_remark %}<a class="button quiet" href="{% url 'exams:remarks' exam.id section.id %}">{% trans "Remarks for result cards" %}</a>{% endif %}
 </div>
 {% endblock %}

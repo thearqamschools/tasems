@@ -4248,3 +4248,47 @@ msgstr ""
 #: templates/people/student_list.html:61
 msgid "No students yet in this branch."
 msgstr "اس برانچ میں ابھی کوئی طالب علم نہیں۔"
+
+#: apps/accounts/context_processors.py
+msgid "Overview"
+msgstr "جائزہ"
+
+#: apps/accounts/context_processors.py
+msgid "Dashboard"
+msgstr "ڈیش بورڈ"
+
+#: apps/accounts/context_processors.py
+msgid "Academics"
+msgstr "تعلیمی امور"
+
+#: apps/accounts/context_processors.py
+msgid "Finance"
+msgstr "مالیات"
+
+#: apps/accounts/context_processors.py
+msgid "Make vouchers"
+msgstr "واؤچر بنائیں"
+
+#: apps/accounts/context_processors.py
+msgid "Discounts"
+msgstr "رعایتیں"
+
+#: apps/accounts/context_processors.py
+msgid "Settings"
+msgstr "ترتیبات"
+
+#: templates/base.html
+msgid "Menu"
+msgstr "مینو"
+
+#: templates/base.html
+msgid "Skip to content"
+msgstr "مواد پر جائیں"
+
+#: templates/base.html
+msgid "Search branches"
+msgstr "برانچ تلاش کریں"
+
+#: templates/base.html
+msgid "No branch matches this search."
+msgstr "اس تلاش سے کوئی برانچ نہیں ملی۔"

@@ -26,7 +26,7 @@
     <td>{{ v.due_on|date:"d M" }}</td>
     <td class="num">{{ v.payable|rupees }}</td>
     <td>{% if v.status == "paid" %}<span class="badge">{{ v.get_status_display }}</span>{% elif v.status == "open" %}<span class="badge attention">{{ v.get_status_display }}</span>{% else %}<span class="badge muted">{{ v.get_status_display }}</span>{% endif %}</td>
-    <td><a href="{% url 'fees:voucher_pdf' v.id %}" target="_blank" rel="noopener">{% trans "Print" %}</a>{% if v.status == "open" or v.status == "superseded" %} · <a href="{% url 'fees:receive' v.id %}">{% trans "Receive" %}</a>{% endif %}</td>
+    <td><a href="{% url 'fees:voucher_pdf' v.id %}" target="_blank" rel="noopener">{% trans "Print" %}</a>{% if can_pay and v.status == "open" or can_pay and v.status == "superseded" %} · <a href="{% url 'fees:receive' v.id %}">{% trans "Receive" %}</a>{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="?{{ query }}&page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %} {{ page.number }} / {{ page.paginator.num_pages }} {% if page.has_next %}<a href="?{{ query }}&page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}

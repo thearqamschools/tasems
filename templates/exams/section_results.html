@@ -5,7 +5,7 @@
 <nav class="actions" aria-label="{% trans 'Result type' %}">
   <a class="button {% if card == 'mid' %}secondary{% else %}quiet{% endif %}" href="?card=mid">{% trans "Mid-Term progress report" %}</a>
   <a class="button {% if card == 'annual' %}secondary{% else %}quiet{% endif %}" href="?card=annual">{% trans "Annual result" %}</a>
-  <a class="button quiet" href="{% url 'exams:ratings' section.id %}">{% trans "Enter teacher ratings" %}</a>
+  {% if can_rate %}<a class="button quiet" href="{% url 'exams:ratings' section.id %}">{% trans "Enter teacher ratings" %}</a>{% endif %}
 </nav>
 {% if not scheme %}<div class="card"><p>{% trans "No result pattern is set up. Head office sets it under Setup → Grading schemes." %}</p></div>
 {% elif not subjects %}<div class="card"><p>{% trans "No exam papers for this class yet." %}</p></div>

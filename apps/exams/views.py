@@ -75,6 +75,7 @@ def section_exam(request, exam_id, section_id):
             "papers": [(p, entered[p.id]) for p in papers],
             "students": count,
             "can_enter": services.can_enter(request.user, section, exam),
+            "can_remark": services.can_write_remarks(request.user, section),
         },
     )
 
@@ -142,7 +143,11 @@ def section_results(request, section_id):
     section = _section(request, branch, section_id)
     card = "mid" if request.GET.get("card") == "mid" else "annual"
     data = R.section_results(section, card)
-    return render(request, "exams/section_results.html", {"section": section, "card": card, **data})
+    return render(
+        request,
+        "exams/section_results.html",
+        {"section": section, "card": card, "can_rate": services.can_rate(request.user, section), **data},
+    )
 
 
 def _card_context(section, card, results_data, for_file):
@@ -216,11 +221,9 @@ def remarks(request, section_id, exam_id):
     branch = _branch(request)
     section = _section(request, branch, section_id)
     exam = _exams(branch, section.session).filter(pk=exam_id).first()
-    if exam is None or not request.user.has_branch_perm("exams.change_resultremark", branch.id):
+    if exam is None or not services.can_write_remarks(request.user, section):
         raise PermissionDenied
     is_principal = request.user.has_branch_perm(services.CHANGE_PERM, branch.id)
-    if not is_principal and section.class_teacher_id != request.user.id:
-        raise PermissionDenied
     entries = services.roster(section)
     existing = {
         r.student_id: r for r in ResultRemark.objects.filter(exam=exam, student_id__in=[e.student_id for e in entries])
@@ -246,10 +249,7 @@ def ratings(request, section_id):
     """Teacher's marks for discipline, neatness, summer work and class work."""
     branch = _branch(request)
     section = _section(request, branch, section_id)
-    is_principal = request.user.has_branch_perm("exams.change_rating", branch.id)
-    if not is_principal and not (
-        section.class_teacher_id == request.user.id and request.user.has_branch_perm("exams.add_rating", branch.id)
-    ):
+    if not services.can_rate(request.user, section):
         raise PermissionDenied
     scheme = GradingScheme.for_stage(section.class_level.stage)
     components = list(scheme.components.filter(source=GradingComponent.Source.RATING)) if scheme else []

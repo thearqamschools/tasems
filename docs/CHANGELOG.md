@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.0 — 2026-10-17 — New staff screen frame and official colours (Phase 4, M1)
+
+Added
+- Collapsible left sidebar with grouped menu (Overview, Students, Academics, Finance, Staff, Settings) and icons; it remembers being collapsed, slides in on phones, and mirrors for Urdu. Shows only pages the person may open, including pages that were reachable only from inside a module (absent students, admissions report, vouchers, defaulters, daily collection, discounts, staff attendance, monthly sheet, leave).
+- Top bar with a searchable branch picker grouped by head office (type to filter; built for 350+ branches; works without JavaScript), language switch, signed-in user and sign out.
+- Official colours taken from the logo: blue #3E4095 and red #ED3237 (D-061); status colours kept separate; all text colours pass WCAG AA contrast.
+- Local Lucide icon sprite (ISC licence, 36 icons, ~11 KB); no outside services.
+- 12 automated tests (161 in total): every menu item opens for every demo role, the branch picker, and the hidden actions below.
+
+Fixed
+- Buttons that led to a "Forbidden" page are no longer shown: "Remarks for result cards" and "Enter teacher ratings" for sections the person may not change, "Receive" on fee vouchers for people who do not take payments, and "Take register" on the home screen on days the class does not attend.
+
+Not deployed.
+
 ## 0.11.0 — 2026-10-17 — Demo server
 
 Added

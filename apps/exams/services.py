@@ -27,6 +27,20 @@ def can_enter(user, section, exam):
     return user.has_branch_perm(ADD_PERM, section.branch_id)
 
 
+def can_write_remarks(user, section):
+    """Remarks on result cards: principals for any section, class teachers for their own section."""
+    if not user.has_branch_perm("exams.change_resultremark", section.branch_id):
+        return False
+    return user.has_branch_perm(CHANGE_PERM, section.branch_id) or section.class_teacher_id == user.id
+
+
+def can_rate(user, section):
+    """Teacher ratings (discipline, neatness …): principals for any section, class teachers for their own."""
+    if user.has_branch_perm("exams.change_rating", section.branch_id):
+        return True
+    return section.class_teacher_id == user.id and user.has_branch_perm("exams.add_rating", section.branch_id)
+
+
 def roster(section):
     return list(
         Enrolment.objects.filter(section=section, session_id=section.session_id, student__status=Student.Status.ACTIVE)

@@ -45,6 +45,26 @@ def get_item(mapping, key):
 
 
 @register.simple_tag
+def icon(name, label=""):
+    """An icon from the local Lucide sprite (static/icons/icons.svg). Decorative unless a label is given."""
+    from django.templatetags.static import static
+    from django.utils.html import format_html
+
+    if label:
+        return format_html(
+            '<svg class="icon" role="img" aria-label="{}"><use href="{}#i-{}"></use></svg>',
+            label,
+            static("icons/icons.svg"),
+            name,
+        )
+    return format_html(
+        '<svg class="icon" aria-hidden="true" focusable="false"><use href="{}#i-{}"></use></svg>',
+        static("icons/icons.svg"),
+        name,
+    )
+
+
+@register.simple_tag
 def official_logo(layout, media_base, font_base):
     """The logo uploaded in Setup if there is one, otherwise the official logo shipped with TASEMS
     (static/img/arqam-logo.png, used exactly as provided — never redrawn or recoloured)."""

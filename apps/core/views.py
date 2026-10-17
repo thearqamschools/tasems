@@ -70,9 +70,19 @@ def home(request):
     my_sections = Section.objects.filter(class_teacher=user, is_active=True)
     if session:
         my_sections = my_sections.filter(session=session)
-    context["my_sections"] = my_sections.select_related("class_level", "branch").annotate(
-        n=Count("enrolments", filter=Q(enrolments__student__status=Student.Status.ACTIVE))
+    from apps.attendance.services import can_mark
+
+    my_sections = list(
+        my_sections.select_related("class_level", "branch", "session").annotate(
+            n=Count("enrolments", filter=Q(enrolments__student__status=Student.Status.ACTIVE))
+        )
     )
+    today = timezone.localdate()
+    for s in my_sections:
+        # Only offer "Take register" when it can be taken: today is a school day for this class and the
+        # section is in the branch being worked in (the register page works in the current branch).
+        s.can_take_register = s.branch_id == branch.id and can_mark(user, s, today)
+    context["my_sections"] = my_sections
 
     branch_ids = user.accessible_branch_ids("people.view_student")
     if len(branch_ids) > 1:

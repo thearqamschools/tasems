@@ -37,8 +37,9 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 
 | Milestone | Contents | Status |
 | --- | --- | --- |
-| 4.0 — Audit and plan | Code and docs audit, 149 tests passing, live check with all demo roles, gap matrix, redesign plan, roadmap | **Done (17 Oct 2026)**; reference video not analysed (could not be opened; screenshots requested) |
-| M1 — Design system + app shell | Grouped collapsible sidebar, top bar, searchable branch selector, components, icons, permission-aware actions | **Awaiting approval** |
+| 4.0 — Audit and plan | Code and docs audit, 149 tests passing, live check with all demo roles, gap matrix, redesign plan, roadmap | **Done (17 Oct 2026)** |
+| 4.0a — Reference video analysis | 194 screens of the supplied demo video reviewed; gap matrix rows added; approvals and logo colours recorded (D-056 to D-062) | **Done (17 Oct 2026)** |
+| M1 — Design system + app shell | Logo colours as design tokens; grouped collapsible sidebar (permission-filtered, RTL, phone slide-in); top bar with searchable branch picker; local icon sprite; buttons that led to "Forbidden" removed; 161 automated tests; live check of every demo role in English and Urdu, desktop and phone | **Done (17 Oct 2026), not deployed** |
 | M2–M13 | See `INTEGRATION_ROADMAP.md` | Not started |
 
 ## Known gaps and pending inputs
@@ -61,5 +62,6 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 - Staff: no recruitment, appraisals or payroll yet (payroll gets the monthly Excel).
 - Exams: exam set-up and grading scheme edits are in Setup (admin) for now; a purpose-built head-office screen can follow.
 - Not yet provided: current software data export; biometric machine brand/model; academic session dates; subject list per class.
-- Phase 4: reference video screenshots; current student/Hifz figures (200,000+/15,000+ vs 250,000+/20,000+); official brand colours; approvals for Hifz, payroll, accounting, inventory, AI and SMS (see `INTEGRATION_ROADMAP.md` §4).
+- Phase 4: SMS/WhatsApp provider and AI monthly spending cap to agree before switching on (D-060). HTMX and Chart.js (D-055) are added with the first screen that needs them (M2 dashboards), not before.
+- Bulk voucher PDF for a whole month still takes ~23 s for 32 vouchers; background printing is planned in M6.
 - Hosting provider not chosen (no preference stated; shortlist in master plan Part 5).

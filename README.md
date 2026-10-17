@@ -61,6 +61,7 @@ The same checks run automatically on GitHub for every push.
 | `apps/admissions/` | Inquiries, follow-ups, campus visits, admit to student, reports |
 | `apps/fees/` | Fee rates, vouchers (3 copies + payment options), payments, defaulters, discounts, royalty |
 | `static/fonts/` | Bundled Urdu and Latin fonts (Open Font License) |
+| `static/css/`, `static/js/`, `static/icons/` | Design tokens and components (logo colours), sidebar/branch-picker script, Lucide icon sprite (ISC) |
 | `deploy/` | Production setup: HTTPS proxy, database role, backups |
 | `tests/` | Automated tests |
 | `docs/` | Project source of truth: decisions, progress, design, security |

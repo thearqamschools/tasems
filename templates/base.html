@@ -1,41 +1,87 @@
-{% load static i18n %}<!doctype html>
+{% load static i18n tasems_tags %}<!doctype html>
 {% get_current_language as LANG %}{% get_current_language_bidi as RTL %}
 <html lang="{{ LANG }}" dir="{% if RTL %}rtl{% else %}ltr{% endif %}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3e4095">
   <title>{% block title %}{% trans "TASEMS" %}{% endblock %} · {% trans "The Arqam Schools" %}</title>
   <link rel="stylesheet" href="{% static 'css/tasems.css' %}">
   <link rel="icon" href="{% static 'img/arqam-logo-192.png' %}">
+  <script>try{if(localStorage.getItem("tasems.sidebar")==="collapsed")document.documentElement.classList.add("sidebar-collapsed")}catch(e){}</script>
 </head>
 <body>
 {% if DEMO_MODE %}<div class="demo-banner" role="note">{% trans "DEMO — fictional data for testing. Do not enter real student information." %}</div>{% endif %}
 {% block body %}
-  <header class="topbar">
-    <a class="school" href="{% url 'home' %}"><img src="{% static 'img/arqam-logo-192.png' %}" alt="" width="32" height="32">{% trans "The Arqam Schools" %}</a>
-    <span class="branch-name">{% if current_branch %}{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ current_branch.name }}{% endif %}{% endif %}</span>
-    {% if switchable_branches|length > 1 %}
-    <form method="post" action="{% url 'switch_branch' %}">{% csrf_token %}
-      <label class="visually-hidden" for="branch-switch">{% trans "Branch" %}</label>
-      <select id="branch-switch" name="branch" onchange="this.form.submit()">
-        {% for b in switchable_branches %}<option value="{{ b.id }}" {% if b.id == current_branch.id %}selected{% endif %}>{{ b.name }}</option>{% endfor %}
-      </select>
-      <noscript><button type="submit">{% trans "Switch" %}</button></noscript>
-    </form>
-    {% endif %}
-    <form method="post" action="{% url 'set_language' %}">{% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.get_full_path }}">
-      {% if LANG == "ur" %}<button name="language" value="en">English</button>{% else %}<button name="language" value="ur" class="ur">اردو</button>{% endif %}
-    </form>
-    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button type="submit">{% trans "Sign out" %}</button></form>
-  </header>
-  <nav class="primary" aria-label="{% trans 'Main' %}">
-    {% for item in nav_items %}<a href="{{ item.url }}" {% if item.active %}aria-current="page"{% endif %}>{{ item.label }}</a>{% endfor %}
-  </nav>
-  <main>
-    {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
-    {% block content %}{% endblock %}
-  </main>
+<a class="skip-link" href="#content">{% trans "Skip to content" %}</a>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="{% url 'home' %}">
+      <img src="{% static 'img/arqam-logo-192.png' %}" alt="" width="40" height="40">
+      <span class="brand-text"><strong>{% trans "The Arqam Schools" %}</strong><span class="brand-sub">TASEMS</span></span>
+    </a>
+    <nav class="side-nav" aria-label="{% trans 'Main' %}">
+      {% for group in nav_groups %}
+      <div class="nav-group">
+        <p class="nav-group-label">{{ group.label }}</p>
+        <ul>
+          {% for item in group.items %}
+          <li><a href="{{ item.url }}" title="{{ item.label }}" {% if item.active %}aria-current="page"{% endif %}>{% icon item.icon %}<span class="nav-text">{{ item.label }}</span></a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </nav>
+  </aside>
+  <div class="sidebar-scrim" data-close-sidebar></div>
+  <div class="app-main">
+    <header class="appbar">
+      <button type="button" class="icon-button" id="sidebar-toggle" aria-controls="sidebar" aria-label="{% trans 'Menu' %}">{% icon "menu" %}</button>
+      <div class="appbar-context">
+        {% if current_branch %}{% with name=current_branch.name %}
+        {% if switchable_branches|length > 1 %}
+        <details class="branch-picker" data-dropdown>
+          <summary>{% icon "building-2" %}<span class="branch-current">{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ name }}{% endif %}</span>{% icon "chevron-down" %}</summary>
+          <div class="dropdown-panel branch-panel">
+            <label class="visually-hidden" for="branch-search">{% trans "Search branches" %}</label>
+            <input type="search" id="branch-search" placeholder="{% trans 'Search branches' %}" autocomplete="off" data-branch-filter>
+            <form method="post" action="{% url 'switch_branch' %}">{% csrf_token %}
+              {% regroup switchable_branches by head_office as offices %}
+              {% for office in offices %}
+              <div class="branch-group" data-branch-group>
+                <p class="branch-group-label">{{ office.grouper.name }}</p>
+                <ul>
+                  {% for b in office.list %}
+                  <li><button type="submit" name="branch" value="{{ b.id }}" data-search="{{ b.name|lower }} {{ b.code|lower }} {{ b.city|lower }} {{ b.region.name|default:''|lower }}" {% if b.id == current_branch.id %}aria-current="true"{% endif %}><span>{% if LANG == "ur" and b.name_ur %}{{ b.name_ur }}{% else %}{{ b.name }}{% endif %}</span><small>{% if b.region %}{{ b.region.name }} · {% endif %}{{ b.city }}</small></button></li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endfor %}
+            </form>
+            <p class="muted branch-empty" data-branch-empty hidden>{% trans "No branch matches this search." %}</p>
+          </div>
+        </details>
+        {% else %}
+        <span class="branch-static">{% icon "building-2" %}<span class="branch-current">{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ name }}{% endif %}</span></span>
+        {% endif %}
+        {% endwith %}{% endif %}
+      </div>
+      <div class="appbar-actions">
+        <form method="post" action="{% url 'set_language' %}">{% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          {% if LANG == "ur" %}<button class="appbar-button" name="language" value="en">{% icon "languages" %}<span>English</span></button>{% else %}<button class="appbar-button" name="language" value="ur">{% icon "languages" %}<span class="ur">اردو</span></button>{% endif %}
+        </form>
+        <span class="appbar-user">{% icon "user" %}<span>{{ user.get_full_name|default:user.get_username }}</span></span>
+        <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="appbar-button" type="submit" aria-label="{% trans 'Sign out' %}">{% icon "log-out" %}<span>{% trans "Sign out" %}</span></button></form>
+      </div>
+    </header>
+    <main id="content" tabindex="-1">
+      {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{% if m.tags == "error" %}{% icon "circle-alert" %}{% elif m.tags == "warning" %}{% icon "triangle-alert" %}{% elif m.tags == "success" %}{% icon "circle-check" %}{% else %}{% icon "info" %}{% endif %}<span>{{ m }}</span></li>{% endfor %}</ul>{% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+<script src="{% static 'js/tasems.js' %}" defer></script>
 {% endblock %}
 </body>
 </html>

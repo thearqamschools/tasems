@@ -25,7 +25,7 @@
 <h2>{% trans "My classes" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Branch" %}</th><th class="num">{% trans "Students" %}</th></tr></thead>
-  <tbody>{% for s in my_sections %}<tr><td><a href="{% url 'people:student_list' %}?section={{ s.id }}">{{ s }}</a> · <a href="{% url 'attendance:take' s.id today_iso %}">{% trans "Take register" %}</a></td><td>{{ s.branch }}</td><td class="num">{{ s.n }}</td></tr>{% endfor %}</tbody>
+  <tbody>{% for s in my_sections %}<tr><td><a href="{% url 'people:student_list' %}?section={{ s.id }}">{{ s }}</a>{% if s.can_take_register %} · <a href="{% url 'attendance:take' s.id today_iso %}">{% trans "Take register" %}</a>{% endif %}</td><td>{{ s.branch }}</td><td class="num">{{ s.n }}</td></tr>{% endfor %}</tbody>
 </table></div>
 {% endif %}
 

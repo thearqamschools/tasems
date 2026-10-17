@@ -239,6 +239,7 @@ def vouchers(request):
             "status": status,
             "statuses": Voucher.Status.choices,
             "query": request.GET.urlencode(),
+            "can_pay": request.user.has_branch_perm(S.PAY_PERM, branch.id),
         },
     )
 
