@@ -203,3 +203,59 @@ def test_father_cnic_typed_with_dashes(org, section, make_user, login_as):
     assert Student.objects.get(admission_no="C-1").father_cnic == "3310012345671"
     body = client.post("/students/new/", student_post(admission_no="C-2", father_cnic="1234")).content.decode()
     assert "13 digits" in body
+
+
+OLD_REPORT = """
+<html><head><style>@page {{ size: A4 landscape; margin: 10mm; }} table {{ border-collapse: collapse; }}
+td, th {{ border: 1px solid #000; padding: 3px; font-size: 9pt; }}</style></head><body>
+<p>THE ARQAM SCHOOLS</p><p>Student Data</p>
+<p>Count ( 3 ) Campus (Boys) Class : (Pre Nine) Section : (Rose)</p>
+<table><tr><th>Comp. Code</th><th>Student Name</th><th>Father Name</th><th>Class</th><th>Section</th>
+<th>Mon. Fee</th><th>Mobile</th><th>Other Number</th><th>CNIC/Occupation</th></tr>
+{rows}</table></body></html>
+"""
+
+
+def old_report_pdf():
+    from weasyprint import HTML
+
+    rows = [
+        ("9001", "Test Boy One", "Test Father One", "Pre<br>Nine", "Rose", "2900", "+923001112223<br>03211234567", "",
+         "3310011111111"),
+        ("9002", "Test Boy Two", "Test Father Two", "Pre<br>Nine", "Rose", "4300", "+923002223334", "2669650",
+         "3310022222222<br>School"),
+        ("9003", "Test Boy Three", "Test Father Three", "Pre<br>Nine", "Rose", "4000", "+923003334445", "", ""),
+    ]  # fmt: skip
+    html = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>" for r in rows)
+    return HTML(string=OLD_REPORT.format(rows=html)).write_pdf()
+
+
+def test_import_old_software_pdf_report(org, make_user, login_as):
+    from apps.fees import services as fees
+    from apps.fees.models import Concession, FeeHead, FeeRate
+
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    upload = io.BytesIO(old_report_pdf())
+    upload.name = "Student Data.pdf"
+    page = client.post("/students/import/", {"step": "check", "file": upload})
+    result = page.context["result"]
+    assert result.ok, result.errors
+    assert result.defaulted_admission_dates == 3
+    client.post("/students/import/", {"step": "import", "token": page.context["token"]})
+    one = Student.objects.get(admission_no="9001")
+    assert (one.gender, one.father_name, one.father_cnic) == ("male", "Test Father One", "3310011111111")
+    assert one.admission_date == org["session"].starts_on
+    link = one.guardian_links.get()
+    assert (link.guardian.phone, link.guardian.alt_phone) == ("03001112223", "03211234567")
+    two = Student.objects.get(admission_no="9002")
+    assert two.guardian_links.get().guardian.occupation == "School"
+    assert one.enrolments.get().section.class_level.code == "pre-9"
+    assert one.enrolments.get().section.gender_group == "boys"
+    # the old monthly fee carries over exactly, whatever the sibling rule would say
+    assert Concession.objects.get(student=one).value == 2900
+    tuition = FeeHead.objects.get(code="tuition")
+    head_rate = FeeRate.objects.get(branch=org["samanabad"], head=tuition)
+    gross, discount, reason = fees.price(
+        tuition, head_rate, org["session"].starts_on, True, [Concession.objects.get(student=one)]
+    )
+    assert (gross - discount, reason) == (2900, "Agreed fee")
