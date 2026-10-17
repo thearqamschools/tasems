@@ -29,6 +29,18 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 | 3b — Hifz | Sabaq, Sabqi, Manzil, mistakes, milestones, parent reports | **Deferred** by the project lead (D-050) |
 | 3c — Admissions | Inquiries from every source; pipeline with next follow-up date and person responsible; follow-ups due today and campus visits today; call and WhatsApp buttons (ready message, no API); brothers/sisters already at school and earlier inquiries shown by mobile number; "not joining" with reason; admit → student record → admission fee voucher; report by source, class, status and reasons; Excel; 146 automated tests | **Done (16 Oct 2026), not deployed** |
 
+## Phase 4 — ERP upgrade (planning)
+
+Brief received 17 Oct 2026: upgrade TASEMS into a full multi-branch ERP with a modern interface, using a reference
+demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_ANALYSIS.md`, `FEATURE_GAP_MATRIX.md`,
+`UI_UX_REDESIGN_PLAN.md`, `INTEGRATION_ROADMAP.md`. Starting point tagged `checkpoint/before-erp-upgrade`.
+
+| Milestone | Contents | Status |
+| --- | --- | --- |
+| 4.0 — Audit and plan | Code and docs audit, 149 tests passing, live check with all demo roles, gap matrix, redesign plan, roadmap | **Done (17 Oct 2026)**; reference video not analysed (could not be opened; screenshots requested) |
+| M1 — Design system + app shell | Grouped collapsible sidebar, top bar, searchable branch selector, components, icons, permission-aware actions | **Awaiting approval** |
+| M2–M13 | See `INTEGRATION_ROADMAP.md` | Not started |
+
 ## Known gaps and pending inputs
 
 - Production setup not yet run on a real server (no Docker available in the build environment); first install should be on a test server.
@@ -49,4 +61,5 @@ Status words: **Done** = built and passing automated tests. **Not deployed** unt
 - Staff: no recruitment, appraisals or payroll yet (payroll gets the monthly Excel).
 - Exams: exam set-up and grading scheme edits are in Setup (admin) for now; a purpose-built head-office screen can follow.
 - Not yet provided: current software data export; biometric machine brand/model; academic session dates; subject list per class.
+- Phase 4: reference video screenshots; current student/Hifz figures (200,000+/15,000+ vs 250,000+/20,000+); official brand colours; approvals for Hifz, payroll, accounting, inventory, AI and SMS (see `INTEGRATION_ROADMAP.md` §4).
 - Hosting provider not chosen (no preference stated; shortlist in master plan Part 5).
