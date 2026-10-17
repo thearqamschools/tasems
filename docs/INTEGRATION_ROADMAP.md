@@ -52,14 +52,14 @@ image. Choice of library to be recorded as a decision before Milestone 6.
 | **M1** | **Design system + app shell** | Tokens and components, collapsible grouped sidebar, top bar, searchable branch selector, icons, toasts, empty/loading states, HTMX vendored; hide actions users cannot perform; all existing pages moved into the new shell unchanged in function | Brand colours (can start with placeholder) | 6–8 days |
 | M2 | Role dashboards | Head office network dashboard, principal, teacher, accountant, admissions dashboards with charts | M1 | 6–8 days |
 | M3 | Settings & multi-branch screens | Branches/regions/campuses, sessions, class levels & sections, class teachers, fee rates & bank details, users & role assignments, exam setup | M1 | 8–10 days |
-| M4 | Student lifecycle | Profile with tabs, photos, session rollover & promotion, withdrawal/transfer workflow, leaving & character certificates, ID cards, parent directory | M1, M3 | 8–10 days |
+| M4 | Student lifecycle | Profile with tabs, photos, session rollover & promotion, withdrawal/transfer workflow, leaving & character certificates, student/staff ID cards, experience certificate, parent directory with family tree and family-wise defaulters, printable admission forms | M1, M3 | 9–12 days |
 | M5 | Module restyle | Apply components to students, attendance, diary, exams, fees, admissions, staff, parent portal; consistent filters and exports | M1 | 8–12 days |
-| M6 | Reports centre + background printing | One reports hub, Excel/PDF everywhere, job queue for large PDFs | M5 | 5–7 days |
-| M7 | Academic management | Subject-teacher assignment, timetable, holiday calendar, date sheets, roll-number slips, award lists | M3 | 6–8 days |
-| M8 | Notices & parent communication | Circulars in portal and staff home; PWA for parents; SMS/WhatsApp provider ✱ later | M1 | 4–6 days (+ provider) |
+| M6 | Reports centre + background printing | One reports hub (each module: KPI cards + printable report set, as in the reference), Excel/PDF everywhere, family vouchers, job queue for large PDFs | M5 | 6–8 days |
+| M7 | Academic management | Subject-teacher assignment, timetable, holiday calendar, date sheets, exam slips with photo, award lists | M3 | 6–8 days |
+| M8 | Notices & parent communication | Circulars in portal and staff home; message templates with placeholders; PWA for parents; SMS/WhatsApp provider later | M1 | 4–6 days (+ provider) |
 | M9 ✱ | Accounting | Expenses, other income, cash/bank book, branch P&L, head-office consolidation | M3 | 10–15 days |
 | M10 ✱ | Payroll | Salary structures, monthly run from staff attendance, payslips, bank sheet | M3 | 8–12 days |
-| M11 ✱ | Inventory | Items, stock, issue, sales linked to vouchers | M9 | 6–8 days |
+| M11 ✱ | Inventory | Items, stock, issue, point of sale with barcode scan and receipt, sales linked to vouchers, stock reports | M9 | 7–9 days |
 | M12 ✱ | Hifz | Per D-050 when un-deferred | M4 | 8–10 days |
 | M13 ✱ | AI | Rules-based at-risk analytics first (free), then Teacher Assistant, Question Paper Generator, AI summaries (Claude API) | Textbook PDFs, API billing | 12–18 days |
 
@@ -77,18 +77,18 @@ input (data, approvals, staff review). Total ≈ 95–130 working days. Estimate
 6. Update DEVELOPMENT_PROGRESS.md, DECISIONS.md, DATABASE_DESIGN.md, CHANGELOG.md.
 7. No deployment, paid service or destructive change without explicit approval.
 
-## 4. Decisions needed from the project lead
+## 4. Decisions (answered 17 Oct 2026)
 
-| # | Decision | Why it needs approval |
+| # | Decision | Answer |
 | --- | --- | --- |
-| 1 | Screenshots or file of the reference video | The video could not be opened from the build environment |
-| 2 | Current figures: 200,000+ / 15,000+ (brief) or 250,000+ / 20,000+ (docs, 16 Oct) | Conflicting confirmed facts |
-| 3 | Official brand colours (hex) | `tasems.css` uses placeholders |
-| 4 | Un-defer Hifz (D-050) | Earlier decision by the project lead |
-| 5 | Build payroll (reverses D-045 "integrate, not build") | Earlier decision |
-| 6 | Build accounting and inventory | New scope |
-| 7 | Claude API billing for AI modules; SMS/WhatsApp provider | Paid, usage-based services |
-| 8 | Push access for this session to the `tasems` repository | Work is committed locally; it cannot be pushed until access is granted |
+| 1 | Reference video | MP4 supplied and analysed (REFERENCE_FEATURE_ANALYSIS.md) |
+| 2 | Figures | 250,000+ students, 20,000+ Hifz (D-056) |
+| 3 | Brand colours | From the logo: blue `#3E4095`, red `#ED3237` (D-061) |
+| 4 | Hifz | Approved (D-057) |
+| 5 | Payroll | Approved (D-058) |
+| 6 | Accounting and inventory | Approved (D-059) |
+| 7 | Claude API, SMS/WhatsApp provider | Approved as usage-based; provider and monthly cap to agree before switching on (D-060) |
+| 8 | Push access | Granted |
 
 ## 5. Risks and dependencies
 

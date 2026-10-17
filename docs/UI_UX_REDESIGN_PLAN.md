@@ -65,8 +65,11 @@ Dashboards read the summary tables (e.g. `SectionAttendance`, D-022), never scan
 
 ## 5. Visual language
 
-- **Brand:** official logo unchanged (D-051). Colour tokens stay in one place; current green `#0f5c4d` is a
-  placeholder per `tasems.css`. **Needs the official brand colours** (hex codes) from the project lead.
+- **Brand:** official logo unchanged (D-051). Colours from the logo (D-061): **blue `#3E4095`** is the primary
+  (sidebar, primary buttons, links, focus), **red `#ED3237`** is the accent (active menu marker, highlights,
+  brand badges), white surfaces. Status colours (success green, attention amber, danger red) are separate
+  tokens. Red `#ED3237` on white is 3.9:1, so it is used for large text, bars and icons only; small red text
+  uses a darker shade that passes AA.
 - **Type:** Noto Sans (English), Noto Nastaliq Urdu with generous line height (already bundled). Scale: 12/14/16/20/24/32.
 - **Spacing:** 4-px grid; cards 16–24 px padding; consistent 8-px radius.
 - **Density:** comfortable by default; tables use compact rows for long lists.
@@ -74,14 +77,22 @@ Dashboards read the summary tables (e.g. `SectionAttendance`, D-022), never scan
 - **Printable documents:** keep WeasyPrint templates; refresh vouchers/result cards/certificates with the same
   tokens and logo; add print styles for lists (Ctrl+P prints the table only).
 
-## 6. UX fixes already identified
+## 6. Patterns adopted from the reference ERP (adapted, not copied)
+
+- Module home = KPI cards + "Printable reports" panel (one place to find every report of a module).
+- "Show/Hide amounts" toggle on money dashboards.
+- Export buttons (Excel, PDF, Print) on every list; confirmation dialogs before risky actions.
+- Quick actions on the dashboard for the most used tasks of each role.
+- Illustrated empty states.
+
+## 7. UX fixes already identified
 
 1. Hide actions a user is not allowed to perform (Remarks, Ratings, Receive, Take register on a non-school day) — show a short reason instead of a 403 page.
 2. Branch switcher usable at 350+ branches.
 3. Large print jobs run in the background with a progress page and download link.
 4. Consistent filter bars and Export buttons across modules.
 
-## 7. Rollout without breakage
+## 8. Rollout without breakage
 
 - New shell lands first behind the same URLs and the same `nav_items` permission logic; page content blocks unchanged.
 - Modules are then restyled one at a time; tests (55 of them check page HTML) run after each.

@@ -83,12 +83,7 @@ permissions allow (navigation is built in `apps/accounts/context_processors.py`)
 - Session rollover / promotion, student photos, certificates, ID cards: not built.
 - No accounting beyond fees, no payroll, no inventory, no Hifz, no AI, no notices/SMS (see FEATURE_GAP_MATRIX.md).
 
-## 7. Facts that need confirmation
+## 7. Facts confirmed
 
-| Item | In project docs (16 Oct 2026) | In the upgrade brief (17 Oct 2026) |
-| --- | --- | --- |
-| Students | 250,000+ | 200,000+ |
-| Hifz-e-Quran students | 20,000+ | 15,000+ |
-| Branches | 350+ | 350+ |
-
-Not changed in any document until the project lead confirms which figures are current.
+Organisation figures confirmed by the project lead on 17 Oct 2026 (D-056): **350+ branches, 250,000+ students,
+20,000+ Hifz-e-Quran students**, two head offices (Faisalabad and Lahore).
