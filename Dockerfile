@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN SECRET_KEY=build-only FIELD_ENCRYPTION_KEY=Y2ktb25seS1ub3Qtc2VjcmV0LWtleS0zMmJ5dGVzISE= DATABASE_URL=postgres://x@localhost/x python manage.py collectstatic --noinput
 
+RUN mkdir -p /app/media && chown -R tasems /app/media
 USER tasems
 EXPOSE 8000
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3 --timeout 60"]

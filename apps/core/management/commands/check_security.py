@@ -37,6 +37,8 @@ class Command(BaseCommand):
 
         if settings.DEBUG:
             problems.append("DEBUG is on. Set DEBUG=False in production.")
+        if getattr(settings, "DEMO_MODE", False):
+            problems.append("DEMO_MODE is on (no two-step sign-in). Only for demo servers with fictional data.")
         if len(settings.SECRET_KEY) < 50:
             problems.append("SECRET_KEY is shorter than 50 characters.")
         if not settings.ALLOWED_HOSTS:

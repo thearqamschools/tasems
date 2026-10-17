@@ -81,6 +81,10 @@ class User(AbstractUser):
     @property
     def requires_mfa(self):
         """Superusers and anyone holding a privileged role must use two-factor login."""
+        from django.conf import settings
+
+        if getattr(settings, "DEMO_MODE", False):
+            return False  # demo server with fictional data only (see settings.DEMO_MODE)
         if self.is_superuser:
             return True
         return self.active_assignments().filter(role__requires_mfa=True).exists()

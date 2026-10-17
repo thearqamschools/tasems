@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.0 — 2026-10-17 — Demo server
+
+Added
+- `manage.py seed_demo`: fictional demo data (classes, students, parents, staff, attendance, diary, Mid-Term marks, fees, staff punches, inquiries) and demo logins for every role; refuses a database with real students.
+- DEMO_MODE: no two-step sign-in, "DEMO" bar on every page; `check_security` fails while it is on.
+- render.yaml for a one-click demo on Render.com; docs/DEMO.md with logins and what to try.
+- Docker image: listens on $PORT, media folder writable by the app user.
+- 149 automated tests.
+
+Not deployed.
+
 ## 0.10.2 — 2026-10-17 — Import from the previous software
 
 Added

@@ -1,0 +1,33 @@
+# Demo / test server on Render.com with FICTIONAL data only (docs/DEMO.md).
+# Never use this blueprint for real student data: it turns two-step sign-in off (DEMO_MODE).
+databases:
+  - name: tasems-demo-db
+    plan: free
+    databaseName: tasems
+    user: tasems
+
+services:
+  - type: web
+    name: tasems-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    dockerCommand: >-
+      sh -c "python manage.py migrate --noinput && python manage.py seed_demo &&
+      gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 90"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tasems-demo-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FIELD_ENCRYPTION_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DEMO_MODE
+        value: "True"
+      - key: DEMO_PASSWORD
+        sync: false # Render asks for it when the blueprint is created: the password for all demo logins

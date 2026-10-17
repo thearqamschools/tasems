@@ -17,6 +17,7 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, []),
     CSRF_TRUSTED_ORIGINS=(list, []),
     SECURE_SSL_REDIRECT=(bool, False),
+    DEMO_MODE=(bool, False),
 )
 environ.Env.read_env(BASE_DIR / ".env")
 
@@ -25,6 +26,13 @@ FIELD_ENCRYPTION_KEY = env("FIELD_ENCRYPTION_KEY")  # encrypts two-factor secret
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
+# Render.com (demo/test hosting) tells the app its own address.
+if env("RENDER_EXTERNAL_HOSTNAME", default=""):
+    ALLOWED_HOSTS.append(env("RENDER_EXTERNAL_HOSTNAME"))
+    CSRF_TRUSTED_ORIGINS.append(f"https://{env('RENDER_EXTERNAL_HOSTNAME')}")
+# Demo mode: fictional data for testing; two-step sign-in is not asked for and every page says "Demo".
+# Never on a server with real data (check_security fails while it is on).
+DEMO_MODE = env("DEMO_MODE")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -77,6 +85,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.i18n",
                 "apps.accounts.context_processors.navigation",
+                "apps.core.context_processors.demo",
             ],
         },
     },
