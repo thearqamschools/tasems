@@ -8,9 +8,15 @@ so testers do not need an authenticator app. Every page shows a red "DEMO" bar.
 
 1. Sign in at <https://dashboard.render.com> with the school's GitHub account (thearqamschools).
 2. Give Render access to the `tasems` repository when asked.
-3. Click **New → Blueprint**, choose the `tasems` repository, then **Apply**.
+3. Click **New → Blueprint** and choose the `tasems` repository. To see the upgrade work in progress,
+   set **Branch** to the newest `upgrade/…` branch (e.g. `upgrade/m3-setup`) instead of `main`.
+   Then **Apply**. Every new push to that branch redeploys the demo automatically.
 4. Render asks for `DEMO_PASSWORD`: type a password of at least 10 characters. All demo logins use it.
 5. Wait for the first build (about 10 minutes). The link looks like `https://tasems-demo.onrender.com`.
+
+Checked on 19 Oct 2026 by running the blueprint's start command locally on an empty database with
+`DEBUG=False`: tables created, demo data loaded (about 16 s; a restart does not duplicate it), all five
+staff logins and the parent sign-in page work, fee voucher PDFs download, unknown web addresses are refused.
 
 Free plan notes: the site sleeps after 15 minutes without visitors and takes about a minute to wake
 up; the free database is deleted by Render after its free period, so the demo is for testing only.
