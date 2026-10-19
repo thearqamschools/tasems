@@ -39,7 +39,9 @@ python manage.py runserver                    # open http://127.0.0.1:8000
 | Class teacher (Class 4-A) | `demo-teacher` | Take today's register, write the diary, enter marks, "My attendance" |
 | Accountant | `demo-accountant` | Make vouchers, receive fees, defaulters, daily collection |
 | Admissions officer | `demo-admissions` | Inquiries due today, follow-ups, WhatsApp button, admit a child |
-| Head office | `demo-headoffice` | All branches, royalty statement, Setup |
+| Head office | `demo-headoffice` | Faisalabad head office: its branches (Samanabad + Demo Branch FSD-1 to FSD-3), royalty statement, Setup |
+| Network (both head offices) | `demo-network` | All 7 branches in Faisalabad and Lahore: network dashboard with filters by head office and region, royalty statement, Setup → Branches and regions, Users and roles, Academic sessions |
+| Principal of a demo branch | `demo-principal-fsd-1` … `demo-principal-lhr-3` | One fictional branch each |
 | Parent | at `/parents/login/`, mobile **0300-7000001** | The child's diary, attendance, fee voucher, Mid-Term report |
 
 ## What the demo contains
@@ -48,3 +50,9 @@ Four classes (Play Group, Class 4-A, Class 6 Boys, Pre-9 Boys) with 32 made-up s
 last week's attendance for Class 4-A; today's diary; a published Mid-Term exam with marks; this
 month's fee vouchers with some payments; five staff members with a week of machine punches; four
 admission inquiries due today.
+
+For head office there is also a fictional network: six "Demo Branch" campuses (FSD-1 to FSD-3 under
+Faisalabad, LHR-1 to LHR-3 under Lahore) in four demo regions, franchise and company-owned, each with
+three classes of 10 made-up students, two weeks of registers (some branches not yet taken today),
+this month's vouchers with different collection rates, and a royalty statement. It is added the next
+time the demo starts, also to a demo that is already running.

@@ -23,7 +23,7 @@ pytestmark = pytest.mark.django_db
 def demo(monkeypatch, settings):
     monkeypatch.setenv("DEMO_PASSWORD", "Demo-pass-2026!")
     settings.DEMO_MODE = True
-    call_command("seed_demo", verbosity=0)
+    call_command("seed_demo", "--without-network", verbosity=0)
 
 
 def _dash(login_as, username):

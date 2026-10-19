@@ -19,7 +19,7 @@
   <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Code" %}</th><th>{% trans "Head office" %}</th><th>{% trans "Region" %}</th><th>{% trans "Ownership" %}</th><th class="num">{% trans "Royalty %" %}</th><th>{% trans "City" %}</th><th></th></tr></thead>
   <tbody>{% for b in page %}<tr>
     <td>{{ b.name }}{% if not b.is_active %} <span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td><td class="num">{{ b.code }}</td>
-    <td>{{ b.head_office.city }}</td><td>{{ b.region|default:"—" }}</td><td>{{ b.get_ownership_display }}</td><td class="num">{{ b.royalty_percent }}</td><td>{{ b.city }}</td>
+    <td>{{ b.head_office.city }}</td><td>{{ b.region.name|default:"—" }}</td><td>{{ b.get_ownership_display }}</td><td class="num">{{ b.royalty_percent }}</td><td>{{ b.city }}</td>
     <td>{% if b.id in changeable %}<a class="button quiet sm" href="{% url 'setup:branch_edit' b.id %}">{% trans "Edit" %}</a>{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>

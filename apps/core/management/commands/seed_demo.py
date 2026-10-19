@@ -5,6 +5,9 @@
 Creates one session, a few classes with made-up students and parents, staff and their logins,
 attendance, a published diary, a Mid-Term exam with marks, fee vouchers and payments, staff
 attendance and admission inquiries. Every name, number and CNIC is invented.
+Also adds a fictional network for head office to look at: demo regions and "Demo Branch"
+campuses under both head offices, each with classes, registers, fees and inquiries
+(added once, also to a database that already has the first demo data).
 Refuses to run if the database already has students that are not demo students.
 """
 
@@ -20,7 +23,7 @@ from django.utils import timezone
 
 from apps.academics.models import ClassLevel, Section, Subject
 from apps.accounts.models import Role, RoleAssignment, Scope, User
-from apps.organisation.models import AcademicSession, Branch, HeadOffice
+from apps.organisation.models import AcademicSession, Branch, HeadOffice, Region
 from apps.people.models import Enrolment, Guardian, Student, StudentGuardian
 
 PREFIX = "DEMO-"
@@ -48,6 +51,23 @@ CLASSES = [
     ("pre-9", "Daisy", "boys"),
 ]
 BIRTH_YEAR = {"play-group": 2022, "class-4": 2017, "class-6": 2015, "pre-9": 2012}
+# Fictional branches for the head-office view: code, name, head office, region, ownership, royalty %,
+# chance a child is absent, share of vouchers paid, register taken today
+NETWORK_REGIONS = [
+    ("demo-fsd-east", "Demo Region — Faisalabad East", "faisalabad"),
+    ("demo-fsd-west", "Demo Region — Faisalabad West", "faisalabad"),
+    ("demo-lhr-north", "Demo Region — Lahore North", "lahore"),
+    ("demo-lhr-south", "Demo Region — Lahore South", "lahore"),
+]
+NETWORK_BRANCHES = [
+    ("demo-fsd-1", "Demo Branch FSD-1", "faisalabad", "demo-fsd-east", "franchise", 8, 0.05, 0.85, True),
+    ("demo-fsd-2", "Demo Branch FSD-2", "faisalabad", "demo-fsd-east", "franchise", 8, 0.12, 0.45, True),
+    ("demo-fsd-3", "Demo Branch FSD-3", "faisalabad", "demo-fsd-west", "company", 0, 0.08, 0.70, False),
+    ("demo-lhr-1", "Demo Branch LHR-1", "lahore", "demo-lhr-north", "franchise", 8, 0.06, 0.60, True),
+    ("demo-lhr-2", "Demo Branch LHR-2", "lahore", "demo-lhr-north", "franchise", 8, 0.18, 0.30, True),
+    ("demo-lhr-3", "Demo Branch LHR-3", "lahore", "demo-lhr-south", "franchise", 8, 0.09, 0.75, False),
+]
+NETWORK_CLASSES = [("class-1", "A", "mixed", 2020), ("class-5", "A", "mixed", 2016), ("class-8", "Boys", "boys", 2013)]
 USERS = [
     ("demo-principal", "Demo Principal", "principal"),
     ("demo-teacher", "Demo Class Teacher", "class_teacher"),
@@ -59,6 +79,11 @@ USERS = [
 class Command(BaseCommand):
     help = "Fill an empty database with fictional demo data (never on a server with real data)."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--without-network", action="store_true", help="Only the Samanabad demo (faster, for automated tests)."
+        )
+
     def handle(self, *args, **options):
         password = os.environ.get("DEMO_PASSWORD", "")
         if len(password) < 10:
@@ -67,12 +92,23 @@ class Command(BaseCommand):
         if Student.objects.exclude(admission_no__startswith=PREFIX).exists():
             raise CommandError("This database has real students. Demo data is only for an empty database.")
         if User.objects.filter(username="demo-principal").exists():
-            self.stdout.write("Demo data already present; nothing to do.")
+            self.stdout.write("Demo data already present.")
+        else:
+            random.seed(2026)
+            with transaction.atomic():
+                self.build(password)
+            self.stdout.write(
+                self.style.SUCCESS("Demo data created. Sign in as demo-principal (password: DEMO_PASSWORD).")
+            )
+        if options["without_network"]:
             return
-        random.seed(2026)
+        if Branch.objects.filter(code__startswith="demo-").exists():
+            self.stdout.write("Demo network already present; nothing to do.")
+            return
+        random.seed(2027)
         with transaction.atomic():
-            self.build(password)
-        self.stdout.write(self.style.SUCCESS("Demo data created. Sign in as demo-principal (password: DEMO_PASSWORD)."))
+            self.network(password)
+        self.stdout.write(self.style.SUCCESS("Demo network created. Sign in as demo-network to see both head offices."))
 
     # ------------------------------------------------------------------------------------------
     def build(self, password):
@@ -155,6 +191,99 @@ class Command(BaseCommand):
         self.staff(branch, users, today)
         self.admissions(branch, users["admissions_officer"])
         self.parent(students[0], branch, users["principal"], password)
+
+    def network(self, password):
+        """Fictional regions and branches so the head-office screens have a network to show."""
+        from apps.attendance.services import is_school_day, roster, save_register
+        from apps.fees import services as fees
+        from apps.fees.models import BranchFeeSettings, FeeRate
+
+        today = timezone.localdate()
+        session = AcademicSession.objects.get(is_current=True)
+        month = today.replace(day=1)
+        samanabad = Branch.objects.get(code="fsd-samanabad")
+        offices = {h.code: h for h in HeadOffice.objects.all()}
+        regions = {
+            code: Region.objects.create(code=code, name=name, head_office=offices[office])
+            for code, name, office in NETWORK_REGIONS
+        }
+        network = User.objects.create_user(
+            username="demo-network", password=password, first_name="Demo", last_name="Network Admin", is_staff=True
+        )
+        RoleAssignment.objects.create(user=network, role=Role.objects.get(code="network_admin"), scope=Scope.NETWORK)
+        principal_role = Role.objects.get(code="principal")
+        n = 0
+        for code, name, office, region, ownership, royalty, absent, paid, today_done in NETWORK_BRANCHES:
+            branch = Branch.objects.create(
+                code=code,
+                name=f"{name} (DEMO)",
+                head_office=offices[office],
+                region=regions[region],
+                ownership=ownership,
+                royalty_percent=royalty,
+                city=offices[office].city,
+            )
+            principal = User.objects.create_user(
+                username=f"demo-principal-{code[5:]}",
+                password=password,
+                first_name="Demo",
+                last_name=f"Principal {name[-5:]}",
+            )
+            RoleAssignment.objects.create(user=principal, role=principal_role, scope=Scope.BRANCH, branch=branch)
+            for rate in FeeRate.objects.filter(branch=samanabad):
+                rate.pk, rate.branch = None, branch
+                rate.save()
+            fs = BranchFeeSettings.for_branch(branch)
+            fs.bank_name, fs.account_title, fs.account_number = "Demo Bank", f"{name} (DEMO)", "0000-0000000000"
+            fs.save()
+
+            for level_code, section_name, group, born in NETWORK_CLASSES:
+                section = Section.objects.create(
+                    branch=branch,
+                    session=session,
+                    class_level=ClassLevel.objects.get(code=level_code),
+                    name=section_name,
+                    gender_group=group,
+                )
+                for i in range(10):
+                    n += 1
+                    gender = "male" if group == "boys" or i % 2 == 0 else "female"
+                    father = f"{random.choice(FATHERS)} {random.choice(SURNAMES)}"
+                    s = Student.objects.create(
+                        branch=branch,
+                        admission_no=f"{PREFIX}{code[5:].upper()}-{n:03d}",
+                        first_name=random.choice(BOYS if gender == "male" else GIRLS),
+                        last_name=father.split()[-1],
+                        gender=gender,
+                        date_of_birth=dt.date(born, 1 + i, 12),
+                        admission_date=dt.date(session.starts_on.year - (i % 3), 4, 1),
+                        father_name=father,
+                        father_cnic=f"35200{2000000 + n:07d}1",
+                    )
+                    g = Guardian.objects.create(branch=branch, full_name=father, phone=f"0301{7000000 + n:07d}")
+                    StudentGuardian.objects.create(
+                        student=s, guardian=g, relationship="father", is_primary_contact=True
+                    )
+                    Enrolment.objects.create(branch=branch, student=s, session=session, section=section, roll_no=i + 1)
+
+                day, done = today + dt.timedelta(days=1 if today_done else 0), 0
+                while done < 14:
+                    day -= dt.timedelta(days=1)
+                    if not is_school_day(section.class_level, day):
+                        continue
+                    marks = {
+                        e.student_id: ("absent" if random.random() < absent else "present", "") for e in roster(section)
+                    }
+                    save_register(section, day, marks, principal)
+                    done += 1
+
+            result = fees.generate_vouchers(
+                branch, session, month, month, fees.default_due_date(branch, month), principal
+            )
+            for v in result["created"]:
+                if random.random() < paid:
+                    paid_on = month + dt.timedelta(days=random.randint(0, max(0, (today - month).days)))
+                    fees.record_payment(v.student, v.payable, paid_on, "counter", principal, voucher=v)
 
     def attendance(self, section, teacher, today):
         from apps.attendance.services import is_school_day, roster, save_register

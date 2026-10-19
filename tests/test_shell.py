@@ -20,7 +20,7 @@ DEMO_STAFF = ["demo-principal", "demo-teacher", "demo-accountant", "demo-admissi
 def demo(monkeypatch, settings):
     monkeypatch.setenv("DEMO_PASSWORD", "Demo-pass-2026!")
     settings.DEMO_MODE = True
-    call_command("seed_demo", verbosity=0)
+    call_command("seed_demo", "--without-network", verbosity=0)
 
 
 def _on(monkeypatch, day):
