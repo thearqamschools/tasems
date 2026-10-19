@@ -12,6 +12,8 @@ Staff attendance (DECISIONS D-011, D-042):
 """
 
 import datetime as dt
+import secrets
+from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -28,6 +30,32 @@ WEEKDAYS = [_("Monday"), _("Tuesday"), _("Wednesday"), _("Thursday"), _("Friday"
 
 def default_working_days():
     return [0, 1, 2, 3, 4, 5]  # Monday–Saturday; Sunday off (to confirm for staff)
+
+
+# Designations in order of seniority (project lead, 19 Oct 2026). Stored in English, shown translated.
+DESIGNATIONS = [
+    ("Director", _("Director")),
+    ("Principal", _("Principal")),
+    ("Vice Principal", _("Vice Principal")),
+    ("Coordinator", _("Coordinator")),
+    ("Accountant", _("Accountant")),
+    ("Admin", _("Admin")),
+    ("Senior Teacher", _("Senior Teacher")),
+    ("Junior Teacher", _("Junior Teacher")),
+    ("Qari", _("Qari")),
+    ("Guard", _("Guard")),
+    ("Aapa", _("Aapa")),
+    ("Janitorial staff", _("Janitorial staff")),
+    ("Office boy", _("Office boy")),
+    ("Helping staff / Other", _("Helping staff / Other")),
+    ("Lawyer", _("Lawyer")),
+]
+
+
+def cv_path(employee, filename):
+    """Private folder and a random name, so a CV cannot be guessed; it is opened only through TASEMS."""
+    extension = Path(filename).suffix.lower()
+    return f"private/staff-cv/{employee.branch_id}/{secrets.token_hex(16)}{extension}"
 
 
 @audited
@@ -53,15 +81,19 @@ class Employee(BranchOwnedModel):
     )
     full_name = models.CharField(max_length=150)
     full_name_ur = models.CharField(_("full name (Urdu)"), max_length=150, blank=True)
-    father_name = models.CharField(_("father's / husband's name"), max_length=150, blank=True)
+    father_name = models.CharField(_("father's name"), max_length=150, blank=True)
+    husband_name = models.CharField(_("husband's name"), max_length=150, blank=True)
     gender = models.CharField(max_length=10, choices=[("male", _("Male")), ("female", _("Female"))])
     cnic = models.CharField(_("CNIC"), max_length=13, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     phone = models.CharField(_("mobile"), max_length=11, blank=True)
     alt_phone = models.CharField(_("other phone"), max_length=20, blank=True)
     email = models.EmailField(blank=True)
-    address = models.TextField(blank=True)
-    designation = models.CharField(max_length=80, help_text=_("e.g. Senior Teacher, Accountant, Qari, Guard"))
+    address = models.TextField(_("present address"), blank=True)
+    permanent_address = models.TextField(blank=True)
+    designation = models.CharField(
+        max_length=80, help_text=_("Logins and what the person may do follow the designation.")
+    )
     staff_type = models.CharField(max_length=10, choices=StaffType.choices)
     campus = models.ForeignKey("organisation.Campus", on_delete=models.PROTECT, null=True, blank=True, related_name="+")
     qualification = models.CharField(max_length=150, blank=True)
@@ -77,6 +109,7 @@ class Employee(BranchOwnedModel):
         help_text=_("The person's TASEMS login, if they have one."),
     )
     notes = models.TextField(blank=True)
+    cv = models.FileField(_("CV"), upload_to=cv_path, blank=True, help_text=_("JPG, PNG or PDF, up to 5 MB."))
 
     class Meta:
         ordering = ["full_name"]

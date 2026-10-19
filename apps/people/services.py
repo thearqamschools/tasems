@@ -1,8 +1,83 @@
-"""Saving a student with their class and primary contact, shared by the form and the Excel import."""
+"""Saving a student with their class and family, shared by the form, admissions and the Excel import."""
 
 from django.db import transaction
+from django.db.models.functions import Length
 
-from .models import Enrolment, Guardian, StudentGuardian
+from .models import Enrolment, Guardian, Student, StudentGuardian
+
+FAMILY_ROLES = ("father", "mother", "guardian")
+
+
+def next_admission_no(branch):
+    """The branch's next admission number: one more than its highest plain-number admission number."""
+    numbers = (
+        Student.objects.filter(branch=branch, admission_no__regex=r"^[0-9]+$")
+        .order_by(Length("admission_no").desc(), "-admission_no")
+        .values_list("admission_no", flat=True)
+    )
+    highest = numbers.first()
+    return str(int(highest) + 1) if highest else "1001"
+
+
+def family_of(student):
+    """{role: link} for the father, mother and guardian rows of the form (older records: the primary
+    contact counts as the guardian row when it is not marked father or mother)."""
+    rows = {}
+    for link in student.guardian_links.select_related("guardian").order_by("-is_primary_contact", "pk"):
+        role = link.relationship if link.relationship in ("father", "mother") else "guardian"
+        rows.setdefault(role, link)
+    return rows
+
+
+def _guardian_for(branch, role, person):
+    """Brothers and sisters share one parent record: same mobile and same role (or same name)."""
+    same_phone = Guardian.objects.filter(branch=branch, phone=person["phone"])
+    return (
+        same_phone.filter(student_links__relationship=role).first()
+        or same_phone.filter(full_name__iexact=person["name"]).first()
+    )
+
+
+@transaction.atomic
+def save_family(student, family):
+    """`family` = {"father": {...}, "mother": {...}, "guardian": {...}}, each with name, phone and optionally
+    email, occupation, organisation, relation_detail. An empty row removes that person from this student."""
+    current = family_of(student)
+    for role in FAMILY_ROLES:
+        person = family.get(role) or {}
+        link = current.get(role)
+        if not person.get("name"):
+            if link is not None and role != "father":
+                link.delete()
+            continue
+        guardian = link.guardian if link is not None and link.guardian.phone == person["phone"] else None
+        guardian = guardian or _guardian_for(student.branch, role, person)
+        taken = StudentGuardian.objects.filter(student=student, guardian=guardian).exclude(pk=getattr(link, "pk", None))
+        if guardian is None or (guardian.pk and taken.exists()):  # e.g. mother typed exactly like the father
+            guardian = Guardian(branch=student.branch, phone=person["phone"])
+        guardian.full_name = person["name"]
+        for field in ("email", "occupation", "organisation"):
+            if field in person:
+                setattr(guardian, field, person[field])
+        guardian.save()
+        if link is not None and link.guardian_id != guardian.id:
+            link.delete()
+            link = None
+        StudentGuardian.objects.update_or_create(
+            student=student,
+            guardian=guardian,
+            defaults={
+                "relationship": role,
+                "relation_detail": person.get("relation_detail", "") if role == "guardian" else "",
+                "is_primary_contact": False,
+            },
+        )
+    # The father is the main contact; without one, the mother, then the guardian.
+    links = family_of(student)
+    primary = links.get("father") or links.get("mother") or links.get("guardian")
+    if primary is not None:
+        StudentGuardian.objects.filter(student=student).exclude(pk=primary.pk).update(is_primary_contact=False)
+        StudentGuardian.objects.filter(pk=primary.pk).update(is_primary_contact=True)
 
 
 @transaction.atomic
@@ -12,15 +87,25 @@ def save_student(
     session,
     section,
     roll_no,
-    guardian_name,
-    guardian_phone,
-    relationship,
+    family=None,
+    guardian_name="",
+    guardian_phone="",
+    relationship="father",
     guardian_name_ur="",
 ):
-    """`student` is an unsaved or changed Student. Returns the saved student."""
+    """`student` is an unsaved or changed Student. Returns the saved student.
+    The form passes `family` (father, mother, guardian); the Excel import passes one primary contact."""
     student.full_clean()
     student.save()
+    if family is not None:
+        save_family(student, family)
+    else:
+        _save_primary_contact(student, guardian_name, guardian_phone, relationship, guardian_name_ur)
+    _place(student, session, section, roll_no)
+    return student
 
+
+def _save_primary_contact(student, guardian_name, guardian_phone, relationship, guardian_name_ur):
     guardian = Guardian.objects.filter(branch=student.branch, phone=guardian_phone).first()
     if guardian is None:
         guardian = Guardian.objects.create(
@@ -39,6 +124,8 @@ def save_student(
         defaults={"relationship": relationship, "is_primary_contact": True},
     )
 
+
+def _place(student, session, section, roll_no):
     if session and section:
         enrolment = Enrolment.objects.filter(student=student, session=session).first() or Enrolment(
             student=student, session=session, branch=student.branch
@@ -47,7 +134,6 @@ def save_student(
         enrolment.roll_no = roll_no
         enrolment.full_clean()
         enrolment.save()
-    return student
 
 
 def primary_contact(student):

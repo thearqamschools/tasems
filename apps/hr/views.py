@@ -3,12 +3,13 @@
 import datetime as dt
 import io
 import secrets
+from pathlib import Path
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -103,7 +104,7 @@ def index(request):
 def employee_form(request, employee_id=None):
     branch = _branch(request, S.EDIT_PERM if employee_id else S.ADD_PERM)
     instance = _employee(branch, employee_id) if employee_id else None
-    form = EmployeeForm(request.POST or None, instance=instance, branch=branch)
+    form = EmployeeForm(request.POST or None, request.FILES or None, instance=instance, branch=branch)
     if request.method == "POST" and form.is_valid():
         e = form.save()
         if instance and instance.status != Employee.Status.ACTIVE and e.left_on:
@@ -111,6 +112,16 @@ def employee_form(request, employee_id=None):
         messages.success(request, _("Saved."))
         return redirect("hr:employee", employee_id=e.id)
     return render(request, "hr/employee_form.html", {"form": form, "employee": instance})
+
+
+@login_required
+def employee_cv(request, employee_id):
+    """The CV is private: only people who may see this branch's staff can open it."""
+    branch = _branch(request)
+    e = _employee(branch, employee_id)
+    if not e.cv:
+        raise Http404
+    return FileResponse(e.cv.open("rb"), filename=f"CV - {e.full_name}{Path(e.cv.name).suffix}")
 
 
 @login_required

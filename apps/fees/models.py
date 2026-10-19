@@ -15,7 +15,9 @@ Fee amounts are per branch (each franchise sets its own) and per class.
 """
 
 import datetime as dt
+import secrets
 from decimal import ROUND_HALF_UP, Decimal
+from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -169,12 +171,61 @@ class BranchFeeSettings(TimeStampedModel):
 
 
 class Method(models.TextChoices):
+    """New payments are Cash or Bank (with the branch's bank); the others are kept for older records
+    and for the JazzCash / Alfa files."""
+
     COUNTER = "counter", _("Cash at school")
+    BANK = "bank", _("Bank")
     BANK_BRANCH = "bank_branch", _("Deposited at bank with voucher")
     BANK_TRANSFER = "bank_transfer", _("Bank transfer")
     JAZZCASH = "jazzcash", _("JazzCash")
     ALFA = "alfa", _("Bank Alfalah (Alfa app)")
     OTHER = "other", _("Other")
+
+
+@audited
+class BankAccount(BranchOwnedModel):
+    """A bank or wallet the branch collects fees in (Askari, Alfalah, JazzCash, UBL, HBL…), set in Setup."""
+
+    name = models.CharField(max_length=80, help_text=_("e.g. Askari Bank, Bank Alfalah, JazzCash"))
+    account_title = models.CharField(max_length=120, blank=True)
+    account_number = models.CharField(max_length=40, blank=True)
+    sort_order = models.PositiveSmallIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["sort_order", "name"]
+        constraints = [models.UniqueConstraint(fields=["branch", "name"], name="unique_bank_name_per_branch")]
+
+    def __str__(self):
+        return self.name
+
+
+@audited
+class DiscountType(TimeStampedModel):
+    """A discount head office offers (10% off, Scholarship, Staff child…), chosen when admitting a student.
+    The brother/sister discount is not one of these: it applies by itself from the father's CNIC."""
+
+    name = models.CharField(max_length=80, unique=True)
+    percent = models.DecimalField(
+        max_digits=5, decimal_places=2, validators=[MinValueValidator(Decimal("0")), MaxValueValidator(Decimal("100"))]
+    )
+    needs_approval = models.BooleanField(
+        default=False, help_text=_("Ask the principal or head office to approve before it applies.")
+    )
+    sort_order = models.PositiveSmallIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["sort_order", "percent"]
+
+    def __str__(self):
+        return self.name
+
+
+def proof_path(payment, filename):
+    """Private folder and a random name; opened only through TASEMS."""
+    return f"private/payment-proof/{payment.branch_id}/{secrets.token_hex(16)}{Path(filename).suffix.lower()}"
 
 
 @audited
@@ -317,10 +368,14 @@ class Payment(BranchOwnedModel):
     amount = models.DecimalField(**MONEY, validators=[MinValueValidator(Decimal("1"))])
     paid_on = models.DateField()
     method = models.CharField(max_length=20, choices=Method.choices)
+    bank = models.ForeignKey(BankAccount, on_delete=models.PROTECT, null=True, blank=True, related_name="payments")
     reference = models.CharField(
         max_length=60, blank=True, help_text=_("Bank or app transaction ID, deposit slip number")
     )
     note = models.CharField(max_length=200, blank=True)
+    attachment = models.FileField(
+        upload_to=proof_path, blank=True, help_text=_("Optional: photo or screenshot of the bank / JazzCash receipt.")
+    )
     received_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
     is_reversed = models.BooleanField(default=False)
     reversed_by = models.ForeignKey(
@@ -335,7 +390,14 @@ class Payment(BranchOwnedModel):
         indexes = [models.Index(fields=["branch", "paid_on"]), models.Index(fields=["student", "is_reversed"])]
 
     def __str__(self):
-        return f"Receipt {self.receipt_no}: {self.amount} ({self.get_method_display()})"
+        return f"Receipt {self.receipt_no}: {self.amount} ({self.method_label})"
+
+    @property
+    def method_label(self):
+        """ "Cash" or the bank's name (older records: the method as recorded)."""
+        if self.method == Method.BANK and self.bank_id:
+            return self.bank.name
+        return self.get_method_display()
 
     @property
     def receipt_no(self):
@@ -381,6 +443,9 @@ class Concession(BranchOwnedModel):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name="+"
     )
     decided_at = models.DateTimeField(null=True, blank=True)
+    discount_type = models.ForeignKey(
+        DiscountType, on_delete=models.PROTECT, null=True, blank=True, related_name="concessions"
+    )
 
     class Meta:
         ordering = ["-created_at"]

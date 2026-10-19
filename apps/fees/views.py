@@ -2,6 +2,7 @@
 
 import datetime as dt
 import secrets
+from pathlib import Path
 
 from django.conf import settings
 from django.contrib import messages
@@ -9,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -27,7 +28,7 @@ from apps.people.models import Enrolment, Student
 from . import exchange, reports
 from . import services as S
 from .barcode import voucher_barcode
-from .forms import ConcessionForm, GenerateForm, IssueForm, MonthField, PaymentForm, ReasonForm
+from .forms import ConcessionForm, GenerateForm, IssueForm, MonthField, PaymentForm, QuickReceiveForm, ReasonForm
 from .models import (
     BranchFeeSettings,
     Charge,
@@ -90,11 +91,15 @@ def index(request):
         return find(request, branch, q)
     month = _month(request)
     user = request.user
+    day = _date(request.GET.get("day"), timezone.localdate())
     return render(
         request,
         "fees/index.html",
         {
             "branch": branch,
+            "day": day,
+            "today": timezone.localdate(),
+            "day_summary": reports.collections(branch, day, day),
             "summary": reports.month_summary(branch, month),
             "month": month,
             "warnings": _setup_warnings(branch),
@@ -491,7 +496,9 @@ def receive(request, voucher_id):
     today = timezone.localdate()
     form = PaymentForm(
         request.POST or None,
-        initial={"amount": due if due > 0 else None, "paid_on": today, "method": "counter"},
+        request.FILES or None,
+        initial={"amount": due if due > 0 else None, "paid_on": today, "how": PaymentForm.CASH},
+        branch=branch,
         full_amount=due,
         allow_partial=fee_settings.allow_partial_payment,
     )
@@ -506,6 +513,8 @@ def receive(request, voucher_id):
             voucher=voucher,
             reference=d["reference"],
             note=d["note"],
+            bank=d["bank"],
+            attachment=d["attachment"],
         )
         messages.success(
             request, _("Rs %(a)s received. Receipt %(r)s.") % {"a": rupees(d["amount"]), "r": payment.receipt_no}
@@ -537,7 +546,9 @@ def receive(request, voucher_id):
 def receipt(request, payment_id):
     branch = _branch(request)
     payment = (
-        Payment.objects.filter(pk=payment_id, branch=branch).select_related("student", "voucher", "received_by").first()
+        Payment.objects.filter(pk=payment_id, branch=branch)
+        .select_related("student", "voucher", "bank", "received_by__employee")
+        .first()
     )
     if payment is None:
         raise Http404
@@ -546,6 +557,7 @@ def receipt(request, payment_id):
         "fees/receipt.html",
         {
             "payment": payment,
+            "receiver": reports.receiver_label(payment.received_by),
             "balance": S.balance(payment.student),
             "paid_for": payment.allocations.select_related("charge__head").order_by("charge__month"),
             "branch": branch,
@@ -684,10 +696,77 @@ def collections(request):
         date_from, date_to = date_to, date_from
     if (date_to - date_from).days > 92:
         date_to = date_from + dt.timedelta(days=92)
+    summary = reports.collections(branch, date_from, date_to)
     return render(
         request,
         "fees/collections.html",
-        {"date_from": date_from, "date_to": date_to, **reports.collections(branch, date_from, date_to)},
+        {"date_from": date_from, "date_to": date_to, "summary": summary, "payments": summary["payments"]},
+    )
+
+
+@login_required
+def quick_receive(request):
+    """Finance → Barcode: type or scan the Voucher ID, choose the date and Cash/Bank, press Pay.
+    The whole amount due on that date is recorded, and the page is ready for the next voucher."""
+    branch = _branch(request, S.PAY_PERM)
+    today = timezone.localdate()
+    form = QuickReceiveForm(
+        request.POST or None,
+        request.FILES or None,
+        initial={"paid_on": today, "how": PaymentForm.CASH},
+        branch=branch,
+    )
+    if request.method == "POST" and form.is_valid():
+        d = form.cleaned_data
+        digits = d["voucher_number"].replace(" ", "")
+        voucher = (
+            Voucher.objects.filter(branch=branch, number=int(digits)).select_related("student").first()
+            if digits.isdigit()
+            else None
+        )
+        due = S.amount_due_now(voucher, d["paid_on"])[0] if voucher else S.ZERO
+        if voucher is None:
+            form.add_error("voucher_number", _("There is no voucher with this ID in this branch."))
+        elif voucher.status == Voucher.Status.CANCELLED:
+            form.add_error("voucher_number", _("This voucher was cancelled."))
+        elif due <= 0:
+            form.add_error("voucher_number", _("Nothing is owed on this voucher: it is already paid."))
+        else:
+            payment = S.record_payment(
+                voucher.student,
+                due,
+                d["paid_on"],
+                d["method"],
+                request.user,
+                voucher=voucher,
+                reference=d["reference"],
+                note=d["note"],
+                bank=d["bank"],
+                attachment=d["attachment"],
+            )
+            messages.success(
+                request,
+                _("Voucher %(v)s paid: Rs %(a)s from %(s)s. Receipt %(r)s.")
+                % {"v": voucher.number, "a": rupees(due), "s": voucher.student.full_name, "r": payment.receipt_no},
+            )
+            return redirect("fees:quick")
+    mine = [
+        p
+        for p in reports.collections(branch, today, today)["payments"]
+        if p.received_by_id == request.user.id and not p.is_reversed
+    ]
+    return render(request, "fees/quick.html", {"form": form, "mine": mine[-10:][::-1]})
+
+
+@login_required
+def payment_attachment(request, payment_id):
+    """Receipt photos are private: only people who may see this branch's fees can open them."""
+    branch = _branch(request)
+    payment = Payment.objects.filter(pk=payment_id, branch=branch).first()
+    if payment is None or not payment.attachment:
+        raise Http404
+    return FileResponse(
+        payment.attachment.open("rb"), filename=f"Payment {payment.receipt_no}{Path(payment.attachment.name).suffix}"
     )
 
 

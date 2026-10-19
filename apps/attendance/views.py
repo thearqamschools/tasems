@@ -11,9 +11,10 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from apps.academics.models import Section
+from apps.academics.models import ClassLevel, Section
 from apps.core.branch import current_branch
 from apps.organisation.models import AcademicSession, Branch
+from apps.people.forms import section_order
 from apps.people.models import StudentGuardian
 
 from . import services
@@ -148,30 +149,46 @@ def take_register(request, section_id, date):
 def absentees(request):
     branch = _branch(request)
     date = _date_from(request)
+    marked = AttendanceRecord.objects.filter(branch=branch, date=date).exclude(status=Status.PRESENT)
+    level_id, section_name = request.GET.get("class", ""), request.GET.get("section", "")
+    if level_id.isdigit():
+        marked = marked.filter(section__class_level_id=level_id)
+    if section_name:
+        marked = marked.filter(section__name=section_name)
     records = list(
-        AttendanceRecord.objects.filter(branch=branch, date=date)
-        .exclude(status=Status.PRESENT)
-        .select_related("student", "section__class_level")
-        .order_by("section__class_level__sort_order", "section__name", "student__first_name")
+        marked.select_related("student", "section__class_level").order_by(
+            "section__class_level__sort_order", "section__name", "student__first_name"
+        )
     )
     ids = [r.student_id for r in records]
-    contacts = {
-        link.student_id: link.guardian
-        for link in StudentGuardian.objects.filter(student_id__in=ids, is_primary_contact=True).select_related(
-            "guardian"
-        )
-    }
+    # Father's and mother's mobiles (older records: the main contact counts as the father's).
+    phones = {}
+    links = StudentGuardian.objects.filter(student_id__in=ids).select_related("guardian")
+    for link in links.order_by("-is_primary_contact"):
+        role = "mother" if link.relationship == "mother" else "father"
+        phones.setdefault(link.student_id, {}).setdefault(role, link.guardian.phone)
     streaks = services.absence_streaks(ids, date)
     groups = {s: [] for s in (Status.ABSENT, Status.LEAVE, Status.LATE)}
     for r in records:
+        family = phones.get(r.student_id, {})
         groups[r.status].append(
-            {"record": r, "contact": contacts.get(r.student_id), "streak": streaks.get(r.student_id, 0)}
+            {
+                "record": r,
+                "father": family.get("father"),
+                "mother": family.get("mother"),
+                "streak": streaks.get(r.student_id, 0),
+            }
         )
+    sections = Section.objects.filter(branch=branch, session__is_current=True)
     return render(
         request,
         "attendance/absentees.html",
         {
             "date": date,
+            "levels": ClassLevel.objects.filter(sections__in=sections).distinct(),
+            "section_names": sorted(set(sections.values_list("name", flat=True)), key=section_order),
+            "level_id": level_id,
+            "section_name": section_name,
             "absent": groups[Status.ABSENT],
             "leave": groups[Status.LEAVE],
             "late": groups[Status.LATE],

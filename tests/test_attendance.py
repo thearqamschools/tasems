@@ -119,8 +119,15 @@ def test_absentee_list_shows_parent_and_streak(org, klass, make_user, login_as):
         )
     assert absence_streaks([bilal.pk], today) == {bilal.pk: 3}
     principal = make_user("principal", Scope.BRANCH, org["samanabad"])
-    body = login_as(principal).get("/attendance/absent/").content.decode()
+    mother = Guardian.objects.create(branch=org["samanabad"], full_name="Amna", phone="03015556667")
+    StudentGuardian.objects.create(student=bilal, guardian=mother, relationship="mother")
+    client = login_as(principal)
+    body = client.get("/attendance/absent/").content.decode()
     assert "Bilal" in body and "03001112223" in body and "3 or more days" in body
+    assert "03015556667" in body  # father's and mother's mobiles
+    other_class = ClassLevel.objects.exclude(pk=klass["section"].class_level_id).first()
+    assert "Bilal" not in client.get(f"/attendance/absent/?class={other_class.id}").content.decode()
+    assert "Bilal" in client.get(f"/attendance/absent/?section={klass['section'].name}").content.decode()
 
 
 def test_today_page_and_home_show_progress(org, klass, make_user, login_as):

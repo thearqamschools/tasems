@@ -21,6 +21,29 @@
 {% else %}<div class="card empty-state">{% icon "wallet" %}<p>{% trans "No fee rates yet. Vouchers cannot be made until the monthly fee is set." %}</p></div>{% endif %}
 
 <div class="page-header" style="margin-top:2rem">
+  <div><h2 style="margin:0">{% trans "Banks for fee collection" %}</h2><p class="lede">{% trans "When a fee is received by bank, staff choose one of these. Cash is always available." %}</p></div>
+  {% if can.settings %}<div class="actions"><a class="button secondary" href="{% url 'setup:bank_new' %}">{% trans "Add a bank" %}</a></div>{% endif %}
+</div>
+{% if banks %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Bank or wallet" %}</th><th>{% trans "Account" %}</th><th></th><th></th></tr></thead>
+  <tbody>{% for b in banks %}<tr><td>{{ b.name }}</td><td>{{ b.account_title|default:"" }}{% if b.account_number %} · <span class="num">{{ b.account_number }}</span>{% endif %}</td>
+    <td>{% if b.is_active %}<span class="badge ok">{% trans "In use" %}</span>{% else %}<span class="badge muted">{% trans "Switched off" %}</span>{% endif %}</td>
+    <td>{% if can.settings %}<a class="button quiet sm" href="{% url 'setup:bank_edit' b.id %}">{% trans "Edit" %}</a>{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card"><p class="muted">{% trans "No banks yet: fees can only be received as cash until a bank is added." %}</p></div>{% endif %}
+
+<div class="page-header" style="margin-top:2rem">
+  <div><h2 style="margin:0">{% trans "Discounts offered at admission" %}</h2><p class="lede">{% trans "The same list for every branch. Brothers and sisters get the sibling fee by themselves." %}</p></div>
+  {% if can.discounts %}<div class="actions"><a class="button secondary" href="{% url 'setup:discount_new' %}">{% trans "Add a discount" %}</a></div>{% endif %}
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th class="num">{% trans "Discount %" %}</th><th>{% trans "Needs approval" %}</th><th></th><th></th></tr></thead>
+  <tbody>{% for d in discounts %}<tr><td>{{ d.name }}</td><td class="num">{{ d.percent|floatformat:"-2" }}</td><td>{% if d.needs_approval %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+    <td>{% if d.is_active %}<span class="badge ok">{% trans "In use" %}</span>{% else %}<span class="badge muted">{% trans "Switched off" %}</span>{% endif %}</td>
+    <td>{% if can.discounts %}<a class="button quiet sm" href="{% url 'setup:discount_edit' d.id %}">{% trans "Edit" %}</a>{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+
+<div class="page-header" style="margin-top:2rem">
   <div><h2 style="margin:0">{% trans "Voucher and payment settings" %}</h2><p class="lede">{% trans "Printed on every fee voucher." %}</p></div>
   {% if can.settings %}<div class="actions"><a class="button secondary" href="{% url 'setup:fee_settings' %}">{% trans "Change settings" %}</a></div>{% endif %}
 </div>

@@ -36,8 +36,9 @@ class InquiryForm(forms.ModelForm):
             "next_follow_up": DATE,
             "phone": forms.TextInput(attrs={"inputmode": "tel", "dir": "ltr", "placeholder": "0300-1234567"}),
             "alt_phone": forms.TextInput(attrs={"inputmode": "tel", "dir": "ltr"}),
-            "notes": forms.Textarea(attrs={"rows": 2}),
+            "notes": forms.Textarea(attrs={"rows": 3}),
         }
+        labels = {"notes": _("Description"), "source": _("Where did they hear about us?")}
 
     def __init__(self, *args, branch, **kwargs):
         super().__init__(*args, **kwargs)

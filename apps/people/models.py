@@ -27,6 +27,7 @@ class Guardian(BranchOwnedModel):
     cnic = models.CharField(_("CNIC"), max_length=15, blank=True)
     email = models.EmailField(blank=True)
     occupation = models.CharField(max_length=100, blank=True)
+    organisation = models.CharField(max_length=150, blank=True)
     address = models.TextField(blank=True)
 
     class Meta:
@@ -40,9 +41,13 @@ class Guardian(BranchOwnedModel):
 class Student(BranchOwnedModel):
     class Status(models.TextChoices):
         ACTIVE = "active", _("Active")
-        WITHDRAWN = "withdrawn", _("Withdrawn")
+        WITHDRAWN = "withdrawn", _("Withdrawn / Left")
         TRANSFERRED = "transferred", _("Transferred out")
         GRADUATED = "graduated", _("Graduated")
+
+    class SubjectGroup(models.TextChoices):
+        BIOLOGY = "biology", _("Biology")
+        COMPUTER = "computer", _("Computer")
 
     admission_no = models.CharField(max_length=30)
     first_name = models.CharField(max_length=80)
@@ -59,6 +64,14 @@ class Student(BranchOwnedModel):
         db_index=True,
         help_text=_("13 digits. Brothers and sisters are recognised by this number for the sibling fee."),
     )
+    email = models.EmailField(blank=True)
+    current_address = models.TextField(blank=True)
+    permanent_address = models.TextField(blank=True)
+    subject_group = models.CharField(
+        max_length=10, choices=SubjectGroup.choices, blank=True, help_text=_("Pre-9th, 9th and 10th only.")
+    )
+    reference = models.CharField(max_length=200, blank=True)
+    notes = models.TextField(blank=True)
     admission_date = models.DateField()
     is_hifz = models.BooleanField(_("Hifz student"), default=False)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE, db_index=True)
@@ -100,6 +113,9 @@ class StudentGuardian(TimeStampedModel):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="guardian_links")
     guardian = models.ForeignKey(Guardian, on_delete=models.PROTECT, related_name="student_links")
     relationship = models.CharField(max_length=20, choices=Relationship.choices)
+    relation_detail = models.CharField(
+        max_length=60, blank=True, help_text=_("For a guardian, e.g. uncle, aunt, grandfather.")
+    )
     is_primary_contact = models.BooleanField(default=False)
 
     objects = StudentLinkQuerySet.as_manager()

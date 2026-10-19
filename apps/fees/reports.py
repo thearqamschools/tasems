@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from decimal import ROUND_HALF_UP, Decimal
 
 from django.db.models import Count, Sum
+from django.utils.translation import gettext as _
 
 from apps.people.models import StudentGuardian
 
@@ -98,8 +99,10 @@ def month_summary(branch, month):
         "outstanding": sum((r["due"] for r in owed), ZERO),
         "defaulters": len(owed),
         "by_method": [
-            {**row, "method": Method(row["method"]).label}
-            for row in payments.values("method").annotate(total=Sum("amount"), n=Count("id")).order_by("-total")
+            {**row, "method": row["bank__name"] or Method(row["method"]).label}
+            for row in payments.values("method", "bank__name")
+            .annotate(total=Sum("amount"), n=Count("id"))
+            .order_by("-total")
         ],
     }
 
@@ -129,23 +132,51 @@ def outstanding(branch, as_of=None, student_ids=None):
     return [{"student_id": sid, **row, "months": len(row["months"])} for sid, row in per.items()]
 
 
+def receiver_label(user):
+    """ "Name (Designation)" of the person who received a payment: the staff record's designation,
+    or their role when they have no staff record."""
+    name = user.get_full_name() or user.username
+    employee = getattr(user, "employee", None)
+    if employee is not None and employee.designation:
+        return f"{name} ({_(employee.designation)})"
+    roles = [a.role.display_name for a in user.role_assignments.all() if a.is_active]
+    return f"{name} ({roles[0]})" if roles else name
+
+
 def collections(branch, date_from, date_to):
-    payments = (
+    payments = list(
         Payment.objects.filter(branch=branch, paid_on__gte=date_from, paid_on__lte=date_to)
-        .select_related("student", "voucher", "received_by")
+        .select_related("student", "voucher", "bank", "received_by__employee")
+        .prefetch_related("received_by__role_assignments__role")
         .order_by("paid_on", "pk")
     )
+    labels = {}
+    for p in payments:
+        if p.received_by_id not in labels:
+            labels[p.received_by_id] = receiver_label(p.received_by)
+        p.receiver = labels[p.received_by_id]
     live = [p for p in payments if not p.is_reversed]
     by_method = defaultdict(lambda: ZERO)
     by_person = defaultdict(lambda: ZERO)
+    cash_by_person = defaultdict(lambda: ZERO)
+    by_bank = defaultdict(lambda: ZERO)
     for p in live:
-        by_method[p.get_method_display()] += p.amount
-        by_person[p.received_by.get_full_name() or p.received_by.username] += p.amount
+        by_method[p.method_label] += p.amount
+        by_person[p.receiver] += p.amount
+        if p.method == Method.COUNTER:
+            cash_by_person[p.receiver] += p.amount
+        else:
+            by_bank[p.method_label] += p.amount
     return {
-        "payments": list(payments),
+        "payments": payments,
         "total": sum((p.amount for p in live), ZERO),
+        "count": len(live),
+        "cash_total": sum(cash_by_person.values(), ZERO),
+        "bank_total": sum(by_bank.values(), ZERO),
         "by_method": sorted(by_method.items()),
         "by_person": sorted(by_person.items()),
+        "cash_by_person": sorted(cash_by_person.items()),
+        "by_bank": sorted(by_bank.items()),
     }
 
 

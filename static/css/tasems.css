@@ -596,3 +596,7 @@ section > h2:first-child { margin-block-start: 0; }
   .card, .table-wrap, .figure { box-shadow: none; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Student form: one heading per family member */
+.family-title { font-size: var(--step-0); margin: var(--space-4) 0 var(--space-2); color: var(--ink-soft); }
+.family-title:first-of-type { margin-top: 0; }

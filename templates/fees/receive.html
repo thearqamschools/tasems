@@ -11,7 +11,7 @@
   <div class="figure {% if due > 0 %}attention{% endif %}"><div class="value">{{ due|rupees }}</div><div class="label">{% trans "To pay today (Rs)" %}{% if fine %} — {% blocktrans with f=fine|rupees %}includes late fine {{ f }}{% endblocktrans %}{% endif %}</div></div>
 </div>
 
-<form method="post" class="card">{% csrf_token %}
+<form method="post" class="card" enctype="multipart/form-data" data-payment-form>{% csrf_token %}
   {{ form.non_field_errors }}
   <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
   <button class="button" type="submit">{% trans "Save payment" %}</button>

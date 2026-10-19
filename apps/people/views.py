@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Prefetch, Q
+from django.db.models.functions import Length
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
@@ -20,9 +21,9 @@ from apps.core.models import AuditEvent
 from apps.organisation.models import AcademicSession
 
 from . import importer
-from .forms import StudentForm
+from .forms import StudentForm, section_order
 from .models import Enrolment, Student, StudentGuardian
-from .services import current_enrolment, primary_contact, save_student
+from .services import current_enrolment
 
 PAGE_SIZE = 50
 
@@ -61,19 +62,21 @@ def student_list(request):
             Q(admission_no__icontains=q)
             | Q(first_name__icontains=q)
             | Q(last_name__icontains=q)
+            | Q(father_name__icontains=q)
             | Q(full_name_ur__icontains=q)
         )
         if len(digits) >= 4:
             match |= Q(guardian_links__guardian__phone__contains=digits)
         students = students.filter(match).distinct()
 
-    sections = Section.objects.filter(branch=branch, session=session).select_related("class_level") if session else []
-    section_id = request.GET.get("section", "")
+    sections = Section.objects.filter(branch=branch, session=session) if session else Section.objects.none()
+    section_names = sorted(set(sections.values_list("name", flat=True)), key=section_order)
+    section_name = request.GET.get("section", "")
     level_id = request.GET.get("class", "")
-    if session and section_id.isdigit():
-        students = students.filter(enrolments__session=session, enrolments__section_id=section_id)
-    elif session and level_id.isdigit():
+    if session and level_id.isdigit():
         students = students.filter(enrolments__session=session, enrolments__section__class_level_id=level_id)
+    if session and section_name:
+        students = students.filter(enrolments__session=session, enrolments__section__name=section_name)
 
     enrolments = Enrolment.objects.filter(session=session).select_related("section__class_level") if session else []
     students = students.prefetch_related(
@@ -83,7 +86,7 @@ def student_list(request):
             queryset=StudentGuardian.objects.filter(is_primary_contact=True).select_related("guardian"),
             to_attr="primary_links",
         ),
-    ).order_by("admission_no")
+    ).order_by(Length("admission_no"), "admission_no")
 
     page = Paginator(students, PAGE_SIZE).get_page(request.GET.get("page"))
     params = request.GET.copy()
@@ -96,9 +99,9 @@ def student_list(request):
             "q": q,
             "status": status,
             "statuses": Student.Status.choices,
-            "sections": sections,
+            "section_names": section_names,
             "levels": ClassLevel.objects.filter(is_active=True),
-            "section_id": section_id,
+            "section_name": section_name,
             "level_id": level_id,
             "session": session,
             "querystring": params.urlencode(),
@@ -134,30 +137,18 @@ def _student_form(request, branch, student=None):
     session = _current_session()
     initial = {}
     if student is not None:
-        link = primary_contact(student)
-        if link:
-            initial.update(
-                guardian_name=link.guardian.full_name,
-                guardian_name_ur=link.guardian.full_name_ur,
-                guardian_phone=link.guardian.phone,
-                relationship=link.relationship,
-            )
         enrolment = current_enrolment(student, session)
         if enrolment:
-            initial.update(section=enrolment.section_id, roll_no=enrolment.roll_no)
-    form = StudentForm(request.POST or None, instance=student, initial=initial, branch=branch, session=session)
+            initial.update(
+                class_level=enrolment.section.class_level_id,
+                section_name=enrolment.section.name,
+                roll_no=enrolment.roll_no,
+            )
+    form = StudentForm(
+        request.POST or None, instance=student, initial=initial, branch=branch, session=session, user=request.user
+    )
     if request.method == "POST" and form.is_valid():
-        data = form.cleaned_data
-        saved = save_student(
-            form.save(commit=False),
-            session=session,
-            section=data.get("section"),
-            roll_no=data.get("roll_no"),
-            guardian_name=data["guardian_name"],
-            guardian_name_ur=data.get("guardian_name_ur", ""),
-            guardian_phone=data["guardian_phone"],
-            relationship=data["relationship"],
-        )
+        saved = form.save_all()
         messages.success(request, _("Saved %(name)s.") % {"name": saved.full_name})
         return redirect("people:student_detail", pk=saved.pk)
     return render(request, "people/student_form.html", {"form": form, "student": student, "session": session})

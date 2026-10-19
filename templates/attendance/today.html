@@ -38,14 +38,15 @@
 <h2>{% trans "All sections" %}</h2>
 {% if rows %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Section" %}</th><th>{% trans "Class teacher" %}</th><th class="num">{% trans "Present" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Leave" %}</th><th>{% trans "Register" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th class="num">{% trans "Present" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Leave" %}</th><th>{% trans "Register" %}</th><th>{% trans "Class teacher" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr>
-    <td>{{ r.section }}{% if r.section.campus %} <span class="muted">· {{ r.section.campus.name }}</span>{% endif %}</td>
-    <td>{{ r.section.class_teacher.get_full_name|default:r.section.class_teacher|default:"—" }}</td>
+    <td>{{ r.section.class_level }}</td>
+    <td>{{ r.section.name }}{% if r.section.campus %} <span class="muted">· {{ r.section.campus.name }}</span>{% endif %}</td>
     {% if r.register %}<td class="num">{{ r.register.attended }}</td><td class="num">{{ r.register.absent }}</td><td class="num">{{ r.register.leave }}</td>
     <td>{% if r.can_mark %}<a href="{% url 'attendance:take' r.section.id date|date:'Y-m-d' %}">{% trans "Correct" %}</a>{% else %}<span class="badge">{% trans "Taken" %}</span>{% endif %}</td>
     {% else %}<td class="num">—</td><td class="num">—</td><td class="num">—</td>
     <td>{% if r.can_mark %}<a href="{% url 'attendance:take' r.section.id date|date:'Y-m-d' %}">{% trans "Take register" %}</a>{% else %}<span class="badge attention">{% trans "Not taken" %}</span>{% endif %}</td>{% endif %}
+    <td>{{ r.section.class_teacher.get_full_name|default:r.section.class_teacher|default:"—" }}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}

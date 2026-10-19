@@ -156,6 +156,41 @@
     sync();
   });
 
+  // ---------- Student form: sections of the chosen class; subject group only for some classes ----------
+  document.querySelectorAll("select[data-class-select]").forEach(function (classSelect) {
+    var form = classSelect.form;
+    var sectionSelect = form && form.querySelector("select[data-section-select]");
+    var byClass = {};
+    try { byClass = JSON.parse(sectionSelect.getAttribute("data-section-select") || "{}"); } catch (e) { byClass = {}; }
+    function sync() {
+      var names = byClass[classSelect.value] || [];
+      if (sectionSelect) {
+        Array.prototype.forEach.call(sectionSelect.options, function (option) {
+          option.hidden = option.value !== "" && classSelect.value !== "" && names.indexOf(option.value) === -1;
+        });
+        if (sectionSelect.selectedOptions[0] && sectionSelect.selectedOptions[0].hidden) sectionSelect.value = "";
+      }
+      form.querySelectorAll("[data-for-classes]").forEach(function (box) {
+        box.hidden = box.getAttribute("data-for-classes").split(",").indexOf(classSelect.value) === -1;
+      });
+    }
+    classSelect.addEventListener("change", sync);
+    sync();
+  });
+
+  // ---------- Fee payment: the bank list only when "Bank" is chosen ----------
+  document.querySelectorAll("form[data-payment-form]").forEach(function (form) {
+    var bank = form.querySelector("[data-show-when-bank]");
+    if (!bank) return;
+    var box = bank.closest(".field") || bank;
+    function sync() {
+      var chosen = form.querySelector('input[name="how"]:checked');
+      box.hidden = !chosen || chosen.value !== "bank";
+    }
+    form.querySelectorAll('input[name="how"]').forEach(function (r) { r.addEventListener("change", sync); });
+    sync();
+  });
+
   // ---------- Branch picker: type to filter (350+ branches) ----------
   document.querySelectorAll(".branch-picker").forEach(function (picker) {
     var input = picker.querySelector("[data-branch-filter]");

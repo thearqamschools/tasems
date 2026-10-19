@@ -2,16 +2,19 @@
 {% block title %}{{ employee.full_name }}{% endblock %}
 {% block content %}
 <h1>{{ employee.full_name }}</h1>
-{% if employee.full_name_ur %}<p class="ur" lang="ur" dir="rtl" style="margin:0">{{ employee.full_name_ur }}</p>{% endif %}
 <p class="lede">{{ employee.designation }} · {{ employee.get_staff_type_display }} · <span class="num">{{ employee.code }}</span>{% if employee.status != "active" %} · {{ employee.get_status_display }}{% endif %}</p>
 <div class="actions">
   {% if can_edit %}<a class="button" href="{% url 'hr:employee_edit' employee.id %}">{% trans "Edit" %}</a>{% endif %}
   {% if can_leave %}<a class="button secondary" href="{% url 'hr:leave_new' employee.id %}">{% trans "Record leave" %}</a>{% endif %}
+  {% if employee.cv %}<a class="button quiet" href="{% url 'hr:employee_cv' employee.id %}">{% icon "file-text" %}{% trans "Open CV" %}</a>{% endif %}
 </div>
 <div class="table-wrap"><table><tbody>
-  <tr><th>{% trans "Father's / husband's name" %}</th><td>{{ employee.father_name|default:"—" }}</td></tr>
+  <tr><th>{% trans "Father name" %}</th><td>{{ employee.father_name|default:"—" }}</td></tr>
+  {% if employee.husband_name %}<tr><th>{% trans "Husband name" %}</th><td>{{ employee.husband_name }}</td></tr>{% endif %}
   <tr><th>{% trans "CNIC" %}</th><td class="num">{{ employee.cnic|cnic|default:"—" }}</td></tr>
   <tr><th>{% trans "Mobile" %}</th><td>{% if employee.phone %}<a href="tel:{{ employee.phone }}" class="num">{{ employee.phone }}</a>{% else %}—{% endif %}</td></tr>
+  <tr><th>{% trans "Present address" %}</th><td>{{ employee.address|default:"—"|linebreaksbr }}</td></tr>
+  <tr><th>{% trans "Permanent address" %}</th><td>{{ employee.permanent_address|default:"—"|linebreaksbr }}</td></tr>
   <tr><th>{% trans "Joining date" %}</th><td>{{ employee.joined_on|date:"d M Y" }}{% if employee.left_on %} – {{ employee.left_on|date:"d M Y" }}{% endif %}</td></tr>
   <tr><th>{% trans "Campus" %}</th><td>{{ employee.campus|default:"—" }}</td></tr>
   <tr><th>{% trans "Qualification" %}</th><td>{{ employee.qualification|default:"—" }}</td></tr>

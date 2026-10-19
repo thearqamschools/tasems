@@ -1,8 +1,12 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Staff" %}{% endblock %}
 {% block content %}
-<h1>{% trans "Staff" %}</h1>
-<p class="lede">{% trans "Staff records, attendance from the face-recognition machine, and leave." %}</p>
+<div class="page-header">
+  <div><h1>{% trans "Staff" %}</h1>
+  <p class="lede">{% trans "Staff records, attendance from the face-recognition machine, and leave." %}</p></div>
+  {% if can_edit %}<div class="actions"><a class="button" href="{% url 'hr:employee_new' %}">{% icon "user-plus" %}{% trans "Add staff member" %}</a>
+  <a class="button secondary" href="{% url 'hr:staff_import' %}">{% trans "Import staff from Excel" %}</a></div>{% endif %}
+</div>
 {% if settings_missing %}<ul class="messages"><li class="warning">{% trans "Duty time is not set for this branch, so late arrivals are not worked out yet (Advanced setup → HR settings)." %}</li></ul>{% endif %}
 
 <div class="figures">
@@ -17,8 +21,6 @@
   {% if can_import %}<a class="button secondary" href="{% url 'hr:punches_import' %}">{% trans "Import machine file" %}</a>{% endif %}
   <a class="button quiet" href="{% url 'hr:month' %}">{% trans "Monthly sheet" %}</a>
   <a class="button quiet" href="{% url 'hr:leaves' %}">{% trans "Leave" %}</a>
-  {% if can_edit %}<a class="button quiet" href="{% url 'hr:employee_new' %}">{% trans "Add staff member" %}</a>
-  <a class="button quiet" href="{% url 'hr:staff_import' %}">{% trans "Import staff from Excel" %}</a>{% endif %}
 </div>
 
 <form method="get" class="card">

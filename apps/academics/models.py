@@ -85,7 +85,7 @@ class Section(BranchOwnedModel):
 
     session = models.ForeignKey("organisation.AcademicSession", on_delete=models.PROTECT, related_name="sections")
     class_level = models.ForeignKey(ClassLevel, on_delete=models.PROTECT, related_name="sections")
-    name = models.CharField(max_length=20, help_text=_("e.g. A, B, Rose, Jasmine"))
+    name = models.CharField(max_length=20, help_text=_("Usually Rose, Jasmine, Daisy, Pansy or Tulip"))
     gender_group = models.CharField(max_length=10, choices=GenderGroup.choices, default=GenderGroup.MIXED)
     campus = models.ForeignKey(
         "organisation.Campus",

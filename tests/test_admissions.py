@@ -91,19 +91,20 @@ def test_admit_makes_the_student(adm, login_as, org):
     response = client.post(
         f"{url}admit/",
         {
-            "admission_no": "PG-101",
+            "admission_no": "101",
             "first_name": "Ahmar",
             "last_name": "Rauf",
             "gender": "male",
             "admission_date": timezone.localdate().isoformat(),
-            "guardian_name": "Abdul Rauf",
-            "guardian_phone": "0300-1234567",
-            "relationship": "father",
-            "section": section.id,
+            "father_cnic": "33100-1234567-1",
+            "father_name": "Abdul Rauf",
+            "father_phone": "0300-1234567",
+            "class_level": section.class_level_id,
+            "section_name": section.name,
         },
     )
     inquiry.refresh_from_db()
-    student = Student.objects.get(admission_no="PG-101")
+    student = Student.objects.get(admission_no="101")
     assert inquiry.student == student and inquiry.status == "admitted"
     assert student.enrolments.get().section == section
     assert response.url == f"/fees/student/{student.id}/voucher/"  # admission voucher next

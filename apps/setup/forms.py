@@ -1,12 +1,15 @@
 from django import forms
 from django.db.models import Q
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from apps.academics.models import Section
 from apps.accounts.models import Role, Scope, User
 from apps.core.phone import normalize_mobile
-from apps.fees.models import BranchFeeSettings, FeeRate
+from apps.fees.models import BankAccount, BranchFeeSettings, DiscountType, FeeRate
 from apps.organisation.models import AcademicSession, Branch, Campus, HeadOffice, Region
+from apps.people.forms import SECTION_NAMES
 
 DATE = forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")
 UR = forms.TextInput(attrs={"dir": "rtl", "lang": "ur", "class": "ur"})
@@ -16,7 +19,6 @@ LTR = forms.TextInput(attrs={"dir": "ltr"})
 LABELS = {
     "class_level": _("Class"),
     "name": _("Name"),
-    "name_ur": _("Name (Urdu)"),
     "gender_group": _("Boys / girls"),
     "campus": _("Campus"),
     "class_teacher": _("Class teacher"),
@@ -76,10 +78,28 @@ def staff_of(branch):
     )
 
 
+BANK_SUGGESTIONS = ["Askari Bank", "Bank Alfalah", "JazzCash", "Easypaisa", "UBL", "HBL", "MCB", "Meezan Bank"]
+
+
+class SuggestInput(forms.TextInput):
+    """A text box that offers a list of usual values (the person can still type another)."""
+
+    def __init__(self, suggestions, attrs=None):
+        super().__init__(attrs)
+        self.suggestions = suggestions
+
+    def render(self, name, value, attrs=None, renderer=None):
+        list_id = f"{(attrs or {}).get('id', name)}-suggestions"
+        html = super().render(name, value, {**(attrs or {}), "list": list_id, "autocomplete": "off"}, renderer)
+        options = "".join(format_html('<option value="{}">', s) for s in self.suggestions)
+        return mark_safe(f'{html}<datalist id="{list_id}">{options}</datalist>')  # noqa: S308 (escaped above)
+
+
 class SectionForm(Labelled, forms.ModelForm):
     class Meta:
         model = Section
         fields = ["class_level", "name", "gender_group", "campus", "class_teacher", "capacity", "is_active"]
+        widgets = {"name": SuggestInput(SECTION_NAMES)}
 
     def __init__(self, *args, branch, session, **kwargs):
         super().__init__(*args, **kwargs)
@@ -103,8 +123,8 @@ class SectionForm(Labelled, forms.ModelForm):
 class CampusForm(Labelled, forms.ModelForm):
     class Meta:
         model = Campus
-        fields = ["name", "name_ur", "gender_group", "address", "is_active"]
-        widgets = {"name_ur": UR, "address": forms.Textarea(attrs={"rows": 2})}
+        fields = ["name", "gender_group", "address", "is_active"]
+        widgets = {"address": forms.Textarea(attrs={"rows": 2})}
 
     def __init__(self, *args, branch, **kwargs):
         super().__init__(*args, **kwargs)
@@ -174,13 +194,50 @@ class FeeSettingsForm(Labelled, forms.ModelForm):
         }
 
 
+class BankAccountForm(forms.ModelForm):
+    class Meta:
+        model = BankAccount
+        fields = ["name", "account_title", "account_number", "sort_order", "is_active"]
+        labels = {
+            "name": _("Bank or wallet"),
+            "account_title": _("Account title"),
+            "account_number": _("Account number"),
+            "sort_order": _("Order in lists"),
+            "is_active": _("In use"),
+        }
+        widgets = {"account_number": LTR, "name": SuggestInput(BANK_SUGGESTIONS)}
+
+    def __init__(self, *args, branch, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.instance.branch = branch
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        clash = BankAccount.objects.filter(branch=self.instance.branch, name__iexact=name).exclude(pk=self.instance.pk)
+        if clash.exists():
+            raise forms.ValidationError(_("This branch already has this bank."))
+        return name
+
+
+class DiscountTypeForm(forms.ModelForm):
+    class Meta:
+        model = DiscountType
+        fields = ["name", "percent", "needs_approval", "sort_order", "is_active"]
+        labels = {
+            "name": _("Name"),
+            "percent": _("Discount %"),
+            "needs_approval": _("Needs approval"),
+            "sort_order": _("Order in lists"),
+            "is_active": _("In use"),
+        }
+
+
 class BranchForm(Labelled, forms.ModelForm):
     class Meta:
         model = Branch
         fields = [
             "code",
             "name",
-            "name_ur",
             "head_office",
             "region",
             "ownership",
@@ -190,7 +247,7 @@ class BranchForm(Labelled, forms.ModelForm):
             "phone",
             "is_active",
         ]
-        widgets = {"code": LTR, "name_ur": UR, "phone": LTR, "address": forms.Textarea(attrs={"rows": 2})}
+        widgets = {"code": LTR, "phone": LTR, "address": forms.Textarea(attrs={"rows": 2})}
 
     def __init__(self, *args, head_offices, **kwargs):
         super().__init__(*args, **kwargs)
@@ -208,8 +265,8 @@ class BranchForm(Labelled, forms.ModelForm):
 class RegionForm(Labelled, forms.ModelForm):
     class Meta:
         model = Region
-        fields = ["head_office", "code", "name", "name_ur", "is_active"]
-        widgets = {"code": LTR, "name_ur": UR}
+        fields = ["head_office", "code", "name", "is_active"]
+        widgets = {"code": LTR}
 
     def __init__(self, *args, head_offices, **kwargs):
         super().__init__(*args, **kwargs)
@@ -273,10 +330,9 @@ class AssignmentForm(forms.Form):
 class NewUserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "full_name_ur", "phone", "email", "preferred_language"]
+        fields = ["username", "first_name", "last_name", "phone", "email", "preferred_language"]
         widgets = {
             "username": forms.TextInput(attrs={"dir": "ltr", "autocomplete": "off"}),
-            "full_name_ur": UR,
             "phone": forms.TextInput(attrs={"dir": "ltr", "inputmode": "tel", "placeholder": "0300-1234567"}),
             "email": forms.EmailInput(attrs={"dir": "ltr"}),
         }
@@ -285,7 +341,6 @@ class NewUserForm(forms.ModelForm):
         "username": _("Username"),
         "first_name": _("First name"),
         "last_name": _("Last name"),
-        "full_name_ur": _("Full name (Urdu)"),
         "phone": _("Mobile"),
         "email": _("Email"),
         "preferred_language": _("Language"),
@@ -314,4 +369,4 @@ class NewUserForm(forms.ModelForm):
 
 class UserDetailsForm(NewUserForm):
     class Meta(NewUserForm.Meta):
-        fields = ["first_name", "last_name", "full_name_ur", "phone", "email", "preferred_language"]
+        fields = ["first_name", "last_name", "phone", "email", "preferred_language"]

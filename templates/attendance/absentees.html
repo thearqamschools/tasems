@@ -3,6 +3,18 @@
 {% block content %}
 <h1>{% trans "Absent students" %}</h1>
 <p class="lede">{{ date|date:"l, d F Y" }}</p>
+<form method="get" class="card no-print">
+  <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+  <div class="form-grid">
+    <div class="field"><label for="class">{% trans "Class" %}</label>
+      <select id="class" name="class"><option value="">{% trans "All classes" %}</option>
+        {% for l in levels %}<option value="{{ l.id }}" {% if level_id == l.id|stringformat:"s" %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="section">{% trans "Section" %}</label>
+      <select id="section" name="section"><option value="">{% trans "All sections" %}</option>
+        {% for n in section_names %}<option value="{{ n }}" {% if section_name == n %}selected{% endif %}>{{ n }}</option>{% endfor %}</select></div>
+  </div>
+  <div class="actions" style="margin:0"><button class="button" type="submit">{% trans "Show" %}</button></div>
+</form>
 <div class="actions no-print">
   <a class="button quiet" href="{% url 'attendance:today' %}?date={{ date|date:'Y-m-d' }}">{% trans "Back to attendance" %}</a>
   <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
@@ -11,7 +23,7 @@
 {% if long_absences %}
 <div class="card" style="border-color:var(--attention);margin-bottom:1rem">
   <h2 style="margin-top:0">{% trans "Absent 3 or more days in a row" %}</h2>
-  <ul>{% for a in long_absences %}<li>{{ a.record.student.full_name }} ({{ a.record.section }}) — {% blocktrans count n=a.streak %}{{ n }} day{% plural %}{{ n }} days{% endblocktrans %}{% if a.contact %} · <a href="tel:{{ a.contact.phone }}" class="num">{{ a.contact.phone }}</a>{% endif %}</li>{% endfor %}</ul>
+  <ul>{% for a in long_absences %}<li>{{ a.record.student.full_name }} ({{ a.record.section.class_level }} · {{ a.record.section.name }}) — {% blocktrans count n=a.streak %}{{ n }} day{% plural %}{{ n }} days{% endblocktrans %}{% if a.father %} · <a href="tel:{{ a.father }}" class="num">{{ a.father }}</a>{% endif %}{% if a.mother %} · <a href="tel:{{ a.mother }}" class="num">{{ a.mother }}</a>{% endif %}</li>{% endfor %}</ul>
 </div>
 {% endif %}
 

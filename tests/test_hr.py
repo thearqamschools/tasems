@@ -177,10 +177,11 @@ def test_principal_adds_staff_and_imports_machine_file(hr, login_as):
         {
             "code": "T-1",
             "full_name": "Test Teacher",
+            "father_name": "Test Father",
             "gender": "female",
             "cnic": "33100-1234567-1",
             "phone": "0300-1234567",
-            "designation": "Teacher",
+            "designation": "Junior Teacher",
             "staff_type": "teaching",
             "joined_on": "2025-04-01",
             "machine_id": "101",
@@ -248,3 +249,33 @@ def test_other_branch_cannot_see_staff(hr, org, login_as, make_user):
     e = hr["employee"]()
     other = login_as(make_user("principal", Scope.BRANCH, org["fsd_franchise"]))
     assert other.get(f"/staff/{e.id}/").status_code == 404
+
+
+def test_staff_form_designations_cv_and_privacy(hr, login_as, make_user, org, tmp_path, settings):
+    from django.core.files.uploadedfile import SimpleUploadedFile
+
+    settings.MEDIA_ROOT = tmp_path
+    client = login_as(hr["principal"])
+    page = client.get("/staff/new/").content.decode()
+    assert "Vice Principal" in page and "Janitorial staff" in page and "Name (Urdu)" not in page
+    data = {
+        "code": "T1",
+        "full_name": "Sana Tariq",
+        "father_name": "Tariq Mehmood",
+        "husband_name": "",
+        "gender": "female",
+        "designation": "Senior Teacher",
+        "staff_type": "teaching",
+        "joined_on": "2026-04-01",
+        "address": "Samanabad",
+        "permanent_address": "Jhang",
+    }
+    bad = client.post("/staff/new/", {**data, "cv": SimpleUploadedFile("cv.exe", b"MZ")}).content.decode()
+    assert "JPG, PNG or PDF" in bad
+    done = client.post("/staff/new/", {**data, "cv": SimpleUploadedFile("cv.pdf", b"%PDF-1.4 cv")})
+    e = Employee.objects.get(code="T1")
+    assert done.status_code == 302 and e.cv and e.permanent_address == "Jhang"
+    assert "private/staff-cv/" in e.cv.name and "cv.pdf" not in e.cv.name  # random name, private folder
+    assert client.get(f"/staff/{e.id}/cv/").status_code == 200
+    outsider = login_as(make_user("principal", Scope.BRANCH, org["fsd_franchise"]))
+    assert outsider.get(f"/staff/{e.id}/cv/").status_code in (403, 404)

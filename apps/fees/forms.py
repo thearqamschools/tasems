@@ -1,4 +1,5 @@
 from decimal import Decimal
+from pathlib import Path
 
 from django import forms
 from django.utils import timezone
@@ -6,9 +7,11 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.academics.models import Section
 
-from .models import Concession, FeeHead, Method, month_start
+from .models import BankAccount, Concession, FeeHead, Method, month_start
 
 DATE = forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")
+PROOF_TYPES = {".jpg", ".jpeg", ".png", ".pdf"}
+PROOF_MAX_BYTES = 5 * 1024 * 1024
 
 
 class MonthField(forms.DateField):
@@ -88,21 +91,37 @@ class IssueForm(GenerateForm):
 
 
 class PaymentForm(forms.Form):
+    """Cash or Bank (one of the branch's banks); who received it is the signed-in person."""
+
+    CASH, BANK = "cash", "bank"
+
     amount = forms.DecimalField(min_value=Decimal("1"), max_digits=12, decimal_places=2, label=_("Amount received"))
     paid_on = forms.DateField(label=_("Date paid"), widget=DATE)
-    method = forms.ChoiceField(choices=Method.choices, label=_("How it was paid"))
+    how = forms.ChoiceField(
+        choices=[(CASH, _("Cash")), (BANK, _("Bank"))], widget=forms.RadioSelect, label=_("Received in")
+    )
+    bank = forms.ModelChoiceField(queryset=BankAccount.objects.none(), required=False, label=_("Which bank"))
     reference = forms.CharField(
         required=False,
         max_length=60,
         label=_("Transaction ID / slip number"),
-        help_text=_("Needed for bank, JazzCash and Alfa payments."),
         widget=forms.TextInput(attrs={"dir": "ltr"}),
+    )
+    attachment = forms.FileField(
+        required=False,
+        label=_("Attachment"),
+        help_text=_("Optional: photo or screenshot of the receipt (JPG, PNG or PDF, up to 5 MB)."),
+        widget=forms.ClearableFileInput(attrs={"accept": ".jpg,.jpeg,.png,.pdf"}),
     )
     note = forms.CharField(required=False, max_length=200, label=_("Note"))
 
-    def __init__(self, *args, full_amount=None, allow_partial=True, **kwargs):
+    def __init__(self, *args, branch, full_amount=None, allow_partial=True, **kwargs):
         super().__init__(*args, **kwargs)
         self.full_amount, self.allow_partial = full_amount, allow_partial
+        self.fields["bank"].queryset = BankAccount.objects.filter(branch=branch, is_active=True)
+        self.fields["bank"].widget.attrs["data-show-when-bank"] = ""
+        if not self.fields["bank"].queryset.exists():
+            self.fields["bank"].help_text = _("No banks yet: add them in Setup → Fee rates and vouchers.")
 
     def clean_paid_on(self):
         value = self.cleaned_data["paid_on"]
@@ -110,13 +129,40 @@ class PaymentForm(forms.Form):
             raise forms.ValidationError(_("The date is in the future."))
         return value
 
+    def clean_attachment(self):
+        file = self.cleaned_data.get("attachment")
+        if file:
+            if Path(file.name).suffix.lower() not in PROOF_TYPES:
+                raise forms.ValidationError(_("Attach a JPG, PNG or PDF file."))
+            if file.size > PROOF_MAX_BYTES:
+                raise forms.ValidationError(_("The file is larger than 5 MB."))
+        return file
+
     def clean(self):
         data = super().clean()
-        if data.get("method") not in (None, Method.COUNTER) and not data.get("reference"):
-            self.add_error("reference", _("Enter the transaction ID or deposit slip number."))
+        if data.get("how") == self.BANK and not data.get("bank"):
+            self.add_error("bank", _("Choose the bank the money came in."))
+        if data.get("how") == self.CASH:
+            data["bank"] = None
+        data["method"] = Method.BANK if data.get("how") == self.BANK else Method.COUNTER
         if not self.allow_partial and self.full_amount and data.get("amount") and data["amount"] < self.full_amount:
             self.add_error("amount", _("This branch accepts only the full amount."))
         return data
+
+
+class QuickReceiveForm(PaymentForm):
+    """Finance → Barcode: type or scan the Voucher ID and record the full amount due."""
+
+    voucher_number = forms.CharField(
+        max_length=20,
+        label=_("Voucher ID"),
+        widget=forms.TextInput(attrs={"dir": "ltr", "inputmode": "numeric", "autofocus": True, "autocomplete": "off"}),
+    )
+    field_order = ["voucher_number", "paid_on", "how", "bank", "reference", "attachment", "note"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        del self.fields["amount"]
 
 
 class ConcessionForm(forms.ModelForm):

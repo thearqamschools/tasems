@@ -8,20 +8,17 @@
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
   <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
 </form>
-<div class="figures">
-  <div class="figure"><div class="value">{{ total|rupees }}</div><div class="label">{% trans "Received (Rs)" %}</div></div>
-  {% for name, amount in by_method %}<div class="figure"><div class="value">{{ amount|rupees }}</div><div class="label">{{ name }}</div></div>{% endfor %}
-</div>
-{% if by_person %}<h2>{% trans "By person receiving" %}</h2>
-<div class="table-wrap"><table><tbody>{% for name, amount in by_person %}<tr><td>{{ name }}</td><td class="num">{{ amount|rupees }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% include "fees/_day_breakdown.html" with day=summary %}
 <h2>{% trans "Payments" %}</h2>
 {% if payments %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Receipt" %}</th><th>{% trans "Date" %}</th><th>{% trans "Student" %}</th><th>{% trans "Voucher" %}</th><th>{% trans "Method" %}</th><th>{% trans "Reference" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Voucher ID" %}</th><th>{% trans "Student" %}</th><th>{% trans "Father name" %}</th><th>{% trans "Method" %}</th><th>{% trans "Received by" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
   <tbody>{% for p in payments %}<tr{% if p.is_reversed %} class="muted"{% endif %}>
-    <td><a href="{% url 'fees:receipt' p.id %}">{{ p.receipt_no }}</a>{% if p.is_reversed %} <span class="badge muted">{% trans "Reversed" %}</span>{% endif %}</td>
-    <td>{{ p.paid_on|date:"d M" }}</td><td>{{ p.student.full_name }}</td><td class="num">{{ p.voucher.number|default:"—" }}</td>
-    <td>{{ p.get_method_display }}</td><td>{{ p.reference|default:"—" }}</td>
+    <td>{{ p.paid_on|date:"d M" }}</td>
+    <td class="num"><a href="{% url 'fees:receipt' p.id %}">{{ p.voucher.number|default:"—" }}</a>{% if p.is_reversed %} <span class="badge muted">{% trans "Reversed" %}</span>{% endif %}</td>
+    <td>{{ p.student.full_name }}</td><td>{{ p.student.father_name|default:"—" }}</td>
+    <td>{% if p.method == "counter" %}{% trans "Cash" %}{% else %}{{ p.method_label }}{% endif %}{% if p.reference %} <span class="muted small num">{{ p.reference }}</span>{% endif %}{% if p.attachment %} <a href="{% url 'fees:payment_attachment' p.id %}" title="{% trans 'Attachment' %}">{% icon "file-text" %}</a>{% endif %}</td>
+    <td>{{ p.receiver }}</td>
     <td class="num">{% if p.is_reversed %}<s>{{ p.amount|rupees }}</s>{% else %}{{ p.amount|rupees }}{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>

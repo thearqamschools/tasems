@@ -202,6 +202,12 @@ def network(branches, session, today, fee_branch_ids):
     }
     totals["rate"] = percent(totals["attended"], totals["total"])
     totals["collection"] = percent(totals["received"], totals["billed"])
+    totals["received_today"] = (
+        Payment.objects.filter(branch_id__in=fee_ids, is_reversed=False, paid_on=today).aggregate(t=Sum("amount"))["t"]
+        or ZERO
+        if fee_ids
+        else ZERO
+    )
     return rows, totals
 
 

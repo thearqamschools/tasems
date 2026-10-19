@@ -11,10 +11,10 @@
     <tr><th>{% trans "Voucher" %}</th><td>{{ payment.voucher.number|default:"—" }}</td></tr>
     <tr><th>{% trans "Amount" %}</th><td><strong>Rs {{ payment.amount|rupees }}</strong></td></tr>
     <tr><th>{% trans "Date paid" %}</th><td>{{ payment.paid_on|date:"d M Y" }}</td></tr>
-    <tr><th>{% trans "Method" %}</th><td>{{ payment.get_method_display }}{% if payment.reference %} · {{ payment.reference }}{% endif %}</td></tr>
+    <tr><th>{% trans "Method" %}</th><td>{% if payment.method == "counter" %}{% trans "Cash" %}{% else %}{{ payment.method_label }}{% endif %}{% if payment.reference %} · {{ payment.reference }}{% endif %}{% if payment.attachment %} · <a class="no-print" href="{% url 'fees:payment_attachment' payment.id %}">{% trans "Attachment" %}</a>{% endif %}</td></tr>
     <tr><th>{% trans "Paid for" %}</th><td>{% for a in paid_for %}{{ a.charge.head.name }} {{ a.charge.month|date:"M Y" }}: {{ a.amount|rupees }}{% if not forloop.last %}<br>{% endif %}{% empty %}{% trans "Kept as advance" %}{% endfor %}</td></tr>
     <tr><th>{% trans "Balance now" %}</th><td>Rs {{ balance|rupees }}</td></tr>
-    <tr><th>{% trans "Received by" %}</th><td>{{ payment.received_by.get_full_name|default:payment.received_by.username }}</td></tr>
+    <tr><th>{% trans "Received by" %}</th><td>{{ receiver }}</td></tr>
   </tbody></table></div>
 </div>
 <div class="actions">

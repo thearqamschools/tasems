@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% load i18n %}
 {% block title %}{{ inquiry.child_name }}{% endblock %}
 {% block content %}
-<p><a href="{% url 'admissions:index' %}">‹ {% trans "Admissions" %}</a></p>
+<p><a href="{% url 'admissions:index' %}">‹ {% trans "Admission inquiries" %}</a></p>
 <h1>{{ inquiry.child_name }}</h1>
 <p class="lede">{{ inquiry.class_level.name }}{% if inquiry.is_hifz %} · {% trans "Hifz" %}{% endif %} · <strong>{{ inquiry.get_status_display }}</strong>{% if inquiry.lost_reason %} ({{ inquiry.get_lost_reason_display }}){% endif %}</p>
 <div class="actions">

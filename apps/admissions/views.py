@@ -17,7 +17,6 @@ from apps.academics.models import ClassLevel
 from apps.core.branch import current_branch
 from apps.organisation.models import AcademicSession
 from apps.people.forms import StudentForm
-from apps.people.services import save_student
 
 from . import services as S
 from .forms import FollowUpForm, InquiryForm
@@ -194,26 +193,14 @@ def admit(request, pk):
         "date_of_birth": inquiry.date_of_birth,
         "admission_date": timezone.localdate(),
         "is_hifz": inquiry.is_hifz,
-        "guardian_name": inquiry.parent_name,
-        "guardian_phone": inquiry.phone,
-        "relationship": "father",
         "father_name": inquiry.parent_name,
+        "father_phone": inquiry.phone,
+        "class_level": inquiry.class_level_id,
     }
-    form = StudentForm(request.POST or None, initial=initial, branch=branch, session=session)
-    if session:
-        form.fields["section"].queryset = form.fields["section"].queryset.filter(class_level=inquiry.class_level)
+    form = StudentForm(request.POST or None, initial=initial, branch=branch, session=session, user=request.user)
     if request.method == "POST" and form.is_valid():
         d = form.cleaned_data
-        student = save_student(
-            form.save(commit=False),
-            session=session,
-            section=d.get("section"),
-            roll_no=d.get("roll_no"),
-            guardian_name=d["guardian_name"],
-            guardian_name_ur=d.get("guardian_name_ur", ""),
-            guardian_phone=d["guardian_phone"],
-            relationship=d["relationship"],
-        )
+        student = form.save_all()
         S.admit(inquiry, student, request.user)
         messages.success(
             request, _("%(n)s is now a student. Make the admission fee voucher next.") % {"n": student.full_name}

@@ -1,8 +1,11 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
-{% block title %}{% trans "Admissions" %}{% endblock %}
+{% block title %}{% trans "Admission inquiries" %}{% endblock %}
 {% block content %}
-<h1>{% trans "Admissions" %}</h1>
-<p class="lede">{% trans "Every inquiry in one place, with the next follow-up date so no family is forgotten." %}</p>
+<div class="page-header">
+  <div><h1>{% trans "Admission inquiries" %}</h1>
+  <p class="lede">{% trans "Every inquiry in one place, with the next follow-up date so no family is forgotten." %}</p></div>
+  {% if can_add %}<div class="actions"><a class="button" href="{% url 'admissions:new' %}">{% icon "user-plus" %}{% trans "Add inquiry" %}</a></div>{% endif %}
+</div>
 <div class="figures">
   <a class="figure {% if figures.due %}attention{% endif %}" href="?view=due" style="color:inherit;text-decoration:none"><div class="value">{{ figures.due }}</div><div class="label">{% trans "Follow-ups due today" %}</div></a>
   <a class="figure" href="?view=open" style="color:inherit;text-decoration:none"><div class="value">{{ figures.open }}</div><div class="label">{% trans "Open inquiries" %}</div></a>
@@ -10,7 +13,6 @@
   <div class="figure"><div class="value">{{ figures.admitted }}</div><div class="label">{% trans "Admitted this month" %}</div></div>
 </div>
 <div class="actions">
-  {% if can_add %}<a class="button" href="{% url 'admissions:new' %}">{% trans "New inquiry" %}</a>{% endif %}
   <a class="button quiet" href="{% url 'admissions:report' %}">{% trans "Report" %}</a>
   <a class="button quiet" href="?{{ query }}&format=xlsx">{% trans "Download Excel" %}</a>
 </div>

@@ -1,0 +1,33 @@
+{% load i18n tasems_tags %}
+  {% for e in form.non_field_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+  <fieldset><legend>{% trans "Student information" %}</legend><div class="form-grid">
+    {% for name in "admission_no first_name last_name gender date_of_birth admission_date b_form_no father_cnic email status"|split %}{% with field=form|field:name %}{% if field %}{% include "includes_field.html" %}{% endif %}{% endwith %}{% endfor %}
+  </div>
+  <div class="form-grid">
+    {% with field=form.current_address %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.permanent_address %}{% include "includes_field.html" %}{% endwith %}
+  </div>
+  {% with field=form.is_hifz %}<div class="field"><label>{{ field }} {{ field.label }}</label></div>{% endwith %}
+  </fieldset>
+  <fieldset><legend>{% trans "Class" %}{% if session %} · {{ session }}{% endif %}</legend><div class="form-grid">
+    {% with field=form.roll_no %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.class_level %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.section_name %}{% include "includes_field.html" %}{% endwith %}
+    <div data-for-classes="{{ form.subject_group_classes }}">{% with field=form.subject_group %}{% include "includes_field.html" %}{% endwith %}</div>
+  </div></fieldset>
+  <fieldset><legend>{% trans "Family details" %}</legend>
+    <h3 class="family-title">{% trans "Father" %}</h3>
+    <div class="form-grid">{% for name in "father_name father_phone father_email father_occupation father_organisation"|split %}{% with field=form|field:name %}{% include "includes_field.html" %}{% endwith %}{% endfor %}</div>
+    <h3 class="family-title">{% trans "Mother" %}</h3>
+    <div class="form-grid">{% for name in "mother_name mother_phone mother_occupation mother_organisation"|split %}{% with field=form|field:name %}{% include "includes_field.html" %}{% endwith %}{% endfor %}</div>
+    <h3 class="family-title">{% trans "Guardian" %}</h3>
+    <div class="form-grid">{% for name in "guardian_name guardian_phone guardian_relation_detail guardian_occupation"|split %}{% with field=form|field:name %}{% include "includes_field.html" %}{% endwith %}{% endfor %}</div>
+    <p class="help muted">{% trans "Father name and mobile are required. Brothers and sisters with the same father mobile share one family record." %}</p>
+  </fieldset>
+  {% if form.discount_type %}<fieldset><legend>{% trans "Fee" %}</legend><div class="form-grid">
+    {% with field=form.discount_type %}{% include "includes_field.html" %}{% endwith %}
+  </div><p class="help muted">{% trans "The monthly fee comes from the class's fee rate (Setup → Fee rates and vouchers)." %}</p></fieldset>{% endif %}
+  <fieldset><legend>{% trans "Other" %}</legend><div class="form-grid">
+    {% with field=form.reference %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.notes %}{% include "includes_field.html" %}{% endwith %}
+  </div></fieldset>

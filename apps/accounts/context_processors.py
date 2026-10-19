@@ -35,7 +35,7 @@ def _menu(user, branch):
         _("Students"),
         [
             perm("people.view_student") and (reverse("people:student_list"), _("Students"), "users"),
-            perm("admissions.view_inquiry") and (reverse("admissions:index"), _("Admissions"), "user-plus"),
+            perm("admissions.view_inquiry") and (reverse("admissions:index"), _("Admission inquiries"), "user-plus"),
             perm("admissions.view_inquiry") and (reverse("admissions:report"), _("Admissions report"), "file-text"),
             *attendance_items,
             perm("people.add_student")
@@ -53,6 +53,7 @@ def _menu(user, branch):
     group(
         _("Finance"),
         [
+            perm("fees.add_payment") and (reverse("fees:quick"), _("Barcode"), "scan-barcode"),
             fees and (reverse("fees:index"), _("Fees"), "wallet"),
             perm("fees.add_voucher") and (reverse("fees:generate"), _("Make vouchers"), "receipt"),
             fees and (reverse("fees:vouchers"), _("Vouchers"), "list-checks"),

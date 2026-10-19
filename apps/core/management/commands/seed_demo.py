@@ -26,7 +26,9 @@ from apps.accounts.models import Role, RoleAssignment, Scope, User
 from apps.organisation.models import AcademicSession, Branch, HeadOffice, Region
 from apps.people.models import Enrolment, Guardian, Student, StudentGuardian
 
-PREFIX = "DEMO-"
+PREFIX = "DEMO-"  # admission numbers of demos made before plain-number admission numbers
+DEMO_MARK = "Demo data (fictional)"  # kept in Student.reference so demo students are always recognised
+MOTHERS = ["Saima", "Nadia", "Rabia", "Amna", "Sadia", "Farah", "Huma", "Asma", "Bushra", "Shazia", "Uzma", "Sobia"]
 BOYS = ["Ahmad", "Ali", "Hamza", "Usman", "Bilal", "Hassan", "Zain", "Saad", "Talha", "Fahad", "Umar", "Hadi"]
 GIRLS = ["Ayesha", "Fatima", "Hira", "Maryam", "Zainab", "Aiman", "Sana", "Iqra", "Noor", "Areeba", "Laiba", "Mahnoor"]
 FATHERS = [
@@ -46,7 +48,7 @@ FATHERS = [
 SURNAMES = ["Khan", "Ahmad", "Malik", "Butt", "Sheikh", "Chaudhry", "Raza", "Iqbal"]
 CLASSES = [
     ("play-group", "Tulip", "mixed"),
-    ("class-4", "A", "mixed"),
+    ("class-4", "Rose", "mixed"),
     ("class-6", "Rose", "boys"),
     ("pre-9", "Daisy", "boys"),
 ]
@@ -67,7 +69,11 @@ NETWORK_BRANCHES = [
     ("demo-lhr-2", "Demo Branch LHR-2", "lahore", "demo-lhr-north", "franchise", 8, 0.18, 0.30, True),
     ("demo-lhr-3", "Demo Branch LHR-3", "lahore", "demo-lhr-south", "franchise", 8, 0.09, 0.75, False),
 ]
-NETWORK_CLASSES = [("class-1", "A", "mixed", 2020), ("class-5", "A", "mixed", 2016), ("class-8", "Boys", "boys", 2013)]
+NETWORK_CLASSES = [
+    ("class-1", "Jasmine", "mixed", 2020),
+    ("class-5", "Rose", "mixed", 2016),
+    ("class-8", "Daisy", "boys", 2013),
+]
 USERS = [
     ("demo-principal", "Demo Principal", "principal"),
     ("demo-teacher", "Demo Class Teacher", "class_teacher"),
@@ -89,8 +95,9 @@ class Command(BaseCommand):
         if len(password) < 10:
             raise CommandError("Set DEMO_PASSWORD (at least 10 characters) before running seed_demo.")
         call_command("seed_tasems", verbosity=0)
-        if Student.objects.exclude(admission_no__startswith=PREFIX).exists():
+        if Student.objects.exclude(admission_no__startswith=PREFIX).exclude(reference=DEMO_MARK).exists():
             raise CommandError("This database has real students. Demo data is only for an empty database.")
+        self.upgrade_old_demo()
         if User.objects.filter(username="demo-principal").exists():
             self.stdout.write("Demo data already present.")
         else:
@@ -100,6 +107,7 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.SUCCESS("Demo data created. Sign in as demo-principal (password: DEMO_PASSWORD).")
             )
+        self.demo_banks()
         if options["without_network"]:
             return
         if Branch.objects.filter(code__startswith="demo-").exists():
@@ -163,12 +171,13 @@ class Command(BaseCommand):
                     sibling = students[0]
                     father, phone, cnic = (
                         sibling.father_name,
-                        sibling.guardian_links.get().guardian.phone,
+                        sibling.guardian_links.get(relationship="father").guardian.phone,
                         sibling.father_cnic,
                     )
                 s = Student.objects.create(
                     branch=branch,
-                    admission_no=f"{PREFIX}{n:03d}",
+                    admission_no=str(4000 + n),
+                    reference=DEMO_MARK,
                     first_name=first,
                     last_name=father.split()[-1],
                     gender=gender,
@@ -178,9 +187,10 @@ class Command(BaseCommand):
                     father_cnic=cnic,
                 )
                 g = Guardian.objects.filter(branch=branch, phone=phone).first() or Guardian.objects.create(
-                    branch=branch, full_name=father, phone=phone
+                    branch=branch, full_name=father, phone=phone, occupation="Business"
                 )
                 StudentGuardian.objects.create(student=s, guardian=g, relationship="father", is_primary_contact=True)
+                self.mother(s, branch, n, father)
                 Enrolment.objects.create(branch=branch, student=s, session=session, section=sec, roll_no=i + 1)
                 students.append(s)
 
@@ -196,7 +206,7 @@ class Command(BaseCommand):
         """Fictional regions and branches so the head-office screens have a network to show."""
         from apps.attendance.services import is_school_day, roster, save_register
         from apps.fees import services as fees
-        from apps.fees.models import BranchFeeSettings, FeeRate
+        from apps.fees.models import BankAccount, BranchFeeSettings, FeeRate
 
         today = timezone.localdate()
         session = AcademicSession.objects.get(is_current=True)
@@ -236,8 +246,12 @@ class Command(BaseCommand):
             fs = BranchFeeSettings.for_branch(branch)
             fs.bank_name, fs.account_title, fs.account_number = "Demo Bank", f"{name} (DEMO)", "0000-0000000000"
             fs.save()
+            for order, bank_name in enumerate(["Askari Bank", "Bank Alfalah", "JazzCash"], start=1):
+                BankAccount.objects.create(
+                    branch=branch, name=bank_name, account_title=f"{name} (DEMO)", sort_order=order
+                )
 
-            for level_code, section_name, group, born in NETWORK_CLASSES:
+            for c, (level_code, section_name, group, born) in enumerate(NETWORK_CLASSES):
                 section = Section.objects.create(
                     branch=branch,
                     session=session,
@@ -251,7 +265,8 @@ class Command(BaseCommand):
                     father = f"{random.choice(FATHERS)} {random.choice(SURNAMES)}"
                     s = Student.objects.create(
                         branch=branch,
-                        admission_no=f"{PREFIX}{code[5:].upper()}-{n:03d}",
+                        admission_no=str(1001 + 10 * c + i),
+                        reference=DEMO_MARK,
                         first_name=random.choice(BOYS if gender == "male" else GIRLS),
                         last_name=father.split()[-1],
                         gender=gender,
@@ -264,6 +279,7 @@ class Command(BaseCommand):
                     StudentGuardian.objects.create(
                         student=s, guardian=g, relationship="father", is_primary_contact=True
                     )
+                    self.mother(s, branch, 500 + n, father)
                     Enrolment.objects.create(branch=branch, student=s, session=session, section=section, roll_no=i + 1)
 
                 day, done = today + dt.timedelta(days=1 if today_done else 0), 0
@@ -280,10 +296,65 @@ class Command(BaseCommand):
             result = fees.generate_vouchers(
                 branch, session, month, month, fees.default_due_date(branch, month), principal
             )
+            banks = list(BankAccount.objects.filter(branch=branch)) or [None]
             for v in result["created"]:
                 if random.random() < paid:
                     paid_on = month + dt.timedelta(days=random.randint(0, max(0, (today - month).days)))
-                    fees.record_payment(v.student, v.payable, paid_on, "counter", principal, voucher=v)
+                    bank = random.choice(banks) if random.random() < 0.4 else None
+                    fees.record_payment(
+                        v.student, v.payable, paid_on, "bank" if bank else "counter", principal, voucher=v, bank=bank
+                    )
+
+    def demo_banks(self):
+        """Every branch with demo students gets three fictional banks to choose when a fee comes by bank."""
+        from apps.fees.models import BankAccount
+
+        branch_ids = Student.objects.filter(reference=DEMO_MARK).values_list("branch_id", flat=True).distinct()
+        for branch in Branch.objects.filter(id__in=branch_ids):
+            for order, name in enumerate(["Askari Bank", "Bank Alfalah", "JazzCash"], start=1):
+                BankAccount.objects.get_or_create(
+                    branch=branch,
+                    name=name,
+                    defaults={
+                        "account_title": f"{branch.name} (DEMO)",
+                        "account_number": "0000-0000000000",
+                        "sort_order": order,
+                    },
+                )
+
+    def mother(self, student, branch, n, father):
+        mother = Guardian.objects.filter(branch=branch, phone=f"0302{7000000 + n:07d}").first()
+        if mother is None:
+            mother = Guardian.objects.create(
+                branch=branch,
+                full_name=f"{random.choice(MOTHERS)} {father.split()[-1]}",
+                phone=f"0302{7000000 + n:07d}",
+                occupation=random.choice(["Housewife", "Teacher", "Doctor"]),
+            )
+        StudentGuardian.objects.create(student=student, guardian=mother, relationship="mother")
+
+    def upgrade_old_demo(self):
+        """Demos made before October 2026 used admission numbers like DEMO-001 and sections like "A":
+        give their students plain numbers and the sections the usual names. Only demo students are touched."""
+        old = Student.objects.filter(admission_no__startswith=PREFIX)
+        if not old.exists():
+            return
+        with transaction.atomic():
+            for branch_id in old.values_list("branch_id", flat=True).distinct():
+                number = 4001 if Branch.objects.get(pk=branch_id).code == "fsd-samanabad" else 1001
+                for student in old.filter(branch_id=branch_id).order_by("pk"):
+                    student.admission_no, student.reference = str(number), DEMO_MARK
+                    student.save(update_fields=["admission_no", "reference"])
+                    number += 1
+            renames = {"A": "Rose", "Boys": "Daisy"}
+            demo_sections = Section.objects.filter(name__in=renames, enrolments__student__reference=DEMO_MARK)
+            for section in demo_sections.distinct():
+                if section.class_level.code == "class-1":
+                    section.name = "Jasmine"
+                else:
+                    section.name = renames[section.name]
+                section.save(update_fields=["name"])
+        self.stdout.write("Older demo updated: plain admission numbers and usual section names.")
 
     def attendance(self, section, teacher, today):
         from apps.attendance.services import is_school_day, roster, save_register
@@ -355,10 +426,10 @@ class Command(BaseCommand):
 
         people = [
             ("Demo Senior Teacher", "Senior Teacher", "teaching", users["class_teacher"]),
-            ("Demo Qari Sahib", "Hifz Teacher", "hifz", None),
+            ("Demo Qari Sahib", "Qari", "hifz", None),
             ("Demo Accountant", "Accountant", "admin", users["accountant"]),
             ("Demo Guard", "Guard", "support", None),
-            ("Demo Teacher Two", "Teacher", "teaching", None),
+            ("Demo Teacher Two", "Junior Teacher", "teaching", None),
         ]
         for i, (name, designation, kind, user) in enumerate(people, start=1):
             e = Employee.objects.create(
@@ -413,7 +484,7 @@ class Command(BaseCommand):
     def parent(self, student, branch, issuer, password):
         from apps.parents import services as parents
 
-        phone = student.guardian_links.get().guardian.phone
+        phone = student.guardian_links.get(relationship="father").guardian.phone
         code = parents.issue_code(phone, branch, issuer)
         parents.redeem(parents.check_code(phone, code), password)
         self.stdout.write(f"Parent demo login: mobile {phone}")

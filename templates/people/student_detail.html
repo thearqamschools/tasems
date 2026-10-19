@@ -2,7 +2,6 @@
 {% block title %}{{ student.full_name }}{% endblock %}
 {% block content %}
 <h1>{{ student.full_name }}</h1>
-{% if student.full_name_ur %}<p class="ur" lang="ur" dir="rtl" style="font-size:1.25rem;margin:0">{{ student.full_name_ur }}</p>{% endif %}
 <p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p>
 <div class="actions">{% if can_edit %}<a class="button" href="{% url 'people:student_edit' student.pk %}">{% trans "Edit student" %}</a>{% endif %}
 {% if perms.fees.view_voucher %}<a class="button quiet" href="{% url 'fees:student' student.pk %}">{% trans "Fee account" %}</a>{% endif %}
@@ -15,23 +14,29 @@
   <tr><th>{% trans "B-Form number" %}</th><td><span class="num">{{ student.b_form_no|default:"—" }}</span></td></tr>
   <tr><th>{% trans "Father's name" %}</th><td>{{ student.father_name|default:"—" }}</td></tr>
   <tr><th>{% trans "Father's CNIC" %}</th><td><span class="num">{{ student.father_cnic|cnic|default:"—" }}</span></td></tr>
+  {% if student.subject_group %}<tr><th>{% trans "Subject group" %}</th><td>{{ student.get_subject_group_display }}</td></tr>{% endif %}
+  <tr><th>{% trans "Email" %}</th><td>{{ student.email|default:"—" }}</td></tr>
+  <tr><th>{% trans "Current address" %}</th><td>{{ student.current_address|default:"—"|linebreaksbr }}</td></tr>
+  <tr><th>{% trans "Permanent address" %}</th><td>{{ student.permanent_address|default:"—"|linebreaksbr }}</td></tr>
+  {% if student.reference %}<tr><th>{% trans "Reference" %}</th><td>{{ student.reference }}</td></tr>{% endif %}
+  {% if student.notes %}<tr><th>{% trans "Notes" %}</th><td>{{ student.notes|linebreaksbr }}</td></tr>{% endif %}
 </tbody></table></div>
 
-<h2>{% trans "Parents and guardians" %}</h2>
+<h2>{% trans "Family details" %}</h2>
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Relationship" %}</th><th>{% trans "Mobile" %}</th><th></th></tr></thead>
+  <thead><tr><th>{% trans "Relationship" %}</th><th>{% trans "Name" %}</th><th>{% trans "Mobile / WhatsApp" %}</th><th>{% trans "Occupation" %}</th><th>{% trans "Organisation" %}</th></tr></thead>
   <tbody>{% for l in links %}<tr>
-    <td>{{ l.guardian.full_name }}{% if l.guardian.full_name_ur %}<br><span class="ur" lang="ur" dir="rtl">{{ l.guardian.full_name_ur }}</span>{% endif %}</td>
-    <td>{{ l.get_relationship_display }}</td><td><span class="num">{{ l.guardian.phone }}</span></td>
-    <td>{% if l.is_primary_contact %}<span class="badge">{% trans "Primary contact" %}</span>{% endif %}</td>
-  </tr>{% empty %}<tr><td colspan="4"><span class="badge attention">{% trans "No parent contact recorded" %}</span></td></tr>{% endfor %}</tbody>
+    <td>{{ l.get_relationship_display }}{% if l.relation_detail %} ({{ l.relation_detail }}){% endif %}{% if l.is_primary_contact %} <span class="badge">{% trans "Main contact" %}</span>{% endif %}</td>
+    <td>{{ l.guardian.full_name }}{% if l.guardian.email %}<br><span class="muted small">{{ l.guardian.email }}</span>{% endif %}</td>
+    <td><span class="num">{{ l.guardian.phone }}</span></td><td>{{ l.guardian.occupation|default:"—" }}</td><td>{{ l.guardian.organisation|default:"—" }}</td>
+  </tr>{% empty %}<tr><td colspan="5"><span class="badge attention">{% trans "No parent contact recorded" %}</span></td></tr>{% endfor %}</tbody>
 </table></div>
 
 <h2>{% trans "Classes by session" %}</h2>
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Class" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Roll no." %}</th></tr></thead>
-  <tbody>{% for e in enrolments %}<tr><td>{{ e.session }}</td><td>{{ e.section }}</td><td>{{ e.section.campus.name|default:"—" }}</td><td class="num">{{ e.roll_no|default:"—" }}</td></tr>
-  {% empty %}<tr><td colspan="4">{% trans "Not placed in any class yet." %}</td></tr>{% endfor %}</tbody>
+  <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Roll no." %}</th></tr></thead>
+  <tbody>{% for e in enrolments %}<tr><td>{{ e.session }}</td><td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td><td>{{ e.section.campus.name|default:"—" }}</td><td class="num">{{ e.roll_no|default:"—" }}</td></tr>
+  {% empty %}<tr><td colspan="5">{% trans "Not placed in any class yet." %}</td></tr>{% endfor %}</tbody>
 </table></div>
 
 {% if history %}

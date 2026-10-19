@@ -525,20 +525,28 @@ def amount_due_now(voucher, on_date=None):
 
 
 @transaction.atomic
-def record_payment(student, amount, paid_on, method, user, voucher=None, reference="", note=""):
+def record_payment(
+    student, amount, paid_on, method, user, voucher=None, reference="", note="", bank=None, attachment=None
+):
     if voucher is not None and voucher.student_id != student.id:
         raise ValueError("Voucher belongs to another student.")
-    payment = Payment.objects.create(
+    if bank is not None and bank.branch_id != student.branch_id:
+        raise ValueError("Bank belongs to another branch.")
+    payment = Payment(
         branch_id=student.branch_id,
         student=student,
         voucher=voucher,
         amount=amount,
         paid_on=paid_on,
         method=method,
+        bank=bank,
         reference=reference,
         note=note,
         received_by=user,
     )
+    if attachment:
+        payment.attachment = attachment
+    payment.save()
     # A late payment brings its fine with it (one fine per voucher).
     apply_late_fines(student, paid_on, user)
     reallocate(student)
@@ -587,6 +595,26 @@ def set_agreed_fee(student, amount, user, session=None):
 
 
 @transaction.atomic
+def discount_at_admission(student, discount_type, user):
+    """The discount chosen on the admission form, on the monthly fee from the admission month.
+    It applies at once unless head office marked that discount as needing approval."""
+    approved = not discount_type.needs_approval
+    return Concession.objects.create(
+        branch_id=student.branch_id,
+        student=student,
+        head=FeeHead.objects.get(code="tuition"),
+        kind=Concession.Kind.PERCENT,
+        value=discount_type.percent,
+        starts_on=month_start(student.admission_date),
+        reason=discount_type.name,
+        discount_type=discount_type,
+        status=Concession.Status.APPROVED if approved else Concession.Status.PENDING,
+        requested_by=user,
+        decided_by=user if approved else None,
+        decided_at=timezone.now() if approved else None,
+    )
+
+
 def decide_concession(concession, user, approve):
     concession.status = Concession.Status.APPROVED if approve else Concession.Status.REJECTED
     concession.decided_by = user

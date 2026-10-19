@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Barcode" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Barcode" %}</h1>
+<p class="lede">{% trans "Scan or type the Voucher ID, check the date and where the money came, then press Pay. The full amount due is recorded in your name." %}</p>
+<form method="post" class="card" enctype="multipart/form-data" data-payment-form>{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% icon "circle-check" %}{% trans "Pay" %}</button></div>
+</form>
+{% if mine %}
+<h2>{% trans "Your payments today" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Voucher ID" %}</th><th>{% trans "Student" %}</th><th>{% trans "Method" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>{% for p in mine %}<tr><td class="num"><a href="{% url 'fees:receipt' p.id %}">{{ p.voucher.number|default:"—" }}</a></td><td>{{ p.student.full_name }}</td>
+    <td>{% if p.method == "counter" %}{% trans "Cash" %}{% else %}{{ p.method_label }}{% endif %}</td><td class="num money">{{ p.amount|rupees }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endblock %}

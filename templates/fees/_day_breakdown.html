@@ -1,0 +1,15 @@
+{% load i18n tasems_tags %}
+<div class="figures">
+  <div class="figure"><div class="value money">{{ day.total|rupees }}</div><div class="label">{% blocktrans count n=day.count %}Received (Rs), {{ n }} payment{% plural %}Received (Rs), {{ n }} payments{% endblocktrans %}</div></div>
+  <div class="figure"><div class="value money">{{ day.cash_total|rupees }}</div><div class="label">{% trans "Cash (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ day.bank_total|rupees }}</div><div class="label">{% trans "Bank (Rs)" %}</div></div>
+</div>
+{% if day.cash_by_person or day.by_bank %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Received in" %}</th><th>{% trans "By / bank" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>
+  {% for name, amount in day.cash_by_person %}<tr><td>{% trans "Cash" %}</td><td>{{ name }}</td><td class="num money">{{ amount|rupees }}</td></tr>{% endfor %}
+  {% for name, amount in day.by_bank %}<tr><td>{% trans "Bank" %}</td><td>{{ name }}</td><td class="num money">{{ amount|rupees }}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endif %}

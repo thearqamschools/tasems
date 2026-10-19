@@ -44,6 +44,18 @@ def get_item(mapping, key):
     return mapping.get(key) if mapping else None
 
 
+@register.filter
+def split(value):
+    """ "a b c"|split → ["a", "b", "c"] (lists of field names in templates)."""
+    return value.split()
+
+
+@register.filter
+def field(form, name):
+    """form|field:"name" → the bound field, or None when the form has no such field."""
+    return form[name] if name in form.fields else None
+
+
 @register.simple_tag
 def icon(name, label=""):
     """An icon from the local Lucide sprite (static/icons/icons.svg). Decorative unless a label is given."""

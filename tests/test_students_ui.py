@@ -16,20 +16,21 @@ pytestmark = pytest.mark.django_db
 HEADERS = [h for _k, h, _r in COLUMNS]
 
 
-def student_post(**overrides):
+def student_post(section=None, **overrides):
     data = {
-        "admission_no": "A-100",
+        "admission_no": "100",
         "first_name": "Ali",
         "last_name": "Raza",
-        "full_name_ur": "علی رضا",
         "gender": "male",
         "date_of_birth": "2018-05-01",
         "admission_date": "2026-04-01",
         "b_form_no": "",
-        "guardian_name": "Raza Khan",
-        "guardian_phone": "0300-1112223",
-        "relationship": "father",
+        "father_cnic": "33100-1112223-1",
+        "father_name": "Raza Khan",
+        "father_phone": "0300-1112223",
     }
+    if section is not None:
+        data.update(class_level=section.class_level_id, section_name=section.name)
     data.update(overrides)
     return data
 
@@ -54,20 +55,29 @@ def test_other_branch_student_is_not_found(org, students, make_user, login_as):
 
 def test_principal_adds_student_and_siblings_share_contact(org, section, make_user, login_as):
     client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
-    response = client.post("/students/new/", student_post(section=section.pk, roll_no=1))
+    response = client.post(
+        "/students/new/",
+        student_post(section, roll_no=1, mother_name="Amna Raza", mother_phone="0301-5556667", notes="Came from X"),
+    )
     assert response.status_code == 302
-    ali = Student.objects.get(admission_no="A-100")
-    assert ali.enrolments.get().section == section
-    client.post("/students/new/", student_post(admission_no="A-101", first_name="Sara", gender="female"))
+    ali = Student.objects.get(admission_no="100")
+    assert ali.enrolments.get().section == section and ali.father_name == "Raza Khan" and ali.notes == "Came from X"
+    assert ali.guardian_links.get(relationship="father").is_primary_contact
+    assert ali.guardian_links.get(relationship="mother").guardian.full_name == "Amna Raza"
+    assert "101" in client.get("/students/new/").content.decode()  # next number filled in
+    client.post("/students/new/", student_post(admission_no="101", first_name="Sara", gender="female"))
     assert Guardian.objects.filter(branch=org["samanabad"], phone="03001112223").count() == 1
     assert Guardian.objects.get(phone="03001112223").students.count() == 2
 
 
 def test_form_rejects_bad_phone_and_duplicate_admission(org, students, make_user, login_as):
     client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
-    body = client.post("/students/new/", student_post(admission_no="S-1", guardian_phone="12345")).content.decode()
-    assert "already used in this branch" in body
+    body = client.post("/students/new/", student_post(admission_no="S-1", father_phone="12345")).content.decode()
+    assert "numbers only" in body
     assert "Pakistani mobile number" in body
+    Student.objects.filter(pk=students["samanabad"].pk).update(admission_no="555")
+    body = client.post("/students/new/", student_post(admission_no="555", father_cnic="")).content.decode()
+    assert "already used in this branch" in body and "13 digits" in body  # father CNIC is required
 
 
 def test_form_rejects_girl_in_boys_section(org, make_user, login_as):
@@ -79,9 +89,9 @@ def test_form_rejects_girl_in_boys_section(org, make_user, login_as):
         gender_group="boys",
     )
     client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
-    body = client.post("/students/new/", student_post(gender="female", section=boys.pk)).content.decode()
+    body = client.post("/students/new/", student_post(boys, gender="female")).content.decode()
     assert "for Boys only" in body
-    assert not Student.objects.filter(admission_no="A-100").exists()
+    assert not Student.objects.filter(admission_no="100").exists()
 
 
 def test_edit_student_records_history(org, students, make_user, login_as):
@@ -107,7 +117,7 @@ def xlsx(rows):
 
 
 def row(adm, name, gender, klass, section, phone="03001234567", date=dt.date(2026, 4, 1)):
-    return [adm, name, "", "", gender, "", date, "", klass, section, "", "Parent", "", phone, "Father"]
+    return [adm, name, "", gender, "", date, "", klass, section, "", "Parent", phone, "Father"]
 
 
 def test_template_downloads(org, make_user, login_as):
@@ -192,16 +202,46 @@ def test_head_office_sees_todays_registers_per_branch(org, students, make_user, 
     assert "Registers taken today" in body and "Diaries published today" in body
 
 
+def test_subject_group_only_for_pre9_to_10(org, make_user, login_as):
+    def section(code):
+        level = ClassLevel.objects.get(code=code)
+        return Section.objects.create(branch=org["samanabad"], session=org["session"], class_level=level, name="Rose")
+
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    nine, five = section("class-9"), section("class-5")
+    body = client.post("/students/new/", student_post(nine)).content.decode()
+    assert "Choose Biology or Computer" in body
+    client.post("/students/new/", student_post(nine, subject_group="computer"))
+    assert Student.objects.get(admission_no="100").subject_group == "computer"
+    client.post("/students/new/", student_post(five, admission_no="101", subject_group="biology"))
+    assert Student.objects.get(admission_no="101").subject_group == ""  # not used below Pre-9th
+
+
+def test_discount_chosen_at_admission(org, section, make_user, login_as):
+    from apps.fees.models import Concession, DiscountType
+
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    staff_half = DiscountType.objects.get(name="Staff child (50%)")
+    scholarship = DiscountType.objects.get(name="Scholarship (100%)")
+    client.post("/students/new/", student_post(section, discount_type=staff_half.id))
+    c = Concession.objects.get(student__admission_no="100")
+    assert c.value == 50 and c.status == "approved" and c.head.code == "tuition" and c.discount_type == staff_half
+    client.post("/students/new/", student_post(section, admission_no="101", discount_type=scholarship.id))
+    assert Concession.objects.get(student__admission_no="101").status == "pending"  # 100% waits for approval
+    edit = client.get(f"/students/{Student.objects.get(admission_no='100').pk}/edit/").content.decode()
+    assert "discount_type" not in edit  # later discounts go through the fee account
+
+
 def test_father_cnic_typed_with_dashes(org, section, make_user, login_as):
     from apps.people.models import Student
 
     client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
     client.post(
         "/students/new/",
-        student_post(admission_no="C-1", father_name="Abdul Rauf", father_cnic="33100-1234567-1", section=section.id),
+        student_post(section, admission_no="701", father_name="Abdul Rauf", father_cnic="33100-1234567-1"),
     )
-    assert Student.objects.get(admission_no="C-1").father_cnic == "3310012345671"
-    body = client.post("/students/new/", student_post(admission_no="C-2", father_cnic="1234")).content.decode()
+    assert Student.objects.get(admission_no="701").father_cnic == "3310012345671"
+    body = client.post("/students/new/", student_post(admission_no="702", father_cnic="1234")).content.decode()
     assert "13 digits" in body
 
 

@@ -22,6 +22,15 @@
   {% if can.royalty %}<a class="button quiet" href="{% url 'fees:royalty' %}">{% trans "Royalty" %}</a>{% endif %}
 </div>
 
+<h2>{% if day == today %}{% trans "Received today" %}{% else %}{% blocktrans with d=day|date:"d M Y" %}Received on {{ d }}{% endblocktrans %}{% endif %}</h2>
+<form method="get" class="actions"><label for="day">{% trans "Date" %}</label>
+  <input type="date" id="day" name="day" value="{{ day|date:'Y-m-d' }}" style="width:auto">
+  <input type="hidden" name="month" value="{{ month|date:'Y-m' }}">
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+  <a class="button quiet" href="{% url 'fees:collections' %}?from={{ day|date:'Y-m-d' }}">{% trans "List of payments" %}</a></form>
+{% include "fees/_day_breakdown.html" with day=day_summary %}
+
+<h2>{{ month|date:"F Y" }}</h2>
 <form method="get" class="actions"><label for="month">{% trans "Month" %}</label>
   <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto">
   <button class="button quiet" type="submit">{% trans "Show" %}</button></form>

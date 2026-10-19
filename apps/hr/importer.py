@@ -19,8 +19,7 @@ MAX_ROWS = 2000
 COLUMNS = [
     ("code", "Employee Code", True),
     ("full_name", "Full Name", True),
-    ("full_name_ur", "Name (Urdu)", False),
-    ("father_name", "Father / Husband Name", False),
+    ("father_name", "Father Name", False),
     ("gender", "Gender", True),
     ("cnic", "CNIC", False),
     ("phone", "Mobile", False),

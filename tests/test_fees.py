@@ -4,13 +4,14 @@ import datetime as dt
 from decimal import Decimal
 
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
 from apps.academics.models import ClassLevel, Section
 from apps.accounts.models import Scope
 from apps.fees import reports
 from apps.fees import services as S
-from apps.fees.models import BranchFeeSettings, Charge, Concession, FeeHead, FeeRate, Payment, Voucher
+from apps.fees.models import BankAccount, BranchFeeSettings, Charge, Concession, FeeHead, FeeRate, Payment, Voucher
 from apps.people.models import Enrolment, Student
 
 pytestmark = pytest.mark.django_db
@@ -342,13 +343,61 @@ def test_accountant_makes_prints_and_receives(fees, login_as):
 
     found = client.get(f"/fees/?q={v.number}")
     assert found.status_code == 302 and found.url == f"/fees/voucher/{v.id}/receive/"
-    bad = client.post(found.url, {"amount": "4300", "paid_on": "2026-10-14", "method": "jazzcash"})
-    assert "transaction ID" in bad.content.decode()  # online payments need their reference
-    done = client.post(found.url, {"amount": "4300", "paid_on": "2026-10-14", "method": "jazzcash", "reference": "J1"})
+    jazz = BankAccount.objects.create(branch=child.branch, name="JazzCash")
+    bad = client.post(found.url, {"amount": "4300", "paid_on": "2026-10-14", "how": "bank"})
+    assert "Choose the bank" in bad.content.decode()  # bank payments say which bank
+    done = client.post(
+        found.url, {"amount": "4300", "paid_on": "2026-10-14", "how": "bank", "bank": jazz.id, "reference": "J1"}
+    )
     receipt = client.get(done.url).content.decode()
-    assert "Fee receipt" in receipt and "4,300" in receipt
+    assert "Fee receipt" in receipt and "4,300" in receipt and "JazzCash" in receipt
     v.refresh_from_db()
     assert v.status == Voucher.Status.PAID
+    payment = Payment.objects.get(voucher=v)
+    assert payment.method == "bank" and payment.bank == jazz and payment.received_by == fees["user"]
+
+
+GENERATE = {"first_month": "2026-10", "last_month": "2026-10", "due_on": "2026-10-14", "confirm": "1"}
+
+
+def test_barcode_page_receives_the_full_amount_and_shows_who(fees, login_as, tmp_path, settings):
+    settings.MEDIA_ROOT = tmp_path
+    child = fees["student"]("class-4")
+    client = login_as(fees["user"])
+    client.post("/fees/generate/", GENERATE)
+    v = voucher_of(child)
+    assert (
+        client.post("/fees/barcode/", {"voucher_number": "999999", "paid_on": "2026-10-14", "how": "cash"}).status_code
+        == 200
+    )
+    proof = SimpleUploadedFile("slip.jpg", b"\xff\xd8 fake jpeg", content_type="image/jpeg")
+    done = client.post(
+        "/fees/barcode/",
+        {"voucher_number": str(v.number), "paid_on": "2026-10-14", "how": "cash", "attachment": proof},
+    )
+    assert done.status_code == 302
+    payment = Payment.objects.get(voucher=v)
+    assert payment.amount == v.payable and payment.method == "counter" and payment.attachment
+    again = client.post("/fees/barcode/", {"voucher_number": str(v.number), "paid_on": "2026-10-14", "how": "cash"})
+    assert "already paid" in again.content.decode()
+    day = client.get("/fees/collections/?from=2026-10-14").content.decode()
+    assert fees["user"].get_full_name() in day  # who received it
+    assert client.get(f"/fees/receipt/{payment.id}/attachment/").status_code == 200
+
+
+def test_payment_attachment_is_private(fees, login_as, make_user, org, tmp_path, settings):
+    settings.MEDIA_ROOT = tmp_path
+    child = fees["student"]("class-4")
+    client = login_as(fees["user"])
+    client.post("/fees/generate/", GENERATE)
+    v = voucher_of(child)
+    proof = SimpleUploadedFile("slip.pdf", b"%PDF-1.4 fake", content_type="application/pdf")
+    client.post(
+        "/fees/barcode/", {"voucher_number": str(v.number), "paid_on": "2026-10-14", "how": "cash", "attachment": proof}
+    )
+    payment = Payment.objects.get(voucher=v)
+    other = login_as(make_user("principal", Scope.BRANCH, org["fsd_franchise"]))
+    assert other.get(f"/fees/receipt/{payment.id}/attachment/").status_code in (403, 404)
 
 
 def test_admission_voucher_screen(fees, login_as):

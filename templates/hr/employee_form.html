@@ -2,7 +2,7 @@
 {% block title %}{% if employee %}{% trans "Edit staff member" %}{% else %}{% trans "Add staff member" %}{% endif %}{% endblock %}
 {% block content %}
 <h1>{% if employee %}{{ employee.full_name }}{% else %}{% trans "Add staff member" %}{% endif %}</h1>
-<form method="post" class="card">{% csrf_token %}
+<form method="post" class="card" enctype="multipart/form-data">{% csrf_token %}
   {{ form.non_field_errors }}
   <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
   <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button>

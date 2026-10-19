@@ -63,6 +63,7 @@
     {% if network_totals.has_fees %}
     <div class="figure"><div class="value money">{{ network_totals.received|rupees }}</div><div class="label">{% blocktrans with b=network_totals.billed|rupees %}Fees received this month (Rs) of {{ b }} billed{% endblocktrans %}</div></div>
     <div class="figure"><div class="value">{% if network_totals.collection is not None %}{{ network_totals.collection }}%{% else %}—{% endif %}</div><div class="label">{% trans "Fee collection this month" %}</div></div>
+    <a class="figure" href="{% url 'fees:collections' %}"><div class="value money">{{ network_totals.received_today|rupees }}</div><div class="label">{% trans "Fees received today (Rs)" %}</div></a>
     {% endif %}
     {% if network_totals.royalty is not None %}<a class="figure" href="{% url 'fees:royalty' %}"><div class="value money">{{ network_totals.royalty|rupees }}</div><div class="label">{% trans "Royalty due this month (Rs)" %}</div></a>{% endif %}
   </div>

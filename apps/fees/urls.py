@@ -6,6 +6,7 @@ app_name = "fees"
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("barcode/", views.quick_receive, name="quick"),
     path("generate/", views.generate, name="generate"),
     path("vouchers/", views.vouchers, name="vouchers"),
     path("vouchers/print/", views.vouchers_pdf, name="vouchers_pdf"),
@@ -14,6 +15,7 @@ urlpatterns = [
     path("voucher/<int:voucher_id>/receive/", views.receive, name="receive"),
     path("receipt/<int:payment_id>/", views.receipt, name="receipt"),
     path("receipt/<int:payment_id>/reverse/", views.reverse_payment, name="reverse_payment"),
+    path("receipt/<int:payment_id>/attachment/", views.payment_attachment, name="payment_attachment"),
     path("student/<int:student_id>/", views.student, name="student"),
     path("student/<int:student_id>/voucher/", views.issue, name="issue"),
     path("student/<int:student_id>/discount/", views.concession_new, name="concession_new"),

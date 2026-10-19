@@ -9,6 +9,7 @@ urlpatterns = [
     path("new/", views.employee_form, name="employee_new"),
     path("<int:employee_id>/", views.employee, name="employee"),
     path("<int:employee_id>/edit/", views.employee_form, name="employee_edit"),
+    path("<int:employee_id>/cv/", views.employee_cv, name="employee_cv"),
     path("<int:employee_id>/leave/", views.leave_new, name="leave_new"),
     path("import/", views.staff_import, name="staff_import"),
     path("attendance/import/", views.punches_import, name="punches_import"),

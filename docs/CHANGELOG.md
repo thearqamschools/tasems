@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.16.0 — 2026-10-19 — Project lead's changes, batches 1–3: students, attendance, staff, fees
+
+Changed
+- Students list: separate Class and Section columns, Father name column, order Admission no → Name → Father name → Class → Section → Parent mobile → Status; Class then Section filters; search also by father name; "Add a student" and "Import from Excel" at the top; status "Withdrawn / Left".
+- Admission numbers: numbers only, next number filled in automatically.
+- Add/Edit student: student email, current and permanent address; Class → Section (only that class's sections) → Subject group (Biology/Computer, Pre-9th to 10th); roll number optional; Family details for father (name, mobile, email, occupation, organisation), mother and guardian (with relationship); Reference and Notes; father CNIC required.
+- No Urdu entry boxes in any form (students, Setup, users); the Excel template no longer has Urdu columns.
+- Setup offers the usual section names (Rose, Jasmine, Daisy, Pansy, Tulip); the demo uses them, and older demos are updated on their next start.
+
+- Admission inquiries: menu renamed, "Add inquiry" at the top, notes labelled "Description".
+- Attendance: Class, Section, Present, Absent, Leave, Register order; absent students by class and section, with father's and mother's mobiles.
+- Staff: "Add staff member" and "Import staff from Excel" at the top; father name required, separate husband name, present and permanent address, designation from a fixed list (Director … Lawyer), CV upload (JPG/PDF, private).
+- Fees: Cash or Bank with each branch's own banks (Setup); who received each payment shown everywhere; today's total with cash per person and each bank on the Fees page, Daily collection and the dashboard; Daily collection columns Date → Voucher ID → Student → Father → Method → Received by; Finance → Barcode quick receive by Voucher ID; optional receipt photo on a payment (private).
+- Discounts: head office's list of discounts, chosen on the admission form; 100% discounts wait for approval.
+
+Fixed
+- The Father CNIC box cut off a CNIC typed with dashes at 13 characters.
+
+Not deployed (demo updates automatically). 201 automated tests.
+
 ## 0.15.0 — 2026-10-19 — Settings and branch management (Phase 4, M3)
 
 Added

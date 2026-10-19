@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django import forms
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -5,7 +7,10 @@ from django.utils.translation import gettext_lazy as _
 from apps.core.phone import format_cnic, normalize_cnic, normalize_mobile
 from apps.organisation.models import Campus
 
-from .models import Employee, LeaveType, StaffDay
+from .models import DESIGNATIONS, Employee, LeaveType, StaffDay
+
+CV_TYPES = {".jpg", ".jpeg", ".png", ".pdf"}
+CV_MAX_BYTES = 5 * 1024 * 1024
 
 DATE = forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")
 TIME = forms.TimeInput(attrs={"type": "time"}, format="%H:%M")
@@ -17,8 +22,8 @@ class EmployeeForm(forms.ModelForm):
         fields = [
             "code",
             "full_name",
-            "full_name_ur",
             "father_name",
+            "husband_name",
             "gender",
             "cnic",
             "date_of_birth",
@@ -26,6 +31,7 @@ class EmployeeForm(forms.ModelForm):
             "alt_phone",
             "email",
             "address",
+            "permanent_address",
             "designation",
             "staff_type",
             "campus",
@@ -35,7 +41,19 @@ class EmployeeForm(forms.ModelForm):
             "status",
             "left_on",
             "notes",
+            "cv",
         ]
+        labels = {
+            "code": _("Employee code"),
+            "full_name": _("Full name"),
+            "father_name": _("Father name"),
+            "husband_name": _("Husband name"),
+            "address": _("Present address"),
+            "permanent_address": _("Permanent address"),
+            "staff_type": _("Staff type"),
+            "joined_on": _("Joining date"),
+            "cv": _("CV (JPG or PDF)"),
+        }
         widgets = {
             "date_of_birth": DATE,
             "joined_on": DATE,
@@ -44,8 +62,8 @@ class EmployeeForm(forms.ModelForm):
             "machine_id": forms.TextInput(attrs={"dir": "ltr", "inputmode": "numeric"}),
             "cnic": forms.TextInput(attrs={"dir": "ltr", "inputmode": "numeric", "placeholder": "33100-1234567-1"}),
             "phone": forms.TextInput(attrs={"dir": "ltr", "inputmode": "tel", "placeholder": "0300-1234567"}),
-            "full_name_ur": forms.TextInput(attrs={"dir": "rtl", "lang": "ur", "class": "ur"}),
             "address": forms.Textarea(attrs={"rows": 2}),
+            "permanent_address": forms.Textarea(attrs={"rows": 2}),
             "notes": forms.Textarea(attrs={"rows": 2}),
         }
 
@@ -54,6 +72,17 @@ class EmployeeForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.branch = branch
         self.fields["campus"].queryset = Campus.objects.filter(branch=branch, is_active=True)
+        self.fields["father_name"].required = True
+        # A fixed list; an older record's own designation stays selectable until it is changed.
+        choices = list(DESIGNATIONS)
+        if self.instance.designation and self.instance.designation not in dict(choices):
+            choices.append((self.instance.designation, self.instance.designation))
+        self.fields["designation"] = forms.ChoiceField(
+            choices=[("", "---------"), *choices],
+            label=_("Designation"),
+            help_text=self.fields["designation"].help_text,
+        )
+        self.fields["cv"].widget.attrs["accept"] = ".jpg,.jpeg,.png,.pdf"
         self.initial["cnic"] = format_cnic(self.instance.cnic)
         # Typed with dashes or spaces; stored as digits only after cleaning.
         for name, length in (("cnic", 17), ("phone", 16)):
@@ -79,6 +108,15 @@ class EmployeeForm(forms.ModelForm):
         ):
             raise forms.ValidationError(_("Another person already has this machine ID in this branch."))
         return value
+
+    def clean_cv(self):
+        cv = self.cleaned_data.get("cv")
+        if cv and getattr(cv, "size", None) is not None and cv != self.instance.cv:
+            if Path(cv.name).suffix.lower() not in CV_TYPES:
+                raise forms.ValidationError(_("Attach a JPG, PNG or PDF file."))
+            if cv.size > CV_MAX_BYTES:
+                raise forms.ValidationError(_("The file is larger than 5 MB."))
+        return cv
 
     def clean_cnic(self):
         raw = self.cleaned_data.get("cnic", "").strip()

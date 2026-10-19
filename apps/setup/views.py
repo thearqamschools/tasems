@@ -25,15 +25,17 @@ from apps.academics.models import Section
 from apps.accounts.models import Role, RoleAssignment, Scope
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
-from apps.fees.models import BranchFeeSettings, FeeRate
+from apps.fees.models import BankAccount, BranchFeeSettings, DiscountType, FeeRate
 from apps.organisation.models import AcademicSession, Branch, Campus, HeadOffice, Region
 from apps.people.models import Student
 
 from . import access
 from .forms import (
     AssignmentForm,
+    BankAccountForm,
     BranchForm,
     CampusForm,
+    DiscountTypeForm,
     FeeRateForm,
     FeeSettingsForm,
     NewUserForm,
@@ -236,10 +238,13 @@ def fees(request):
             "current_ids": set(current.values()),
             "today": today,
             "settings": BranchFeeSettings.for_branch(branch),
+            "banks": BankAccount.objects.filter(branch=branch),
+            "discounts": DiscountType.objects.all(),
             "can": {
                 "add": request.user.has_branch_perm("fees.add_feerate", branch.id),
                 "change": request.user.has_branch_perm("fees.change_feerate", branch.id),
                 "settings": request.user.has_branch_perm("fees.change_branchfeesettings", branch.id),
+                "discounts": _network_wide(request.user, "fees.change_feehead"),
             },
         },
     )
@@ -282,6 +287,45 @@ def fee_settings(request):
         _("Voucher and payment settings"),
         reverse("setup:fees"),
         lede=_("Printed on every fee voucher of %(b)s.") % {"b": branch},
+    )
+
+
+@login_required
+def bank_form(request, pk=None):
+    """The banks and wallets this branch collects fees in (chosen when a fee is received by bank)."""
+    branch = _branch(request, "fees.change_branchfeesettings")
+    instance = get_object_or_404(BankAccount, pk=pk, branch=branch) if pk else None
+    form = BankAccountForm(request.POST or None, instance=instance, branch=branch)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Bank saved."))
+        return redirect("setup:fees")
+    return _form_page(
+        request,
+        form,
+        _("Edit bank") if instance else _("Add a bank"),
+        reverse("setup:fees"),
+        lede=_("Fees received by bank are recorded against one of %(b)s's banks.") % {"b": branch},
+    )
+
+
+@login_required
+def discount_form(request, pk=None):
+    """Discount types offered at admission; the same list for every branch, so only network-wide setup."""
+    if not _network_wide(request.user, "fees.change_feehead"):
+        raise PermissionDenied
+    instance = get_object_or_404(DiscountType, pk=pk) if pk else None
+    form = DiscountTypeForm(request.POST or None, instance=instance)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Discount saved."))
+        return redirect("setup:fees")
+    return _form_page(
+        request,
+        form,
+        _("Edit discount") if instance else _("Add a discount"),
+        reverse("setup:fees"),
+        lede=_("Offered on the admission form. Brothers and sisters get the sibling fee by themselves."),
     )
 
 

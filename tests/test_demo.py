@@ -22,7 +22,8 @@ def test_demo_data_fills_an_empty_database(monkeypatch, settings):
     monkeypatch.setenv("DEMO_PASSWORD", "Demo-pass-2026!")
     call_command("seed_demo", verbosity=0)
     samanabad = Student.objects.filter(branch__code="fsd-samanabad")
-    assert samanabad.count() == 32 and not Student.objects.exclude(admission_no__startswith="DEMO-").exists()
+    assert samanabad.count() == 32 and not Student.objects.exclude(reference="Demo data (fictional)").exists()
+    assert all(s.admission_no.isdigit() for s in Student.objects.all())  # plain numbers, like the old software
     assert User.objects.get(username="demo-principal").check_password("Demo-pass-2026!")
     assert Diary.objects.filter(status="published").exists() and Mark.objects.exists()
     assert Voucher.objects.filter(branch__code="fsd-samanabad").count() == 32 and Payment.objects.exists()
@@ -49,6 +50,20 @@ def test_demo_network_for_head_office(monkeypatch, client, settings):
     client.force_login(network)
     page = client.get("/").content.decode()
     assert "Demo Branch LHR-2" in page and "Demo Branch FSD-1" in page
+
+
+def test_older_demo_gets_plain_numbers_and_usual_section_names(monkeypatch):
+    from apps.academics.models import Section
+
+    monkeypatch.setenv("DEMO_PASSWORD", "Demo-pass-2026!")
+    call_command("seed_demo", "--without-network", verbosity=0)
+    for n, student in enumerate(Student.objects.order_by("pk"), start=1):  # as demos made before Oct 2026
+        Student.objects.filter(pk=student.pk).update(admission_no=f"DEMO-{n:03d}", reference="")
+    Section.objects.filter(name="Rose", class_level__code="class-4").update(name="A")
+    call_command("seed_demo", "--without-network", verbosity=0)
+    assert not Student.objects.filter(admission_no__startswith="DEMO-").exists()
+    assert Student.objects.order_by("pk").first().admission_no == "4001"
+    assert Section.objects.filter(class_level__code="class-4").get().name == "Rose"
 
 
 def test_demo_refuses_a_database_with_real_students(org, students, monkeypatch):
