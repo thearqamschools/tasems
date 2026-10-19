@@ -45,6 +45,56 @@
     if (root.classList.contains("sidebar-open")) { root.classList.remove("sidebar-open"); syncExpanded(); }
   });
 
+  // ---------- Confirm before risky actions: <form data-confirm="…"> ----------
+  // The page stays usable without JavaScript (the form simply submits). With it, a dialog asks first;
+  // the form is then sent with the same button that was pressed, so its name/value is kept.
+  var dialog = document.getElementById("confirm-dialog");
+  document.addEventListener("submit", function (event) {
+    var form = event.target;
+    if (!form.matches("form[data-confirm]") || form.dataset.confirmed === "1") return;
+    event.preventDefault();
+    var submitter = event.submitter || null;
+    if (!dialog || typeof dialog.showModal !== "function") {
+      if (window.confirm(form.dataset.confirm)) { form.dataset.confirmed = "1"; send(form, submitter); }
+      return;
+    }
+    dialog.querySelector("[data-dialog-text]").textContent = form.dataset.confirm;
+    var ok = dialog.querySelector("[data-dialog-ok]");
+    ok.textContent = form.dataset.confirmButton || ok.dataset.defaultLabel;
+    dialog.returnValue = "";
+    dialog.onclose = function () {
+      if (dialog.returnValue === "ok") { form.dataset.confirmed = "1"; send(form, submitter); }
+    };
+    dialog.showModal();
+  });
+  function send(form, submitter) {
+    if (typeof form.requestSubmit === "function") form.requestSubmit(submitter || undefined);
+    else form.submit();
+  }
+
+  // ---------- Stop double submissions (e.g. a payment saved twice) ----------
+  document.addEventListener("submit", function (event) {
+    var form = event.target;
+    // Read attributes, not form.method/form.target: a field named "method" (e.g. payment method) hides them.
+    var method = (form.getAttribute("method") || "get").toLowerCase();
+    if (event.defaultPrevented || method !== "post" || form.getAttribute("target") === "_blank") return;
+    if (form.dataset.sending === "1") { event.preventDefault(); return; }
+    form.dataset.sending = "1";
+    var button = event.submitter;
+    if (button && button.classList.contains("button")) button.setAttribute("aria-busy", "true");
+    // If the answer is a download (no new page), make the form usable again.
+    setTimeout(function () { reset(form); }, 8000);
+  });
+  function reset(form) {
+    delete form.dataset.sending;
+    delete form.dataset.confirmed;
+    form.querySelectorAll('[aria-busy="true"]').forEach(function (b) { b.removeAttribute("aria-busy"); });
+  }
+  // Coming back with the browser's Back button shows the page from memory: clear busy states.
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) document.querySelectorAll("form").forEach(reset);
+  });
+
   // ---------- Branch picker: type to filter (350+ branches) ----------
   document.querySelectorAll(".branch-picker").forEach(function (picker) {
     var input = picker.querySelector("[data-branch-filter]");

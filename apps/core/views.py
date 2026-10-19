@@ -151,6 +151,33 @@ def switch_branch(request):
     return redirect(back)
 
 
+@login_required
+def design_system(request):
+    """Living style guide: every component of the design system with sample content (no school data).
+    Staff accounts only; the reference for building new screens (docs/DESIGN_SYSTEM.md)."""
+    from django.core.exceptions import PermissionDenied
+
+    if not request.user.is_staff:
+        raise PermissionDenied
+    swatches = [
+        ("--brand", "#3E4095", _("Primary (logo blue)")),
+        ("--brand-strong", "#2B2D6E", _("Sidebar, hover")),
+        ("--accent", "#ED3237", _("Accent (logo red)")),
+        ("--ok", "#1F6B3A", _("Success")),
+        ("--attention-bar", "#D99A1E", _("Needs attention")),
+        ("--danger", "#B42318", _("Danger")),
+        ("--ink", "#1D2238", _("Text")),
+        ("--paper", "#F4F5FA", _("Page background")),
+    ]
+    import re
+
+    from django.conf import settings
+
+    sprite = (settings.BASE_DIR / "static" / "icons" / "icons.svg").read_text()
+    icon_names = re.findall(r'<symbol id="i-([a-z0-9-]+)"', sprite)
+    return render(request, "core/design_system.html", {"swatches": swatches, "icon_names": icon_names})
+
+
 def health(request):
     """For uptime monitoring: 200 when the app and database answer, 503 otherwise. No login needed."""
     from django.db import connection

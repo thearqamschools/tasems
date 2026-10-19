@@ -1,6 +1,14 @@
-/* TASEMS staff interface — design tokens and components.
+/* =====================================================================
+   TASEMS design system — one stylesheet for every staff and parent screen.
    Brand colours come from the official logo (DECISIONS D-061): blue #3E4095, red #ED3237.
-   Logical properties (inline-start/end) keep Urdu right-to-left correct everywhere. */
+   Logical properties (inline-start/end, block-start/end) keep Urdu right-to-left correct.
+   Guide: docs/DESIGN_SYSTEM.md · live examples: /design-system/ (staff sign-in).
+
+   1. Tokens          5. Cards & KPI figures     9. Badges & alerts      13. Module screens
+   2. Base & type     6. Tables                 10. Empty states        14. App shell
+   3. Layout & pages  7. Forms & filters        11. Dialogs             15. Print & motion
+   4. Buttons         8. Disclosure & tabs      12. Pagination & misc
+   ===================================================================== */
 
 /* Fonts are served from this server (no outside font service): small files, work on slow links. */
 @font-face { font-family: "Noto Sans"; src: url("../fonts/NotoSans-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
@@ -8,12 +16,14 @@
 @font-face { font-family: "Noto Nastaliq Urdu"; src: url("../fonts/NotoNastaliqUrdu-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Noto Nastaliq Urdu"; src: url("../fonts/NotoNastaliqUrdu-Bold.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
 
+/* ---------- 1. Tokens ---------- */
 :root {
   /* Brand (from the logo) */
   --brand: #3e4095;          /* primary: buttons, links, active states (8.9:1 on white) */
   --brand-strong: #2b2d6e;   /* sidebar background, hover */
   --brand-ink: #ffffff;
   --brand-soft: #eceef8;
+  --brand-ring: rgba(62, 64, 149, 0.25);
   --accent: #ed3237;         /* logo red: markers, bars, icons — not small text (4.1:1) */
   --accent-ink: #c41f26;     /* red text that passes AA */
   --accent-soft: #fdecec;
@@ -22,6 +32,7 @@
   --ink-soft: #5a6078;
   --paper: #f4f5fa;
   --surface: #ffffff;
+  --surface-sunk: #f7f8fc;
   --line: #dde0ea;
   --line-strong: #b8bdd0;
   /* Status (separate from brand, D-061) */
@@ -29,29 +40,40 @@
   --attention-bar: #d99a1e;
   --attention-soft: #fdf3dc;
   --danger: #b42318;
+  --danger-strong: #8f1b12;
   --danger-soft: #fdecec;
   --ok: #1f6b3a;
   --ok-soft: #e6f4ea;
-  /* Shape and type */
+  /* Space (4-px grid) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  /* Shape */
   --radius-sm: 8px;
   --radius-lg: 12px;
+  --radius-full: 999px;
   --shadow-sm: 0 1px 2px rgba(29, 34, 56, 0.06);
   --shadow-md: 0 8px 24px rgba(29, 34, 56, 0.14);
+  --control-h: 2.75rem;       /* touch-friendly height for inputs and buttons */
   --sidebar-w: 16rem;
   --sidebar-w-collapsed: 4.25rem;
+  /* Type */
   --font: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-ur: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", serif;
+  --step--2: 0.75rem;
   --step--1: 0.875rem;
   --step-0: 1rem;
-  --step-1: 1.25rem;
+  --step-1: 1.2rem;
   --step-2: 1.6rem;
   --step-3: 2.1rem;
 }
 
+/* ---------- 2. Base & typography ---------- */
 * { box-sizing: border-box; }
-
 html { -webkit-text-size-adjust: 100%; }
-
 body {
   margin: 0;
   font-family: var(--font);
@@ -60,16 +82,38 @@ body {
   color: var(--ink);
   background: var(--paper);
 }
-
 /* Urdu: Nastaliq needs generous line height or descenders collide. */
 html[lang="ur"] body { font-family: var(--font-ur), var(--font); line-height: 2.1; }
 html[lang="ur"] input, html[lang="ur"] select, html[lang="ur"] button, html[lang="ur"] textarea { font-family: inherit; }
 [dir="ltr"].keep-ltr, .num { direction: ltr; unicode-bidi: isolate; font-family: var(--font); }
+.num, table, .figure .value { font-variant-numeric: tabular-nums; }
 .ur { font-family: var(--font-ur); line-height: 2.1; }
 
-a { color: var(--brand); }
+h1, h2, h3 { color: var(--ink); }
+h1 { font-size: var(--step-2); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 var(--space-1); }
+h2 { font-size: var(--step-1); font-weight: 600; line-height: 1.3; margin: var(--space-6) 0 var(--space-3); }
+h3 { font-size: var(--step-0); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+html[lang="ur"] h1, html[lang="ur"] h2, html[lang="ur"] h3 { line-height: 2; letter-spacing: 0; }
+p { margin: 0 0 var(--space-3); }
+.lede { color: var(--ink-soft); margin: 0 0 var(--space-5); }
+.muted { color: var(--ink-soft); }
+small, .small { font-size: var(--step--1); }
+
+a { color: var(--brand); text-underline-offset: 0.15em; }
+a:hover { color: var(--brand-strong); }
 :focus-visible { outline: 3px solid var(--attention-bar); outline-offset: 2px; }
 [hidden] { display: none !important; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- 3. Layout & page headers ---------- */
+main { max-width: 80rem; margin: 0 auto; padding: var(--space-5) var(--space-4) 3rem; }
+main:focus { outline: none; }
+.page-header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-3) var(--space-4); margin-block-end: var(--space-5); }
+.page-header h1 { margin: 0; }
+.page-header .lede { margin: var(--space-1) 0 0; }
+.page-header .actions { margin: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin: var(--space-4) 0; }
+.stack > * + * { margin-block-start: var(--space-4); }
 
 /* ---------- Parent portal top bar ---------- */
 .topbar {
@@ -96,86 +140,189 @@ a { color: var(--brand); }
 }
 .topbar select option { color: var(--ink); }
 
-main { max-width: 80rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-main:focus { outline: none; }
-
-h1 { font-size: var(--step-2); line-height: 1.25; margin: 0 0 0.25rem; }
-h2 { font-size: var(--step-1); margin: 2rem 0 0.75rem; }
-html[lang="ur"] h1, html[lang="ur"] h2 { line-height: 2; }
-.lede { color: var(--ink-soft); margin: 0 0 1.5rem; }
-
-/* ---------- Figures: counts that answer "how is my branch today" ---------- */
-.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 0.75rem; margin: 1rem 0; }
-.figure { background: var(--surface); border: 1px solid var(--line); border-block-start: 3px solid var(--brand); border-radius: var(--radius-sm); padding: 0.85rem 1rem; box-shadow: var(--shadow-sm); }
-.figure .value { font-size: var(--step-3); font-weight: 700; line-height: 1.1; direction: ltr; unicode-bidi: isolate; font-family: var(--font); }
-.figure .label { color: var(--ink-soft); font-size: var(--step--1); }
-.figure.attention { border-color: var(--attention-bar); background: var(--attention-soft); }
-
-/* ---------- Tables ---------- */
-.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); }
-table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
-th, td { padding: 0.6rem 0.75rem; text-align: start; border-block-end: 1px solid var(--line); vertical-align: top; }
-th { font-weight: 600; color: var(--ink-soft); background: #f7f8fc; }
-tbody tr:hover td { background: #fafbfe; }
-tr:last-child td { border-block-end: 0; }
-td.num, th.num { text-align: end; }
-
-/* ---------- Forms ---------- */
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: var(--shadow-sm); }
-.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.25rem 1rem; }
-.field { margin-block-end: 0.9rem; }
-.field label { display: block; font-weight: 600; font-size: var(--step--1); margin-block-end: 0.25rem; }
-.field .help { color: var(--ink-soft); font-size: var(--step--1); margin-block-start: 0.2rem; }
-.field .error, .errorlist { color: var(--danger); font-size: var(--step--1); margin: 0.25rem 0 0; padding: 0; list-style: none; }
-input[type="text"], input[type="password"], input[type="date"], input[type="tel"], input[type="email"],
-input[type="search"], input[type="file"], input[type="month"], input[type="number"], input[type="datetime-local"], input[type="time"], select, textarea {
-  width: 100%;
-  font-size: var(--step-0);
-  padding: 0.6rem 0.7rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-sm);
-  background: #fff;
-  color: var(--ink);
-  min-height: 2.75rem;
-}
-fieldset { border: 1px solid var(--line); border-radius: var(--radius-sm); margin: 1rem 0; padding: 0.75rem 1rem 0.25rem; }
-legend { font-weight: 600; padding: 0 0.4rem; }
-
+/* ---------- 4. Buttons ---------- */
 .button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.75rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--control-h);
   padding: 0.55rem 1.1rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--brand);
   background: var(--brand);
   color: var(--brand-ink);
-  font-size: var(--step-0);
-  font-weight: 600;
-  text-decoration: none;
+  font: inherit; font-size: var(--step-0); font-weight: 600; line-height: 1.2;
+  text-decoration: none; white-space: nowrap;
   cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
 }
-.button:hover { background: var(--brand-strong); border-color: var(--brand-strong); }
-.button.secondary { background: transparent; color: var(--brand); }
-.button.secondary:hover { background: var(--brand-soft); }
-.button.quiet { background: var(--surface); border-color: var(--line); color: var(--ink); font-weight: 400; }
-.button.quiet:hover { background: var(--brand-soft); border-color: var(--line-strong); }
-.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+html[lang="ur"] .button { line-height: 1.9; padding-block: 0.25rem; }
+.button:hover { background: var(--brand-strong); border-color: var(--brand-strong); color: var(--brand-ink); }
+.button:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--attention-bar); }
+.button.secondary { background: var(--surface); color: var(--brand); }
+.button.secondary:hover { background: var(--brand-soft); color: var(--brand-strong); }
+.button.quiet { background: var(--surface); border-color: var(--line); color: var(--ink); font-weight: 500; }
+.button.quiet:hover { background: var(--brand-soft); border-color: var(--line-strong); color: var(--ink); }
+.button.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+.button.danger:hover { background: var(--danger-strong); border-color: var(--danger-strong); }
+.button.sm { min-height: 2.25rem; padding: 0.3rem 0.75rem; font-size: var(--step--1); }
+.button .icon { width: 1.1rem; height: 1.1rem; }
+.button:disabled, .button[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
+/* Busy: shown while a form is sending (static/js/tasems.js); stops double submissions. */
+.button[aria-busy="true"] { position: relative; color: transparent !important; pointer-events: none; }
+.button[aria-busy="true"]::after {
+  content: ""; position: absolute; inset: 0; margin: auto; width: 1.1rem; height: 1.1rem;
+  border: 2px solid currentColor; border-color: var(--brand-ink) var(--brand-ink) transparent transparent;
+  border-radius: 50%; animation: tasems-spin 0.7s linear infinite;
+}
+.button.secondary[aria-busy="true"]::after, .button.quiet[aria-busy="true"]::after { border-color: var(--brand) var(--brand) transparent transparent; }
+@keyframes tasems-spin { to { transform: rotate(360deg); } }
+.link-button { background: none; border: 0; padding: 0; color: var(--brand); text-decoration: underline; font: inherit; cursor: pointer; }
 
-/* ---------- Messages ---------- */
-.messages { list-style: none; padding: 0; margin: 0 0 1rem; }
-.messages li { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.75rem 0.9rem; border-radius: var(--radius-sm); margin-block-end: 0.5rem; background: var(--brand-soft); border-inline-start: 4px solid var(--brand); }
-.messages li .icon { flex: none; margin-block-start: 0.15rem; }
-.messages li.success { background: var(--ok-soft); border-color: var(--ok); }
-.messages li.success .icon { color: var(--ok); }
-.messages li.error { background: var(--danger-soft); color: var(--danger); border-color: var(--danger); }
-.messages li.warning { background: var(--attention-soft); border-color: var(--attention-bar); }
+/* ---------- 5. Cards & KPI figures ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+.card + .card, .card + .table-wrap, .table-wrap + .card { margin-block-start: var(--space-4); }
+.card > :first-child { margin-block-start: 0; }
+.card > :last-child { margin-block-end: 0; }
+.card-title { font-size: var(--step-0); font-weight: 600; margin: 0 0 var(--space-3); }
 
-.badge { display: inline-block; padding: 0.05rem 0.5rem; border-radius: 999px; font-size: 0.8rem; background: var(--brand-soft); color: var(--brand); }
+.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--space-3); margin: var(--space-4) 0; }
+.figure {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--line); border-block-start: 3px solid var(--brand);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1rem;
+  box-shadow: var(--shadow-sm);
+  color: inherit; text-decoration: none;
+}
+a.figure { transition: box-shadow 0.12s ease, transform 0.12s ease; }
+a.figure:hover { box-shadow: var(--shadow-md); color: inherit; }
+.figure .value { font-size: var(--step-3); font-weight: 700; line-height: 1.1; direction: ltr; unicode-bidi: isolate; font-family: var(--font); }
+.figure .label { color: var(--ink-soft); font-size: var(--step--1); margin-block-start: var(--space-1); }
+.figure.attention { border-color: var(--attention-bar); background: var(--attention-soft); }
+.figure.ok { border-block-start-color: var(--ok); }
+.figure.danger { border-block-start-color: var(--danger); background: var(--danger-soft); }
+
+/* ---------- 6. Tables ---------- */
+.table-wrap {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
+th, td { padding: 0.65rem 0.8rem; text-align: start; border-block-end: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--ink-soft); background: var(--surface-sunk); white-space: nowrap; }
+html[lang="en"] thead th { font-size: var(--step--2); letter-spacing: 0.04em; text-transform: uppercase; }
+tbody tr:hover td { background: #fafbfe; }
+tr:last-child td { border-block-end: 0; }
+td.num, th.num { text-align: end; }
+tfoot td, tfoot th { font-weight: 600; background: var(--surface-sunk); border-block-start: 1px solid var(--line-strong); }
+td .button { min-height: 2.25rem; padding: 0.3rem 0.75rem; font-size: var(--step--1); }
+td form { margin: 0; }
+
+/* ---------- 7. Forms & filter bars ---------- */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0 var(--space-4); }
+.field { margin-block-end: var(--space-4); }
+.field label { display: block; font-weight: 600; font-size: var(--step--1); margin-block-end: var(--space-1); }
+.field .req { color: var(--accent-ink); margin-inline-start: 0.15rem; }
+.field .help { color: var(--ink-soft); font-size: var(--step--1); margin: var(--space-1) 0 0; }
+.field .error, .errorlist { color: var(--danger); font-size: var(--step--1); margin: var(--space-1) 0 0; padding: 0; list-style: none; }
+.errorlist.nonfield, form > .errorlist { background: var(--danger-soft); border-inline-start: 4px solid var(--danger); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); margin-block-end: var(--space-4); }
+input[type="text"], input[type="password"], input[type="date"], input[type="tel"], input[type="email"], input[type="url"],
+input[type="search"], input[type="file"], input[type="month"], input[type="number"], input[type="datetime-local"], input[type="time"],
+input:not([type]), select, textarea {
+  width: 100%;
+  font: inherit; font-size: var(--step-0);
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  min-height: var(--control-h);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+html[lang="ur"] input, html[lang="ur"] select { padding-block: 0.2rem; }
+input:hover, select:hover, textarea:hover { border-color: var(--ink-soft); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-ring); }
+input:disabled, select:disabled, textarea:disabled { background: var(--surface-sunk); color: var(--ink-soft); cursor: not-allowed; }
+input::placeholder, textarea::placeholder { color: #8a8fa5; }
+.field.has-error input, .field.has-error select, .field.has-error textarea, [aria-invalid="true"] { border-color: var(--danger); }
+.field.has-error input:focus, .field.has-error select:focus, .field.has-error textarea:focus { box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.2); }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--brand); width: 1.15rem; height: 1.15rem; vertical-align: middle; }
+input[type="file"] { padding: 0.45rem; }
+fieldset { border: 1px solid var(--line); border-radius: var(--radius-sm); margin: var(--space-4) 0; padding: var(--space-3) var(--space-4) var(--space-1); }
+legend { font-weight: 600; padding: 0 0.4rem; }
+/* Filter bars: every list page uses <form method="get" class="card"> for its search and filters. */
+form.card[method="get"] { background: var(--surface-sunk); box-shadow: none; padding: var(--space-4); margin-block-end: var(--space-4); }
+form.card[method="get"] .field { margin-block-end: var(--space-3); }
+form.card[method="get"] .actions { margin: 0; }
+
+/* ---------- 8. Disclosure (<details>) & tabs ---------- */
+main details > summary { cursor: pointer; color: var(--brand); font-weight: 500; list-style: none; display: inline-flex; align-items: center; gap: var(--space-1); }
+main details > summary::-webkit-details-marker { display: none; }
+main details > summary::before { content: "▸"; font-size: 0.8em; transition: transform 0.12s ease; }
+[dir="rtl"] main details > summary::before { content: "◂"; }
+main details[open] > summary::before { transform: rotate(90deg); }
+[dir="rtl"] main details[open] > summary::before { transform: rotate(-90deg); }
+main details[open] > summary { margin-block-end: var(--space-2); }
+td details form { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+td details input { min-width: 12rem; }
+.tabs { display: flex; gap: var(--space-1); overflow-x: auto; border-block-end: 1px solid var(--line); margin: var(--space-2) 0 var(--space-4); }
+.tabs a { padding: 0.6rem 0.9rem; text-decoration: none; color: var(--ink-soft); border-block-end: 3px solid transparent; white-space: nowrap; }
+.tabs a:hover { color: var(--ink); }
+.tabs a[aria-current="page"] { color: var(--ink); border-color: var(--brand); font-weight: 600; }
+
+/* ---------- 9. Badges & alerts ---------- */
+.badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.1rem 0.55rem; border-radius: var(--radius-full); font-size: var(--step--2); font-weight: 600; line-height: 1.6; background: var(--brand-soft); color: var(--brand); white-space: nowrap; }
+html[lang="ur"] .badge { font-size: var(--step--1); line-height: 1.9; }
 .badge.muted { background: #eceef3; color: var(--ink-soft); }
 .badge.attention { background: var(--attention-soft); color: var(--attention); }
-.muted { color: var(--ink-soft); }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.danger { background: var(--danger-soft); color: var(--danger); }
+.messages { list-style: none; padding: 0; margin: 0 0 var(--space-4); }
+.messages li, .callout { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.75rem 0.9rem; border-radius: var(--radius-sm); margin-block-end: var(--space-2); background: var(--brand-soft); border-inline-start: 4px solid var(--brand); }
+.messages li .icon, .callout .icon { flex: none; margin-block-start: 0.15rem; }
+.messages li.success, .callout.ok { background: var(--ok-soft); border-color: var(--ok); }
+.messages li.success .icon, .callout.ok .icon { color: var(--ok); }
+.messages li.error, .callout.danger { background: var(--danger-soft); color: var(--danger); border-color: var(--danger); }
+.messages li.warning, .callout.attention { background: var(--attention-soft); border-color: var(--attention-bar); }
+.callout > div > :last-child { margin-block-end: 0; }
+
+/* ---------- 10. Empty states ---------- */
+.empty-state { text-align: center; padding: var(--space-6) var(--space-4); }
+.empty-state > .icon { width: 2.75rem; height: 2.75rem; padding: 0.6rem; border-radius: 50%; background: var(--brand-soft); color: var(--brand); margin-block-end: var(--space-3); }
+.empty-state p { max-width: 36rem; margin-inline: auto; color: var(--ink-soft); }
+.empty-state .actions { justify-content: center; margin-block-end: 0; }
+
+/* ---------- 11. Dialogs ---------- */
+.dialog { border: 0; border-radius: var(--radius-lg); padding: 0; width: min(28rem, calc(100vw - 2rem)); box-shadow: var(--shadow-md); color: var(--ink); }
+.dialog::backdrop { background: rgba(29, 34, 56, 0.5); }
+.dialog-body { display: flex; gap: var(--space-3); padding: var(--space-5) var(--space-5) var(--space-3); }
+.dialog-body > .icon { width: 2.5rem; height: 2.5rem; padding: 0.55rem; border-radius: 50%; background: var(--danger-soft); color: var(--danger); }
+.dialog-title { font-size: var(--step-1); margin: 0 0 var(--space-1); }
+.dialog-text { color: var(--ink-soft); margin: 0; }
+.dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-3) var(--space-5) var(--space-5); }
+
+/* ---------- 12. Pagination & misc ---------- */
+.pagination { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-block-start: var(--space-4); }
+.pagination a { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.25rem 0.8rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); text-decoration: none; }
+.pagination a:hover { background: var(--brand-soft); }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: var(--space-3); }
+.swatch { display: flex; flex-direction: column; gap: 0.15rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3); font-size: var(--step--1); }
+.swatch-chip { height: 2.5rem; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.08); margin-block-end: var(--space-2); }
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); gap: var(--space-3); }
+.icon-grid span { display: flex; align-items: center; gap: var(--space-2); color: var(--ink); }
+.icon-grid small { color: var(--ink-soft); }
+dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-4); margin: 0; }
+dl.facts dt { color: var(--ink-soft); }
+dl.facts dd { margin: 0; }
 
 /* ---------- Sign-in pages ---------- */
 .auth { min-height: 100vh; display: grid; place-items: center; padding: 1.5rem 1rem; }
@@ -191,18 +338,8 @@ legend { font-weight: 600; padding: 0 0.4rem; }
 .codes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: var(--step-1); direction: ltr; font-family: var(--font); letter-spacing: 0.05em; }
 .secret { word-break: break-all; direction: ltr; font-family: var(--font); background: #f1f2f8; padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); }
 
-.pagination { display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; }
 
-@media print {
-  .topbar, .appbar, .sidebar, .sidebar-scrim, .skip-link, .actions, .no-print { display: none !important; }
-  .app { display: block !important; }
-  body { background: #fff; }
-}
-
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
-
-.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
+/* ---------- 13. Module screens ---------- */
 /* ---------- Attendance register: large targets for phones ---------- */
 .register-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0.75rem; }
 .register-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-inline-start: 4px solid var(--attention); border-radius: var(--radius-sm); color: var(--ink); text-decoration: none; }
@@ -246,11 +383,7 @@ textarea.ur { font-family: var(--font-ur); line-height: 2.1; }
 .child-name { font-size: var(--step-1); font-weight: 700; color: var(--brand); }
 .child-facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-top: 0.5rem; font-size: var(--step--1); }
 .child-facts .due { color: var(--accent-ink); }
-.tabs { display: flex; gap: 0.25rem; overflow-x: auto; border-block-end: 1px solid var(--line); margin: 0.5rem 0 1rem; }
-.tabs a { padding: 0.6rem 0.9rem; text-decoration: none; color: var(--ink-soft); border-block-end: 3px solid transparent; white-space: nowrap; }
-.tabs a[aria-current="page"] { color: var(--ink); border-color: var(--brand); font-weight: 600; }
 .diary-item { margin-block-end: 0.75rem; }
-.diary-item summary { cursor: pointer; }
 
 /* ---------- Official logo (used exactly as provided) ---------- */
 .topbar .school { display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -260,9 +393,7 @@ textarea.ur { font-family: var(--font-ur); line-height: 2.1; }
 /* ---------- Demo server notice ---------- */
 .demo-banner { background: #7a2e00; color: #fff; text-align: center; padding: 0.4rem 1rem; font-weight: 600; font-size: var(--step--1); }
 
-/* ================================================================
-   Staff app shell (base.html): sidebar + app bar. RTL-safe.
-   ================================================================ */
+/* ---------- 14. Staff app shell (base.html): sidebar + app bar. RTL-safe. ---------- */
 .icon { width: 1.25rem; height: 1.25rem; flex: none; vertical-align: middle; }
 .skip-link { position: absolute; inset-inline-start: 0.5rem; inset-block-start: -3rem; z-index: 100; background: var(--surface); padding: 0.5rem 0.9rem; border-radius: var(--radius-sm); box-shadow: var(--shadow-md); }
 .skip-link:focus { inset-block-start: 0.5rem; }
@@ -305,6 +436,13 @@ html[lang="ur"] .side-nav a { padding-block: 0.3rem; }
 .side-nav a[aria-current="page"] .icon, .side-nav a:hover .icon { color: #fff; }
 .nav-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+.sidebar-foot { margin: auto 0 0; display: flex; align-items: center; gap: 0.6rem; padding: 0.8rem 1.3rem; font-size: var(--step--1); color: #c9cbe8; border-block-start: 1px solid rgba(255, 255, 255, 0.12); }
+.sidebar-collapsed .sidebar-foot { justify-content: center; padding-inline: 0; }
+.appbar-search { position: relative; flex: 0 1 18rem; min-width: 11rem; }
+.appbar-search .icon { position: absolute; inset-inline-start: 0.7rem; inset-block: 0; margin: auto; color: var(--ink-soft); pointer-events: none; }
+.appbar-search input { min-height: 2.5rem; padding-block: 0.4rem; padding-inline-start: 2.4rem; background: var(--surface-sunk); border-color: var(--line); }
+.appbar-search input:focus { background: var(--surface); }
+@media (max-width: 47.99rem) { .appbar-search { display: none; } }
 .sidebar-scrim { display: none; }
 .app-main { min-width: 0; }
 
@@ -326,6 +464,8 @@ html[lang="ur"] .side-nav a { padding-block: 0.3rem; }
   font: inherit; font-size: var(--step--1); cursor: pointer;
 }
 .icon-button:hover, .appbar-button:hover { background: var(--brand-soft); color: var(--brand); }
+.appbar-button span { white-space: nowrap; }
+@media (max-width: 89.99rem) { .appbar-user { display: none; } }
 .appbar-user { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--ink-soft); font-size: var(--step--1); padding-inline: 0.4rem; max-width: 14rem; }
 .appbar-user span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -381,3 +521,12 @@ html[lang="ur"] .side-nav a { padding-block: 0.3rem; }
   .appbar-button .ur { display: inline; }
   .branch-current { max-width: 11rem; }
 }
+
+/* ---------- 15. Print & motion ---------- */
+@media print {
+  .topbar, .appbar, .sidebar, .sidebar-scrim, .skip-link, .actions, .no-print, .dialog { display: none !important; }
+  .app { display: block !important; }
+  body { background: #fff; }
+  .card, .table-wrap, .figure { box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

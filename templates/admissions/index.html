@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Admissions" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Admissions" %}</h1>
@@ -47,5 +47,5 @@
   </tr>{% endfor %}</tbody>
 </table></div>
 {% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="?{{ query }}&page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %} {{ page.number }} / {{ page.paginator.num_pages }} {% if page.has_next %}<a href="?{{ query }}&page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
-{% else %}<div class="card" style="margin-top:1rem"><p>{% if view == "due" %}{% trans "No follow-ups due. Well done." %}{% else %}{% trans "No inquiries here yet." %}{% endif %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "inbox" %}<p>{% if view == "due" %}{% trans "No follow-ups due. Well done." %}{% else %}{% trans "No inquiries here yet." %}{% endif %}</p></div>{% endif %}
 {% endblock %}

@@ -37,7 +37,7 @@
   var key = "{{ draft_key }}";
   var note = document.getElementById("draft-note");
   var summary = document.getElementById("summary");
-  var labels = { present: "{% trans 'present' %}", absent: "{% trans 'absent' %}", leave: "{% trans 'on leave' %}", late: "{% trans 'late' %}" };
+  var labels = { present: "{% filter escapejs %}{% trans 'present' %}{% endfilter %}", absent: "{% filter escapejs %}{% trans 'absent' %}{% endfilter %}", leave: "{% filter escapejs %}{% trans 'on leave' %}{% endfilter %}", late: "{% filter escapejs %}{% trans 'late' %}{% endfilter %}" };
 
   function state() {
     var data = {};
@@ -68,7 +68,7 @@
         if (text) text.value = draft[name];
       });
       note.hidden = false;
-      note.textContent = "{% trans 'Your unsaved register from this phone has been restored. Check it and press Save register.' %}";
+      note.textContent = "{% filter escapejs %}{% trans 'Your unsaved register from this phone has been restored. Check it and press Save register.' %}{% endfilter %}";
     }
   } catch (e) {}
 
@@ -79,7 +79,7 @@
     if (!navigator.onLine) {
       event.preventDefault();
       note.hidden = false;
-      note.textContent = "{% trans 'No internet connection. The register is kept on this phone. Press Save register again when you are connected.' %}";
+      note.textContent = "{% filter escapejs %}{% trans 'No internet connection. The register is kept on this phone. Press Save register again when you are connected.' %}{% endfilter %}";
       window.scrollTo(0, 0);
     }
   });

@@ -41,7 +41,7 @@
     <td class="num">{{ v.payable|rupees }}</td>
     <td>{{ v.get_status_display }}{% if v.cancel_reason %} <span class="muted">({{ v.cancel_reason }})</span>{% endif %}</td>
     <td>{% if v.status != "cancelled" %}<a href="{% url 'fees:voucher_pdf' v.id %}" target="_blank" rel="noopener">{% trans "Print" %}</a>{% if can.pay and v.status != "paid" %} · <a href="{% url 'fees:receive' v.id %}">{% trans "Receive" %}</a>{% endif %}
-      {% if can.cancel and forloop.first %}<details><summary>{% trans "Cancel" %}</summary><form method="post" action="{% url 'fees:cancel_voucher' v.id %}">{% csrf_token %}<input type="text" name="reason" required maxlength="200" placeholder="{% trans 'Reason' %}"><button class="button quiet" type="submit">{% trans "Cancel voucher" %}</button></form></details>{% endif %}{% endif %}</td>
+      {% if can.cancel and forloop.first %}<details><summary>{% trans "Cancel" %}</summary><form method="post" action="{% url 'fees:cancel_voucher' v.id %}" data-confirm="{% trans 'This voucher will be cancelled and its fee charges removed. Fines and earlier unpaid amounts move to the next voucher. This cannot be undone.' %}" data-confirm-button="{% trans 'Cancel voucher' %}">{% csrf_token %}<input type="text" name="reason" required maxlength="200" placeholder="{% trans 'Reason' %}"><button class="button danger sm" type="submit">{% trans "Cancel voucher" %}</button></form></details>{% endif %}{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<p class="muted">{% trans "No vouchers yet." %}</p>{% endif %}
@@ -74,7 +74,7 @@
     <td class="num">{% if c.is_cancelled %}<s>{{ c.amount|rupees }}</s>{% else %}{{ c.amount|rupees }}{% endif %}</td>
     <td>{% if c.discount %}{{ c.discount|rupees }} ({{ c.discount_reason }}){% endif %}</td>
     <td>{{ c.note }}{% if c.is_cancelled %} {% trans "Cancelled" %}: {{ c.cancel_reason }}{% endif %}</td>
-    <td>{% if can.cancel_charge and not c.is_cancelled %}<details><summary>{% trans "Cancel" %}</summary><form method="post" action="{% url 'fees:cancel_charge' c.id %}">{% csrf_token %}<input type="text" name="reason" required maxlength="200" placeholder="{% trans 'Reason' %}"><button class="button quiet" type="submit">{% trans "Cancel charge" %}</button></form></details>{% endif %}</td>
+    <td>{% if can.cancel_charge and not c.is_cancelled %}<details><summary>{% trans "Cancel" %}</summary><form method="post" action="{% url 'fees:cancel_charge' c.id %}" data-confirm="{% trans 'This charge will be cancelled and the student’s balance worked out again. This cannot be undone.' %}" data-confirm-button="{% trans 'Cancel charge' %}">{% csrf_token %}<input type="text" name="reason" required maxlength="200" placeholder="{% trans 'Reason' %}"><button class="button danger sm" type="submit">{% trans "Cancel charge" %}</button></form></details>{% endif %}</td>
   </tr>{% empty %}<tr><td colspan="6" class="muted">{% trans "Nothing charged yet." %}</td></tr>{% endfor %}</tbody>
 </table></div>
 {% endblock %}

@@ -32,6 +32,7 @@
       </div>
       {% endfor %}
     </nav>
+    {% if current_session %}<p class="sidebar-foot">{% icon "calendar-check" %}<span class="nav-text">{% blocktrans with name=current_session.name %}Session {{ name }}{% endblocktrans %}</span></p>{% endif %}
   </aside>
   <div class="sidebar-scrim" data-close-sidebar></div>
   <div class="app-main">
@@ -41,7 +42,7 @@
         {% if current_branch %}{% with name=current_branch.name %}
         {% if switchable_branches|length > 1 %}
         <details class="branch-picker" data-dropdown>
-          <summary>{% icon "building-2" %}<span class="branch-current">{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ name }}{% endif %}</span>{% icon "chevron-down" %}</summary>
+          <summary>{% icon "building-2" %}<span class="branch-current" dir="auto">{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ name }}{% endif %}</span>{% icon "chevron-down" %}</summary>
           <div class="dropdown-panel branch-panel">
             <label class="visually-hidden" for="branch-search">{% trans "Search branches" %}</label>
             <input type="search" id="branch-search" placeholder="{% trans 'Search branches' %}" autocomplete="off" data-branch-filter>
@@ -62,10 +63,16 @@
           </div>
         </details>
         {% else %}
-        <span class="branch-static">{% icon "building-2" %}<span class="branch-current">{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ name }}{% endif %}</span></span>
+        <span class="branch-static">{% icon "building-2" %}<span class="branch-current" dir="auto">{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ name }}{% endif %}</span></span>
         {% endif %}
         {% endwith %}{% endif %}
       </div>
+      {% if can_search_students %}
+      <form class="appbar-search" method="get" action="{% url 'people:student_list' %}" role="search">
+        <label class="visually-hidden" for="global-search">{% trans "Search students" %}</label>
+        {% icon "search" %}<input type="search" id="global-search" name="q" placeholder="{% trans 'Search students…' %}" title="{% trans 'Name, admission no. or parent mobile' %}" autocomplete="off">
+      </form>
+      {% endif %}
       <div class="appbar-actions">
         <form method="post" action="{% url 'set_language' %}">{% csrf_token %}
           <input type="hidden" name="next" value="{{ request.get_full_path }}">
@@ -81,6 +88,15 @@
     </main>
   </div>
 </div>
+<dialog class="dialog" id="confirm-dialog" aria-labelledby="confirm-dialog-title">
+  <form method="dialog">
+    <div class="dialog-body">{% icon "triangle-alert" %}<div><h2 class="dialog-title" id="confirm-dialog-title">{% trans "Are you sure?" %}</h2><p class="dialog-text" data-dialog-text></p></div></div>
+    <div class="dialog-actions">
+      <button class="button quiet" value="cancel">{% trans "Go back" %}</button>
+      <button class="button danger" value="ok" data-dialog-ok data-default-label="{% trans 'Yes, continue' %}">{% trans "Yes, continue" %}</button>
+    </div>
+  </form>
+</dialog>
 <script src="{% static 'js/tasems.js' %}" defer></script>
 {% endblock %}
 </body>

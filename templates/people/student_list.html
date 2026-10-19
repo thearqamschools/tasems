@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Students" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Students" %}</h1>
@@ -57,7 +57,8 @@
 </nav>
 {% endif %}
 {% else %}
-<div class="card" style="margin-top:1rem">
+<div class="card empty-state">
+  {% icon "users" %}
   <p>{% if q or section_id or level_id %}{% trans "No students match these filters. Clear the search or choose another class." %}{% else %}{% trans "No students yet in this branch." %}{% endif %}</p>
   {% if can_add and not q %}<div class="actions"><a class="button" href="{% url 'people:student_import' %}">{% trans "Import from Excel" %}</a><a class="button secondary" href="{% url 'people:student_create' %}">{% trans "Add a student" %}</a></div>{% endif %}
 </div>

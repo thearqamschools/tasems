@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from apps.core.branch import accessible_branches, current_branch
+from apps.organisation.models import AcademicSession
 
 MAX_SWITCHER_BRANCHES = 400
 
@@ -74,7 +75,10 @@ def _menu(user, branch):
         ],
     )
     if user.is_staff:
-        group(_("Settings"), [("/admin/", _("Setup"), "settings")])
+        group(
+            _("Settings"),
+            [("/admin/", _("Setup"), "settings"), (reverse("design_system"), _("Design system"), "palette")],
+        )
     return groups
 
 
@@ -104,6 +108,9 @@ def navigation(request):
     )
     return {
         "current_branch": branch,
+        "current_session": AcademicSession.objects.filter(is_current=True).first(),
+        # Top-bar search opens the student list (same search as on that page).
+        "can_search_students": branch is not None and user.has_branch_perm("people.view_student", branch.id),
         "switchable_branches": switchable,
         "nav_groups": nav_groups,
         # Flat list kept for any page that still reads it.

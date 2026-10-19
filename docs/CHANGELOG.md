@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.13.0 — 2026-10-17 — Design system (Phase 1: UI/UX foundation)
+
+Added
+- One organised stylesheet with design tokens (logo colours, spacing, type scale, shapes) and shared components: page header, buttons (primary, secondary, quiet, danger, small, busy, disabled), cards, KPI figures, tables with totals, filter bars, form fields (required mark, error state), badges, messages, callouts, empty states, tabs, pagination. Every existing screen picks them up without changes to its address or behaviour.
+- Confirmation dialog before cancelling a voucher or charge, reversing a payment, cancelling approved leave or withdrawing a leave request (the same button and values are sent after "Yes, continue"; works without JavaScript as before).
+- Every form that saves shows "busy" after the first press and ignores further presses, so a payment cannot be saved twice.
+- Student search in the top bar (opens the student list with the same search); running academic session at the foot of the sidebar.
+- Living style guide at /design-system/ (staff accounts) and docs/DESIGN_SYSTEM.md.
+- Urdu for all new text. 4 more automated tests (165 in total).
+
+Fixed
+- In Urdu, the attendance register's script stopped because a translation contains quotation marks: live counts and the draft kept on the phone did not work. Strings in scripts are now escaped (with a test).
+- Branch name in the top bar is cut from the correct end in Urdu.
+
+Not deployed.
+
 ## 0.12.0 — 2026-10-17 — New staff screen frame and official colours (Phase 4, M1)
 
 Added

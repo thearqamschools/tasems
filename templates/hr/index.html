@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Staff" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Staff" %}</h1>
@@ -41,5 +41,5 @@
     <td class="num">{{ e.machine_id|default:"—" }}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "No staff records yet. Add them one by one or import the staff list from Excel." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "briefcase" %}<p>{% trans "No staff records yet. Add them one by one or import the staff list from Excel." %}</p></div>{% endif %}
 {% endblock %}

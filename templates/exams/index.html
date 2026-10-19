@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Exams & Results" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Exams & Results" %}</h1>
@@ -18,7 +18,7 @@
   <tbody>{% for e in exams %}<tr><td>{{ e.name }}</td><td>{{ e.get_kind_display }}</td><td>{{ e.marks_due_on|date:"d M Y"|default:"—" }}</td>
     <td>{% if e.is_published %}<span class="badge">{% trans "Published" %}</span>{% else %}<span class="badge muted">{% trans "Not published" %}</span>{% endif %}</td></tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "No exams set up yet. Head office creates exams and their papers under Setup → Exams." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No exams set up yet. Head office creates exams and their papers under Setup → Exams." %}</p></div>{% endif %}
 
 <h2>{% trans "All sections" %}</h2>
 {% if sections %}
@@ -28,5 +28,5 @@
     {% for e in exams %}<td><a href="{% url 'exams:section_exam' e.id s.id %}">{% trans "Marks" %}</a></td>{% endfor %}
     <td><a href="{% url 'exams:section_results' s.id %}">{% trans "Results" %}</a></td></tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "inbox" %}<p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
 {% endblock %}

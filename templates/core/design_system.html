@@ -1,0 +1,115 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Design system" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>{% trans "Design system" %}</h1>
+    <p class="lede">{% trans "Every building block of TASEMS screens, drawn from the one stylesheet. Use these when adding or changing a screen. Sample content only — no school data." %}</p>
+  </div>
+  <div class="actions"><a class="button quiet" href="{% url 'home' %}">{% icon "layout-dashboard" %}{% trans "Back to dashboard" %}</a></div>
+</div>
+{% if request.GET.confirmed %}<ul class="messages"><li class="success">{% icon "circle-check" %}<span>{% trans "The confirmation dialog sent the form." %}</span></li></ul>{% endif %}
+
+<h2>{% trans "Colours" %}</h2>
+<p class="muted">{% trans "Brand colours are measured from the official logo. Status colours are separate, so red on a badge always means a problem, never just “brand”." %}</p>
+<div class="swatches">
+  {% for token, hex, label in swatches %}
+  <div class="swatch"><span class="swatch-chip" style="background: var({{ token }})"></span><strong>{{ label }}</strong><span class="num muted">{{ hex }} · {{ token }}</span></div>
+  {% endfor %}
+</div>
+
+<h2>{% trans "Typography" %}</h2>
+<div class="card">
+  <h1>{% trans "Page title (h1)" %}</h1>
+  <p class="lede">{% trans "Lede: one sentence that explains the page." %}</p>
+  <h2 style="margin-top:0">{% trans "Section title (h2)" %}</h2>
+  <h3>{% trans "Sub-section (h3)" %}</h3>
+  <p>{% trans "Body text in Noto Sans. Urdu switches to Noto Nastaliq with taller lines." %} <span class="ur" lang="ur" dir="rtl">دی ارقم سکولز — علم اور اقدار</span></p>
+  <p class="muted"><small>{% trans "Small, muted text for notes." %}</small> · <span class="num">Rs 12,500 · 03-07-2026</span></p>
+</div>
+
+<h2>{% trans "Buttons" %}</h2>
+<div class="card">
+  <div class="actions" style="margin-top:0">
+    <button class="button" type="button">{% trans "Primary" %}</button>
+    <button class="button secondary" type="button">{% trans "Secondary" %}</button>
+    <button class="button quiet" type="button">{% trans "Quiet" %}</button>
+    <button class="button danger" type="button">{% trans "Danger" %}</button>
+    <button class="button" type="button">{% icon "printer" %}{% trans "With icon" %}</button>
+    <button class="button sm" type="button">{% trans "Small" %}</button>
+    <button class="button" type="button" aria-busy="true">{% trans "Busy" %}</button>
+    <button class="button" type="button" disabled>{% trans "Disabled" %}</button>
+  </div>
+  <p class="muted" style="margin:0">{% trans "One primary button per area. Every form that saves shows “busy” after the first press, so a payment cannot be saved twice." %}</p>
+</div>
+
+<h2>{% trans "Figures (KPI cards)" %}</h2>
+<div class="figures">
+  <a class="figure" href="#"><div class="value">1,284</div><div class="label">{% trans "Active students" %}</div></a>
+  <div class="figure ok"><div class="value">96%</div><div class="label">{% trans "Attendance today" %}</div></div>
+  <div class="figure attention"><div class="value">3/12</div><div class="label">{% trans "Registers taken today" %}</div></div>
+  <div class="figure danger"><div class="value">41</div><div class="label">{% trans "Defaulters" %}</div></div>
+</div>
+
+<h2>{% trans "Table" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Status" %}</th><th class="num">{% trans "Balance (Rs)" %}</th><th></th></tr></thead>
+  <tbody>
+    <tr><td>Sample Student A</td><td>Class 4-A</td><td><span class="badge ok">{% trans "Paid" %}</span></td><td class="num">0</td><td><a class="button quiet sm" href="#">{% trans "Open" %}</a></td></tr>
+    <tr><td>Sample Student B</td><td>Class 6-Rose</td><td><span class="badge attention">{% trans "Part paid" %}</span></td><td class="num">2,150</td><td><a class="button quiet sm" href="#">{% trans "Open" %}</a></td></tr>
+    <tr><td>Sample Student C</td><td>Pre-9 Daisy</td><td><span class="badge danger">{% trans "Unpaid" %}</span></td><td class="num">8,600</td><td><a class="button quiet sm" href="#">{% trans "Open" %}</a></td></tr>
+  </tbody>
+  <tfoot><tr><td colspan="3">{% trans "Total" %}</td><td class="num">10,750</td><td></td></tr></tfoot>
+</table></div>
+
+<h2>{% trans "Filter bar" %}</h2>
+<form method="get" class="card" action="#">
+  <div class="form-grid">
+    <div class="field"><label for="ds-q">{% trans "Search" %}</label><input type="search" id="ds-q" placeholder="{% trans 'Name, admission no. or parent mobile' %}"></div>
+    <div class="field"><label for="ds-class">{% trans "Class" %}</label><select id="ds-class"><option>{% trans "All classes" %}</option></select></div>
+  </div>
+  <div class="actions"><button class="button" type="button">{% icon "search" %}{% trans "Show" %}</button><a class="button quiet" href="#">{% icon "download" %}Excel</a></div>
+</form>
+
+<h2>{% trans "Form" %}</h2>
+<div class="card">
+  <div class="form-grid">
+    <div class="field"><label for="ds-name">{% trans "Full name" %}<span class="req" aria-hidden="true">*</span></label><input type="text" id="ds-name" value="Sample Student"><p class="help">{% trans "As written on the B-Form." %}</p></div>
+    <div class="field has-error"><label for="ds-mobile">{% trans "Parent mobile" %}<span class="req" aria-hidden="true">*</span></label><input type="tel" id="ds-mobile" value="0300-12" aria-invalid="true"><p class="error">{% trans "Enter an 11-digit mobile number, e.g. 0300-1234567." %}</p></div>
+    <div class="field"><label for="ds-date">{% trans "Admission date" %}</label><input type="date" id="ds-date"></div>
+    <div class="field"><label for="ds-note">{% trans "Note" %}</label><textarea id="ds-note" rows="2"></textarea></div>
+  </div>
+  <p style="margin:0"><label><input type="checkbox" checked> {% trans "Hifz student" %}</label></p>
+</div>
+
+<h2>{% trans "Badges and messages" %}</h2>
+<p><span class="badge">{% trans "Info" %}</span> <span class="badge ok">{% trans "Present" %}</span> <span class="badge attention">{% trans "Late" %}</span> <span class="badge danger">{% trans "Absent" %}</span> <span class="badge muted">{% trans "Withdrawn" %}</span></p>
+<ul class="messages">
+  <li class="success">{% icon "circle-check" %}<span>{% trans "Register saved for Class 4-A: 30 present, 2 absent." %}</span></li>
+  <li class="info">{% icon "info" %}<span>{% trans "Information for the person working on the screen." %}</span></li>
+  <li class="warning">{% icon "triangle-alert" %}<span>{% trans "Something needs attention before it is complete." %}</span></li>
+  <li class="error">{% icon "circle-alert" %}<span>{% trans "Something went wrong and nothing was saved." %}</span></li>
+</ul>
+
+<h2>{% trans "Empty state" %}</h2>
+<div class="card empty-state">{% icon "inbox" %}<p>{% trans "No vouchers for this month yet." %}</p><div class="actions"><a class="button" href="#">{% trans "Make vouchers" %}</a></div></div>
+
+<h2>{% trans "Disclosure, tabs and pagination" %}</h2>
+<div class="card">
+  <details><summary>{% trans "Cancel (asks for a reason)" %}</summary><p class="muted">{% trans "Risky actions sit behind a disclosure and ask for a reason." %}</p></details>
+  <nav class="tabs" aria-label="{% trans 'Example tabs' %}"><a href="#" aria-current="page">{% trans "Diary" %}</a><a href="#">{% trans "Attendance" %}</a><a href="#">{% trans "Fees" %}</a></nav>
+  <nav class="pagination" aria-label="{% trans 'Pages' %}"><a href="#">{% trans "Previous" %}</a><span class="muted">{% trans "Page 2 of 5" %}</span><a href="#">{% trans "Next" %}</a></nav>
+</div>
+
+<h2>{% trans "Confirmation dialog" %}</h2>
+<form method="get" class="card" action="" data-confirm="{% trans 'This is a sample: nothing is changed. Press “Yes, continue” to see the form being sent.' %}" data-confirm-button="{% trans 'Yes, continue' %}">
+  <input type="hidden" name="confirmed" value="1">
+  <p class="muted">{% trans "Add data-confirm to any form that cancels, reverses or deletes. The same button and values are sent after the person agrees." %}</p>
+  <div class="actions" style="margin:0"><button class="button danger" type="submit">{% trans "Try the dialog" %}</button></div>
+</form>
+
+<h2>{% trans "Icons" %}</h2>
+<div class="icon-grid card">
+  {% for name in icon_names %}<span>{% icon name %}<small>{{ name }}</small></span>{% endfor %}
+</div>
+{% endblock %}

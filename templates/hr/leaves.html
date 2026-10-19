@@ -24,7 +24,7 @@
     <td><a href="{% url 'hr:employee' l.employee_id %}">{{ l.employee.full_name }}</a></td><td>{{ l.leave_type }}</td>
     <td>{{ l.starts_on|date:"d M" }} – {{ l.ends_on|date:"d M Y" }}</td><td class="num">{{ l.days }}</td><td>{{ l.get_status_display }}</td>
     <td>{{ l.decided_by.get_full_name|default:l.decided_by.username|default:"—" }}</td>
-    <td>{% if can_decide and l.status == "approved" %}<form method="post" style="margin:0">{% csrf_token %}<input type="hidden" name="id" value="{{ l.id }}"><button class="button quiet" name="decision" value="cancel" type="submit">{% trans "Cancel leave" %}</button></form>{% endif %}</td>
+    <td>{% if can_decide and l.status == "approved" %}<form method="post" data-confirm="{% trans 'This approved leave will be cancelled.' %}" data-confirm-button="{% trans 'Cancel leave' %}">{% csrf_token %}<input type="hidden" name="id" value="{{ l.id }}"><button class="button danger sm" name="decision" value="cancel" type="submit">{% trans "Cancel leave" %}</button></form>{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<p class="muted">{% trans "None yet." %}</p>{% endif %}

@@ -106,3 +106,41 @@ def test_receive_link_only_for_people_who_take_payments(demo, login_as, client):
     client.logout()
     admissions = login_as(User.objects.get(username="demo-admissions")).get(url).content.decode()
     assert "/receive/" not in admissions
+
+
+def test_register_script_survives_urdu_quotes(demo, login_as, settings):
+    """Urdu translations contain quotation marks; inside the register's script they must be escaped,
+    otherwise the whole script stops (no counts, no draft kept on the phone)."""
+    client = login_as(User.objects.get(username="demo-principal"))
+    client.cookies[settings.LANGUAGE_COOKIE_NAME] = "ur"
+    section = Section.objects.get(class_teacher__username="demo-teacher")
+    body = client.get(f"/attendance/section/{section.pk}/{_last(4).isoformat()}/").content.decode()
+    script = body[body.index("<script>", body.index('id="register"')) :]
+    script = script[: script.index("</script>")]
+    assert "\\u0022" in script  # the quotes in the Urdu text, escaped
+    assert '\\"' not in script and 'کر کے "' not in script
+
+
+def test_design_system_page_is_for_staff_accounts(demo, login_as, client):
+    staff = login_as(User.objects.get(username="demo-headoffice"))
+    body = staff.get("/design-system/").content.decode()
+    assert "Design system" in body and 'id="i-palette"' not in body and "#i-palette" in body
+    client.logout()
+    assert login_as(User.objects.get(username="demo-teacher")).get("/design-system/").status_code == 403
+
+
+def test_top_bar_search_and_session(demo, login_as):
+    principal = login_as(User.objects.get(username="demo-principal")).get("/").content.decode()
+    assert 'id="global-search"' in principal and 'action="/students/"' in principal
+    assert "Session 20" in principal  # current academic session shown in the sidebar
+
+
+def test_risky_actions_ask_for_confirmation(demo, login_as):
+    from apps.fees.models import Payment
+
+    payment = Payment.objects.filter(is_reversed=False).first()
+    principal = login_as(User.objects.get(username="demo-principal"))
+    receipt = principal.get(f"/fees/receipt/{payment.pk}/").content.decode()
+    assert "data-confirm=" in receipt and 'id="confirm-dialog"' in receipt
+    account = principal.get(f"/fees/student/{payment.student_id}/").content.decode()
+    assert account.count("data-confirm=") >= 1

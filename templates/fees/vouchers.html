@@ -30,5 +30,5 @@
   </tr>{% endfor %}</tbody>
 </table></div>
 {% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="?{{ query }}&page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %} {{ page.number }} / {{ page.paginator.num_pages }} {% if page.has_next %}<a href="?{{ query }}&page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
-{% else %}<div class="card"><p>{% trans "No vouchers for this month yet." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "receipt" %}<p>{% trans "No vouchers for this month yet." %}</p></div>{% endif %}
 {% endblock %}

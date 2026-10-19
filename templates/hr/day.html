@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Staff attendance" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Staff attendance" %} · {{ date|date:"l d M Y" }}</h1>
@@ -33,5 +33,5 @@
       </form></details></td>{% endif %}
   </tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "No staff records yet." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "briefcase" %}<p>{% trans "No staff records yet." %}</p></div>{% endif %}
 {% endblock %}

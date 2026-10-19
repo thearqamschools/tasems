@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Attendance" %}{% endblock %}
 {% block content %}
 <h1>{% if is_today %}{% trans "Today's attendance" %}{% else %}{% trans "Attendance" %}{% endif %}</h1>
@@ -49,7 +49,7 @@
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}
-<div class="card"><p>{% if weekday == 6 %}{% trans "No classes today." %}{% else %}{% trans "No sections for this session yet. Add students with their class, or import them from Excel." %}{% endif %}</p></div>
+<div class="card empty-state">{% icon "calendar-check" %}<p>{% if weekday == 6 %}{% trans "No classes today." %}{% else %}{% trans "No sections for this session yet. Add students with their class, or import them from Excel." %}{% endif %}</p></div>
 {% endif %}
 
 <script>

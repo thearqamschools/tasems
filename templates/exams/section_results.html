@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Results" %} {{ section }}{% endblock %}
 {% block content %}
 <h1>{% trans "Results" %} · {{ section }}</h1>
@@ -8,7 +8,7 @@
   {% if can_rate %}<a class="button quiet" href="{% url 'exams:ratings' section.id %}">{% trans "Enter teacher ratings" %}</a>{% endif %}
 </nav>
 {% if not scheme %}<div class="card"><p>{% trans "No result pattern is set up. Head office sets it under Setup → Grading schemes." %}</p></div>
-{% elif not subjects %}<div class="card"><p>{% trans "No exam papers for this class yet." %}</p></div>
+{% elif not subjects %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No exam papers for this class yet." %}</p></div>
 {% else %}
 <div class="table-wrap"><table>
   <thead><tr><th class="num">{% trans "Roll no." %}</th><th>{% trans "Student" %}</th><th class="num">%</th><th>{% trans "Grade" %}</th><th>{% trans "Result" %}</th><th>{% trans "Position" %}</th><th>{% trans "Still missing" %}</th><th></th></tr></thead>

@@ -4292,3 +4292,52 @@ msgstr "برانچ تلاش کریں"
 #: templates/base.html
 msgid "No branch matches this search."
 msgstr "اس تلاش سے کوئی برانچ نہیں ملی۔"
+
+#: templates/base.html
+msgid "Are you sure?"
+msgstr "کیا آپ کو یقین ہے؟"
+
+#: templates/base.html
+msgid "Go back"
+msgstr "واپس جائیں"
+
+#: templates/base.html
+msgid "Yes, continue"
+msgstr "جی ہاں، جاری رکھیں"
+
+#: templates/base.html
+msgid "Search students"
+msgstr "طلبہ تلاش کریں"
+
+#: templates/base.html
+msgid "Search students…"
+msgstr "طلبہ تلاش کریں…"
+
+#: templates/base.html
+#, python-format
+msgid "Session %(name)s"
+msgstr "سیشن %(name)s"
+
+#: apps/accounts/context_processors.py
+msgid "Design system"
+msgstr "ڈیزائن سسٹم"
+
+#: templates/fees/student.html
+msgid "This voucher will be cancelled and its fee charges removed. Fines and earlier unpaid amounts move to the next voucher. This cannot be undone."
+msgstr "یہ واؤچر منسوخ ہو جائے گا اور اس کی فیس کے چارجز ختم ہو جائیں گے۔ جرمانہ اور پچھلی بقایا رقم اگلے واؤچر میں چلی جائے گی۔ یہ عمل واپس نہیں ہو سکتا۔"
+
+#: templates/fees/student.html
+msgid "This charge will be cancelled and the student’s balance worked out again. This cannot be undone."
+msgstr "یہ چارج منسوخ ہو جائے گا اور طالب علم کا بقایا دوبارہ حساب کیا جائے گا۔ یہ عمل واپس نہیں ہو سکتا۔"
+
+#: templates/fees/receipt.html
+msgid "This payment will be marked as reversed and the student’s balance worked out again. The record is kept with your reason."
+msgstr "یہ ادائیگی واپس شدہ درج ہو جائے گی اور طالب علم کا بقایا دوبارہ حساب کیا جائے گا۔ ریکارڈ آپ کی بتائی گئی وجہ کے ساتھ محفوظ رہے گا۔"
+
+#: templates/hr/leaves.html
+msgid "This approved leave will be cancelled."
+msgstr "یہ منظور شدہ رخصت منسوخ ہو جائے گی۔"
+
+#: templates/hr/mine.html
+msgid "Your leave request will be withdrawn."
+msgstr "آپ کی رخصت کی درخواست واپس لے لی جائے گی۔"

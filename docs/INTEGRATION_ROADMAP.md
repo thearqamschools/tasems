@@ -49,7 +49,7 @@ image. Choice of library to be recorded as a decision before Milestone 6.
 
 | # | Milestone | Contents | Depends on | Effort* |
 | --- | --- | --- | --- | --- |
-| **M1** | **Design system + app shell** | Tokens and components, collapsible grouped sidebar, top bar, searchable branch selector, icons, toasts, empty/loading states, HTMX vendored; hide actions users cannot perform; all existing pages moved into the new shell unchanged in function | Brand colours (can start with placeholder) | 6–8 days |
+| **M1** ✅ | **Design system + app shell** (done 17 Oct 2026, incl. M1b) | Tokens and components, collapsible grouped sidebar, top bar, searchable branch selector, icons, toasts, empty/loading states, HTMX vendored; hide actions users cannot perform; all existing pages moved into the new shell unchanged in function | Brand colours (can start with placeholder) | 6–8 days |
 | M2 | Role dashboards | Head office network dashboard, principal, teacher, accountant, admissions dashboards with charts | M1 | 6–8 days |
 | M3 | Settings & multi-branch screens | Branches/regions/campuses, sessions, class levels & sections, class teachers, fee rates & bank details, users & role assignments, exam setup | M1 | 8–10 days |
 | M4 | Student lifecycle | Profile with tabs, photos, session rollover & promotion, withdrawal/transfer workflow, leaving & character certificates, student/staff ID cards, experience certificate, parent directory with family tree and family-wise defaulters, printable admission forms | M1, M3 | 9–12 days |

@@ -24,9 +24,9 @@
 </div>
 {% if can_reverse and not payment.is_reversed %}
 <details><summary>{% trans "Reverse this payment (entered by mistake)" %}</summary>
-  <form method="post" action="{% url 'fees:reverse_payment' payment.id %}" class="card">{% csrf_token %}
+  <form method="post" action="{% url 'fees:reverse_payment' payment.id %}" class="card" data-confirm="{% trans 'This payment will be marked as reversed and the student’s balance worked out again. The record is kept with your reason.' %}" data-confirm-button="{% trans 'Reverse payment' %}">{% csrf_token %}
     <div class="field"><label for="reason">{% trans "Reason" %}</label><input type="text" id="reason" name="reason" required maxlength="200"></div>
-    <button class="button secondary" type="submit">{% trans "Reverse payment" %}</button>
+    <button class="button danger" type="submit">{% trans "Reverse payment" %}</button>
   </form></details>
 {% endif %}
 {% endblock %}
