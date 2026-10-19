@@ -95,6 +95,54 @@
     if (event.persisted) document.querySelectorAll("form").forEach(reset);
   });
 
+  // ---------- Dashboards: "Hide amounts" (remembered on this browser) ----------
+  var moneyToggle = document.querySelector("[data-money-toggle]");
+  function setMoney(hidden) {
+    root.classList.toggle("hide-money", hidden);
+    if (!moneyToggle) return;
+    moneyToggle.setAttribute("aria-pressed", hidden ? "true" : "false");
+    moneyToggle.textContent = hidden ? moneyToggle.dataset.labelShow : moneyToggle.dataset.labelHide;
+  }
+  if (moneyToggle) {
+    var hiddenBefore = false;
+    try { hiddenBefore = localStorage.getItem("tasems.money") === "hidden"; } catch (e) { /* not remembered */ }
+    setMoney(hiddenBefore);
+    moneyToggle.addEventListener("click", function () {
+      var hidden = !root.classList.contains("hide-money");
+      setMoney(hidden);
+      try { localStorage.setItem("tasems.money", hidden ? "hidden" : "shown"); } catch (e) { /* not remembered */ }
+    });
+  }
+
+  // ---------- Charts: tooltip on hover and keyboard focus (values also in each chart's table) ----------
+  document.querySelectorAll("[data-chart]").forEach(function (figure) {
+    var tip = figure.querySelector(".chart-tip");
+    if (!tip) return;
+    var money = figure.classList.contains("money-chart");
+    function show(bar) {
+      var hiddenMoney = money && root.classList.contains("hide-money");
+      tip.textContent = "";
+      var value = document.createElement("strong");
+      value.textContent = hiddenMoney ? "••••" : bar.dataset.tipValue;
+      var label = document.createElement("span");
+      label.textContent = bar.dataset.tipTitle + (bar.dataset.tipDetail && !hiddenMoney ? " · " + bar.dataset.tipDetail : "");
+      tip.appendChild(value);
+      tip.appendChild(label);
+      var box = figure.getBoundingClientRect();
+      var mark = (bar.querySelector(".chart-mark") || bar).getBoundingClientRect();
+      tip.style.left = (mark.left + mark.width / 2 - box.left) + "px";
+      tip.style.top = (Math.max(mark.top - box.top, 16) - 6) + "px";
+      tip.hidden = false;
+    }
+    function hide() { tip.hidden = true; }
+    figure.querySelectorAll(".chart-bar").forEach(function (bar) {
+      bar.addEventListener("pointerenter", function () { show(bar); });
+      bar.addEventListener("focus", function () { show(bar); });
+      bar.addEventListener("pointerleave", hide);
+      bar.addEventListener("blur", hide);
+    });
+  });
+
   // ---------- Branch picker: type to filter (350+ branches) ----------
   document.querySelectorAll(".branch-picker").forEach(function (picker) {
     var input = picker.querySelector("[data-branch-filter]");

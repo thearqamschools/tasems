@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.14.0 — 2026-10-19 — Role dashboards (Phase 4, M2)
+
+Added
+- The home page is now a dashboard built from what each person may see: quick actions; class teachers see today's register and diary for each of their classes (with one-press links) and students absent three or more days in a row; principals see today's attendance with a class-wise table and a 14-day chart, this month's fees (billed, received, % collected, owed, received today) with a daily chart and payment methods, admissions and student records; head office and anyone with several branches see network totals, a 14-day attendance chart, a branch table with attendance and fee-collection meters, filters by head office and region, five orderings and the royalty due this month; staff with a login see their own attendance this month.
+- "Hide amounts" switch on money figures, remembered on each browser.
+- Charts drawn on the server (no chart library): one series in the brand colour, value on hover and keyboard focus, and a table view under each chart.
+- Urdu for all dashboard text. 12 dashboard tests (177 in total).
+
+Changed
+- Teacher's home: the register link reads "Change register" once today's register is taken.
+
+Not deployed.
+
 ## 0.13.0 — 2026-10-17 — Design system (Phase 1: UI/UX foundation)
 
 Added

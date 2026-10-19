@@ -54,6 +54,11 @@ left-to-right inside Urdu text (`class="num"`).
 | Risky action | `<form method="post" data-confirm="What will happen" data-confirm-button="Cancel voucher">` + `.button.danger` |
 | Disclosure | `<details><summary>…</summary>…</details>` (used for actions that need a reason) |
 | Tabs, pagination | `<nav class="tabs">` with `aria-current="page"`; `<nav class="pagination">` |
+| Quick actions | `<nav class="quick-actions">` of links with an icon |
+| Meter | `<span class="meter"><span style="inline-size:42%"></span></span>` (`.wide` for full width) |
+| Horizontal bars | `<ul class="hbars">` rows of label, `.hbar-track` > `.hbar-fill`, value |
+| Column chart | `apps/dashboards/charts.column_chart(points)` + `{% include "dashboards/_columns.html" with chart=… title=… %}` (D-064) |
+| Money figures | add `class="money"` so "Hide amounts" can mask them; charts of money pass `money=True` |
 
 ## Behaviours (`static/js/tasems.js`)
 

@@ -7,7 +7,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from apps.academics.models import ClassLevel, Section
+from apps.academics.models import Section
 from apps.organisation.models import AcademicSession, Branch
 from apps.people.models import Student, StudentGuardian
 
@@ -16,128 +16,133 @@ from .branch import current_branch, set_current_branch
 
 @login_required
 def home(request):
+    """The dashboard: panels chosen by what the person may see (permissions, not role names)."""
     user = request.user
     if not user.accessible_branch_ids() and hasattr(user, "parent_account"):
         return redirect("parents:home")
     branch = current_branch(request)
     session = AcademicSession.objects.filter(is_current=True).first()
-    context = {
-        "branch": branch,
-        "session": session,
-        "active_count": None,
-        "today_iso": timezone.localdate().isoformat(),
-    }
-
+    today = timezone.localdate()
+    context = {"branch": branch, "session": session, "today": today, "today_iso": today.isoformat()}
     if branch is None:
         return render(request, "core/home_no_access.html", context)
 
-    if user.has_branch_perm("people.view_student", branch.id):
-        students = Student.objects.filter(branch=branch)
-        active = students.filter(status=Student.Status.ACTIVE)
+    from apps.dashboards import metrics
+
+    def can(perm):
+        return user.has_branch_perm(perm, branch.id)
+
+    perms = {
+        "students": can("people.view_student"),
+        "attendance": can("attendance.view_attendancerecord"),
+        "fees": can("fees.view_voucher"),
+        "admissions": can("admissions.view_inquiry"),
+        "staff": can("hr.view_employee"),
+    }
+    context["can"] = perms
+    context["quick_actions"] = _quick_actions(user, branch, can)
+
+    if perms["students"]:
+        active = Student.objects.filter(branch=branch, status=Student.Status.ACTIVE)
         with_contact = StudentGuardian.objects.filter(student__in=active, is_primary_contact=True).values_list(
             "student_id", flat=True
         )
         enrolled_ids = active.filter(enrolments__session=session).values_list("id", flat=True) if session else []
-        by_stage = (
-            active.filter(enrolments__session=session)
-            .values("enrolments__section__class_level__stage")
-            .annotate(n=Count("id"))
-            if session
-            else []
-        )
-        stage_labels = dict(ClassLevel.Stage.choices)
-        context.update(
-            {
-                "active_count": active.count(),
-                "hifz_count": active.filter(is_hifz=True).count(),
-                "no_contact_count": active.exclude(id__in=with_contact).count(),
-                "not_enrolled_count": active.exclude(id__in=enrolled_ids).count() if session else None,
-                "by_stage": [
-                    (stage_labels.get(row["enrolments__section__class_level__stage"], "—"), row["n"])
-                    for row in by_stage
-                ],
-            }
-        )
-    if session and user.has_branch_perm("attendance.view_attendancerecord", branch.id):
-        from apps.attendance.models import SectionAttendance
+        context["students"] = {
+            "active": active.count(),
+            "hifz": active.filter(is_hifz=True).count(),
+            "no_contact": active.exclude(id__in=with_contact).count(),
+            "not_enrolled": active.exclude(id__in=enrolled_ids).count() if session else None,
+        }
+    if session and perms["attendance"]:
+        context["attendance"] = metrics.branch_today(branch, session, today)
+        context["classes"] = metrics.classes_today(branch, session, today)
+        context["attendance_trend"] = metrics.attendance_trend([branch.id], today)
+    if perms["fees"]:
+        context["fees"] = metrics.fee_month(branch, today)
+    if perms["admissions"]:
+        context["admissions"] = metrics.admissions(branch, today)
+    if perms["staff"]:
+        context["staff"] = metrics.staff_today(branch, today)
 
-        today = timezone.localdate()
-        context["registers_taken"] = SectionAttendance.objects.filter(branch=branch, date=today).count()
-        from apps.attendance.services import in_school
-
-        sections_today = Section.objects.filter(branch=branch, session=session, is_active=True)
-        context["registers_total"] = in_school(sections_today, today).count()
     my_sections = Section.objects.filter(class_teacher=user, is_active=True)
     if session:
         my_sections = my_sections.filter(session=session)
-    from apps.attendance.services import can_mark
-
     my_sections = list(
         my_sections.select_related("class_level", "branch", "session").annotate(
             n=Count("enrolments", filter=Q(enrolments__student__status=Student.Status.ACTIVE))
         )
     )
-    today = timezone.localdate()
-    for s in my_sections:
-        # Only offer "Take register" when it can be taken: today is a school day for this class and the
-        # section is in the branch being worked in (the register page works in the current branch).
-        s.can_take_register = s.branch_id == branch.id and can_mark(user, s, today)
-    context["my_sections"] = my_sections
+    if my_sections:
+        context["my_classes"] = metrics.my_classes(user, branch, my_sections, today)
+    employee = getattr(user, "employee", None)
+    if employee is not None:
+        context["my_month"] = metrics.my_month(employee, today)
 
     branch_ids = user.accessible_branch_ids("people.view_student")
     if len(branch_ids) > 1:
-        counts = dict(
-            Student.objects.filter(branch_id__in=branch_ids, status=Student.Status.ACTIVE)
-            .values("branch_id")
-            .annotate(n=Count("id"))
-            .values_list("branch_id", "n")
-        )
-        today = timezone.localdate()
-        registers, sections_due, diaries = {}, {}, {}
-        if session:
-            from apps.attendance.models import SectionAttendance
-            from apps.attendance.services import in_school
-            from apps.diary.models import Diary
-
-            registers = dict(
-                SectionAttendance.objects.filter(branch_id__in=branch_ids, date=today)
-                .values("branch_id")
-                .annotate(n=Count("id"))
-                .values_list("branch_id", "n")
-            )
-            sections_due = dict(
-                in_school(Section.objects.filter(branch_id__in=branch_ids, session=session, is_active=True), today)
-                .values("branch_id")
-                .annotate(n=Count("id"))
-                .values_list("branch_id", "n")
-            )
-            diaries = dict(
-                Diary.objects.filter(branch_id__in=branch_ids, date=today, status=Diary.Status.PUBLISHED)
-                .values("branch_id")
-                .annotate(n=Count("id"))
-                .values_list("branch_id", "n")
-            )
-        rows = [
-            {
-                "branch": b,
-                "students": counts.get(b.id, 0),
-                "registers": registers.get(b.id, 0),
-                "sections": sections_due.get(b.id, 0),
-                "diaries": diaries.get(b.id, 0),
-            }
-            for b in Branch.objects.filter(id__in=branch_ids).select_related("head_office", "region")
-        ]
-        # Branches that have not started today's registers first, then the largest.
-        rows.sort(
-            key=lambda r: (not (r["sections"] and r["registers"] < r["sections"]), -r["students"], r["branch"].name)
-        )
-        context["network"] = rows[:50]
-        context["network_registers"] = sum(registers.values())
-        context["network_sections"] = sum(sections_due.values())
-        context["network_diaries"] = sum(diaries.values())
-        context["network_students"] = sum(counts.values())
-        context["network_total_branches"] = len(branch_ids)
+        context.update(_network_context(request, user, branch_ids, session, today))
+    context["has_money"] = "fees" in context or context.get("network_totals", {}).get("has_fees", False)
     return render(request, "core/home.html", context)
+
+
+def _quick_actions(user, branch, can):
+    from django.urls import reverse
+
+    items = [
+        ("attendance.view_attendancerecord", "attendance:today", _("Take registers"), "calendar-check"),
+        ("diary.view_diary", "diary:day", _("Daily Diary"), "notebook-pen"),
+        ("fees.add_payment", "fees:index", _("Receive a fee"), "wallet"),
+        ("fees.add_voucher", "fees:generate", _("Make vouchers"), "receipt"),
+        ("admissions.add_inquiry", "admissions:new", _("New inquiry"), "user-plus"),
+        ("people.add_student", "people:student_create", _("Add a student"), "users"),
+        ("hr.add_punch", "hr:punches_import", _("Import machine file"), "user-check"),
+    ]
+    actions = [(reverse(name), label, icon) for perm, name, label, icon in items if can(perm)]
+    if getattr(user, "employee", None) is not None:
+        actions.append((reverse("hr:mine"), _("My attendance"), "clock"))
+    return actions[:6]
+
+
+def _network_context(request, user, branch_ids, session, today):
+    from apps.dashboards import metrics
+
+    branches = Branch.objects.filter(id__in=branch_ids).select_related("head_office", "region").order_by("name")
+    offices = sorted({b.head_office for b in branches}, key=lambda h: h.name)
+    regions = sorted({b.region for b in branches if b.region}, key=lambda r: r.name)
+    office_id, region_id = request.GET.get("ho", ""), request.GET.get("region", "")
+    if office_id.isdigit():
+        branches = branches.filter(head_office_id=int(office_id))
+    if region_id.isdigit():
+        branches = branches.filter(region_id=int(region_id))
+    branches = list(branches)
+    fee_ids = set(user.accessible_branch_ids("fees.view_voucher"))
+    rows, totals = metrics.network(branches, session, today, fee_ids)
+    royalty_ids = set(user.accessible_branch_ids("fees.view_royalty"))
+    royalty_branches = [b for b in branches if b.id in royalty_ids]
+    if royalty_branches:
+        from apps.fees import reports
+
+        # Same calculation as the Royalty page (D-040): each branch's percentage of fees received this month.
+        totals["royalty"] = sum((r.royalty for r in reports.royalty(royalty_branches, today)), metrics.ZERO)
+    sort = request.GET.get("sort", "attention")
+    if sort not in metrics.SORTS:
+        sort = "attention"
+    rows.sort(key=metrics.SORTS[sort])
+    show_all = request.GET.get("all") == "1"
+    return {
+        "network": rows if show_all else rows[:50],
+        "network_more": 0 if show_all else max(0, len(rows) - 50),
+        "network_totals": totals,
+        "network_trend": metrics.attendance_trend([b.id for b in branches], today),
+        "network_filters": {
+            "offices": offices if len(offices) > 1 else [],
+            "regions": regions,
+            "ho": office_id,
+            "region": region_id,
+            "sort": sort,
+        },
+    }
 
 
 @login_required

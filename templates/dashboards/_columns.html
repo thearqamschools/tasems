@@ -1,0 +1,26 @@
+{% load i18n %}{# Column chart drawn by apps/dashboards/charts.py. Expects: chart, title. One series → no legend; the title names it. #}
+<figure class="chart{% if chart.money %} money-chart{% endif %}" data-chart>
+  <div class="chart-scroll">
+    <svg class="chart-svg" viewBox="0 0 {{ chart.width }} {{ chart.height }}" role="group" aria-label="{{ title }}" dir="ltr">
+      {% for t in chart.ticks %}<line class="chart-grid" x1="{{ chart.left }}" x2="{{ chart.right }}" y1="{{ t.y }}" y2="{{ t.y }}"></line>
+      <text class="chart-tick{% if chart.money %} money{% endif %}" x="{{ chart.left|add:'-6' }}" y="{{ t.y }}" dy="4" text-anchor="end">{{ t.text }}</text>{% endfor %}
+      {% for b in chart.bars %}
+      <g class="chart-bar" tabindex="0" data-tip-title="{{ b.title }}" data-tip-value="{{ b.text }}"{% if b.detail %} data-tip-detail="{{ b.detail }}"{% endif %} aria-label="{{ b.title }}: {{ b.text }}">
+        <rect class="chart-hit" x="{{ b.hit_x }}" y="0" width="{{ b.hit_w }}" height="{{ chart.base }}"></rect>
+        {% if b.path %}<path class="chart-mark" d="{{ b.path }}"></path>{% endif %}
+        {% if b.is_last and b.path %}<text class="chart-value{% if chart.money %} money{% endif %}" x="{{ b.cx }}" y="{{ b.y }}" dy="-6" text-anchor="middle">{{ b.text }}</text>{% endif %}
+      </g>
+      {% if b.show_label %}<text class="chart-tick" x="{{ b.cx }}" y="{{ chart.label_y }}" text-anchor="middle">{{ b.label }}</text>{% endif %}
+      {% endfor %}
+      <line class="chart-axis" x1="{{ chart.left }}" x2="{{ chart.right }}" y1="{{ chart.base }}" y2="{{ chart.base }}"></line>
+    </svg>
+  </div>
+  <div class="chart-tip" role="status" hidden></div>
+  <details class="chart-table">
+    <summary>{% trans "Show as a table" %}</summary>
+    <div class="table-wrap"><table>
+      <thead><tr><th>{% trans "Day" %}</th><th class="num">{{ title }}</th></tr></thead>
+      <tbody>{% for b in chart.bars %}<tr><td>{{ b.title }}</td><td class="num{% if chart.money %} money{% endif %}">{{ b.text }}{% if b.detail %} <span class="muted">({{ b.detail }})</span>{% endif %}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </details>
+</figure>

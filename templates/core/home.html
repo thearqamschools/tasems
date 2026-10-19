@@ -1,50 +1,189 @@
-{% extends "base.html" %}{% load i18n %}
-{% block title %}{% trans "Home" %}{% endblock %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Dashboard" %}{% endblock %}
 {% block content %}
-<h1>{% blocktrans with name=request.user.get_short_name|default:request.user.username %}Assalamualaikum, {{ name }}{% endblocktrans %}</h1>
-<p class="lede">{% if session %}{% blocktrans with s=session.name %}Academic session {{ s }}{% endblocktrans %}{% else %}{% trans "No current academic session is set. Head office sets it under Setup." %}{% endif %}</p>
-
-{% if active_count is not None %}
-<div class="figures">
-  {% if registers_total %}<a class="figure {% if registers_taken < registers_total %}attention{% endif %}" href="{% url 'attendance:today' %}" style="color:inherit;text-decoration:none"><div class="value">{{ registers_taken }}/{{ registers_total }}</div><div class="label">{% trans "Registers taken today" %}</div></a>{% endif %}
-  <div class="figure"><div class="value">{{ active_count }}</div><div class="label">{% trans "Active students" %}</div></div>
-  <div class="figure"><div class="value">{{ hifz_count }}</div><div class="label">{% trans "Hifz students" %}</div></div>
-  <div class="figure {% if no_contact_count %}attention{% endif %}"><div class="value">{{ no_contact_count }}</div><div class="label">{% trans "Without a primary contact" %}</div></div>
-  {% if not_enrolled_count is not None %}<div class="figure {% if not_enrolled_count %}attention{% endif %}"><div class="value">{{ not_enrolled_count }}</div><div class="label">{% trans "Not placed in a class this session" %}</div></div>{% endif %}
+<div class="page-header">
+  <div>
+    <h1>{% blocktrans with name=request.user.get_short_name|default:request.user.username %}Assalamualaikum, {{ name }}{% endblocktrans %}</h1>
+    <p class="lede">{{ today|date:"l j F Y" }} · {% if session %}{% blocktrans with s=session.name %}Academic session {{ s }}{% endblocktrans %}{% else %}{% trans "No current academic session is set. Head office sets it under Setup." %}{% endif %}</p>
+  </div>
+  {% if has_money %}<div class="actions"><button type="button" class="button quiet sm" data-money-toggle aria-pressed="false" data-label-hide="{% trans 'Hide amounts' %}" data-label-show="{% trans 'Show amounts' %}">{% trans "Hide amounts" %}</button></div>{% endif %}
 </div>
-{% if by_stage %}
-<h2>{% trans "Students by stage" %}</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Stage" %}</th><th class="num">{% trans "Students" %}</th></tr></thead>
-  <tbody>{% for label, n in by_stage %}<tr><td>{{ label }}</td><td class="num">{{ n }}</td></tr>{% endfor %}</tbody>
-</table></div>
-{% endif %}
+
+{% if quick_actions %}
+<nav class="quick-actions" aria-label="{% trans 'Quick actions' %}">
+  {% for url, label, icon in quick_actions %}<a href="{{ url }}">{% icon icon %}<span>{{ label }}</span></a>{% endfor %}
+</nav>
 {% endif %}
 
-{% if my_sections %}
-<h2>{% trans "My classes" %}</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Branch" %}</th><th class="num">{% trans "Students" %}</th></tr></thead>
-  <tbody>{% for s in my_sections %}<tr><td><a href="{% url 'people:student_list' %}?section={{ s.id }}">{{ s }}</a>{% if s.can_take_register %} · <a href="{% url 'attendance:take' s.id today_iso %}">{% trans "Take register" %}</a>{% endif %}</td><td>{{ s.branch }}</td><td class="num">{{ s.n }}</td></tr>{% endfor %}</tbody>
-</table></div>
+{% if my_classes %}
+<section aria-labelledby="h-my">
+  <h2 id="h-my">{% trans "My classes today" %}</h2>
+  <div class="panel-grid">
+    {% for c in my_classes %}
+    <div class="card class-card">
+      <p class="card-title">{{ c.section }} <span class="muted">· {% blocktrans count n=c.section.n %}{{ n }} student{% plural %}{{ n }} students{% endblocktrans %}</span></p>
+      <ul class="checklist">
+        <li>{% if c.register %}{% icon "circle-check" %}<span>{% blocktrans with p=c.register.attended a=c.register.absent %}Register taken: {{ p }} present, {{ a }} absent{% endblocktrans %}</span>{% if c.can_take %} <a class="button quiet sm" href="{% url 'attendance:take' c.section.id today_iso %}">{% trans "Change register" %}</a>{% endif %}
+            {% elif c.can_take %}{% icon "circle-alert" %}<span>{% trans "Register not taken yet" %}</span> <a class="button sm" href="{% url 'attendance:take' c.section.id today_iso %}">{% trans "Take register" %}</a>
+            {% else %}{% icon "info" %}<span class="muted">{% trans "No register today for this class" %}</span>{% endif %}</li>
+        <li>{% if c.diary and c.diary.status == "published" %}{% icon "circle-check" %}<span>{% trans "Diary published" %}</span>
+            {% elif c.can_write_diary %}{% icon "circle-alert" %}<span>{% if c.diary %}{% trans "Diary saved as draft" %}{% else %}{% trans "Diary not written yet" %}{% endif %}</span> <a class="button quiet sm" href="{% url 'diary:write' c.section.id today_iso %}">{% if c.diary %}{% trans "Finish diary" %}{% else %}{% trans "Write diary" %}{% endif %}</a>
+            {% else %}{% icon "info" %}<span class="muted">{% trans "No diary today for this class" %}</span>{% endif %}</li>
+      </ul>
+      {% if c.streaks %}
+      <p class="small" style="margin:0.75rem 0 0.25rem"><strong>{% trans "Absent 3 or more days in a row" %}</strong></p>
+      <ul class="plain-list">{% for st, n in c.streaks %}<li><a href="{% url 'people:student_detail' st.id %}">{{ st }}</a> <span class="badge danger">{% blocktrans count n=n %}{{ n }} day{% plural %}{{ n }} days{% endblocktrans %}</span></li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
 {% endif %}
 
 {% if network %}
-<h2>{% blocktrans count n=network_total_branches %}Across your {{ n }} branch{% plural %}Across your {{ n }} branches{% endblocktrans %}</h2>
-<div class="figures">
-  <div class="figure"><div class="value">{{ network_students }}</div><div class="label">{% trans "Active students" %}</div></div>
-  <div class="figure {% if network_registers < network_sections %}attention{% endif %}"><div class="value">{{ network_registers }}/{{ network_sections }}</div><div class="label">{% trans "Registers taken today" %}</div></div>
-  <div class="figure"><div class="value">{{ network_diaries }}</div><div class="label">{% trans "Diaries published today" %}</div></div>
-</div>
-<p class="muted">{% trans "Branches still taking today's registers are listed first. Choose a branch in the top bar to work in it." %}</p>
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Head office" %}</th><th>{% trans "Region" %}</th><th class="num">{% trans "Active students" %}</th><th class="num">{% trans "Registers today" %}</th><th class="num">{% trans "Diaries today" %}</th></tr></thead>
-  <tbody>{% for r in network %}<tr>
-    <td>{{ r.branch.name }}</td><td>{{ r.branch.head_office.city }}</td><td>{{ r.branch.region|default:"—" }}</td>
-    <td class="num">{{ r.students }}</td>
-    <td class="num">{% if r.sections and r.registers < r.sections %}<span class="badge attention">{{ r.registers }}/{{ r.sections }}</span>{% else %}{{ r.registers }}/{{ r.sections }}{% endif %}</td>
-    <td class="num">{{ r.diaries }}</td>
-  </tr>{% endfor %}</tbody>
-</table></div>
+<section aria-labelledby="h-network">
+  <h2 id="h-network">{% blocktrans count n=network_totals.branches %}Across your {{ n }} branch{% plural %}Across your {{ n }} branches{% endblocktrans %}</h2>
+  <form method="get" class="filter-row" aria-label="{% trans 'Filter branches' %}">
+    {% if network_filters.offices %}<label>{% trans "Head office" %} <select name="ho"><option value="">{% trans "All" %}</option>{% for h in network_filters.offices %}<option value="{{ h.id }}" {% if network_filters.ho == h.id|stringformat:"s" %}selected{% endif %}>{{ h.city }}</option>{% endfor %}</select></label>{% endif %}
+    {% if network_filters.regions %}<label>{% trans "Region" %} <select name="region"><option value="">{% trans "All" %}</option>{% for r in network_filters.regions %}<option value="{{ r.id }}" {% if network_filters.region == r.id|stringformat:"s" %}selected{% endif %}>{{ r.name }}</option>{% endfor %}</select></label>{% endif %}
+    <label>{% trans "Order" %} <select name="sort">
+      <option value="attention" {% if network_filters.sort == "attention" %}selected{% endif %}>{% trans "Registers still to take first" %}</option>
+      <option value="attendance" {% if network_filters.sort == "attendance" %}selected{% endif %}>{% trans "Lowest attendance first" %}</option>
+      {% if network_totals.has_fees %}<option value="collection" {% if network_filters.sort == "collection" %}selected{% endif %}>{% trans "Lowest fee collection first" %}</option>{% endif %}
+      <option value="students" {% if network_filters.sort == "students" %}selected{% endif %}>{% trans "Largest first" %}</option>
+      <option value="name" {% if network_filters.sort == "name" %}selected{% endif %}>{% trans "By name" %}</option>
+    </select></label>
+    <button class="button quiet sm" type="submit">{% trans "Show" %}</button>
+  </form>
+  <div class="figures">
+    <div class="figure"><div class="value">{{ network_totals.students }}</div><div class="label">{% trans "Active students" %}</div></div>
+    <div class="figure {% if network_totals.registers < network_totals.sections %}attention{% endif %}"><div class="value">{{ network_totals.registers }}/{{ network_totals.sections }}</div><div class="label">{% trans "Registers taken today" %}</div></div>
+    <div class="figure"><div class="value">{% if network_totals.rate is not None %}{{ network_totals.rate }}%{% else %}—{% endif %}</div><div class="label">{% trans "Attendance today" %}</div></div>
+    <div class="figure"><div class="value">{{ network_totals.diaries }}</div><div class="label">{% trans "Diaries published today" %}</div></div>
+    {% if network_totals.has_fees %}
+    <div class="figure"><div class="value money">{{ network_totals.received|rupees }}</div><div class="label">{% blocktrans with b=network_totals.billed|rupees %}Fees received this month (Rs) of {{ b }} billed{% endblocktrans %}</div></div>
+    <div class="figure"><div class="value">{% if network_totals.collection is not None %}{{ network_totals.collection }}%{% else %}—{% endif %}</div><div class="label">{% trans "Fee collection this month" %}</div></div>
+    {% endif %}
+    {% if network_totals.royalty is not None %}<a class="figure" href="{% url 'fees:royalty' %}"><div class="value money">{{ network_totals.royalty|rupees }}</div><div class="label">{% trans "Royalty due this month (Rs)" %}</div></a>{% endif %}
+  </div>
+  {% if network_trend %}<div class="card"><p class="card-title">{% trans "Attendance, last 14 school days (%)" %}</p>{% include "dashboards/_columns.html" with chart=network_trend title=_("Attendance (%)") %}</div>{% endif %}
+  <p class="muted" style="margin-top:1rem">{% trans "Choose a branch in the top bar to work in it." %}</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Head office" %}</th><th>{% trans "Region" %}</th><th class="num">{% trans "Active students" %}</th><th class="num">{% trans "Registers today" %}</th><th>{% trans "Attendance today" %}</th><th class="num">{% trans "Diaries today" %}</th>{% if network_totals.has_fees %}<th>{% trans "Fee collection this month" %}</th>{% endif %}</tr></thead>
+    <tbody>{% for r in network %}<tr>
+      <td>{{ r.branch.name }}</td><td>{{ r.branch.head_office.city }}</td><td>{{ r.branch.region|default:"—" }}</td>
+      <td class="num">{{ r.students }}</td>
+      <td class="num">{% if r.sections and r.registers < r.sections %}<span class="badge attention">{{ r.registers }}/{{ r.sections }}</span>{% else %}{{ r.registers }}/{{ r.sections }}{% endif %}</td>
+      <td>{% if r.rate is not None %}<span class="meter" title="{{ r.attended }}/{{ r.total }}"><span style="inline-size:{{ r.rate }}%"></span></span> <span class="num">{{ r.rate }}%</span>{% else %}<span class="muted">—</span>{% endif %}</td>
+      <td class="num">{{ r.diaries }}</td>
+      {% if network_totals.has_fees %}<td>{% if r.collection is not None %}<span class="meter"><span style="inline-size:{{ r.collection }}%"></span></span> <span class="num">{{ r.collection }}%</span>{% elif r.has_fees %}<span class="muted">{% trans "Nothing billed" %}</span>{% else %}<span class="muted">—</span>{% endif %}</td>{% endif %}
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% if network_more %}<p><a href="?{% if network_filters.ho %}ho={{ network_filters.ho }}&amp;{% endif %}{% if network_filters.region %}region={{ network_filters.region }}&amp;{% endif %}sort={{ network_filters.sort }}&amp;all=1">{% blocktrans count n=network_more %}Show {{ n }} more branch{% plural %}Show {{ n }} more branches{% endblocktrans %}</a></p>{% endif %}
+</section>
+{% endif %}
+
+{% if attendance %}
+<section aria-labelledby="h-today">
+  <h2 id="h-today">{% blocktrans with b=branch.name %}Today at {{ b }}{% endblocktrans %}</h2>
+  <div class="figures">
+    <a class="figure {% if attendance.registers < attendance.due %}attention{% endif %}" href="{% url 'attendance:today' %}"><div class="value">{{ attendance.registers }}/{{ attendance.due }}</div><div class="label">{% trans "Registers taken today" %}</div></a>
+    <div class="figure"><div class="value">{% if attendance.rate is not None %}{{ attendance.rate }}%{% else %}—{% endif %}</div><div class="label">{% trans "Attendance today" %}</div></div>
+    <a class="figure {% if attendance.absent %}danger{% endif %}" href="{% url 'attendance:absentees' %}"><div class="value">{{ attendance.absent }}</div><div class="label">{% trans "Absent students" %}</div></a>
+    <div class="figure"><div class="value">{{ attendance.leave }}</div><div class="label">{% trans "On leave" %}</div></div>
+    {% if staff %}<a class="figure {% if staff.absent or staff.none %}attention{% endif %}" href="{% url 'hr:day' %}"><div class="value">{{ staff.in }}/{{ staff.total }}</div><div class="label">{% trans "Staff in today" %}</div></a>{% endif %}
+  </div>
+  <div class="panel-grid">
+    <div class="card">
+      <p class="card-title">{% trans "Attendance, last 14 school days (%)" %}</p>
+      {% if attendance_trend %}{% include "dashboards/_columns.html" with chart=attendance_trend title=_("Attendance (%)") %}{% else %}<div class="empty-state">{% icon "calendar-check" %}<p>{% trans "No registers taken yet." %}</p></div>{% endif %}
+    </div>
+    <div class="card">
+      <p class="card-title">{% trans "Classes today" %}</p>
+      {% if classes %}
+      <div class="table-wrap flush"><table>
+        <thead><tr><th>{% trans "Class" %}</th><th class="num">{% trans "Strength" %}</th><th class="num">{% trans "Present" %}</th><th class="num">{% trans "Absent" %}</th><th>%</th></tr></thead>
+        <tbody>{% for c in classes %}<tr>
+          <td>{{ c.section }}</td><td class="num">{{ c.strength }}</td>
+          {% if c.register %}<td class="num">{{ c.register.attended }}</td><td class="num">{{ c.register.absent }}</td><td><span class="meter"><span style="inline-size:{{ c.rate|default:0 }}%"></span></span> <span class="num">{{ c.rate|default:"—" }}%</span></td>
+          {% else %}<td colspan="3"><span class="badge attention">{% trans "Not taken" %}</span></td>{% endif %}
+        </tr>{% endfor %}</tbody>
+      </table></div>
+      {% else %}<div class="empty-state">{% icon "calendar-check" %}<p>{% trans "No classes attend today." %}</p></div>{% endif %}
+    </div>
+  </div>
+</section>
+{% elif staff %}
+<section aria-labelledby="h-staff"><h2 id="h-staff">{% trans "Staff today" %}</h2>
+  <div class="figures"><a class="figure" href="{% url 'hr:day' %}"><div class="value">{{ staff.in }}/{{ staff.total }}</div><div class="label">{% trans "Staff in today" %}</div></a>
+  <div class="figure"><div class="value">{{ staff.late }}</div><div class="label">{% trans "Late" %}</div></div>
+  <div class="figure"><div class="value">{{ staff.leave }}</div><div class="label">{% trans "On leave" %}</div></div></div>
+</section>
+{% endif %}
+
+{% if fees %}
+<section aria-labelledby="h-fees">
+  <h2 id="h-fees">{% blocktrans with m=fees.month|date:"F Y" %}Fees · {{ m }}{% endblocktrans %}</h2>
+  <div class="figures">
+    <div class="figure"><div class="value money">{{ fees.billed|rupees }}</div><div class="label">{% trans "Billed for the month (Rs)" %}</div></div>
+    <div class="figure ok"><div class="value money">{{ fees.collected|rupees }}</div><div class="label">{% trans "Received in the month (Rs)" %}</div></div>
+    <div class="figure"><div class="value">{% if fees.rate is not None %}{{ fees.rate }}%{% else %}—{% endif %}</div><div class="label">{% trans "Collected of billed" %}</div>{% if fees.rate is not None %}<span class="meter wide"><span style="inline-size:{% if fees.rate > 100 %}100{% else %}{{ fees.rate }}{% endif %}%"></span></span>{% endif %}</div>
+    <a class="figure {% if fees.defaulters %}attention{% endif %}" href="{% url 'fees:defaulters' %}"><div class="value money">{{ fees.outstanding|rupees }}</div><div class="label">{% blocktrans count n=fees.defaulters %}Owed by {{ n }} student (Rs){% plural %}Owed by {{ n }} students (Rs){% endblocktrans %}</div></a>
+    <a class="figure" href="{% url 'fees:collections' %}"><div class="value money">{{ fees.today_total|rupees }}</div><div class="label">{% blocktrans count n=fees.today_count %}Received today, {{ n }} payment (Rs){% plural %}Received today, {{ n }} payments (Rs){% endblocktrans %}</div></a>
+  </div>
+  <div class="panel-grid">
+    <div class="card"><p class="card-title">{% trans "Fees received each day this month (Rs)" %}</p>{% if fees.chart.empty %}<div class="empty-state">{% icon "wallet" %}<p>{% trans "No payments received this month yet." %}</p></div>{% else %}{% include "dashboards/_columns.html" with chart=fees.chart title=_("Received (Rs)") %}{% endif %}</div>
+    <div class="card">
+      <p class="card-title">{% trans "Received this month by payment method" %}</p>
+      {% if fees.by_method %}
+      <div class="table-wrap flush"><table>
+        <thead><tr><th>{% trans "Method" %}</th><th class="num">{% trans "Payments" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+        <tbody>{% for m in fees.by_method %}<tr><td>{{ m.method }}</td><td class="num">{{ m.n }}</td><td class="num money">{{ m.total|rupees }}</td></tr>{% endfor %}</tbody>
+      </table></div>
+      {% else %}<div class="empty-state">{% icon "wallet" %}<p>{% trans "No payments received this month yet." %}</p></div>{% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if admissions %}
+<section aria-labelledby="h-adm">
+  <h2 id="h-adm">{% trans "Admissions" %}</h2>
+  <div class="figures">
+    <a class="figure {% if admissions.due %}attention{% endif %}" href="{% url 'admissions:index' %}?view=due"><div class="value">{{ admissions.due }}</div><div class="label">{% trans "Follow-ups due today" %}</div></a>
+    <div class="figure"><div class="value">{{ admissions.visits }}</div><div class="label">{% trans "Campus visits today" %}</div></div>
+    <div class="figure"><div class="value">{{ admissions.new }}</div><div class="label">{% trans "New inquiries this month" %}</div></div>
+    <div class="figure ok"><div class="value">{{ admissions.admitted }}</div><div class="label">{% trans "Admitted this month" %}</div></div>
+  </div>
+  {% if admissions.open %}
+  <div class="card"><p class="card-title">{% blocktrans count n=admissions.open %}Open inquiry by stage ({{ n }}){% plural %}Open inquiries by stage ({{ n }}){% endblocktrans %}</p>
+    <ul class="hbars">{% for label, n, width in admissions.pipeline %}<li><span class="hbar-label">{{ label }}</span><span class="hbar-track"><span class="hbar-fill" style="inline-size:{{ width }}%"></span></span><span class="num hbar-value">{{ n }}</span></li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if students %}
+<section aria-labelledby="h-students">
+  <h2 id="h-students">{% trans "Student records" %}</h2>
+  <div class="figures">
+    <a class="figure" href="{% url 'people:student_list' %}"><div class="value">{{ students.active }}</div><div class="label">{% trans "Active students" %}</div></a>
+    <div class="figure"><div class="value">{{ students.hifz }}</div><div class="label">{% trans "Hifz students" %}</div></div>
+    <div class="figure {% if students.no_contact %}attention{% endif %}"><div class="value">{{ students.no_contact }}</div><div class="label">{% trans "Without a primary contact" %}</div></div>
+    {% if students.not_enrolled is not None %}<div class="figure {% if students.not_enrolled %}attention{% endif %}"><div class="value">{{ students.not_enrolled }}</div><div class="label">{% trans "Not placed in a class this session" %}</div></div>{% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if my_month %}
+<section aria-labelledby="h-me">
+  <h2 id="h-me">{% blocktrans with m=today|date:"F" %}My attendance in {{ m }}{% endblocktrans %}</h2>
+  <div class="figures">
+    <a class="figure ok" href="{% url 'hr:mine' %}"><div class="value">{{ my_month.present }}</div><div class="label">{% trans "Days present" %}</div></a>
+    <div class="figure {% if my_month.late %}attention{% endif %}"><div class="value">{{ my_month.late }}</div><div class="label">{% trans "Days late" %}</div></div>
+    <div class="figure {% if my_month.absent %}danger{% endif %}"><div class="value">{{ my_month.absent }}</div><div class="label">{% trans "Days absent" %}</div></div>
+    <div class="figure"><div class="value">{{ my_month.leave }}</div><div class="label">{% trans "Days on leave" %}</div></div>
+  </div>
+</section>
 {% endif %}
 {% endblock %}

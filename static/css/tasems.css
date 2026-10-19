@@ -7,7 +7,7 @@
    1. Tokens          5. Cards & KPI figures     9. Badges & alerts      13. Module screens
    2. Base & type     6. Tables                 10. Empty states        14. App shell
    3. Layout & pages  7. Forms & filters        11. Dialogs             15. Print & motion
-   4. Buttons         8. Disclosure & tabs      12. Pagination & misc
+   4. Buttons         8. Disclosure & tabs      12. Pagination & misc   16. Dashboards & charts
    ===================================================================== */
 
 /* Fonts are served from this server (no outside font service): small files, work on slow links. */
@@ -520,6 +520,62 @@ html[lang="ur"] .side-nav a { padding-block: 0.3rem; }
   .appbar-button span { display: none; }
   .appbar-button .ur { display: inline; }
   .branch-current { max-width: 11rem; }
+}
+
+/* ---------- 16. Dashboards & charts (apps/dashboards) ---------- */
+section + section, .quick-actions + section { margin-block-start: var(--space-6); }
+section > h2:first-child { margin-block-start: 0; }
+.quick-actions { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: var(--space-2); margin-block-end: var(--space-6); }
+.quick-actions a { display: flex; align-items: center; gap: var(--space-2); padding: 0.7rem 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); color: var(--ink); text-decoration: none; font-weight: 500; box-shadow: var(--shadow-sm); }
+.quick-actions a .icon { color: var(--brand); }
+.quick-actions a:hover { border-color: var(--brand); background: var(--brand-soft); color: var(--ink); }
+.panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--space-4); margin-block-start: var(--space-4); }
+.panel-grid > .card + .card { margin-block-start: 0; }
+.table-wrap.flush { box-shadow: none; border: 0; border-radius: 0; margin-inline: calc(var(--space-5) * -1); margin-block-end: calc(var(--space-5) * -1); border-block-start: 1px solid var(--line); }
+.checklist, .plain-list { list-style: none; margin: 0; padding: 0; }
+.checklist li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding-block: var(--space-2); border-block-end: 1px solid var(--line); }
+.checklist li:last-child { border-block-end: 0; }
+.checklist li > .icon { color: var(--brand); }
+.checklist li .button { margin-inline-start: auto; }
+.plain-list li { padding-block: 0.15rem; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); margin-block-end: var(--space-4); }
+.filter-row label { display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--step--1); font-weight: 600; }
+.filter-row select { min-height: 2.25rem; padding-block: 0.3rem; width: auto; min-width: 9rem; }
+/* Meter: a ratio against 100 %; same-hue track (brand on brand-soft). */
+.meter { display: inline-block; vertical-align: middle; inline-size: 5rem; block-size: 0.5rem; border-radius: var(--radius-full); background: var(--brand-soft); overflow: hidden; }
+.meter > span { display: block; block-size: 100%; max-inline-size: 100%; background: var(--brand); border-radius: inherit; }
+.meter.wide { display: block; inline-size: 100%; margin-block-start: var(--space-2); }
+.hbars { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.hbars li { display: grid; grid-template-columns: minmax(8rem, 12rem) 1fr 3rem; align-items: center; gap: var(--space-3); font-size: var(--step--1); }
+.hbar-track { block-size: 0.75rem; background: var(--surface-sunk); border-radius: 0 4px 4px 0; }
+.hbar-fill { display: block; block-size: 100%; min-inline-size: 2px; background: var(--brand); border-start-end-radius: 4px; border-end-end-radius: 4px; }
+.hbar-value { text-align: end; }
+/* Column charts (server-drawn SVG). One series in the brand colour; text in ink tokens, never the series colour. */
+.chart { position: relative; margin: 0; }
+.chart-scroll { overflow-x: auto; }
+.chart-svg { display: block; inline-size: 100%; min-inline-size: 30rem; max-inline-size: 46rem; block-size: auto; font-family: var(--font); }
+.chart-grid { stroke: var(--line); stroke-width: 1; }
+.chart-axis { stroke: var(--line-strong); stroke-width: 1; }
+.chart-tick { fill: var(--ink-soft); font-size: 11px; }
+.chart-value { fill: var(--ink); font-size: 12px; font-weight: 600; }
+.chart-mark { fill: var(--brand); }
+.chart-hit { fill: transparent; }
+.chart-bar { cursor: default; outline: none; }
+.chart-bar:hover .chart-hit, .chart-bar:focus-visible .chart-hit { fill: var(--brand-soft); fill-opacity: 0.6; }
+.chart-bar:hover .chart-mark, .chart-bar:focus-visible .chart-mark { fill: var(--brand-strong); }
+.chart-tip { position: absolute; z-index: 5; pointer-events: none; transform: translate(-50%, -100%); background: var(--ink); color: #fff; border-radius: var(--radius-sm); padding: 0.35rem 0.6rem; font-size: var(--step--1); line-height: 1.35; white-space: nowrap; box-shadow: var(--shadow-md); }
+.chart-tip strong { display: block; font-size: var(--step-0); }
+.chart-tip span { opacity: 0.85; }
+.chart-table { margin-block-start: var(--space-2); font-size: var(--step--1); }
+.chart-table .table-wrap { margin-block-start: var(--space-2); max-block-size: 18rem; overflow-y: auto; box-shadow: none; }
+/* "Hide amounts" (reference ERP: Show/Hide details): money is masked on screen, kept in the page. */
+.hide-money .money { color: transparent !important; fill: transparent !important; text-shadow: none; position: relative; }
+.hide-money .money::after { content: "••••"; position: absolute; inset-inline-start: 0; color: var(--ink-soft); letter-spacing: 0.1em; }
+.hide-money .num.money::after, .hide-money td.num .money::after { inset-inline-start: auto; inset-inline-end: 0; }
+.hide-money .money-chart .chart-svg, .hide-money .money-chart .chart-table { visibility: hidden; }
+@media (max-width: 34rem) {
+  .hbars li { grid-template-columns: 1fr 3rem; }
+  .hbars .hbar-track { grid-column: 1 / -1; grid-row: 2; }
 }
 
 /* ---------- 15. Print & motion ---------- */
