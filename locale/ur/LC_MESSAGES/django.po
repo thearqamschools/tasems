@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 11:16+0500\n"
+"POT-Creation-Date: 2026-10-19 13:08+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2476,6 +2476,14 @@ msgstr "سائن اِن"
 #: templates/accounts/login.html:5
 msgid "Staff sign-in for TASEMS."
 msgstr "TASEMS میں عملے کا سائن اِن۔"
+
+#: templates/accounts/login.html:12
+msgid "Parent?"
+msgstr "والدین؟"
+
+#: templates/accounts/login.html:12
+msgid "Sign in to the parent portal"
+msgstr "والدین کے پورٹل میں سائن اِن کریں"
 
 #: templates/accounts/mfa_setup.html:2 templates/accounts/mfa_setup.html:4
 msgid "Set up two-step sign-in"

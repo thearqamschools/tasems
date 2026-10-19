@@ -9,4 +9,5 @@
   {% for field in form %}{% include "includes_field.html" %}{% endfor %}
   <button class="button" type="submit">{% trans "Sign in" %}</button>
 </form>
+<p class="muted">{% trans "Parent?" %} <a href="{% url 'parents:login' %}">{% trans "Sign in to the parent portal" %}</a></p>
 {% endblock %}
