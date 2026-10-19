@@ -76,9 +76,9 @@ def _setup_warnings(branch):
     fee_settings = BranchFeeSettings.for_branch(branch)
     warnings = []
     if not (fee_settings.bank_name and fee_settings.account_number and fee_settings.account_title):
-        warnings.append(_("Bank name, account title and account number are not set (Setup → Branch fee settings)."))
+        warnings.append(_("Bank name, account title and account number are not set (Setup → Fee rates and vouchers)."))
     if not FeeRate.objects.filter(branch=branch, head__code="tuition").exists():
-        warnings.append(_("No monthly fee is set for this branch (Setup → Fee rates)."))
+        warnings.append(_("No monthly fee is set for this branch (Setup → Fee rates and vouchers)."))
     return warnings
 
 

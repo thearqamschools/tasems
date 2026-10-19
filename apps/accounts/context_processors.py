@@ -74,11 +74,21 @@ def _menu(user, branch):
             getattr(user, "employee", None) is not None and (reverse("hr:mine"), _("My attendance"), "clock"),
         ],
     )
-    if user.is_staff:
-        group(
-            _("Settings"),
-            [("/admin/", _("Setup"), "settings"), (reverse("design_system"), _("Design system"), "palette")],
-        )
+    can_setup = (
+        user.is_superuser
+        or perm("academics.change_section")
+        or perm("fees.change_feerate")
+        or bool(user.accessible_branch_ids("accounts.view_user"))
+        or bool(user.accessible_branch_ids("organisation.change_branch"))
+    )
+    group(
+        _("Settings"),
+        [
+            can_setup and (reverse("setup:hub"), _("Setup"), "settings"),
+            user.is_staff and ("/admin/", _("Advanced setup"), "file-text"),
+            user.is_staff and (reverse("design_system"), _("Design system"), "palette"),
+        ],
+    )
     return groups
 
 

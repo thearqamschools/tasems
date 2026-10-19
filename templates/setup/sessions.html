@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Academic sessions" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Academic sessions" %}</h1><p class="lede">{% trans "One session is current across the whole network. Registers, diaries, fees and results use the current session." %}</p></div>
+  <div class="actions"><a class="button" href="{% url 'setup:session_new' %}">{% trans "Add a session" %}</a></div>
+</div>
+{% if sessions %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Starts" %}</th><th>{% trans "Ends" %}</th><th></th><th></th></tr></thead>
+  <tbody>{% for s in sessions %}<tr>
+    <td><strong>{{ s.name }}</strong></td><td>{{ s.starts_on|date:"j M Y" }}</td><td>{{ s.ends_on|date:"j M Y" }}</td>
+    <td>{% if s.is_current %}<span class="badge ok">{% trans "Current" %}</span>{% else %}<form method="post" action="{% url 'setup:make_current' s.id %}" data-confirm="{% blocktrans with n=s.name %}{{ n }} will become the current session for every branch. Registers, diaries, fee vouchers and results will use it from now on.{% endblocktrans %}" data-confirm-button="{% trans 'Make current' %}">{% csrf_token %}<button class="button quiet sm" type="submit">{% trans "Make current" %}</button></form>{% endif %}</td>
+    <td><a class="button quiet sm" href="{% url 'setup:session_edit' s.id %}">{% trans "Edit" %}</a></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "calendar-check" %}<p>{% trans "No sessions yet." %}</p></div>{% endif %}
+{% endblock %}

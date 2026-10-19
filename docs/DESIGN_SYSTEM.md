@@ -59,6 +59,8 @@ left-to-right inside Urdu text (`class="num"`).
 | Horizontal bars | `<ul class="hbars">` rows of label, `.hbar-track` > `.hbar-fill`, value |
 | Column chart | `apps/dashboards/charts.column_chart(points)` + `{% include "dashboards/_columns.html" with chart=… title=… %}` (D-064) |
 | Money figures | add `class="money"` so "Hide amounts" can mask them; charts of money pass `money=True` |
+| Link cards | `<div class="setup-cards"><a class="setup-card" href=…>{% icon … %}<div><strong>…</strong><p>…</p></div></a></div>` (Setup hub) |
+| Form labels | plain, translated labels set in the form (`apps/setup/forms.LABELS`), never the model field's English name |
 
 ## Behaviours (`static/js/tasems.js`)
 
@@ -68,6 +70,8 @@ left-to-right inside Urdu text (`class="num"`).
   a payment cannot be saved twice. Resets after 8 s (downloads) and when coming back with the Back button.
 - **Sidebar:** collapse remembered per browser; slides in on phones; Escape closes it.
 - **Branch picker:** type to filter; Enter opens the first match.
+- **Scope chooser:** a form with `data-scope-form` shows only the field marked `data-scope-only="<scope>"` that
+  matches the chosen "Where" (head office, region or branch). Without JavaScript all fields show.
 
 ## Rules
 

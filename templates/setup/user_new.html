@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Add a login" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:users' %}">‹ {% trans "Users and roles" %}</a></p>
+<h1>{% trans "Add a login" %}</h1>
+<p class="lede">{% trans "TASEMS makes a temporary password and shows it once. Give it to the person privately; they should change it after signing in. People with privileged roles also set up two-step sign-in the first time." %}</p>
+<form method="post" novalidate>{% csrf_token %}
+  <div class="card">
+    <p class="card-title">{% trans "Person" %}</p>
+    {% if form.non_field_errors %}<ul class="errorlist nonfield">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  </div>
+  <div class="card">
+    <p class="card-title">{% trans "First role" %}</p>
+    {% include "setup/_assignment_fields.html" %}
+  </div>
+  <div class="actions"><button class="button" type="submit">{% trans "Add login" %}</button><a class="button quiet" href="{% url 'setup:users' %}">{% trans "Cancel" %}</a></div>
+</form>
+{% endblock %}

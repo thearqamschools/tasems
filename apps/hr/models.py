@@ -105,7 +105,7 @@ class Employee(BranchOwnedModel):
 
 @audited
 class HRSettings(TimeStampedModel):
-    """Duty time and working days for one branch (Setup → HR settings)."""
+    """Duty time and working days for one branch (Advanced setup → HR settings)."""
 
     branch = models.OneToOneField("organisation.Branch", on_delete=models.CASCADE, related_name="hr_settings")
     duty_starts = models.TimeField(null=True, blank=True, help_text=_("e.g. 07:45. Empty: late is not worked out."))

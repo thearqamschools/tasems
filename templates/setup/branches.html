@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Branches and regions" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Branches and regions" %}</h1><p class="lede">{% blocktrans count n=page.paginator.count %}{{ n }} branch{% plural %}{{ n }} branches{% endblocktrans %}</p></div>
+  {% if can_add %}<div class="actions"><a class="button" href="{% url 'setup:branch_new' %}">{% icon "building-2" %}{% trans "Add a branch" %}</a></div>{% endif %}
+</div>
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="q">{% trans "Search" %}</label><input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name, code or city' %}"></div>
+    {% if offices|length > 1 %}<div class="field"><label for="ho">{% trans "Head office" %}</label><select id="ho" name="ho"><option value="">{% trans "All" %}</option>{% for h in offices %}<option value="{{ h.id }}" {% if ho == h.id|stringformat:"s" %}selected{% endif %}>{{ h.city }}</option>{% endfor %}</select></div>{% endif %}
+    <div class="field"><label for="status">{% trans "Status" %}</label><select id="status" name="status"><option value="active" {% if status == "active" %}selected{% endif %}>{% trans "Open" %}</option><option value="inactive" {% if status == "inactive" %}selected{% endif %}>{% trans "Closed" %}</option><option value="all" {% if status == "all" %}selected{% endif %}>{% trans "All" %}</option></select></div>
+  </div>
+  <div class="actions"><button class="button quiet" type="submit">{% icon "search" %}{% trans "Show" %}</button></div>
+</form>
+{% if page %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Code" %}</th><th>{% trans "Head office" %}</th><th>{% trans "Region" %}</th><th>{% trans "Ownership" %}</th><th class="num">{% trans "Royalty %" %}</th><th>{% trans "City" %}</th><th></th></tr></thead>
+  <tbody>{% for b in page %}<tr>
+    <td>{{ b.name }}{% if not b.is_active %} <span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td><td class="num">{{ b.code }}</td>
+    <td>{{ b.head_office.city }}</td><td>{{ b.region|default:"—" }}</td><td>{{ b.get_ownership_display }}</td><td class="num">{{ b.royalty_percent }}</td><td>{{ b.city }}</td>
+    <td>{% if b.id in changeable %}<a class="button quiet sm" href="{% url 'setup:branch_edit' b.id %}">{% trans "Edit" %}</a>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="?q={{ q|urlencode }}&amp;ho={{ ho }}&amp;status={{ status }}&amp;page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %}<span class="muted">{% blocktrans with a=page.number b=page.paginator.num_pages %}Page {{ a }} of {{ b }}{% endblocktrans %}</span>{% if page.has_next %}<a href="?q={{ q|urlencode }}&amp;ho={{ ho }}&amp;status={{ status }}&amp;page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
+{% else %}<div class="card empty-state">{% icon "building-2" %}<p>{% trans "No branches match these filters." %}</p></div>{% endif %}
+
+{% if regions or can_add_region %}
+<h2>{% trans "Regions" %}</h2>
+<p class="muted">{% trans "Cities or areas a head office supervises. A regional director's access follows the region." %}</p>
+{% if regions %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Region" %}</th><th>{% trans "Head office" %}</th><th class="num">{% trans "Branches" %}</th><th></th></tr></thead>
+  <tbody>{% for r in regions %}<tr><td>{{ r.name }}{% if not r.is_active %} <span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td><td>{{ r.head_office.city }}</td><td class="num">{{ r.n }}</td><td><a class="button quiet sm" href="{% url 'setup:region_edit' r.id %}">{% trans "Edit" %}</a></td></tr>{% endfor %}</tbody>
+</table></div>{% endif %}
+{% if can_add_region %}<div class="actions"><a class="button secondary" href="{% url 'setup:region_new' %}">{% trans "Add a region" %}</a></div>{% endif %}
+{% endif %}
+{% endblock %}

@@ -7,7 +7,7 @@
   <a class="button {% if card == 'annual' %}secondary{% else %}quiet{% endif %}" href="?card=annual">{% trans "Annual result" %}</a>
   {% if can_rate %}<a class="button quiet" href="{% url 'exams:ratings' section.id %}">{% trans "Enter teacher ratings" %}</a>{% endif %}
 </nav>
-{% if not scheme %}<div class="card"><p>{% trans "No result pattern is set up. Head office sets it under Setup → Grading schemes." %}</p></div>
+{% if not scheme %}<div class="card"><p>{% trans "No result pattern is set up. Head office sets it under Advanced setup → Grading schemes." %}</p></div>
 {% elif not subjects %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No exam papers for this class yet." %}</p></div>
 {% else %}
 <div class="table-wrap"><table>

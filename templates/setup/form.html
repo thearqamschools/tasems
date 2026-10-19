@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{{ back }}">‹ {% trans "Back" %}</a></p>
+<h1>{{ title }}</h1>
+{% if lede %}<p class="lede">{{ lede }}</p>{% endif %}
+<form method="post" class="card" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}<ul class="errorlist nonfield">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{{ submit }}</button><a class="button quiet" href="{{ back }}">{% trans "Cancel" %}</a></div>
+</form>
+{% endblock %}

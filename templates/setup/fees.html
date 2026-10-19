@@ -1,0 +1,35 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Fee rates and vouchers" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Fee rates and vouchers" %}</h1><p class="lede">{{ branch.name }}</p></div>
+  {% if can.add %}<div class="actions"><a class="button" href="{% url 'setup:rate_new' %}">{% trans "Add a fee rate" %}</a></div>{% endif %}
+</div>
+<p class="muted">{% trans "A class's own rate wins over the all-classes rate. Each rate applies from its month until a newer rate starts; vouchers already made keep their amounts." %}</p>
+{% if rates %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Fee" %}</th><th>{% trans "Class" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th class="num">{% trans "Brothers and sisters (Rs)" %}</th><th>{% trans "From" %}</th><th></th><th></th></tr></thead>
+  <tbody>{% for r in rates %}<tr>
+    <td>{{ r.head.name }}</td><td>{{ r.class_level|default:_("All classes") }}</td>
+    <td class="num">{{ r.amount|rupees }}</td><td class="num">{{ r.sibling_amount|rupees }}</td>
+    <td>{{ r.effective_from|date:"M Y" }}</td>
+    <td>{% if r.pk in current_ids %}<span class="badge ok">{% trans "In use" %}</span>{% elif r.effective_from > today %}<span class="badge">{% trans "Upcoming" %}</span>{% else %}<span class="badge muted">{% trans "Replaced" %}</span>{% endif %}</td>
+    <td>{% if can.change %}<a class="button quiet sm" href="{% url 'setup:rate_edit' r.id %}">{% trans "Edit" %}</a>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "wallet" %}<p>{% trans "No fee rates yet. Vouchers cannot be made until the monthly fee is set." %}</p></div>{% endif %}
+
+<div class="page-header" style="margin-top:2rem">
+  <div><h2 style="margin:0">{% trans "Voucher and payment settings" %}</h2><p class="lede">{% trans "Printed on every fee voucher." %}</p></div>
+  {% if can.settings %}<div class="actions"><a class="button secondary" href="{% url 'setup:fee_settings' %}">{% trans "Change settings" %}</a></div>{% endif %}
+</div>
+<div class="card"><dl class="facts">
+  <dt>{% trans "Last day to pay" %}</dt><dd>{{ settings.due_day }}</dd>
+  <dt>{% trans "Late fine (Rs)" %}</dt><dd class="num">{{ settings.late_fine|rupees }}</dd>
+  <dt>{% trans "Bank" %}</dt><dd>{{ settings.bank_name|default:"—" }}{% if settings.bank_branch %}, {{ settings.bank_branch }}{% endif %}</dd>
+  <dt>{% trans "Account" %}</dt><dd>{% if settings.account_number %}{{ settings.account_title }} · <span class="num">{{ settings.account_number }}</span>{% else %}<span class="badge attention">{% trans "Not set" %}</span>{% endif %}</dd>
+  <dt>{% trans "Receipts on WhatsApp" %}</dt><dd class="num">{{ settings.receipt_whatsapp|default:"—" }}</dd>
+  <dt>{% trans "Part payments" %}</dt><dd>{% if settings.allow_partial_payment %}{% trans "Allowed" %}{% else %}{% trans "Not allowed" %}{% endif %}</dd>
+</dl></div>
+{% endblock %}

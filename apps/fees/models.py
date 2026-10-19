@@ -119,7 +119,7 @@ class FeeRate(BranchOwnedModel):
 @audited
 class BranchFeeSettings(TimeStampedModel):
     """Due date, late fine and the bank details printed on this branch's vouchers.
-    Head office or the branch accountant can change these at any time (Setup → Branch fee settings)."""
+    Head office or the branch accountant can change these at any time (Setup → Fee rates and vouchers)."""
 
     branch = models.OneToOneField("organisation.Branch", on_delete=models.CASCADE, related_name="fee_settings")
     due_day = models.PositiveSmallIntegerField(

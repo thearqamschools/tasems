@@ -78,7 +78,7 @@
           <input type="hidden" name="next" value="{{ request.get_full_path }}">
           {% if LANG == "ur" %}<button class="appbar-button" name="language" value="en">{% icon "languages" %}<span>English</span></button>{% else %}<button class="appbar-button" name="language" value="ur">{% icon "languages" %}<span class="ur">اردو</span></button>{% endif %}
         </form>
-        <span class="appbar-user">{% icon "user" %}<span>{{ user.get_full_name|default:user.get_username }}</span></span>
+        <a class="appbar-user" href="{% url 'accounts:password_change' %}" title="{% trans 'My password' %}">{% icon "user" %}<span>{{ user.get_full_name|default:user.get_username }}</span></a>
         <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="appbar-button" type="submit" aria-label="{% trans 'Sign out' %}">{% icon "log-out" %}<span>{% trans "Sign out" %}</span></button></form>
       </div>
     </header>

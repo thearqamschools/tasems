@@ -143,6 +143,19 @@
     });
   });
 
+  // ---------- Setup → role form: show only the place chooser that matches "Where" ----------
+  document.querySelectorAll("[data-scope-form]").forEach(function (form) {
+    var select = form.querySelector('select[name$="scope"]');
+    if (!select) return;
+    function sync() {
+      form.querySelectorAll("[data-scope-only]").forEach(function (box) {
+        box.hidden = box.getAttribute("data-scope-only") !== select.value;
+      });
+    }
+    select.addEventListener("change", sync);
+    sync();
+  });
+
   // ---------- Branch picker: type to filter (350+ branches) ----------
   document.querySelectorAll(".branch-picker").forEach(function (picker) {
     var input = picker.querySelector("[data-branch-filter]");

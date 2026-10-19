@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Setup" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Setup" %}</h1>
+<p class="lede">{% if branch %}{% blocktrans with b=branch.name %}Settings for {{ b }} and the areas you look after. Every change is recorded in the history with your name.{% endblocktrans %}{% else %}{% trans "Every change is recorded in the history with your name." %}{% endif %}</p>
+{% if cards %}
+<div class="setup-cards">
+  {% for url, title, text, icon in cards %}<a class="card setup-card" href="{{ url }}">{% icon icon %}<span><strong>{{ title }}</strong><span class="muted">{{ text }}</span></span></a>{% endfor %}
+</div>
+{% endif %}
+{% if request.user.is_staff %}<p class="muted" style="margin-top:1.5rem">{% trans "Class levels, subjects, exams and other network-wide lists are still set up under Advanced setup." %} <a href="/admin/">{% trans "Advanced setup" %}</a></p>{% endif %}
+{% endblock %}

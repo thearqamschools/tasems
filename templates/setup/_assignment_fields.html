@@ -1,0 +1,12 @@
+{% load i18n %}{# Role + where it applies. Only the place chooser that matches "Where" is shown (static/js/tasems.js); all work without JavaScript. #}
+{% if assign.non_field_errors %}<ul class="errorlist nonfield">{% for e in assign.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+<div class="form-grid" data-scope-form>
+  {% with field=assign.role %}{% include "includes_field.html" %}{% endwith %}
+  {% with field=assign.scope %}{% include "includes_field.html" %}{% endwith %}
+  <div data-scope-only="head_office">{% with field=assign.head_office %}{% include "includes_field.html" %}{% endwith %}</div>
+  <div data-scope-only="region">{% with field=assign.region %}{% include "includes_field.html" %}{% endwith %}</div>
+  <div data-scope-only="branch">{% with field=assign.branch %}{% include "includes_field.html" %}{% endwith %}</div>
+  {% with field=assign.starts_on %}{% include "includes_field.html" %}{% endwith %}
+  {% with field=assign.ends_on %}{% include "includes_field.html" %}{% endwith %}
+</div>
+<p class="muted small">{% trans "You can give roles only inside your own area. A role that manages logins or setup can be given only by someone who holds those powers there too." %}</p>

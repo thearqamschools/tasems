@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.15.0 — 2026-10-19 — Settings and branch management (Phase 4, M3)
+
+Added
+- Setup area (/setup/), shown to people who may change setup: classes and sections (class teacher, boys/girls group, campus, capacity), campuses, fee rates per class from a chosen month, voucher and bank settings, branches and regions, academic sessions with "Make current".
+- Users and roles: search staff logins, add a login with its first role, give and end roles, reset a password, switch a login off and on. New and reset passwords are random, shown once and never stored in the history.
+- My password: every staff member can change their own password from the top bar.
+- Access rule (D-066): roles can be given only inside your own area; roles that manage logins, structure or the audit log only by someone who holds those powers there; nobody changes their own access; superusers are protected.
+- Urdu for all new text and clear labels on every setup form. 17 setup tests (194 in total).
+
+Changed
+- Settings menu: "Setup" opens the new screens; the admin site is now "Advanced setup" (staff accounts only).
+
+Not deployed.
+
 ## 0.14.0 — 2026-10-19 — Role dashboards (Phase 4, M2)
 
 Added

@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{% trans "Staff" %}</h1>
 <p class="lede">{% trans "Staff records, attendance from the face-recognition machine, and leave." %}</p>
-{% if settings_missing %}<ul class="messages"><li class="warning">{% trans "Duty time is not set for this branch, so late arrivals are not worked out yet (Setup → HR settings)." %}</li></ul>{% endif %}
+{% if settings_missing %}<ul class="messages"><li class="warning">{% trans "Duty time is not set for this branch, so late arrivals are not worked out yet (Advanced setup → HR settings)." %}</li></ul>{% endif %}
 
 <div class="figures">
   <a class="figure" href="{% url 'hr:day' %}" style="color:inherit;text-decoration:none"><div class="value">{{ counts.in|default:0 }}</div><div class="label">{% trans "In today" %}</div></a>

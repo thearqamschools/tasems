@@ -5,6 +5,7 @@ import time
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, resolve_url
 from django.utils import translation
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -151,3 +152,19 @@ def logout_view(request):
 def admin_login_redirect(request, extra_context=None):
     """The admin site uses the same sign-in (and two-factor) as everything else."""
     return redirect(f"/accounts/login/?next={request.GET.get('next', '/admin/')}")
+
+
+@never_cache
+@login_required
+def password_change_view(request):
+    """Staff change their own password (e.g. after receiving a temporary one from Setup → Users and roles)."""
+    from django.contrib.auth import update_session_auth_hash
+    from django.contrib.auth.forms import PasswordChangeForm
+
+    form = PasswordChangeForm(request.user, request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)  # stay signed in on this device
+        messages.success(request, _("Your password is changed."))
+        return redirect("home")
+    return render(request, "accounts/password_change.html", {"form": form})

@@ -18,7 +18,7 @@
   <tbody>{% for e in exams %}<tr><td>{{ e.name }}</td><td>{{ e.get_kind_display }}</td><td>{{ e.marks_due_on|date:"d M Y"|default:"—" }}</td>
     <td>{% if e.is_published %}<span class="badge">{% trans "Published" %}</span>{% else %}<span class="badge muted">{% trans "Not published" %}</span>{% endif %}</td></tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No exams set up yet. Head office creates exams and their papers under Setup → Exams." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No exams set up yet. Head office creates exams and their papers under Advanced setup → Exams." %}</p></div>{% endif %}
 
 <h2>{% trans "All sections" %}</h2>
 {% if sections %}

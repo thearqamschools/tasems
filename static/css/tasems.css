@@ -468,6 +468,8 @@ html[lang="ur"] .side-nav a { padding-block: 0.3rem; }
 @media (max-width: 89.99rem) { .appbar-user { display: none; } }
 .appbar-user { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--ink-soft); font-size: var(--step--1); padding-inline: 0.4rem; max-width: 14rem; }
 .appbar-user span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+a.appbar-user { text-decoration: none; border-radius: var(--radius-sm); min-height: 2.5rem; }
+a.appbar-user:hover { background: var(--brand-soft); color: var(--brand); }
 
 /* Branch picker: searchable, grouped by head office; works without JavaScript (<details>). */
 .branch-static, .branch-picker summary { display: inline-flex; align-items: center; gap: 0.5rem; max-width: 100%; font-weight: 600; color: var(--ink); }
@@ -577,6 +579,14 @@ section > h2:first-child { margin-block-start: 0; }
   .hbars li { grid-template-columns: 1fr 3rem; }
   .hbars .hbar-track { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* ---------- 17. Setup screens ---------- */
+.setup-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: var(--space-3); }
+.setup-card { display: flex; gap: var(--space-3); align-items: flex-start; color: var(--ink); text-decoration: none; }
+.setup-card + .setup-card { margin-block-start: 0; }
+.setup-card > .icon { width: 2.5rem; height: 2.5rem; padding: 0.55rem; border-radius: var(--radius-sm); background: var(--brand-soft); color: var(--brand); }
+.setup-card > span { display: flex; flex-direction: column; gap: var(--space-1); }
+.setup-card:hover { border-color: var(--brand); color: var(--ink); }
 
 /* ---------- 15. Print & motion ---------- */
 @media print {

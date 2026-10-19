@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from apps.core.audit import audited
@@ -118,6 +119,11 @@ class Role(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def display_name(self):
+        """The Urdu name when the page is in Urdu and one is set."""
+        return self.name_ur if self.name_ur and get_language() == "ur" else self.name
 
 
 @audited

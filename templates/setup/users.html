@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Users and roles" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Users and roles" %}</h1><p class="lede">{% blocktrans count n=page.paginator.count %}{{ n }} person{% plural %}{{ n }} people{% endblocktrans %}</p></div>
+  {% if can_add %}<div class="actions"><a class="button" href="{% url 'setup:user_new' %}">{% icon "user-plus" %}{% trans "Add a login" %}</a></div>{% endif %}
+</div>
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="q">{% trans "Search" %}</label><input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name, username or mobile' %}"></div>
+    <div class="field"><label for="role">{% trans "Role" %}</label><select id="role" name="role"><option value="">{% trans "All roles" %}</option>{% for r in roles %}<option value="{{ r.id }}" {% if role == r.id|stringformat:"s" %}selected{% endif %}>{{ r.display_name }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="status">{% trans "Login" %}</label><select id="status" name="status"><option value="active" {% if status == "active" %}selected{% endif %}>{% trans "Switched on" %}</option><option value="inactive" {% if status == "inactive" %}selected{% endif %}>{% trans "Switched off" %}</option><option value="all" {% if status == "all" %}selected{% endif %}>{% trans "All" %}</option></select></div>
+  </div>
+  <div class="actions"><button class="button quiet" type="submit">{% icon "search" %}{% trans "Show" %}</button></div>
+</form>
+{% if page %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Username" %}</th><th>{% trans "Mobile" %}</th><th>{% trans "Roles" %}</th><th></th></tr></thead>
+  <tbody>{% for u in page %}<tr>
+    <td><a href="{% url 'setup:user' u.id %}">{{ u.get_full_name|default:u.username }}</a>{% if not u.is_active %} <span class="badge muted">{% trans "Switched off" %}</span>{% endif %}</td>
+    <td class="num">{{ u.username }}</td><td class="num">{{ u.phone|default:"—" }}</td>
+    <td>{% for a in u.current_roles %}<span class="badge">{{ a.role.display_name }} · {{ a.branch|default:a.region|default:a.head_office|default:_("Whole network") }}</span> {% empty %}<span class="muted">—</span>{% endfor %}</td>
+    <td><a class="button quiet sm" href="{% url 'setup:user' u.id %}">{% trans "Open" %}</a></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="?q={{ q|urlencode }}&amp;role={{ role }}&amp;status={{ status }}&amp;page={{ page.previous_page_number }}">{% trans "Previous" %}</a>{% endif %}<span class="muted">{% blocktrans with a=page.number b=page.paginator.num_pages %}Page {{ a }} of {{ b }}{% endblocktrans %}</span>{% if page.has_next %}<a href="?q={{ q|urlencode }}&amp;role={{ role }}&amp;status={{ status }}&amp;page={{ page.next_page_number }}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}
+{% else %}<div class="card empty-state">{% icon "user-check" %}<p>{% trans "Nobody matches these filters." %}</p></div>{% endif %}
+{% endblock %}

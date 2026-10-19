@@ -1,0 +1,53 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ target.get_full_name|default:target.username }}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:users' %}">‹ {% trans "Users and roles" %}</a></p>
+<div class="page-header">
+  <div>
+    <h1>{{ target.get_full_name|default:target.username }}{% if not target.is_active %} <span class="badge muted">{% trans "Switched off" %}</span>{% endif %}</h1>
+    <p class="lede"><span class="num">{{ target.username }}</span>{% if target.phone %} · <span class="num">{{ target.phone }}</span>{% endif %}{% if target.last_login %} · {% blocktrans with d=target.last_login|date:"j M Y" %}last signed in {{ d }}{% endblocktrans %}{% else %} · {% trans "has not signed in yet" %}{% endif %}</p>
+  </div>
+  {% if can_manage %}
+  <div class="actions">
+    <form method="post" action="{% url 'setup:reset_password' target.id %}" data-confirm="{% trans 'A new temporary password will replace the current one. The person will need the new password to sign in.' %}" data-confirm-button="{% trans 'Reset password' %}">{% csrf_token %}<button class="button quiet" type="submit">{% trans "Reset password" %}</button></form>
+    <form method="post" action="{% url 'setup:set_active' target.id %}"{% if target.is_active %} data-confirm="{% trans 'This person will no longer be able to sign in. Their records and history stay.' %}" data-confirm-button="{% trans 'Switch off login' %}"{% endif %}>{% csrf_token %}
+      {% if target.is_active %}<input type="hidden" name="active" value="0"><button class="button danger" type="submit">{% trans "Switch off login" %}</button>{% else %}<input type="hidden" name="active" value="1"><button class="button secondary" type="submit">{% trans "Switch on login" %}</button>{% endif %}
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% if is_self %}<div class="callout">{% icon "info" %}<div><p>{% trans "This is your own login. Someone else in your area changes your roles; you can change your own password from the top bar." %}</p></div></div>{% endif %}
+{% if target.is_superuser %}<div class="callout attention">{% icon "triangle-alert" %}<div><p>{% trans "System administrator (superuser): can do everything everywhere. Only another superuser can change this login." %}</p></div></div>{% endif %}
+
+<h2>{% trans "Roles" %}</h2>
+{% if assignments %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Role" %}</th><th>{% trans "Where" %}</th><th>{% trans "From" %}</th><th>{% trans "Until" %}</th><th></th><th></th></tr></thead>
+  <tbody>{% for a in assignments %}<tr{% if not a.is_active %} class="muted"{% endif %}>
+    <td>{{ a.role.display_name }}{% if a.role.requires_mfa %} <span class="badge" title="{% trans 'Needs two-step sign-in' %}">2FA</span>{% endif %}</td>
+    <td>{{ a.branch|default:a.region|default:a.head_office|default:_("Whole network") }} <span class="muted small">({{ a.get_scope_display }})</span></td>
+    <td>{{ a.starts_on|date:"j M Y"|default:"—" }}</td><td>{{ a.ends_on|date:"j M Y"|default:"—" }}</td>
+    <td>{% if a.is_active %}<span class="badge ok">{% trans "In force" %}</span>{% else %}<span class="badge muted">{% trans "Ended" %}</span>{% endif %}</td>
+    <td>{% if a.can_end %}<form method="post" action="{% url 'setup:end_assignment' target.id a.id %}" data-confirm="{% blocktrans with r=a.role.display_name %}{{ r }} will end today. The person keeps any other roles.{% endblocktrans %}" data-confirm-button="{% trans 'End role' %}">{% csrf_token %}<button class="button quiet sm" type="submit">{% trans "End role" %}</button></form>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<p class="muted">{% trans "No roles: this person cannot see any branch." %}</p>{% endif %}
+
+{% if can_assign %}
+<details class="card" {% if assign.errors %}open{% endif %} style="margin-top:1rem">
+  <summary>{% trans "Give another role" %}</summary>
+  <form method="post" novalidate>{% csrf_token %}<input type="hidden" name="action" value="assign">
+    {% include "setup/_assignment_fields.html" %}
+    <div class="actions"><button class="button" type="submit">{% trans "Give role" %}</button></div>
+  </form>
+</details>
+{% endif %}
+
+{% if can_manage %}
+<h2>{% trans "Details" %}</h2>
+<form method="post" class="card" novalidate>{% csrf_token %}<input type="hidden" name="action" value="details">
+  <div class="form-grid">{% for field in details %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save details" %}</button></div>
+</form>
+{% endif %}
+{% endblock %}
