@@ -57,7 +57,7 @@ image. Choice of library to be recorded as a decision before Milestone 6.
 | M6 | Reports centre + background printing | One reports hub (each module: KPI cards + printable report set, as in the reference), Excel/PDF everywhere, family vouchers, job queue for large PDFs | M5 | 6–8 days |
 | M7 | Academic management | Subject-teacher assignment, timetable, holiday calendar, date sheets, exam slips with photo, award lists | M3 | 6–8 days |
 | M8 | Notices & parent communication | Circulars in portal and staff home; message templates with placeholders; PWA for parents; SMS/WhatsApp provider later | M1 | 4–6 days (+ provider) |
-| M9 ✱ | Accounting | Expenses, other income, cash/bank book, branch P&L, head-office consolidation | M3 | 10–15 days |
+| M9 ✱ (started: expenses, royalty ledger, 19 Oct 2026) | Accounting | Expenses, other income, cash/bank book, branch P&L, head-office consolidation | M3 | 10–15 days |
 | M10 ✱ | Payroll | Salary structures, monthly run from staff attendance, payslips, bank sheet | M3 | 8–12 days |
 | M11 ✱ | Inventory | Items, stock, issue, point of sale with barcode scan and receipt, sales linked to vouchers, stock reports | M9 | 7–9 days |
 | M12 ✱ | Hifz | Per D-050 when un-deferred | M4 | 8–10 days |

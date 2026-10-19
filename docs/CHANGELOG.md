@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.17.0 — 2026-10-19 — Project lead's changes, batch 4: royalty and expenses
+
+Added
+- Royalty: paid, pending and total due for every branch on the royalty statement; each branch's royalty month by month with unpaid royalty carried forward; head office records "Royalty received" with a slip photo; branches see their own royalty.
+- Expenses (Finance → Expenses): record an expense with head, amount, what for, paid to, cash or bank, bill photo; month totals by head and cash/bank; net cash today (cash fees received minus cash spent); cancelling keeps the record with a reason.
+- Demo: royalty payments for some franchises and a few expenses.
+
+Not deployed (demo updates automatically).
+
 ## 0.16.0 — 2026-10-19 — Project lead's changes, batches 1–3: students, attendance, staff, fees
 
 Changed

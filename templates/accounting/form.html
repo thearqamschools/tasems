@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Add expense" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'accounting:index' %}">‹ {% trans "Expenses" %}</a></p>
+<h1>{% trans "Add expense" %}</h1>
+<p class="lede">{% trans "Recorded in your name. Cash expenses reduce today's cash in hand." %}</p>
+<form method="post" class="card" enctype="multipart/form-data" data-expense-form>{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save expense" %}</button>
+  <a class="button quiet" href="{% url 'accounting:index' %}">{% trans "Back" %}</a></div>
+</form>
+{% endblock %}

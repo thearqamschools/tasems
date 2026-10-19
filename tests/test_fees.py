@@ -324,6 +324,45 @@ def test_royalty_on_all_fees_received(fees, org, make_user):
     assert (row.collected, row.billed, row.percent, row.royalty) == (D(3500), D(3500), D(8), D(280))
 
 
+def test_royalty_paid_pending_and_total_due_carry_forward(fees, org, make_user, login_as, tmp_path, settings):
+    """The project lead's example: month 1 royalty 100,000, paid 50,000; month 2 royalty 20,000,
+    paid 10,000 → total due 60,000."""
+    settings.MEDIA_ROOT = tmp_path
+    franchise = org["fsd_franchise"]
+    franchise.royalty_percent = D(10)
+    franchise.save()
+    kid = Student.objects.create(
+        branch=franchise, admission_no="R-1", first_name="R", gender="male", admission_date=dt.date(2026, 4, 1)
+    )
+    owner = make_user("principal", Scope.BRANCH, franchise)
+    S.record_payment(kid, D(1_000_000), dt.date(2026, 9, 10), "counter", owner)  # Sep: royalty 100,000
+    S.record_payment(kid, D(200_000), dt.date(2026, 10, 10), "counter", owner)  # Oct: royalty 20,000
+    admin = make_user("head_office_admin", Scope.HEAD_OFFICE, org["fsd"])
+    office = login_as(admin)
+    url = f"/fees/royalty/branch/{franchise.id}/?month=2026-10"
+    slip = SimpleUploadedFile("slip.jpg", b"\xff\xd8 slip", content_type="image/jpeg")
+    office.post(url, {"month": "2026-09", "amount": "50000", "paid_on": "2026-09-30", "attachment": slip})
+    office.post(url, {"month": "2026-10", "amount": "10000", "paid_on": "2026-10-14"})
+    ledger = reports.royalty_ledger(franchise, OCT)
+    sep, octo = ledger["rows"][-2], ledger["rows"][-1]
+    assert (sep["due"], sep["paid"], sep["left"], sep["total_due"]) == (D(100_000), D(50_000), D(50_000), D(50_000))
+    assert (octo["due"], octo["paid"], octo["left"], octo["total_due"]) == (D(20_000), D(10_000), D(10_000), D(60_000))
+    assert reports.royalty_balances([franchise], OCT)[franchise.id] == {"paid": D(10_000), "total_due": D(60_000)}
+    statement = office.get("/fees/royalty/?month=2026-10").content.decode()
+    assert "60,000" in statement
+    from apps.fees.models import RoyaltyPayment
+
+    proof = RoyaltyPayment.objects.get(month=dt.date(2026, 9, 1))
+    assert office.get(f"/fees/royalty/payment/{proof.id}/attachment/").status_code == 200
+    # The branch sees its own royalty but cannot record payments; another branch cannot see it.
+    branch_view = login_as(owner)
+    assert "60,000" in branch_view.get(url).content.decode()
+    assert branch_view.post(url, {"month": "2026-10", "amount": "1", "paid_on": "2026-10-14"}).status_code == 403
+    outsider = login_as(make_user("principal", Scope.BRANCH, org["lhr_franchise"]))
+    assert outsider.get(url).status_code == 404
+    assert outsider.get(f"/fees/royalty/payment/{proof.id}/attachment/").status_code == 404
+
+
 # --- Screens ---------------------------------------------------------------------------------
 
 

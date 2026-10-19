@@ -1,0 +1,47 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Expenses" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{% trans "Expenses" %}</h1><p class="lede">{{ branch.name }} · {{ month|date:"F Y" }}</p></div>
+  {% if can_add %}<div class="actions"><a class="button" href="{% url 'accounting:new' %}">{% icon "receipt" %}{% trans "Add expense" %}</a></div>{% endif %}
+</div>
+
+<h2>{% trans "Cash in hand today" %}</h2>
+<div class="figures">
+  <div class="figure"><div class="value money">{{ cash_in|rupees }}</div><div class="label">{% trans "Cash fees received today (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ cash_out|rupees }}</div><div class="label">{% trans "Cash spent today (Rs)" %}</div></div>
+  <div class="figure {% if cash_net < 0 %}danger{% endif %}"><div class="value money">{{ cash_net|rupees }}</div><div class="label">{% trans "Net cash today (Rs)" %}</div></div>
+</div>
+
+<h2>{{ month|date:"F Y" }}</h2>
+<form method="get" class="actions"><label for="month">{% trans "Month" %}</label>
+  <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto">
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button></form>
+<div class="figures">
+  <div class="figure"><div class="value money">{{ total|rupees }}</div><div class="label">{% trans "Spent this month (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ cash_total|rupees }}</div><div class="label">{% trans "From cash (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ bank_total|rupees }}</div><div class="label">{% trans "From bank (Rs)" %}</div></div>
+</div>
+{% if by_head %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Expense head" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>{% for name, amount in by_head %}<tr><td>{{ name }}</td><td class="num money">{{ amount|rupees }}</td></tr>{% endfor %}</tbody>
+</table></div>{% endif %}
+
+<h2>{% trans "All expenses" %}</h2>
+{% if expenses %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Expense head" %}</th><th>{% trans "What for" %}</th><th>{% trans "Paid to" %}</th><th>{% trans "Paid from" %}</th><th>{% trans "Recorded by" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th></th></tr></thead>
+  <tbody>{% for e in expenses %}<tr{% if e.is_cancelled %} class="muted"{% endif %}>
+    <td>{{ e.date|date:"d M" }}</td><td>{{ e.head.name }}</td>
+    <td>{{ e.description }}{% if e.reference %} <span class="muted small num">{{ e.reference }}</span>{% endif %}{% if e.attachment %} <a href="{% url 'accounting:attachment' e.id %}" title="{% trans 'Bill photo' %}">{% icon "file-text" %}</a>{% endif %}
+      {% if e.is_cancelled %}<br><span class="badge muted">{% trans "Cancelled" %}</span> <span class="small">{{ e.cancel_reason }}</span>{% endif %}</td>
+    <td>{{ e.paid_to|default:"—" }}</td><td>{{ e.paid_from_label }}</td>
+    <td>{{ e.recorded_by.get_full_name|default:e.recorded_by.username }}</td>
+    <td class="num money">{% if e.is_cancelled %}<s>{{ e.amount|rupees }}</s>{% else %}{{ e.amount|rupees }}{% endif %}</td>
+    <td>{% if can_cancel and not e.is_cancelled %}<details><summary>{% trans "Cancel" %}</summary>
+      <form method="post" action="{% url 'accounting:cancel' e.id %}" data-confirm="{% trans 'This expense will be marked as cancelled. The record is kept with your reason.' %}" data-confirm-button="{% trans 'Cancel expense' %}">{% csrf_token %}
+        <input name="reason" required maxlength="200" placeholder="{% trans 'Reason' %}"> <button class="button danger sm" type="submit">{% trans "Cancel expense" %}</button></form></details>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "receipt" %}<p>{% trans "No expenses recorded this month." %}</p></div>{% endif %}
+{% endblock %}

@@ -45,6 +45,12 @@ def get_item(mapping, key):
 
 
 @register.filter
+def sub(value, other):
+    """a|sub:b → a − b (amounts in tables)."""
+    return value - other
+
+
+@register.filter
 def split(value):
     """ "a b c"|split → ["a", "b", "c"] (lists of field names in templates)."""
     return value.split()

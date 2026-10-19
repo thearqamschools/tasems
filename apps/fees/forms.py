@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.academics.models import Section
 
-from .models import BankAccount, Concession, FeeHead, Method, month_start
+from .models import BankAccount, Concession, FeeHead, Method, RoyaltyPayment, month_start
 
 DATE = forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")
 PROOF_TYPES = {".jpg", ".jpeg", ".png", ".pdf"}
@@ -119,7 +119,6 @@ class PaymentForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.full_amount, self.allow_partial = full_amount, allow_partial
         self.fields["bank"].queryset = BankAccount.objects.filter(branch=branch, is_active=True)
-        self.fields["bank"].widget.attrs["data-show-when-bank"] = ""
         if not self.fields["bank"].queryset.exists():
             self.fields["bank"].help_text = _("No banks yet: add them in Setup → Fee rates and vouchers.")
 
@@ -181,3 +180,39 @@ class ConcessionForm(forms.ModelForm):
 
 class ReasonForm(forms.Form):
     reason = forms.CharField(max_length=200, label=_("Reason"))
+
+
+class RoyaltyPaymentForm(forms.ModelForm):
+    month = MonthField(label=_("For the month of"))
+
+    class Meta:
+        model = RoyaltyPayment
+        fields = ["month", "amount", "paid_on", "reference", "attachment", "note"]
+        labels = {
+            "amount": _("Amount (Rs)"),
+            "paid_on": _("Date received"),
+            "reference": _("Deposit slip / transaction ID"),
+            "attachment": _("Attachment (photo of the slip)"),
+            "note": _("Note"),
+        }
+        widgets = {"paid_on": DATE, "reference": forms.TextInput(attrs={"dir": "ltr"})}
+
+    def __init__(self, *args, branch, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.instance.branch = branch
+        self.fields["attachment"].widget.attrs["accept"] = ".jpg,.jpeg,.png,.pdf"
+
+    def clean_paid_on(self):
+        value = self.cleaned_data["paid_on"]
+        if value > timezone.localdate():
+            raise forms.ValidationError(_("The date is in the future."))
+        return value
+
+    def clean_attachment(self):
+        file = self.cleaned_data.get("attachment")
+        if file and getattr(file, "size", None) is not None and file != self.instance.attachment:
+            if Path(file.name).suffix.lower() not in PROOF_TYPES:
+                raise forms.ValidationError(_("Attach a JPG, PNG or PDF file."))
+            if file.size > PROOF_MAX_BYTES:
+                raise forms.ValidationError(_("The file is larger than 5 MB."))
+        return file

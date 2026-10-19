@@ -49,6 +49,7 @@ CANCEL_CHARGE_PERM = "fees.change_charge"
 CONCESSION_PERM = "fees.add_concession"
 APPROVE_PERM = "fees.approve_concession"
 ROYALTY_PERM = "fees.view_royalty"
+ROYALTY_RECORD_PERM = "fees.add_royaltypayment"
 
 
 def default_due_date(branch, first_month, today=None):

@@ -23,6 +23,7 @@ urlpatterns = [
     path("diary/", include("apps.diary.urls")),
     path("exams/", include("apps.exams.urls")),
     path("fees/", include("apps.fees.urls")),
+    path("expenses/", include("apps.accounting.urls")),
     path("staff/", include("apps.hr.urls")),
     path("parents/", include("apps.parents.urls")),
     path("admissions/", include("apps.admissions.urls")),

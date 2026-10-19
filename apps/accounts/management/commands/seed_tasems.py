@@ -218,6 +218,15 @@ FEE_SETUP = (
     ]
 )
 
+# Royalty paid to head office (19 Oct 2026): head office records it, branches see their own.
+ROYALTY_VIEW = ["fees.view_royalty", "fees.view_royaltypayment"]
+ROYALTY_RECORD = ROYALTY_VIEW + ["fees.add_royaltypayment"]
+
+# Expenses (19 Oct 2026): the branch records them, head office sees them.
+EXPENSE_VIEW = ["accounting.view_expense", "accounting.view_expensehead"]
+EXPENSE_WORK = EXPENSE_VIEW + ["accounting.add_expense"]
+EXPENSE_MANAGE = EXPENSE_WORK + ["accounting.change_expense"]
+
 # Staff (HR) — Phase 3a
 HR_VIEW = [
     "hr.view_employee",
@@ -248,27 +257,34 @@ ADM_VIEW = ["admissions.view_inquiry", "admissions.view_followup"]
 ADM_WORK = ADM_VIEW + ["admissions.add_inquiry", "admissions.change_inquiry", "admissions.add_followup"]
 
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP + ADM_VIEW,
-    "head_office_admin": ATT_VIEW + DIARY_DESIGN + EXAM_SETUP + FEE_SETUP + HR_SETUP + ADM_VIEW,
-    "regional_director": ATT_VIEW
-    + DIARY_VIEW
-    + EXAM_VIEW
-    + FEE_VIEW
-    + FEE_APPROVE
-    + ["fees.view_royalty"]
-    + HR_VIEW
+    "network_admin": ATT_VIEW
+    + DIARY_DESIGN
+    + EXAM_SETUP
+    + FEE_SETUP
+    + ROYALTY_RECORD
+    + EXPENSE_VIEW
+    + HR_SETUP
     + ADM_VIEW,
-    "branch_owner": ATT_VIEW
-    + DIARY_VIEW
-    + EXAM_VIEW
-    + FEE_VIEW
-    + FEE_APPROVE
-    + ["fees.view_royalty"]
-    + HR_VIEW
+    "head_office_admin": ATT_VIEW
+    + DIARY_DESIGN
+    + EXAM_SETUP
+    + FEE_SETUP
+    + ROYALTY_RECORD
+    + EXPENSE_VIEW
+    + HR_SETUP
     + ADM_VIEW,
-    "principal": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE + FEE_MANAGE + HR_MANAGE + ADM_WORK,
+    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ROYALTY_VIEW + HR_VIEW + ADM_VIEW,
+    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ROYALTY_VIEW + HR_VIEW + ADM_VIEW,
+    "principal": ATT_MANAGE
+    + DIARY_MANAGE
+    + EXAM_MANAGE
+    + FEE_MANAGE
+    + ROYALTY_VIEW
+    + EXPENSE_MANAGE
+    + HR_MANAGE
+    + ADM_WORK,
     "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
-    "accountant": FEE_COLLECT + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
+    "accountant": FEE_COLLECT + EXPENSE_WORK + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
     "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"] + ADM_WORK,
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": ATT_MARK + DIARY_WRITE,

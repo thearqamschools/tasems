@@ -178,16 +178,17 @@
     sync();
   });
 
-  // ---------- Fee payment: the bank list only when "Bank" is chosen ----------
-  document.querySelectorAll("form[data-payment-form]").forEach(function (form) {
-    var bank = form.querySelector("[data-show-when-bank]");
+  // ---------- Fee payment / expense: the bank list only when "Bank" is chosen ----------
+  document.querySelectorAll("form[data-payment-form], form[data-expense-form]").forEach(function (form) {
+    var radioName = form.hasAttribute("data-expense-form") ? "paid_from" : "how";
+    var bank = form.querySelector('select[name="bank"]');
     if (!bank) return;
     var box = bank.closest(".field") || bank;
     function sync() {
-      var chosen = form.querySelector('input[name="how"]:checked');
+      var chosen = form.querySelector('input[name="' + radioName + '"]:checked');
       box.hidden = !chosen || chosen.value !== "bank";
     }
-    form.querySelectorAll('input[name="how"]').forEach(function (r) { r.addEventListener("change", sync); });
+    form.querySelectorAll('input[name="' + radioName + '"]').forEach(function (r) { r.addEventListener("change", sync); });
     sync();
   });
 

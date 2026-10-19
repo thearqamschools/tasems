@@ -125,4 +125,4 @@ heading "Family details" · no second father mobile · item 5 order used for bot
 | 1 — Students | 1–19 (fee at admission → batch 3) | Done 19 Oct 2026 |
 | 2 — Inquiries, attendance, staff | 21–26, 34–38 | Done 19 Oct 2026 (designation → login permissions: table to approve) |
 | 3 — Fees | 20, 27–33, 43–46 | Done 19 Oct 2026 |
-| 4 — Royalty, expenses | 39–42 | Pending |
+| 4 — Royalty, expenses | 39–42 | Done 19 Oct 2026 (expenses = first part of M9 Accounting; cash/bank book and P&L follow) |

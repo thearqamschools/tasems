@@ -8,16 +8,20 @@
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
   <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button></form>
 <div class="figures">
-  <div class="figure"><div class="value">{{ total_base|rupees }}</div><div class="label">{% trans "Franchise fees received (Rs)" %}</div></div>
-  <div class="figure"><div class="value">{{ total_royalty|rupees }}</div><div class="label">{% trans "Royalty due (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ total_base|rupees }}</div><div class="label">{% trans "Franchise fees received (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ total_royalty|rupees }}</div><div class="label">{% trans "Royalty for the month (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ total_paid|rupees }}</div><div class="label">{% trans "Paid for the month (Rs)" %}</div></div>
+  <div class="figure {% if total_due > 0 %}attention{% endif %}"><div class="value money">{{ total_due|rupees }}</div><div class="label">{% trans "Total due, all months (Rs)" %}</div></div>
 </div>
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Ownership" %}</th><th class="num">{% trans "Billed for the month" %}</th><th class="num">{% trans "Received in the month" %}</th><th class="num">%</th><th class="num">{% trans "Royalty (Rs)" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Ownership" %}</th><th class="num">{% trans "Billed for the month" %}</th><th class="num">{% trans "Received in the month" %}</th><th class="num">%</th><th class="num">{% trans "Royalty (Rs)" %}</th><th class="num">{% trans "Paid (Rs)" %}</th><th class="num">{% trans "Pending (Rs)" %}</th><th class="num">{% trans "Total due (Rs)" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr>
-    <td>{{ r.branch.name }}</td><td>{{ r.branch.get_ownership_display }}</td>
+    <td><a href="{% url 'fees:royalty_branch' r.branch.id %}?month={{ month|date:'Y-m' }}">{{ r.branch.name }}</a></td><td>{{ r.branch.get_ownership_display }}</td>
     <td class="num">{{ r.billed|rupees }}</td><td class="num">{{ r.collected|rupees }}</td>
     <td class="num">{{ r.percent|floatformat }}</td><td class="num"><strong>{{ r.royalty|rupees }}</strong></td>
+    <td class="num">{{ r.paid|rupees }}</td><td class="num">{{ r.royalty|sub:r.paid|rupees }}</td>
+    <td class="num">{% if r.total_due > 0 %}<span class="badge attention">{{ r.total_due|rupees }}</span>{% else %}{{ r.total_due|rupees }}{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
-<p class="muted">{% trans "Figures come from payments recorded in TASEMS. A branch whose fees are not yet recorded here shows 0." %}</p>
+<p class="muted">{% trans "Figures come from payments recorded in TASEMS. A branch whose fees are not yet recorded here shows 0. Open a branch to see its royalty month by month and to record a payment." %}</p>
 {% endblock %}

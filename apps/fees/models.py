@@ -472,3 +472,27 @@ class Concession(BranchOwnedModel):
         else:
             off = self.value
         return min(off, gross)
+
+
+def royalty_proof_path(payment, filename):
+    return f"private/royalty-proof/{payment.branch_id}/{secrets.token_hex(16)}{Path(filename).suffix.lower()}"
+
+
+@audited
+class RoyaltyPayment(BranchOwnedModel):
+    """Royalty a branch paid to head office, recorded by head office against the month it pays for."""
+
+    month = models.DateField(help_text=_("The month whose royalty this pays (first day of the month)."))
+    amount = models.DecimalField(**MONEY, validators=[MinValueValidator(Decimal("1"))])
+    paid_on = models.DateField()
+    reference = models.CharField(max_length=60, blank=True, help_text=_("Deposit slip or transaction ID"))
+    note = models.CharField(max_length=200, blank=True)
+    attachment = models.FileField(upload_to=royalty_proof_path, blank=True)
+    received_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["-paid_on", "-pk"]
+        indexes = [models.Index(fields=["branch", "month"])]
+
+    def __str__(self):
+        return f"{self.branch} royalty {self.month:%b %Y}: {self.amount}"

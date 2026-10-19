@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
@@ -28,7 +29,16 @@ from apps.people.models import Enrolment, Student
 from . import exchange, reports
 from . import services as S
 from .barcode import voucher_barcode
-from .forms import ConcessionForm, GenerateForm, IssueForm, MonthField, PaymentForm, QuickReceiveForm, ReasonForm
+from .forms import (
+    ConcessionForm,
+    GenerateForm,
+    IssueForm,
+    MonthField,
+    PaymentForm,
+    QuickReceiveForm,
+    ReasonForm,
+    RoyaltyPaymentForm,
+)
 from .models import (
     BranchFeeSettings,
     Charge,
@@ -38,6 +48,7 @@ from .models import (
     Method,
     Payment,
     PaymentChannel,
+    RoyaltyPayment,
     Voucher,
     month_start,
 )
@@ -779,6 +790,9 @@ def royalty(request):
     branches = list(Branch.objects.filter(id__in=ids, is_active=True).select_related("head_office", "region"))
     branches.sort(key=lambda b: (b.ownership != Branch.Ownership.FRANCHISE, b.head_office.name, b.name))
     rows = reports.royalty(branches, month)
+    balances = reports.royalty_balances(branches, month)
+    for r in rows:
+        r.paid, r.total_due = balances[r.branch.id]["paid"], balances[r.branch.id]["total_due"]
     franchise = [r for r in rows if r.branch.ownership == Branch.Ownership.FRANCHISE]
     return render(
         request,
@@ -788,7 +802,66 @@ def royalty(request):
             "rows": rows,
             "total_royalty": sum((r.royalty for r in franchise), S.ZERO),
             "total_base": sum((r.collected for r in franchise), S.ZERO),
+            "total_paid": sum((r.paid for r in franchise), S.ZERO),
+            "total_due": sum((r.total_due for r in franchise), S.ZERO),
         },
+    )
+
+
+def _royalty_branch(request, branch_id):
+    if branch_id not in request.user.accessible_branch_ids(S.ROYALTY_PERM):
+        raise Http404
+    return Branch.objects.get(pk=branch_id)
+
+
+@login_required
+def royalty_branch(request, branch_id):
+    """One branch's royalty month by month (due, paid, left, total due) and the payments head office
+    recorded, with the form to record a new one for people allowed to."""
+    branch = _royalty_branch(request, branch_id)
+    month = _month(request)
+    can_record = request.user.has_branch_perm(S.ROYALTY_RECORD_PERM, branch.id)
+    form = None
+    if can_record:
+        form = RoyaltyPaymentForm(
+            request.POST or None,
+            request.FILES or None,
+            initial={"month": month, "paid_on": timezone.localdate()},
+            branch=branch,
+        )
+        if request.method == "POST" and form.is_valid():
+            payment = form.save(commit=False)
+            payment.received_by = request.user
+            payment.save()
+            messages.success(
+                request,
+                _("Royalty of Rs %(a)s recorded for %(m)s.")
+                % {"a": rupees(payment.amount), "m": f"{payment.month:%B %Y}"},
+            )
+            return redirect(f"{reverse('fees:royalty_branch', args=[branch.id])}?month={month:%Y-%m}")
+    elif request.method == "POST":
+        raise PermissionDenied
+    return render(
+        request,
+        "fees/royalty_branch.html",
+        {
+            "branch": branch,
+            "month": month,
+            "ledger": reports.royalty_ledger(branch, month),
+            "payments": RoyaltyPayment.objects.filter(branch=branch).select_related("received_by")[:50],
+            "form": form,
+        },
+    )
+
+
+@login_required
+def royalty_attachment(request, payment_id):
+    payment = RoyaltyPayment.objects.filter(pk=payment_id).first()
+    if payment is None or not payment.attachment:
+        raise Http404
+    _royalty_branch(request, payment.branch_id)
+    return FileResponse(
+        payment.attachment.open("rb"), filename=f"Royalty {payment.month:%Y-%m}{Path(payment.attachment.name).suffix}"
     )
 
 

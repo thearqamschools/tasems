@@ -111,12 +111,15 @@ class Command(BaseCommand):
         if options["without_network"]:
             return
         if Branch.objects.filter(code__startswith="demo-").exists():
-            self.stdout.write("Demo network already present; nothing to do.")
-            return
-        random.seed(2027)
-        with transaction.atomic():
-            self.network(password)
-        self.stdout.write(self.style.SUCCESS("Demo network created. Sign in as demo-network to see both head offices."))
+            self.stdout.write("Demo network already present.")
+        else:
+            random.seed(2027)
+            with transaction.atomic():
+                self.network(password)
+            self.stdout.write(
+                self.style.SUCCESS("Demo network created. Sign in as demo-network to see both head offices.")
+            )
+        self.royalty_and_expenses()
 
     # ------------------------------------------------------------------------------------------
     def build(self, password):
@@ -304,6 +307,51 @@ class Command(BaseCommand):
                     fees.record_payment(
                         v.student, v.payable, paid_on, "bank" if bank else "counter", principal, voucher=v, bank=bank
                     )
+
+    def royalty_and_expenses(self):
+        """Some royalty paid to head office and some branch expenses (added once), so those pages have data."""
+        from apps.accounting.models import Expense, ExpenseHead
+        from apps.fees.models import RoyaltyPayment
+        from apps.fees.reports import royalty_ledger
+
+        if RoyaltyPayment.objects.exists() or Expense.objects.exists():
+            return
+        recorder = User.objects.filter(username="demo-network").first()
+        principal = User.objects.filter(username="demo-principal").first()
+        if recorder is None or principal is None:
+            return
+        today = timezone.localdate()
+        with transaction.atomic():
+            # Some franchises paid their royalty in full, some in part, one not at all.
+            for code, share in [("demo-fsd-1", 1), ("demo-fsd-2", 0.5), ("demo-lhr-1", 1), ("demo-lhr-3", 0.25)]:
+                branch = Branch.objects.get(code=code)
+                row = royalty_ledger(branch, today, months=1)["rows"][-1]
+                amount = (row["due"] * Decimal(str(share))).quantize(Decimal("1"))
+                if amount > 0:
+                    RoyaltyPayment.objects.create(
+                        branch=branch,
+                        month=row["month"],
+                        amount=amount,
+                        paid_on=today,
+                        reference=f"DEMO-SLIP-{branch.id}",
+                        received_by=recorder,
+                    )
+            samanabad = Branch.objects.get(code="fsd-samanabad")
+            for code, amount, text, paid_to in [
+                ("utilities", 18500, "Electricity bill", "Demo Electricity Company"),
+                ("stationery", 3200, "Registers and chalk", "Demo Stationers"),
+                ("repairs", 6000, "Fan repair, Class 4", "Demo Electrician"),
+                ("cleaning", 2500, "Cleaning material", "Demo Store"),
+            ]:
+                Expense.objects.create(
+                    branch=samanabad,
+                    date=today,
+                    head=ExpenseHead.objects.get(code=code),
+                    amount=amount,
+                    description=text,
+                    paid_to=paid_to,
+                    recorded_by=principal,
+                )
 
     def demo_banks(self):
         """Every branch with demo students gets three fictional banks to choose when a fee comes by bank."""

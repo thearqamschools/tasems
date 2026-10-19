@@ -5,11 +5,12 @@ from dataclasses import dataclass, field
 from decimal import ROUND_HALF_UP, Decimal
 
 from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth
 from django.utils.translation import gettext as _
 
 from apps.people.models import StudentGuardian
 
-from .models import Charge, FeeHead, Method, Payment, Voucher, add_months, month_start
+from .models import Charge, FeeHead, Method, Payment, RoyaltyPayment, Voucher, add_months, month_start
 from .services import ZERO
 
 MAX_ROWS = 3
@@ -216,3 +217,78 @@ def royalty(branches, month):
         )
         for b in branches
     ]
+
+
+def _royalty_of(collected, percent):
+    return (collected * percent / Decimal(100)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+
+
+def royalty_balances(branches, until_month):
+    """Per branch: royalty paid for `until_month` and the total still due for all months up to it
+    (each month's royalty minus what was paid for it; what is left carries forward). Two grouped queries."""
+    until = month_start(until_month)
+    end = add_months(until, 1)
+    ids = [b.id for b in branches]
+    due = defaultdict(lambda: ZERO)
+    percent = {b.id: b.royalty_percent for b in branches}
+    received = (
+        Payment.objects.filter(branch_id__in=ids, is_reversed=False, paid_on__lt=end)
+        .annotate(m=TruncMonth("paid_on"))
+        .values("branch_id", "m")
+        .annotate(t=Sum("amount"))
+    )
+    for row in received:
+        due[row["branch_id"]] += _royalty_of(row["t"], percent[row["branch_id"]])
+    paid_total, paid_month = defaultdict(lambda: ZERO), defaultdict(lambda: ZERO)
+    for row in (
+        RoyaltyPayment.objects.filter(branch_id__in=ids, month__lt=end)
+        .values("branch_id", "month")
+        .annotate(t=Sum("amount"))
+    ):
+        paid_total[row["branch_id"]] += row["t"]
+        if row["month"] == until:
+            paid_month[row["branch_id"]] += row["t"]
+    return {b.id: {"paid": paid_month[b.id], "total_due": due[b.id] - paid_total[b.id]} for b in branches}
+
+
+def royalty_ledger(branch, until_month, months=12):
+    """The branch's royalty month by month: due, paid, left for that month, and the running total due
+    (unpaid royalty from earlier months carries forward)."""
+    until = month_start(until_month)
+    start = add_months(until, -(months - 1))
+    end = add_months(until, 1)
+    collected = {
+        row["m"]: row["t"]
+        for row in Payment.objects.filter(branch=branch, is_reversed=False, paid_on__lt=end)
+        .annotate(m=TruncMonth("paid_on"))
+        .values("m")
+        .annotate(t=Sum("amount"))
+    }
+    paid = dict(
+        RoyaltyPayment.objects.filter(branch=branch, month__lt=end)
+        .values("month")
+        .annotate(t=Sum("amount"))
+        .values_list("month", "t")
+    )
+    carried = sum((_royalty_of(t, branch.royalty_percent) for m, t in collected.items() if m < start), ZERO) - sum(
+        (t for m, t in paid.items() if m < start), ZERO
+    )
+    rows, running, month = [], carried, start
+    while month <= until:
+        month_due = _royalty_of(collected.get(month, ZERO), branch.royalty_percent)
+        month_paid = paid.get(month, ZERO)
+        running += month_due - month_paid
+        rows.append(
+            {
+                "month": month,
+                "collected": collected.get(month, ZERO),
+                "due": month_due,
+                "paid": month_paid,
+                "left": month_due - month_paid,
+                "total_due": running,
+            }
+        )
+        month = add_months(month, 1)
+    while len(rows) > 1 and not (rows[0]["collected"] or rows[0]["paid"] or rows[0]["total_due"]):
+        rows.pop(0)  # start at the first month with something to show
+    return {"carried": carried, "rows": rows, "total_due": running}
