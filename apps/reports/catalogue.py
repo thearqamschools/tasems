@@ -232,7 +232,12 @@ def build(user, branch, session, today):
                     (totals["cash"] or 0, _("From cash (Rs)"), "", True),
                     (totals["bank"] or 0, _("From bank (Rs)"), "", True),
                 ],
-                [Report(_("Expenses of the month"), _("Every expense with head, paid to, cash or bank; totals by head."), reverse("accounting:index"))],
+                [
+                    Report(_("Expenses of the month"), _("Every expense with head, paid to, cash or bank; totals by head."), reverse("accounting:index")),
+                    Report(_("Other income"), _("Money received other than fees, by head."), reverse("accounting:incomes")),
+                    Report(_("Cash & bank book"), _("Cash in hand and each bank: opening balance, money in and out, running balance."), reverse("accounting:book")),
+                    Report(_("Profit & loss"), _("Fees received and other income, less expenses, for any dates."), reverse("accounting:profit_loss")),
+                ],
             )
         )  # fmt: skip
     return modules

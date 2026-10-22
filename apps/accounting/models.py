@@ -72,3 +72,89 @@ class Expense(BranchOwnedModel):
     @property
     def paid_from_label(self):
         return self.bank.name if self.paid_from == self.PaidFrom.BANK and self.bank_id else self.get_paid_from_display()
+
+
+# --- Other income, opening balances (M9) -----------------------------------------------------
+
+
+@audited
+class IncomeHead(TimeStampedModel):
+    """Money received other than fees (the same list for every branch)."""
+
+    code = models.SlugField(max_length=40, unique=True)
+    name = models.CharField(max_length=80)
+    sort_order = models.PositiveSmallIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["sort_order", "name"]
+
+    def __str__(self):
+        return self.name
+
+
+@audited
+class Income(BranchOwnedModel):
+    """Money received other than fees (fees are recorded on the Fees pages)."""
+
+    class ReceivedIn(models.TextChoices):
+        CASH = "cash", _("Cash in hand")
+        BANK = "bank", _("Bank")
+
+    date = models.DateField()
+    head = models.ForeignKey(IncomeHead, on_delete=models.PROTECT, related_name="incomes")
+    amount = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(Decimal("1"))])
+    description = models.CharField(max_length=200)
+    received_from = models.CharField(max_length=120, blank=True)
+    received_in = models.CharField(max_length=10, choices=ReceivedIn.choices, default=ReceivedIn.CASH)
+    bank = models.ForeignKey("fees.BankAccount", on_delete=models.PROTECT, null=True, blank=True, related_name="+")
+    reference = models.CharField(max_length=60, blank=True)
+    recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+    is_cancelled = models.BooleanField(default=False)
+    cancelled_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name="+"
+    )
+    cancel_reason = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        ordering = ["-date", "-pk"]
+        indexes = [models.Index(fields=["branch", "date"])]
+
+    def __str__(self):
+        return f"{self.date:%d %b %Y} {self.head}: {self.amount}"
+
+    @property
+    def received_in_label(self):
+        return (
+            self.bank.name
+            if self.received_in == self.ReceivedIn.BANK and self.bank_id
+            else self.get_received_in_display()
+        )
+
+
+@audited
+class OpeningBalance(BranchOwnedModel):
+    """Money in hand or in one bank account on a date, from which the cash and bank book counts forward."""
+
+    bank = models.ForeignKey(
+        "fees.BankAccount",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="+",
+        help_text=_("Empty for cash in hand"),
+    )
+    as_of = models.DateField(help_text=_("The balance at the start of this day"))
+    amount = models.DecimalField(max_digits=14, decimal_places=2)
+    recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["-as_of"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["branch", "bank", "as_of"], name="one_opening_per_account_day", nulls_distinct=False
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.bank or 'Cash'} {self.as_of:%d %b %Y}: {self.amount}"

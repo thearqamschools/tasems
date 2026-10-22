@@ -223,9 +223,21 @@ ROYALTY_VIEW = ["fees.view_royalty", "fees.view_royaltypayment"]
 ROYALTY_RECORD = ROYALTY_VIEW + ["fees.add_royaltypayment"]
 
 # Expenses (19 Oct 2026): the branch records them, head office sees them.
-EXPENSE_VIEW = ["accounting.view_expense", "accounting.view_expensehead"]
-EXPENSE_WORK = EXPENSE_VIEW + ["accounting.add_expense"]
-EXPENSE_MANAGE = EXPENSE_WORK + ["accounting.change_expense"]
+# Other income, opening balances, cash/bank book and profit & loss (M9) go with the same roles as expenses.
+EXPENSE_VIEW = [
+    "accounting.view_expense",
+    "accounting.view_expensehead",
+    "accounting.view_income",
+    "accounting.view_incomehead",
+    "accounting.view_openingbalance",
+]
+EXPENSE_WORK = EXPENSE_VIEW + ["accounting.add_expense", "accounting.add_income"]
+EXPENSE_MANAGE = EXPENSE_WORK + [
+    "accounting.change_expense",
+    "accounting.change_income",
+    "accounting.add_openingbalance",
+    "accounting.change_openingbalance",
+]
 
 # Staff (HR) — Phase 3a
 HR_VIEW = [

@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Other income" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{% trans "Other income" %}</h1><p class="lede">{{ branch.name }} · {{ month|date:"F Y" }} · {% trans "Money received other than fees (fees are recorded on the Fees pages)." %}</p></div>
+  {% if can_add %}<div class="actions"><a class="button" href="{% url 'accounting:income_new' %}">{% icon "coins" %}{% trans "Add income" %}</a></div>{% endif %}
+</div>
+{% include "accounting/_tabs.html" with tab="income" %}
+<form method="get" class="filter-inline"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
+<div class="figures"><div class="figure"><div class="value money">{{ total|rupees }}</div><div class="label">{% trans "Other income this month (Rs)" %}</div></div></div>
+{% if by_head %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Income head" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>{% for name, amount in by_head %}<tr><td>{{ name }}</td><td class="num money">{{ amount|rupees }}</td></tr>{% endfor %}</tbody>
+</table></div>{% endif %}
+<h2>{% trans "All income" %}</h2>
+{% if items %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Income head" %}</th><th>{% trans "What for" %}</th><th>{% trans "Received from" %}</th><th>{% trans "Received in" %}</th><th>{% trans "Recorded by" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th></th></tr></thead>
+  <tbody>{% for i in items %}<tr{% if i.is_cancelled %} class="muted"{% endif %}>
+    <td>{{ i.date|date:"d M" }}</td><td>{{ i.head.name }}</td>
+    <td>{{ i.description }}{% if i.reference %} <span class="muted small num">{{ i.reference }}</span>{% endif %}{% if i.is_cancelled %}<br><span class="badge muted">{% trans "Cancelled" %}</span> <span class="small">{{ i.cancel_reason }}</span>{% endif %}</td>
+    <td>{{ i.received_from|default:"—" }}</td><td>{{ i.received_in_label }}</td>
+    <td>{{ i.recorded_by.get_full_name|default:i.recorded_by.username }}</td>
+    <td class="num money">{% if i.is_cancelled %}<s>{{ i.amount|rupees }}</s>{% else %}{{ i.amount|rupees }}{% endif %}</td>
+    <td>{% if can_cancel and not i.is_cancelled %}<details><summary>{% trans "Cancel" %}</summary>
+      <form method="post" action="{% url 'accounting:income_cancel' i.id %}" data-confirm="{% trans 'This income will be marked as cancelled. The record is kept with your reason.' %}" data-confirm-button="{% trans 'Cancel income' %}">{% csrf_token %}
+        <input name="reason" required maxlength="200" placeholder="{% trans 'Reason' %}"> <button class="button danger sm" type="submit">{% trans "Cancel income" %}</button></form></details>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "coins" %}<p>{% trans "No other income recorded this month." %}</p></div>{% endif %}
+{% endblock %}

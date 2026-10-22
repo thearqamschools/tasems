@@ -94,6 +94,9 @@ def _menu(user, branch):
             fees and (reverse("fees:collections"), _("Daily collection"), "coins"),
             fees and (reverse("fees:concessions"), _("Discounts"), "badge-percent"),
             perm("accounting.view_expense") and (reverse("accounting:index"), _("Expenses"), "receipt"),
+            perm("accounting.view_expense") and (reverse("accounting:book"), _("Cash & bank book"), "landmark"),
+            perm("accounting.view_expense")
+            and (reverse("accounting:profit_loss"), _("Profit & loss"), "file-spreadsheet"),
             bool(user.accessible_branch_ids("fees.view_royalty"))
             and (reverse("fees:royalty"), _("Royalty"), "landmark"),
         ],

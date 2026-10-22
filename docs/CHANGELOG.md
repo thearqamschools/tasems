@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.25.0 — 2026-10-22 — M9: accounting
+
+Added
+- **Other income** (Expenses → Other income): money received other than fees, with a starter list of income heads
+  (forms, books and stationery, uniform, canteen, events, rent, donations, bank profit, sale of old items, other);
+  cash or which bank; cancelling keeps the record with a reason.
+- **Cash & bank book**: for cash in hand, each of the branch's banks, and online payments not tied to a bank —
+  opening balance, each day's fees (one line per day), other income and expenses, running and closing balance,
+  for any dates. Principals enter the real opening balance on a day; the book counts forward from it.
+- **Profit & loss** for any dates: fees received (cash / bank and online) and other income by head, less expenses
+  by head, giving the surplus or deficit. A franchise's royalty on those fees is shown for information.
+- **Income and expenses by branch** for head office and regional roles: every branch they look after, with totals.
+- All with Excel and Print; also listed in Reports.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.24.0 — 2026-10-22 — M8: notices and parent communication
 
 Added

@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Add income" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'accounting:incomes' %}">‹ {% trans "Other income" %}</a></p>
+<h1>{% trans "Add income" %}</h1>
+<p class="lede">{% trans "Money received other than fees, recorded in your name. Cash income adds to cash in hand." %}</p>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save income" %}</button>
+  <a class="button quiet" href="{% url 'accounting:incomes' %}">{% trans "Back" %}</a></div>
+</form>
+{% endblock %}

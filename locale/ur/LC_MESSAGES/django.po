@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 17:18+0500\n"
+"POT-Creation-Date: 2026-10-22 17:59+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,9 +46,11 @@ msgid "Break"
 msgstr "وقفہ"
 
 #: apps/academics/forms.py:31 apps/hr/forms.py:142 apps/setup/forms.py:298
-#: templates/admissions/report.html:6 templates/fees/collections.html:8
-#: templates/fees/student.html:64 templates/reports/new_admissions.html:9
-#: templates/setup/fees.html:12 templates/setup/user_detail.html:25
+#: templates/accounting/book.html:11 templates/accounting/branches.html:9
+#: templates/accounting/profit_loss.html:11 templates/admissions/report.html:6
+#: templates/fees/collections.html:8 templates/fees/student.html:64
+#: templates/reports/new_admissions.html:9 templates/setup/fees.html:12
+#: templates/setup/user_detail.html:25
 msgid "From"
 msgstr "سے"
 
@@ -255,25 +257,45 @@ msgstr "چھٹی ختم کر دی گئی: %(d)s %(n)s۔"
 msgid "%(n)s holiday days added; %(s)s days already had a holiday."
 msgstr "%(n)s چھٹی کے دن شامل ہو گئے؛ %(s)s دنوں میں پہلے سے چھٹی تھی۔"
 
-#: apps/accounting/forms.py:20 apps/accounting/views.py:60
-#: apps/fees/views.py:837 templates/academics/holidays.html:21
-#: templates/accounting/index.html:33 templates/attendance/today.html:9
-#: templates/exams/award_list.html:11 templates/exams/date_sheet.html:22
-#: templates/exams/section_exam.html:8 templates/fees/collections.html:18
-#: templates/fees/family_receive.html:36 templates/fees/index.html:28
-#: templates/fees/payments_import.html:29 templates/fees/student.html:52
-#: templates/hr/_days.html:3 templates/people/student_detail.html:68
+#: apps/accounting/books.py:24 apps/accounting/models.py:44
+#: apps/accounting/models.py:101
+msgid "Cash in hand"
+msgstr "نقد رقم"
+
+#: apps/accounting/books.py:27
+msgid "Online (JazzCash and others, no bank chosen)"
+msgstr "آن لائن (جاز کیش وغیرہ، بینک منتخب نہیں)"
+
+#: apps/accounting/books.py:90
+#, python-format
+msgid "Fees received (%(n)s payments)"
+msgstr "فیس وصول (%(n)s ادائیگیاں)"
+
+#: apps/accounting/forms.py:20 apps/accounting/forms.py:69
+#: apps/accounting/views.py:60 apps/accounting/views.py:185
+#: apps/accounting/views.py:283 apps/fees/views.py:837
+#: templates/academics/holidays.html:21 templates/accounting/book.html:26
+#: templates/accounting/incomes.html:17 templates/accounting/index.html:34
+#: templates/attendance/today.html:9 templates/exams/award_list.html:11
+#: templates/exams/date_sheet.html:22 templates/exams/section_exam.html:8
+#: templates/fees/collections.html:18 templates/fees/family_receive.html:36
+#: templates/fees/index.html:28 templates/fees/payments_import.html:29
+#: templates/fees/student.html:52 templates/hr/_days.html:3
+#: templates/people/student_detail.html:68
 msgid "Date"
 msgstr "تاریخ"
 
 #: apps/accounting/forms.py:21 apps/accounting/views.py:60
-#: templates/accounting/index.html:27 templates/accounting/index.html:33
+#: templates/accounting/index.html:28 templates/accounting/index.html:34
 msgid "Expense head"
 msgstr "خرچ کی مد"
 
-#: apps/accounting/forms.py:22 apps/accounting/views.py:61
+#: apps/accounting/forms.py:22 apps/accounting/forms.py:71
+#: apps/accounting/forms.py:105 apps/accounting/views.py:61
+#: apps/accounting/views.py:186 apps/accounting/views.py:318
 #: apps/fees/forms.py:267 apps/fees/views.py:838 apps/setup/forms.py:29
-#: templates/accounting/index.html:27 templates/accounting/index.html:33
+#: templates/accounting/incomes.html:12 templates/accounting/incomes.html:17
+#: templates/accounting/index.html:28 templates/accounting/index.html:34
 #: templates/core/home.html:148 templates/fees/_day_breakdown.html:9
 #: templates/fees/collections.html:18 templates/fees/family_receive.html:36
 #: templates/fees/index.html:49 templates/fees/payments_import.html:29
@@ -283,22 +305,24 @@ msgstr "خرچ کی مد"
 msgid "Amount (Rs)"
 msgstr "رقم (روپے)"
 
-#: apps/accounting/forms.py:23 apps/accounting/views.py:60
-#: templates/accounting/index.html:33
+#: apps/accounting/forms.py:23 apps/accounting/forms.py:72
+#: apps/accounting/views.py:60 apps/accounting/views.py:185
+#: templates/accounting/incomes.html:17 templates/accounting/index.html:34
 msgid "What for"
 msgstr "کس لیے"
 
 #: apps/accounting/forms.py:24 apps/accounting/views.py:60
-#: templates/accounting/index.html:33
+#: templates/accounting/index.html:34
 msgid "Paid to"
 msgstr "کس کو ادا کیا"
 
 #: apps/accounting/forms.py:25 apps/accounting/views.py:60
-#: templates/accounting/index.html:33
+#: templates/accounting/index.html:34
 msgid "Paid from"
 msgstr "کہاں سے ادا کیا"
 
-#: apps/accounting/forms.py:26 apps/fees/forms.py:138
+#: apps/accounting/forms.py:26 apps/accounting/forms.py:75
+#: apps/fees/forms.py:138
 msgid "Which bank"
 msgstr "کون سا بینک"
 
@@ -310,8 +334,8 @@ msgstr "بل / چیک / ٹرانزیکشن نمبر"
 msgid "Bill photo (optional)"
 msgstr "بل کی تصویر (اختیاری)"
 
-#: apps/accounting/forms.py:42 apps/fees/forms.py:163 apps/fees/forms.py:283
-#: apps/people/forms.py:313
+#: apps/accounting/forms.py:42 apps/accounting/forms.py:89
+#: apps/fees/forms.py:163 apps/fees/forms.py:283 apps/people/forms.py:313
 msgid "The date is in the future."
 msgstr "یہ تاریخ آنے والی ہے۔"
 
@@ -329,13 +353,43 @@ msgstr "فائل 5 MB سے بڑی ہے۔"
 msgid "Choose the bank the money was paid from."
 msgstr "وہ بینک منتخب کریں جس سے رقم ادا ہوئی۔"
 
-#: apps/accounting/models.py:44
-msgid "Cash in hand"
-msgstr "نقد رقم"
+#: apps/accounting/forms.py:70 apps/accounting/views.py:185
+#: templates/accounting/incomes.html:12 templates/accounting/incomes.html:17
+msgid "Income head"
+msgstr "آمدنی کی مد"
 
-#: apps/accounting/models.py:45 apps/fees/forms.py:136 apps/fees/models.py:178
-#: apps/fees/views.py:838 apps/setup/forms.py:35
-#: templates/fees/_day_breakdown.html:12 templates/setup/fees.html:53
+#: apps/accounting/forms.py:73 apps/accounting/views.py:185
+#: templates/accounting/incomes.html:17
+msgid "Received from"
+msgstr "کس سے وصول ہوئی"
+
+#: apps/accounting/forms.py:74 apps/accounting/views.py:185
+#: apps/fees/forms.py:136 apps/fees/views.py:838
+#: templates/accounting/incomes.html:17 templates/fees/_day_breakdown.html:9
+msgid "Received in"
+msgstr "رقم کہاں آئی"
+
+#: apps/accounting/forms.py:76
+msgid "Receipt / cheque / transaction no."
+msgstr "رسید / چیک / ٹرانزیکشن نمبر"
+
+#: apps/accounting/forms.py:95 apps/fees/forms.py:178
+msgid "Choose the bank the money came in."
+msgstr "وہ بینک منتخب کریں جس میں رقم آئی۔"
+
+#: apps/accounting/forms.py:103 templates/accounting/book.html:10
+#: templates/setup/fees.html:28 templates/setup/fees.html:54
+msgid "Account"
+msgstr "اکاؤنٹ"
+
+#: apps/accounting/forms.py:104
+msgid "Balance at the start of"
+msgstr "اس دن کے آغاز پر بیلنس"
+
+#: apps/accounting/models.py:45 apps/accounting/models.py:102
+#: apps/fees/forms.py:136 apps/fees/models.py:178 apps/fees/views.py:838
+#: apps/setup/forms.py:35 templates/fees/_day_breakdown.html:12
+#: templates/setup/fees.html:53
 msgid "Bank"
 msgstr "بینک"
 
@@ -347,28 +401,42 @@ msgstr "دکان، کمپنی یا شخص جسے ادائیگی ہوئی"
 msgid "Bill, cheque or transaction number"
 msgstr "بل، چیک یا ٹرانزیکشن نمبر"
 
+#: apps/accounting/models.py:145
+msgid "Empty for cash in hand"
+msgstr "نقد رقم کے لیے خالی چھوڑیں"
+
+#: apps/accounting/models.py:147
+msgid "The balance at the start of this day"
+msgstr "اس دن کے آغاز پر بیلنس"
+
 #: apps/accounting/views.py:59 apps/accounts/context_processors.py:96
-#: apps/reports/catalogue.py:228 templates/accounting/form.html:4
-#: templates/accounting/index.html:2 templates/accounting/index.html:5
+#: apps/reports/catalogue.py:228 templates/accounting/_tabs.html:2
+#: templates/accounting/form.html:4 templates/accounting/index.html:2
+#: templates/accounting/index.html:5 templates/accounting/profit_loss.html:31
 msgid "Expenses"
 msgstr "اخراجات"
 
-#: apps/accounting/views.py:60 apps/people/forms.py:107
-#: templates/fees/student.html:52 templates/people/student_detail.html:33
+#: apps/accounting/views.py:60 apps/accounting/views.py:185
+#: apps/people/forms.py:107 templates/fees/student.html:52
+#: templates/people/student_detail.html:33
 msgid "Reference"
 msgstr "حوالہ"
 
-#: apps/accounting/views.py:61 templates/accounting/index.html:33
+#: apps/accounting/views.py:61 apps/accounting/views.py:186
+#: templates/accounting/incomes.html:17 templates/accounting/index.html:34
 #: templates/fees/royalty_branch.html:37
 msgid "Recorded by"
 msgstr "کس نے درج کیا"
 
-#: apps/accounting/views.py:61 apps/fees/models.py:280 apps/hr/models.py:213
-#: templates/accounting/index.html:37 templates/fees/student.html:76
+#: apps/accounting/views.py:61 apps/accounting/views.py:186
+#: apps/fees/models.py:280 apps/hr/models.py:213
+#: templates/accounting/incomes.html:20 templates/accounting/index.html:38
+#: templates/fees/student.html:76
 msgid "Cancelled"
 msgstr "منسوخ"
 
-#: apps/accounting/views.py:65 apps/fees/views.py:844 apps/reports/views.py:119
+#: apps/accounting/views.py:65 apps/accounting/views.py:190
+#: apps/fees/views.py:844 apps/reports/views.py:119
 #: templates/notices/templates.html:11 templates/setup/fees.html:41
 msgid "Yes"
 msgstr "ہاں"
@@ -385,6 +453,127 @@ msgstr "خرچ منسوخ کرنے کی وجہ لکھیں۔"
 #: apps/accounting/views.py:127
 msgid "Expense cancelled. The record is kept with your reason."
 msgstr "خرچ منسوخ ہو گیا۔ ریکارڈ آپ کی وجہ کے ساتھ محفوظ ہے۔"
+
+#: apps/accounting/views.py:184 apps/reports/catalogue.py:237
+#: templates/accounting/_tabs.html:3 templates/accounting/income_form.html:4
+#: templates/accounting/incomes.html:2 templates/accounting/incomes.html:5
+msgid "Other income"
+msgstr "دیگر آمدنی"
+
+#: apps/accounting/views.py:225
+#, python-format
+msgid "Income of Rs %(a)s recorded."
+msgstr "%(a)s روپے آمدنی درج ہو گئی۔"
+
+#: apps/accounting/views.py:241
+msgid "Give a reason for cancelling."
+msgstr "منسوخی کی وجہ لکھیں۔"
+
+#: apps/accounting/views.py:245
+msgid "Income cancelled. The record is kept with your reason."
+msgstr "آمدنی منسوخ ہو گئی۔ ریکارڈ آپ کی وجہ کے ساتھ محفوظ ہے۔"
+
+#: apps/accounting/views.py:274
+msgid "Opening balance saved."
+msgstr "ابتدائی بیلنس محفوظ ہو گیا۔"
+
+#: apps/accounting/views.py:278 templates/accounting/book.html:28
+msgid "Opening balance"
+msgstr "ابتدائی بیلنس"
+
+#: apps/accounting/views.py:280 templates/accounting/book.html:33
+msgid "Closing balance"
+msgstr "اختتامی بیلنس"
+
+#: apps/accounting/views.py:283 templates/accounting/book.html:26
+msgid "Particulars"
+msgstr "تفصیل"
+
+#: apps/accounting/views.py:283 templates/accounting/book.html:18
+#: templates/accounting/book.html:26 templates/core/home.html:143
+msgid "Received (Rs)"
+msgstr "وصول (روپے)"
+
+#: apps/accounting/views.py:283 apps/fees/views.py:943 apps/fees/views.py:1001
+#: templates/accounting/book.html:19 templates/accounting/book.html:26
+#: templates/fees/royalty.html:18 templates/fees/royalty_branch.html:17
+msgid "Paid (Rs)"
+msgstr "ادا شدہ (روپے)"
+
+#: apps/accounting/views.py:283 templates/accounting/book.html:26
+#: templates/core/design_system.html:56
+msgid "Balance (Rs)"
+msgstr ""
+
+#: apps/accounting/views.py:311 templates/accounting/profit_loss.html:25
+msgid "Fees received"
+msgstr "وصول شدہ فیس"
+
+#: apps/accounting/views.py:313 templates/accounting/profit_loss.html:28
+msgid "Total income"
+msgstr "کل آمدنی"
+
+#: apps/accounting/views.py:315 templates/accounting/profit_loss.html:33
+msgid "Total expenses"
+msgstr "کل اخراجات"
+
+#: apps/accounting/views.py:315 templates/accounting/profit_loss.html:34
+msgid "Surplus / deficit"
+msgstr "بچت / خسارہ"
+
+#: apps/accounting/views.py:317
+msgid "Profit and loss"
+msgstr "نفع و نقصان"
+
+#: apps/accounting/views.py:318
+msgid "Item"
+msgstr "مد"
+
+#: apps/accounting/views.py:341 templates/accounting/branches.html:2
+#: templates/accounting/branches.html:5
+msgid "Income and expenses by branch"
+msgstr "برانچ وار آمدنی اور اخراجات"
+
+#: apps/accounting/views.py:342 apps/accounts/models.py:24
+#: apps/fees/views.py:942 apps/setup/forms.py:297
+#: templates/accounting/branches.html:21 templates/attendance/branches.html:7
+#: templates/core/home.html:80 templates/fees/royalty.html:18
+#: templates/jobs/index.html:8 templates/setup/branches.html:19
+msgid "Branch"
+msgstr "برانچ"
+
+#: apps/accounting/views.py:342 apps/fees/views.py:1001
+#: templates/accounting/branches.html:21 templates/fees/royalty_branch.html:17
+msgid "Fees received (Rs)"
+msgstr "وصول فیس (روپے)"
+
+#: apps/accounting/views.py:342 templates/accounting/branches.html:21
+msgid "Other income (Rs)"
+msgstr "دیگر آمدنی (روپے)"
+
+#: apps/accounting/views.py:342
+msgid "Total income (Rs)"
+msgstr "کل آمدنی (روپے)"
+
+#: apps/accounting/views.py:342 templates/accounting/branches.html:16
+#: templates/accounting/branches.html:21
+#: templates/accounting/profit_loss.html:18
+msgid "Expenses (Rs)"
+msgstr "اخراجات (روپے)"
+
+#: apps/accounting/views.py:343 templates/accounting/branches.html:17
+#: templates/accounting/branches.html:21
+#: templates/accounting/profit_loss.html:19
+msgid "Surplus / deficit (Rs)"
+msgstr "بچت / خسارہ (روپے)"
+
+#: apps/accounting/views.py:345 apps/reports/views.py:77
+#: apps/reports/views.py:81 templates/accounting/branches.html:24
+#: templates/core/design_system.html:62 templates/fees/family_receive.html:22
+#: templates/reports/class_strength.html:17
+#: templates/reports/class_strength.html:20
+msgid "Total"
+msgstr ""
 
 #: apps/accounts/context_processors.py:43
 msgid "Overview"
@@ -430,7 +619,7 @@ msgid "Absent students"
 msgstr "غیر حاضر طلبہ"
 
 #: apps/accounts/context_processors.py:59 apps/reports/catalogue.py:96
-#: templates/attendance/today.html:11
+#: templates/accounting/profit_loss.html:6 templates/attendance/today.html:11
 msgid "All my branches"
 msgstr "میری تمام برانچیں"
 
@@ -553,31 +742,44 @@ msgstr "روزانہ وصولی"
 msgid "Discounts"
 msgstr "رعایتیں"
 
-#: apps/accounts/context_processors.py:98 apps/fees/views.py:1000
+#: apps/accounts/context_processors.py:97 apps/reports/catalogue.py:238
+#: templates/accounting/_tabs.html:4 templates/accounting/book.html:2
+#: templates/accounting/book.html:5
+msgid "Cash & bank book"
+msgstr "کیش اور بینک بک"
+
+#: apps/accounts/context_processors.py:99 apps/reports/catalogue.py:239
+#: templates/accounting/_tabs.html:5 templates/accounting/branches.html:4
+#: templates/accounting/profit_loss.html:2
+#: templates/accounting/profit_loss.html:5
+msgid "Profit & loss"
+msgstr "نفع و نقصان"
+
+#: apps/accounts/context_processors.py:101 apps/fees/views.py:1000
 #: templates/fees/index.html:24 templates/fees/royalty.html:2
 #: templates/fees/royalty_branch.html:2
 msgid "Royalty"
 msgstr "رائلٹی"
 
-#: apps/accounts/context_processors.py:103
-#: apps/accounts/context_processors.py:105 apps/hr/views.py:85
+#: apps/accounts/context_processors.py:106
+#: apps/accounts/context_processors.py:108 apps/hr/views.py:85
 #: apps/notices/models.py:40 apps/reports/catalogue.py:198
 #: templates/academics/holidays.html:24 templates/hr/index.html:2
 #: templates/hr/index.html:5
 msgid "Staff"
 msgstr "عملہ"
 
-#: apps/accounts/context_processors.py:106 templates/hr/day.html:2
+#: apps/accounts/context_processors.py:109 templates/hr/day.html:2
 #: templates/hr/day.html:4
 msgid "Staff attendance"
 msgstr "عملے کی حاضری"
 
-#: apps/accounts/context_processors.py:107 apps/reports/catalogue.py:209
+#: apps/accounts/context_processors.py:110 apps/reports/catalogue.py:209
 #: templates/hr/index.html:22
 msgid "Monthly sheet"
 msgstr "ماہانہ شیٹ"
 
-#: apps/accounts/context_processors.py:108 apps/attendance/models.py:20
+#: apps/accounts/context_processors.py:111 apps/attendance/models.py:20
 #: apps/reports/catalogue.py:210 apps/reports/views.py:136
 #: templates/attendance/today.html:41 templates/hr/_leave_balance.html:3
 #: templates/hr/index.html:23 templates/hr/leaves.html:2
@@ -586,27 +788,27 @@ msgstr "ماہانہ شیٹ"
 msgid "Leave"
 msgstr "چھٹی"
 
-#: apps/accounts/context_processors.py:109 apps/core/views.py:108
+#: apps/accounts/context_processors.py:112 apps/core/views.py:108
 #: templates/hr/mine.html:2 templates/hr/mine.html:4
 msgid "My attendance"
 msgstr "میری حاضری"
 
-#: apps/accounts/context_processors.py:120
+#: apps/accounts/context_processors.py:123
 msgid "Settings"
 msgstr "ترتیبات"
 
-#: apps/accounts/context_processors.py:122 templates/setup/branches.html:4
+#: apps/accounts/context_processors.py:125 templates/setup/branches.html:4
 #: templates/setup/fees.html:4 templates/setup/hub.html:2
 #: templates/setup/hub.html:4 templates/setup/sections.html:4
 #: templates/setup/sessions.html:4 templates/setup/users.html:4
 msgid "Setup"
 msgstr "سیٹ اپ"
 
-#: apps/accounts/context_processors.py:123 templates/setup/hub.html:11
+#: apps/accounts/context_processors.py:126 templates/setup/hub.html:11
 msgid "Advanced setup"
 msgstr "اعلیٰ سیٹ اپ"
 
-#: apps/accounts/context_processors.py:124 templates/core/design_system.html:2
+#: apps/accounts/context_processors.py:127 templates/core/design_system.html:2
 #: templates/core/design_system.html:6
 msgid "Design system"
 msgstr "ڈیزائن سسٹم"
@@ -646,13 +848,6 @@ msgstr "ہیڈ آفس"
 #: templates/setup/branches.html:19 templates/setup/branches.html:33
 msgid "Region"
 msgstr "ریجن"
-
-#: apps/accounts/models.py:24 apps/fees/views.py:942 apps/setup/forms.py:297
-#: templates/attendance/branches.html:7 templates/core/home.html:80
-#: templates/fees/royalty.html:18 templates/jobs/index.html:8
-#: templates/setup/branches.html:19
-msgid "Branch"
-msgstr "برانچ"
 
 #: apps/accounts/models.py:33 apps/hr/models.py:83 apps/people/models.py:26
 #: apps/people/models.py:62
@@ -1468,11 +1663,12 @@ msgid "Family voucher: Rs %(a)s paid but Rs %(t)s is due; record it on the famil
 msgstr "فیملی واؤچر: %(a)s روپے ادا ہوئے لیکن %(t)s روپے واجب ہیں؛ اسے فیملی صفحے پر درج کریں"
 
 #: apps/fees/forms.py:33 apps/fees/views.py:1001
-#: templates/accounting/index.html:18 templates/fees/family_vouchers.html:9
-#: templates/fees/index.html:36 templates/fees/receive.html:44
-#: templates/fees/royalty.html:7 templates/fees/royalty_branch.html:17
-#: templates/fees/student.html:28 templates/fees/student.html:71
-#: templates/fees/vouchers.html:10 templates/reports/attendance_month.html:7
+#: templates/accounting/incomes.html:9 templates/accounting/index.html:19
+#: templates/fees/family_vouchers.html:9 templates/fees/index.html:36
+#: templates/fees/receive.html:44 templates/fees/royalty.html:7
+#: templates/fees/royalty_branch.html:17 templates/fees/student.html:28
+#: templates/fees/student.html:71 templates/fees/vouchers.html:10
+#: templates/reports/attendance_month.html:7
 msgid "Month"
 msgstr "مہینہ"
 
@@ -1556,11 +1752,6 @@ msgstr "ادائیگی کی تاریخ"
 msgid "Cash"
 msgstr "نقد"
 
-#: apps/fees/forms.py:136 apps/fees/views.py:838
-#: templates/fees/_day_breakdown.html:9
-msgid "Received in"
-msgstr "رقم کہاں آئی"
-
 #: apps/fees/forms.py:142 apps/fees/views.py:838
 msgid "Transaction ID / slip number"
 msgstr "ٹرانزیکشن آئی ڈی / سلپ نمبر"
@@ -1577,10 +1768,6 @@ msgstr "اختیاری: رسید کی تصویر یا اسکرین شاٹ (JPG،
 #: apps/fees/forms.py:158
 msgid "No banks yet: add them in Setup → Fee rates and vouchers."
 msgstr "ابھی کوئی بینک نہیں: سیٹ اپ ← فیس ریٹ اور واؤچر میں شامل کریں۔"
-
-#: apps/fees/forms.py:178
-msgid "Choose the bank the money came in."
-msgstr "وہ بینک منتخب کریں جس میں رقم آئی۔"
 
 #: apps/fees/forms.py:183
 msgid "This branch accepts only the full amount."
@@ -1611,11 +1798,12 @@ msgid "Leave empty until stopped."
 msgstr "روکے جانے تک خالی چھوڑ دیں۔"
 
 #: apps/fees/forms.py:257 apps/hr/forms.py:144 apps/hr/forms.py:170
-#: apps/people/forms.py:305 templates/accounting/index.html:43
-#: templates/fees/concessions.html:8 templates/fees/concessions.html:23
-#: templates/fees/receipt.html:28 templates/fees/student.html:44
-#: templates/fees/student.html:64 templates/fees/student.html:77
-#: templates/hr/day.html:30 templates/hr/leaves.html:8
+#: apps/people/forms.py:305 templates/accounting/incomes.html:26
+#: templates/accounting/index.html:44 templates/fees/concessions.html:8
+#: templates/fees/concessions.html:23 templates/fees/receipt.html:28
+#: templates/fees/student.html:44 templates/fees/student.html:64
+#: templates/fees/student.html:77 templates/hr/day.html:30
+#: templates/hr/leaves.html:8
 msgid "Reason"
 msgstr "وجہ"
 
@@ -2122,11 +2310,6 @@ msgstr "رائلٹی (روپے)"
 
 #: apps/fees/views.py:943 apps/fees/views.py:1001
 #: templates/fees/royalty.html:18 templates/fees/royalty_branch.html:17
-msgid "Paid (Rs)"
-msgstr "ادا شدہ (روپے)"
-
-#: apps/fees/views.py:943 apps/fees/views.py:1001
-#: templates/fees/royalty.html:18 templates/fees/royalty_branch.html:17
 msgid "Pending (Rs)"
 msgstr "باقی (روپے)"
 
@@ -2139,10 +2322,6 @@ msgstr "کل واجب (روپے)"
 #, python-format
 msgid "Royalty of Rs %(a)s recorded for %(m)s."
 msgstr "%(m)s کے لیے %(a)s روپے رائلٹی درج ہو گئی۔"
-
-#: apps/fees/views.py:1001 templates/fees/royalty_branch.html:17
-msgid "Fees received (Rs)"
-msgstr "وصول فیس (روپے)"
 
 #: apps/fees/views.py:1004 templates/fees/royalty_branch.html:19
 msgid "Brought forward from earlier months"
@@ -2248,7 +2427,9 @@ msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مث
 msgid "Type of leave"
 msgstr "رخصت کی قسم"
 
-#: apps/hr/forms.py:143 templates/admissions/report.html:7
+#: apps/hr/forms.py:143 templates/accounting/book.html:12
+#: templates/accounting/branches.html:10
+#: templates/accounting/profit_loss.html:12 templates/admissions/report.html:7
 #: templates/fees/collections.html:9 templates/notices/compose.html:13
 #: templates/reports/new_admissions.html:10
 msgid "To"
@@ -3604,32 +3785,37 @@ msgstr "ہر ملازم کا مہینہ دن بہ دن، تنخواہ کے لی�
 msgid "Leave waiting for approval and decided."
 msgstr "منظوری کی منتظر اور فیصلہ شدہ رخصتیں۔"
 
-#: apps/reports/catalogue.py:231 templates/accounting/index.html:22
+#: apps/reports/catalogue.py:231 templates/accounting/index.html:23
 msgid "Spent this month (Rs)"
 msgstr "اس مہینے خرچ (روپے)"
 
-#: apps/reports/catalogue.py:232 templates/accounting/index.html:23
+#: apps/reports/catalogue.py:232 templates/accounting/index.html:24
 msgid "From cash (Rs)"
 msgstr "نقد سے (روپے)"
 
-#: apps/reports/catalogue.py:233 templates/accounting/index.html:24
+#: apps/reports/catalogue.py:233 templates/accounting/index.html:25
 msgid "From bank (Rs)"
 msgstr "بینک سے (روپے)"
 
-#: apps/reports/catalogue.py:235
+#: apps/reports/catalogue.py:236
 msgid "Expenses of the month"
 msgstr "مہینے کے اخراجات"
 
-#: apps/reports/catalogue.py:235
+#: apps/reports/catalogue.py:236
 msgid "Every expense with head, paid to, cash or bank; totals by head."
 msgstr "ہر خرچ مد، وصول کنندہ، نقد یا بینک کے ساتھ؛ مد وار کل۔"
 
-#: apps/reports/views.py:77 apps/reports/views.py:81
-#: templates/core/design_system.html:62 templates/fees/family_receive.html:22
-#: templates/reports/class_strength.html:17
-#: templates/reports/class_strength.html:20
-msgid "Total"
-msgstr ""
+#: apps/reports/catalogue.py:237
+msgid "Money received other than fees, by head."
+msgstr "فیس کے علاوہ وصول شدہ رقم، مد وار۔"
+
+#: apps/reports/catalogue.py:238
+msgid "Cash in hand and each bank: opening balance, money in and out, running balance."
+msgstr "نقد رقم اور ہر بینک: ابتدائی بیلنس، آمد و خرچ، چلتا بیلنس۔"
+
+#: apps/reports/catalogue.py:239
+msgid "Fees received and other income, less expenses, for any dates."
+msgstr "وصول شدہ فیس اور دیگر آمدنی، اخراجات نکال کر، کسی بھی تاریخوں کے لیے۔"
 
 #: apps/reports/views.py:77 apps/reports/views.py:114
 #: templates/admissions/detail.html:6 templates/admissions/index.html:43
@@ -4236,11 +4422,12 @@ msgid "Save timetable"
 msgstr "ٹائم ٹیبل محفوظ کریں"
 
 #: templates/academics/section_timetable.html:31
-#: templates/accounting/index.html:41 templates/accounts/password_change.html:9
-#: templates/exams/date_sheet.html:36 templates/exams/enter_marks.html:19
-#: templates/fees/student.html:44 templates/fees/student.html:77
-#: templates/people/leave.html:13 templates/people/student_form.html:10
-#: templates/setup/form.html:10 templates/setup/user_new.html:17
+#: templates/accounting/incomes.html:24 templates/accounting/index.html:42
+#: templates/accounts/password_change.html:9 templates/exams/date_sheet.html:36
+#: templates/exams/enter_marks.html:19 templates/fees/student.html:44
+#: templates/fees/student.html:77 templates/people/leave.html:13
+#: templates/people/student_form.html:10 templates/setup/form.html:10
+#: templates/setup/user_new.html:17
 msgid "Cancel"
 msgstr "منسوخ"
 
@@ -4263,44 +4450,13 @@ msgstr "ابھی کسی جماعت کے ٹائم ٹیبل میں آپ کا کو�
 msgid "No periods are given to this teacher in any class timetable yet."
 msgstr "ابھی کسی جماعت کے ٹائم ٹیبل میں اس استاد کا کوئی پیریڈ نہیں۔"
 
-#: templates/accounting/form.html:2 templates/accounting/form.html:5
-#: templates/accounting/index.html:6
-msgid "Add expense"
-msgstr "خرچ شامل کریں"
+#: templates/accounting/_tabs.html:1
+msgid "Accounts"
+msgstr "حسابات"
 
-#: templates/accounting/form.html:6
-msgid "Recorded in your name. Cash expenses reduce today's cash in hand."
-msgstr "آپ کے نام سے درج ہوگا۔ نقد اخراجات آج کی نقد رقم سے کم ہوتے ہیں۔"
-
-#: templates/accounting/form.html:10
-msgid "Save expense"
-msgstr "خرچ محفوظ کریں"
-
-#: templates/accounting/form.html:11 templates/admissions/admit.html:10
-#: templates/admissions/form.html:10 templates/fees/concession_form.html:10
-#: templates/fees/issue.html:27 templates/hr/employee_form.html:9
-#: templates/hr/leave_form.html:9 templates/parents/account.html:10
-#: templates/parents/slips.html:18 templates/setup/form.html:4
-msgid "Back"
-msgstr "واپس"
-
-#: templates/accounting/index.html:9
-msgid "Cash in hand today"
-msgstr "آج کی نقد رقم"
-
-#: templates/accounting/index.html:11
-msgid "Cash fees received today (Rs)"
-msgstr "آج نقد وصول فیس (روپے)"
-
-#: templates/accounting/index.html:12
-msgid "Cash spent today (Rs)"
-msgstr "آج نقد خرچ (روپے)"
-
-#: templates/accounting/index.html:13
-msgid "Net cash today (Rs)"
-msgstr "آج کی خالص نقد (روپے)"
-
-#: templates/accounting/index.html:19 templates/admissions/index.html:36
+#: templates/accounting/book.html:14 templates/accounting/branches.html:12
+#: templates/accounting/incomes.html:9 templates/accounting/index.html:20
+#: templates/accounting/profit_loss.html:14 templates/admissions/index.html:36
 #: templates/admissions/report.html:8 templates/attendance/absentees.html:19
 #: templates/core/design_system.html:71 templates/core/home.html:63
 #: templates/exams/date_sheet.html:14 templates/fees/collections.html:11
@@ -4316,25 +4472,160 @@ msgstr "آج کی خالص نقد (روپے)"
 msgid "Show"
 msgstr "دکھائیں"
 
-#: templates/accounting/index.html:31
+#: templates/accounting/book.html:17
+msgid "Opening balance (Rs)"
+msgstr "ابتدائی بیلنس (روپے)"
+
+#: templates/accounting/book.html:20
+msgid "Closing balance (Rs)"
+msgstr "اختتامی بیلنس (روپے)"
+
+#: templates/accounting/book.html:22
+#, python-format
+msgid "Counted from the opening balance of Rs %(a)s entered for %(d)s."
+msgstr "%(d)s کے لیے درج %(a)s روپے کے ابتدائی بیلنس سے حساب۔"
+
+#: templates/accounting/book.html:23
+msgid "No opening balance entered: counted from the first record in TASEMS. Enter the real balance on a day below so the book matches the cash and the bank statement."
+msgstr "کوئی ابتدائی بیلنس درج نہیں: حساب TASEMS کے پہلے ریکارڈ سے ہے۔ نیچے کسی دن کا اصل بیلنس درج کریں تاکہ بک نقد رقم اور بینک اسٹیٹمنٹ سے ملے۔"
+
+#: templates/accounting/book.html:36
+msgid "Enter an opening balance"
+msgstr "ابتدائی بیلنس درج کریں"
+
+#: templates/accounting/book.html:37
+msgid "The money actually in hand or in the bank account at the start of a day (count the cash; take the bank figure from the statement). The book counts forward from it."
+msgstr "کسی دن کے آغاز پر اصل نقد رقم یا بینک اکاؤنٹ کی رقم (نقد گن لیں؛ بینک کی رقم اسٹیٹمنٹ سے لیں)۔ بک اسی سے آگے حساب کرتی ہے۔"
+
+#: templates/accounting/book.html:40
+msgid "Save opening balance"
+msgstr "ابتدائی بیلنس محفوظ کریں"
+
+#: templates/accounting/branches.html:15
+#: templates/accounting/profit_loss.html:17
+msgid "Income (Rs)"
+msgstr "آمدنی (روپے)"
+
+#: templates/accounting/branches.html:26
+msgid "Only what is recorded in TASEMS: a branch whose expenses are not entered here shows its fees only."
+msgstr "صرف TASEMS میں درج ریکارڈ: جس برانچ کے اخراجات یہاں درج نہیں، اس کی صرف فیس نظر آتی ہے۔"
+
+#: templates/accounting/form.html:2 templates/accounting/form.html:5
+#: templates/accounting/index.html:6
+msgid "Add expense"
+msgstr "خرچ شامل کریں"
+
+#: templates/accounting/form.html:6
+msgid "Recorded in your name. Cash expenses reduce today's cash in hand."
+msgstr "آپ کے نام سے درج ہوگا۔ نقد اخراجات آج کی نقد رقم سے کم ہوتے ہیں۔"
+
+#: templates/accounting/form.html:10
+msgid "Save expense"
+msgstr "خرچ محفوظ کریں"
+
+#: templates/accounting/form.html:11 templates/accounting/income_form.html:11
+#: templates/admissions/admit.html:10 templates/admissions/form.html:10
+#: templates/fees/concession_form.html:10 templates/fees/issue.html:27
+#: templates/hr/employee_form.html:9 templates/hr/leave_form.html:9
+#: templates/parents/account.html:10 templates/parents/slips.html:18
+#: templates/setup/form.html:4
+msgid "Back"
+msgstr "واپس"
+
+#: templates/accounting/income_form.html:2
+#: templates/accounting/income_form.html:5 templates/accounting/incomes.html:6
+msgid "Add income"
+msgstr "آمدنی درج کریں"
+
+#: templates/accounting/income_form.html:6
+msgid "Money received other than fees, recorded in your name. Cash income adds to cash in hand."
+msgstr "فیس کے علاوہ وصول شدہ رقم، آپ کے نام سے درج۔ نقد آمدنی نقد رقم میں شامل ہوتی ہے۔"
+
+#: templates/accounting/income_form.html:10
+msgid "Save income"
+msgstr "آمدنی محفوظ کریں"
+
+#: templates/accounting/incomes.html:5
+msgid "Money received other than fees (fees are recorded on the Fees pages)."
+msgstr "فیس کے علاوہ وصول شدہ رقم (فیس، فیس کے صفحات پر درج ہوتی ہے)۔"
+
+#: templates/accounting/incomes.html:10
+msgid "Other income this month (Rs)"
+msgstr "اس مہینے دیگر آمدنی (روپے)"
+
+#: templates/accounting/incomes.html:15
+msgid "All income"
+msgstr "تمام آمدنی"
+
+#: templates/accounting/incomes.html:25
+msgid "This income will be marked as cancelled. The record is kept with your reason."
+msgstr "یہ آمدنی منسوخ ہو جائے گی۔ ریکارڈ آپ کی وجہ کے ساتھ محفوظ رہے گا۔"
+
+#: templates/accounting/incomes.html:25 templates/accounting/incomes.html:26
+msgid "Cancel income"
+msgstr "آمدنی منسوخ کریں"
+
+#: templates/accounting/incomes.html:29
+msgid "No other income recorded this month."
+msgstr "اس مہینے کوئی دیگر آمدنی درج نہیں۔"
+
+#: templates/accounting/index.html:10
+msgid "Cash in hand today"
+msgstr "آج کی نقد رقم"
+
+#: templates/accounting/index.html:12
+msgid "Cash fees received today (Rs)"
+msgstr "آج نقد وصول فیس (روپے)"
+
+#: templates/accounting/index.html:13
+msgid "Cash spent today (Rs)"
+msgstr "آج نقد خرچ (روپے)"
+
+#: templates/accounting/index.html:14
+msgid "Net cash today (Rs)"
+msgstr "آج کی خالص نقد (روپے)"
+
+#: templates/accounting/index.html:32
 msgid "All expenses"
 msgstr "تمام اخراجات"
 
-#: templates/accounting/index.html:36
+#: templates/accounting/index.html:37
 msgid "Bill photo"
 msgstr "بل کی تصویر"
 
-#: templates/accounting/index.html:42
+#: templates/accounting/index.html:43
 msgid "This expense will be marked as cancelled. The record is kept with your reason."
 msgstr "یہ خرچ منسوخ شمار ہوگا۔ ریکارڈ آپ کی وجہ کے ساتھ محفوظ رہے گا۔"
 
-#: templates/accounting/index.html:42 templates/accounting/index.html:43
+#: templates/accounting/index.html:43 templates/accounting/index.html:44
 msgid "Cancel expense"
 msgstr "خرچ منسوخ کریں"
 
-#: templates/accounting/index.html:46
+#: templates/accounting/index.html:47
 msgid "No expenses recorded this month."
 msgstr "اس مہینے کوئی خرچ درج نہیں۔"
+
+#: templates/accounting/profit_loss.html:23
+msgid "Income"
+msgstr "آمدنی"
+
+#: templates/accounting/profit_loss.html:25
+#, python-format
+msgid "cash %(c)s, bank and online %(b)s"
+msgstr "نقد %(c)s، بینک اور آن لائن %(b)s"
+
+#: templates/accounting/profit_loss.html:32
+msgid "No expenses recorded."
+msgstr "کوئی خرچ درج نہیں۔"
+
+#: templates/accounting/profit_loss.html:36
+msgid "Fees are counted when received (not when billed). Expenses and other income are what is recorded in TASEMS; cancelled entries are left out."
+msgstr "فیس وصولی پر شمار ہوتی ہے (واؤچر بننے پر نہیں)۔ اخراجات اور دیگر آمدنی وہی ہیں جو TASEMS میں درج ہیں؛ منسوخ اندراجات شامل نہیں۔"
+
+#: templates/accounting/profit_loss.html:37
+#, python-format
+msgid "Royalty of %(p)s%% on these fees is Rs %(a)s (Royalty statement); it is included above only when its payment is recorded as an expense."
+msgstr "ان فیسوں پر %(p)s%% رائلٹی %(a)s روپے ہے (رائلٹی اسٹیٹمنٹ)؛ یہ اوپر صرف تب شامل ہوتی ہے جب اس کی ادائیگی خرچ کے طور پر درج ہو۔"
 
 #: templates/accounts/auth_base.html:7 templates/base.html:8
 #: templates/base.html:22 templates/base.html:87
@@ -4981,10 +5272,6 @@ msgstr ""
 msgid "Table"
 msgstr ""
 
-#: templates/core/design_system.html:56
-msgid "Balance (Rs)"
-msgstr ""
-
 #: templates/core/design_system.html:59
 msgid "Part paid"
 msgstr ""
@@ -5320,10 +5607,6 @@ msgstr "اس مہینے روزانہ وصول فیس (روپے)"
 #: templates/core/home.html:143 templates/core/home.html:151
 msgid "No payments received this month yet."
 msgstr "اس مہینے ابھی کوئی ادائیگی وصول نہیں ہوئی۔"
-
-#: templates/core/home.html:143
-msgid "Received (Rs)"
-msgstr "وصول (روپے)"
 
 #: templates/core/home.html:145
 msgid "Received this month by payment method"
@@ -7486,10 +7769,6 @@ msgstr "فیس وصولی کے بینک"
 #: templates/setup/fees.html:24
 msgid "When a fee is received by bank, staff choose one of these. Cash is always available."
 msgstr "جب فیس بینک کے ذریعے آئے تو عملہ ان میں سے ایک منتخب کرتا ہے۔ نقد ہمیشہ دستیاب ہے۔"
-
-#: templates/setup/fees.html:28 templates/setup/fees.html:54
-msgid "Account"
-msgstr "اکاؤنٹ"
 
 #: templates/setup/fees.html:30 templates/setup/fees.html:42
 #: templates/setup/user_detail.html:7 templates/setup/users.html:13

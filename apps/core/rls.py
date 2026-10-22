@@ -39,6 +39,8 @@ RLS_TABLES = [
     "academics_sectionsubject",
     "academics_period",
     "academics_timetableentry",
+    "accounting_income",
+    "accounting_openingbalance",
     "hr_employee",
     "hr_leaverequest",
     "hr_punch",

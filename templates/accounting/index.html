@@ -5,6 +5,7 @@
   <div><h1>{% trans "Expenses" %}</h1><p class="lede">{{ branch.name }} · {{ month|date:"F Y" }}</p></div>
   {% if can_add %}<div class="actions"><a class="button" href="{% url 'accounting:new' %}">{% icon "receipt" %}{% trans "Add expense" %}</a></div>{% endif %}
 </div>
+{% include "accounting/_tabs.html" with tab="expenses" %}
 
 <h2>{% trans "Cash in hand today" %}</h2>
 <div class="figures">

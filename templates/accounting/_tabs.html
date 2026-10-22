@@ -1,0 +1,6 @@
+{% load i18n %}<nav class="tabs no-print" aria-label="{% trans 'Accounts' %}">
+  <a href="{% url 'accounting:index' %}" {% if tab == "expenses" %}aria-current="page"{% endif %}>{% trans "Expenses" %}</a>
+  <a href="{% url 'accounting:incomes' %}" {% if tab == "income" %}aria-current="page"{% endif %}>{% trans "Other income" %}</a>
+  <a href="{% url 'accounting:book' %}" {% if tab == "book" %}aria-current="page"{% endif %}>{% trans "Cash & bank book" %}</a>
+  <a href="{% url 'accounting:profit_loss' %}" {% if tab == "pl" %}aria-current="page"{% endif %}>{% trans "Profit & loss" %}</a>
+</nav>

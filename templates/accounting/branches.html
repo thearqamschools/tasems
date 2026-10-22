@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Income and expenses by branch" %}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'accounting:profit_loss' %}">‹ {% trans "Profit & loss" %}</a></p>
+<h1>{% trans "Income and expenses by branch" %}</h1>
+<p class="lede">{{ start|date:"d M Y" }} – {{ end|date:"d M Y" }}</p>
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="from">{% trans "From" %}</label><input type="date" id="from" name="from" value="{{ start|date:'Y-m-d' }}"></div>
+    <div class="field"><label for="to">{% trans "To" %}</label><input type="date" id="to" name="to" value="{{ end|date:'Y-m-d' }}"></div>
+  </div>
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+</form>
+<div class="figures">
+  <div class="figure"><div class="value money">{{ totals.income|rupees }}</div><div class="label">{% trans "Income (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ totals.expenses|rupees }}</div><div class="label">{% trans "Expenses (Rs)" %}</div></div>
+  <div class="figure {% if totals.net < 0 %}danger{% else %}ok{% endif %}"><div class="value money">{{ totals.net|rupees }}</div><div class="label">{% trans "Surplus / deficit (Rs)" %}</div></div>
+</div>
+{% include "includes_list_tools.html" %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Branch" %}</th><th class="num">{% trans "Fees received (Rs)" %}</th><th class="num">{% trans "Other income (Rs)" %}</th><th class="num">{% trans "Expenses (Rs)" %}</th><th class="num">{% trans "Surplus / deficit (Rs)" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td>{{ r.branch.name }}</td><td class="num money">{{ r.fees|rupees }}</td><td class="num money">{{ r.other|rupees }}</td><td class="num money">{{ r.expenses|rupees }}</td>
+    <td class="num money">{% if r.net < 0 %}<span class="badge danger">{{ r.net|rupees }}</span>{% else %}{{ r.net|rupees }}{% endif %}</td></tr>{% endfor %}</tbody>
+  <tfoot><tr><th>{% trans "Total" %}</th><th class="num money">{{ totals.fees|rupees }}</th><th class="num money">{{ totals.other|rupees }}</th><th class="num money">{{ totals.expenses|rupees }}</th><th class="num money">{{ totals.net|rupees }}</th></tr></tfoot>
+</table></div>
+<p class="muted small">{% trans "Only what is recorded in TASEMS: a branch whose expenses are not entered here shows its fees only." %}</p>
+{% endblock %}
