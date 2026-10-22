@@ -1,0 +1,1 @@
+{% load i18n tasems_tags %}{% if page.has_other_pages %}<nav class="pagination">{% if page.has_previous %}<a href="{% list_url page=page.previous_page_number %}">{% trans "Previous" %}</a>{% endif %} {{ page.number }} / {{ page.paginator.num_pages }} {% if page.has_next %}<a href="{% list_url page=page.next_page_number %}">{% trans "Next" %}</a>{% endif %}</nav>{% endif %}

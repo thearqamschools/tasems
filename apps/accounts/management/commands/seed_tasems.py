@@ -283,8 +283,15 @@ PAYROLL_MANAGE = PAYROLL_VIEW + [
     "payroll.finalise_payroll",
 ]
 
+# Shop & stock (M11): principals keep the item list and cancel sales; accountants sell and record stock received;
+# supervisors see stock and sales.
+INVENTORY_VIEW = ["inventory.view_item", "inventory.view_stockmove", "inventory.view_sale", "inventory.view_saleline"]
+INVENTORY_WORK = INVENTORY_VIEW + ["inventory.add_sale", "inventory.add_saleline", "inventory.add_stockmove"]
+INVENTORY_MANAGE = INVENTORY_WORK + ["inventory.add_item", "inventory.change_item", "inventory.change_sale"]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": PAYROLL_VIEW
+    "network_admin": INVENTORY_VIEW
+    + PAYROLL_VIEW
     + NOTICE_POST
     + TEMPLATE_EDIT
     + ATT_VIEW
@@ -295,7 +302,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "head_office_admin": PAYROLL_VIEW
+    "head_office_admin": INVENTORY_VIEW
+    + PAYROLL_VIEW
     + NOTICE_POST
     + ATT_VIEW
     + DIARY_DESIGN
@@ -305,7 +313,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "regional_director": PAYROLL_VIEW
+    "regional_director": INVENTORY_VIEW
+    + PAYROLL_VIEW
     + ATT_VIEW
     + DIARY_VIEW
     + EXAM_VIEW
@@ -314,7 +323,8 @@ EXTRA_PERMISSIONS = {
     + ROYALTY_VIEW
     + HR_VIEW
     + ADM_VIEW,
-    "branch_owner": PAYROLL_VIEW
+    "branch_owner": INVENTORY_VIEW
+    + PAYROLL_VIEW
     + ATT_VIEW
     + DIARY_VIEW
     + EXAM_VIEW
@@ -323,7 +333,8 @@ EXTRA_PERMISSIONS = {
     + ROYALTY_VIEW
     + HR_VIEW
     + ADM_VIEW,
-    "principal": PAYROLL_MANAGE
+    "principal": INVENTORY_MANAGE
+    + PAYROLL_MANAGE
     + NOTICE_POST
     + ATT_MANAGE
     + DIARY_MANAGE
@@ -334,7 +345,8 @@ EXTRA_PERMISSIONS = {
     + HR_MANAGE
     + ADM_WORK,
     "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
-    "accountant": PAYROLL_VIEW
+    "accountant": INVENTORY_WORK
+    + PAYROLL_VIEW
     + FEE_COLLECT
     + EXPENSE_WORK
     + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],

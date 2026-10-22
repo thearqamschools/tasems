@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.27.0 — 2026-10-22 — M11: shop & stock
+
+Added
+- **Shop & stock** (Finance → Shop & stock): each branch's books, uniforms and stationery with category, class,
+  barcode, sale price and a reorder level. Stock is a ledger: stock received (with purchase price and note), items
+  issued free, count corrections, sales and returns are each one recorded line; stock can never go below zero.
+- **Sell** (Finance → Sell): scan a barcode or type the name, set the quantity, then complete the sale as
+  **Cash**, **Bank** (which bank) or **Add to the student's fee account** (by admission no.). Cash and bank sales
+  are recorded as other income (books and stationery sale / uniform sale), so they appear in the cash & bank book
+  and profit & loss; fee-account sales appear on the student's next voucher under Others. Printable receipt.
+- **Cancel a sale** (principals, with a reason): the items return to stock and the income or fee charge is
+  cancelled; the sale is kept, marked cancelled.
+- **Reports**: stock in hand with value, low and out of stock; sales for any dates with cash / bank / fee-account
+  totals and totals by item; each item's stock card. All with Excel and Print. A Shop & stock section in Reports.
+- Who: principals keep the item list and cancel sales; accountants sell and record stock in / out; branch owners,
+  regional directors and head office see stock and sales. A few fictional items added to the demo campus.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.26.0 — 2026-10-22 — M10: payroll
 
 Added

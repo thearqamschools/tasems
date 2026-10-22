@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% blocktrans with n=sale.number %}Sale {{ n }}{% endblocktrans %}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'inventory:sales' %}">‹ {% trans "Sales" %}</a></p>
+<div class="page-header no-print">
+  <div><h1>{% blocktrans with n=sale.number %}Sale {{ n }}{% endblocktrans %}</h1></div>
+  <div class="actions"><button class="button" type="button" data-print>{% icon "printer" %}{% trans "Print receipt" %}</button>{% if perms.inventory.add_sale %} <a class="button quiet" href="{% url 'inventory:sell' %}">{% icon "shopping-cart" %}{% trans "New sale" %}</a>{% endif %}</div>
+</div>
+<article class="card sale-receipt">
+  <h2>The Arqam Schools</h2>
+  <p>{{ branch.name }}</p>
+  <p><strong>{% trans "Receipt" %}</strong> · {% trans "Sale no." %} <span class="num">{{ sale.number }}</span> · {{ sale.date|date:"d M Y" }}</p>
+  {% if sale.is_cancelled %}<p><span class="badge danger">{% trans "Cancelled" %}</span> {{ sale.cancel_reason }}</p>{% endif %}
+  <p>{% if sale.student %}{{ sale.student.full_name }} · {% trans "Admission no." %} <span class="num">{{ sale.student.admission_no }}</span>{% else %}{{ sale.customer|default:"—" }}{% endif %}</p>
+  <table>
+    <thead><tr><th>{% trans "Item" %}</th><th class="num">{% trans "Quantity" %}</th><th class="num">{% trans "Price (Rs)" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+    <tbody>{% for l in lines %}<tr><td>{{ l.item }}</td><td class="num">{{ l.quantity }}</td><td class="num money">{{ l.unit_price|rupees }}</td><td class="num money">{{ l.amount|rupees }}</td></tr>{% endfor %}</tbody>
+    <tfoot><tr><th colspan="3">{% trans "Total" %}</th><th class="num money">{{ sale.total|rupees }}</th></tr></tfoot>
+  </table>
+  <p>{% trans "Paid by" %}: {{ sale.get_paid_by_display }}{% if sale.bank %} ({{ sale.bank.name }}){% endif %}{% if sale.paid_by == "fees" %} — {% trans "will appear on the next fee voucher under Others." %}{% endif %}</p>
+  <p class="small muted">{% trans "Sold by" %}: {{ sale.sold_by.get_full_name|default:sale.sold_by.username }}</p>
+</article>
+{% if can_cancel %}<details class="no-print"><summary>{% trans "Cancel sale" %}</summary>
+  <form method="post" action="{% url 'inventory:cancel' sale.id %}" data-confirm="{% trans 'The items go back into stock and the money entry is cancelled. The sale is kept, marked cancelled.' %}" data-confirm-button="{% trans 'Cancel sale' %}">{% csrf_token %}
+    <input name="reason" required maxlength="200" placeholder="{% trans 'Reason' %}"> <button class="button danger sm" type="submit">{% trans "Cancel sale" %}</button></form></details>{% endif %}
+{% endblock %}

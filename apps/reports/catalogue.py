@@ -242,6 +242,30 @@ def build(user, branch, session, today):
                 ],
             )
         )  # fmt: skip
+
+    if perm("inventory.view_item"):
+        from apps.inventory import services as stock
+        from apps.inventory.models import Sale
+
+        rows = stock.stock_rows(branch)
+        sold = Sale.objects.filter(branch=branch, is_cancelled=False, date__gte=month, date__lte=today)
+        modules.append(
+            Module(
+                "stock",
+                _("Shop & stock"),
+                "package",
+                [
+                    (sum(r["value"] for r in rows), _("Stock value at sale price (Rs)"), "", True),
+                    (sum(1 for r in rows if r["low"]), _("Low stock"), "attention" if any(r["low"] for r in rows) else "", False),
+                    (sum(1 for r in rows if r["out"]), _("Out of stock"), "danger" if any(r["out"] for r in rows) else "", False),
+                    (sold.aggregate(t=Sum("total"))["t"] or 0, _("Sold this month (Rs)"), "", True),
+                ],
+                [
+                    Report(_("Stock in hand"), _("Every item with stock, sale price and value; low and out of stock."), reverse("inventory:index")),
+                    Report(_("Sales"), _("Each sale with how it was paid, and totals by item, for any dates."), reverse("inventory:sales")),
+                ],
+            )
+        )  # fmt: skip
     return modules
 
 

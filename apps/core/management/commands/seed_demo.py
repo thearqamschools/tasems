@@ -121,6 +121,7 @@ class Command(BaseCommand):
             )
         self.royalty_and_expenses()
         self.demo_salaries()
+        self.demo_stock()
 
     def demo_salaries(self):
         """Fictional salaries for the demo staff (added once), so the Payroll page has something to show."""
@@ -129,6 +130,32 @@ class Command(BaseCommand):
 
         for e in Employee.objects.filter(code__startswith=PREFIX, pay__isnull=True):
             EmployeePay.objects.create(branch=e.branch, employee=e, monthly_salary=Decimal(25000 + 5000 * (e.pk % 3)))
+
+    def demo_stock(self):
+        """A few fictional shop items with stock for the demo campus (added once), so Shop & stock has something
+        to show. Names and prices are made up for the demo."""
+        from apps.inventory import services as stock
+        from apps.inventory.models import Item
+
+        branch = Branch.objects.get(code="fsd-samanabad")
+        user = User.objects.filter(username="demo-principal").first()
+        if user is None or Item.objects.filter(branch=branch).exists():
+            return
+        today = timezone.localdate()
+        level = ClassLevel.objects.filter(code="class-4").first()
+        for name, category, cls, code, price, reorder, qty in [
+            ("Demo English reader", "books", level, "DEMO-1001", 650, 10, 40),
+            ("Demo Mathematics book", "books", level, "DEMO-1002", 720, 10, 8),
+            ("Demo Urdu book", "books", level, "DEMO-1003", 540, 10, 0),
+            ("Exercise copy (single line)", "stationery", None, "DEMO-2001", 80, 50, 300),
+            ("School tie", "uniform", None, "DEMO-3001", 250, 20, 35),
+        ]:
+            item = Item.objects.create(
+                branch=branch, name=name, category=category, class_level=cls, barcode=code,
+                sale_price=Decimal(price), reorder_level=reorder,
+            )  # fmt: skip
+            if qty:
+                stock.move(item, "received", qty, today, user, note="Demo opening stock")
 
     # ------------------------------------------------------------------------------------------
     def build(self, password):

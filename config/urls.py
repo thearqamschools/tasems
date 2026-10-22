@@ -29,6 +29,7 @@ urlpatterns = [
     path("academics/", include("apps.academics.urls")),
     path("notices/", include("apps.notices.urls")),
     path("payroll/", include("apps.payroll.urls")),
+    path("inventory/", include("apps.inventory.urls")),
     path("staff/", include("apps.hr.urls")),
     path("parents/", include("apps.parents.urls")),
     path("admissions/", include("apps.admissions.urls")),

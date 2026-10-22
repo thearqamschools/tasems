@@ -51,7 +51,8 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 | M8 | Notices and circulars, messages to parents (WhatsApp links / Excel for SMS, no paid service), installable parent portal | Done 22 Oct 2026 (SMS/WhatsApp provider: needs approval and cost) |
 | M9 | Accounting: other income, cash & bank book with opening balances, profit & loss, branch-wise statement | Done 22 Oct 2026 |
 | M10 | Payroll: fixed salaries, per-day cut for absence and unpaid leave, finalise and lock, payslips, bank sheet | Done 22 Oct 2026 (per-day rate = salary ÷ days in the month, to confirm) |
-| M11–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M13 AI: cost estimate in AI_COST_ESTIMATE.md, needs approval) |
+| M11 | Shop & stock: items with barcode, stock ledger, sale counter (cash / bank / fee account), receipts, cancel, stock and sales reports | Done 22 Oct 2026 |
+| M12–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M13 AI: cost estimate in AI_COST_ESTIMATE.md, needs approval) |
 
 ## Known gaps and pending inputs
 

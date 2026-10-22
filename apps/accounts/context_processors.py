@@ -97,6 +97,8 @@ def _menu(user, branch):
             perm("accounting.view_expense") and (reverse("accounting:book"), _("Cash & bank book"), "landmark"),
             perm("accounting.view_expense")
             and (reverse("accounting:profit_loss"), _("Profit & loss"), "file-spreadsheet"),
+            perm("inventory.view_item") and (reverse("inventory:index"), _("Shop & stock"), "package"),
+            perm("inventory.add_sale") and (reverse("inventory:sell"), _("Sell"), "shopping-cart"),
             bool(user.accessible_branch_ids("fees.view_royalty"))
             and (reverse("fees:royalty"), _("Royalty"), "landmark"),
         ],

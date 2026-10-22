@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% if item %}{% trans "Change item" %}{% else %}{% trans "Add item" %}{% endif %}{% endblock %}
+{% block content %}
+<p><a href="{% if item %}{% url 'inventory:item' item.id %}{% else %}{% url 'inventory:index' %}{% endif %}">‹ {% if item %}{{ item.name }}{% else %}{% trans "Shop & stock" %}{% endif %}</a></p>
+<h1>{% if item %}{% trans "Change item" %}{% else %}{% trans "Add item" %}{% endif %}</h1>
+<p class="lede">{% trans "Stock is not entered here: after saving, use Stock in / out for stock received." %}</p>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save item" %}</button></div>
+</form>
+{% endblock %}

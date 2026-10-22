@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Sell" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'inventory:index' %}">‹ {% trans "Shop & stock" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Sell" %}</h1><p class="lede">{{ branch.name }} · {% trans "Scan each item's barcode (or type its name), then choose how it is paid. The sale is recorded in your name." %}</p></div>
+  <div class="actions"><a class="button quiet" href="{% url 'inventory:sales' %}">{% icon "receipt" %}{% trans "Sales" %}</a></div>
+</div>
+<form method="post" class="card filter-inline">{% csrf_token %}<input type="hidden" name="action" value="add">
+  <label for="code">{% trans "Barcode or name" %}</label>
+  <input id="code" name="code" list="item-names" autocomplete="off" autofocus required dir="auto" style="min-inline-size:16rem">
+  <datalist id="item-names">{% for i in items %}<option value="{{ i.barcode|default:i.name }}">{{ i.name }}{% if i.class_level %} ({{ i.class_level }}){% endif %} — {{ i.sale_price|rupees }}</option>{% endfor %}</datalist>
+  <label for="qty">{% trans "Quantity" %}</label><input id="qty" name="qty" type="number" min="1" value="1" style="max-inline-size:6rem" dir="ltr">
+  <button class="button" type="submit">{% icon "scan-barcode" %}{% trans "Add" %}</button>
+</form>
+{% if cart %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Item" %}</th><th class="num">{% trans "Price (Rs)" %}</th><th class="num">{% trans "Quantity" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th></th></tr></thead>
+  <tbody>{% for c in cart %}<tr>
+    <td>{{ c.item }}{% if c.short %} <span class="badge danger">{% blocktrans with n=c.stock %}Only {{ n }} in stock{% endblocktrans %}</span>{% endif %}</td>
+    <td class="num money">{{ c.item.sale_price|rupees }}</td><td class="num">{{ c.qty }}</td><td class="num money">{{ c.amount|rupees }}</td>
+    <td><form method="post">{% csrf_token %}<input type="hidden" name="action" value="remove"><input type="hidden" name="item" value="{{ c.item.id }}"><button class="button quiet sm" type="submit" aria-label="{% trans 'Remove' %}">{% icon "x" %}</button></form></td>
+  </tr>{% endfor %}</tbody>
+  <tfoot><tr><th colspan="3">{% trans "Total" %}</th><th class="num money">{{ total|rupees }}</th><th></th></tr></tfoot>
+</table></div>
+<form method="post" class="card">{% csrf_token %}<input type="hidden" name="action" value="complete">
+  <div class="form-grid">
+    <fieldset><legend>{% trans "Paid by" %}</legend>{% for v, l in paid_by %}<label><input type="radio" name="paid_by" value="{{ v }}"{% if forloop.first %} checked{% endif %}> {{ l }}</label><br>{% endfor %}</fieldset>
+    <div class="field"><label for="admission_no">{% trans "Student's admission no." %}</label><input id="admission_no" name="admission_no" dir="ltr" autocomplete="off"><p class="help">{% trans "Needed to add the amount to the fee account; optional for cash." %}</p></div>
+    <div class="field"><label for="customer">{% trans "Or customer name" %}</label><input id="customer" name="customer" maxlength="120"></div>
+    {% if banks %}<div class="field"><label for="bank">{% trans "Which bank" %}</label><select id="bank" name="bank"><option value="">—</option>{% for b in banks %}<option value="{{ b.id }}">{{ b.name }}</option>{% endfor %}</select></div>{% endif %}
+  </div>
+  <div class="actions"><button class="button" type="submit">{% icon "circle-check" %}{% blocktrans with t=total|rupees %}Complete sale — Rs {{ t }}{% endblocktrans %}</button></div>
+</form>
+<form method="post" class="no-print">{% csrf_token %}<input type="hidden" name="action" value="clear"><button class="button quiet sm" type="submit">{% trans "Empty the list" %}</button></form>
+{% else %}<div class="card empty-state">{% icon "shopping-cart" %}<p>{% trans "Scan or type an item to start a sale." %}</p></div>{% endif %}
+{% endblock %}

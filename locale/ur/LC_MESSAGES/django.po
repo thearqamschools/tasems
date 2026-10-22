@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 22:31+0500\n"
+"POT-Creation-Date: 2026-10-22 23:02+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,8 +49,8 @@ msgstr "وقفہ"
 #: templates/accounting/book.html:11 templates/accounting/branches.html:9
 #: templates/accounting/profit_loss.html:11 templates/admissions/report.html:6
 #: templates/fees/collections.html:8 templates/fees/student.html:64
-#: templates/reports/new_admissions.html:9 templates/setup/fees.html:12
-#: templates/setup/user_detail.html:25
+#: templates/inventory/sales.html:10 templates/reports/new_admissions.html:9
+#: templates/setup/fees.html:12 templates/setup/user_detail.html:25
 msgid "From"
 msgstr "سے"
 
@@ -274,14 +274,16 @@ msgstr "فیس وصول (%(n)s ادائیگیاں)"
 #: apps/accounting/forms.py:20 apps/accounting/forms.py:69
 #: apps/accounting/views.py:60 apps/accounting/views.py:185
 #: apps/accounting/views.py:283 apps/fees/views.py:837
-#: templates/academics/holidays.html:21 templates/accounting/book.html:26
-#: templates/accounting/incomes.html:17 templates/accounting/index.html:34
-#: templates/attendance/today.html:9 templates/exams/award_list.html:11
-#: templates/exams/date_sheet.html:22 templates/exams/section_exam.html:8
-#: templates/fees/collections.html:18 templates/fees/family_receive.html:36
-#: templates/fees/index.html:28 templates/fees/payments_import.html:29
-#: templates/fees/student.html:52 templates/hr/_days.html:3
-#: templates/people/student_detail.html:68
+#: apps/inventory/forms.py:59 apps/inventory/views.py:106
+#: apps/inventory/views.py:318 templates/academics/holidays.html:21
+#: templates/accounting/book.html:26 templates/accounting/incomes.html:17
+#: templates/accounting/index.html:34 templates/attendance/today.html:9
+#: templates/exams/award_list.html:11 templates/exams/date_sheet.html:22
+#: templates/exams/section_exam.html:8 templates/fees/collections.html:18
+#: templates/fees/family_receive.html:36 templates/fees/index.html:28
+#: templates/fees/payments_import.html:29 templates/fees/student.html:52
+#: templates/hr/_days.html:3 templates/inventory/item.html:19
+#: templates/inventory/sales.html:29 templates/people/student_detail.html:68
 msgid "Date"
 msgstr "تاریخ"
 
@@ -293,7 +295,8 @@ msgstr "خرچ کی مد"
 #: apps/accounting/forms.py:22 apps/accounting/forms.py:71
 #: apps/accounting/forms.py:105 apps/accounting/views.py:61
 #: apps/accounting/views.py:186 apps/accounting/views.py:318
-#: apps/fees/forms.py:267 apps/fees/views.py:838 apps/setup/forms.py:29
+#: apps/fees/forms.py:267 apps/fees/views.py:838 apps/inventory/views.py:312
+#: apps/inventory/views.py:319 apps/setup/forms.py:29
 #: templates/accounting/incomes.html:12 templates/accounting/incomes.html:17
 #: templates/accounting/index.html:28 templates/accounting/index.html:34
 #: templates/core/home.html:148 templates/fees/_day_breakdown.html:9
@@ -301,7 +304,9 @@ msgstr "خرچ کی مد"
 #: templates/fees/index.html:49 templates/fees/payments_import.html:29
 #: templates/fees/quick.html:14 templates/fees/receive.html:26
 #: templates/fees/royalty_branch.html:37 templates/fees/student.html:52
-#: templates/fees/student.html:71 templates/setup/fees.html:12
+#: templates/fees/student.html:71 templates/inventory/receipt.html:16
+#: templates/inventory/sales.html:24 templates/inventory/sales.html:29
+#: templates/inventory/sell.html:18 templates/setup/fees.html:12
 msgid "Amount (Rs)"
 msgstr "رقم (روپے)"
 
@@ -322,7 +327,7 @@ msgid "Paid from"
 msgstr "کہاں سے ادا کیا"
 
 #: apps/accounting/forms.py:26 apps/accounting/forms.py:75
-#: apps/fees/forms.py:138
+#: apps/fees/forms.py:138 templates/inventory/sell.html:31
 msgid "Which bank"
 msgstr "کون سا بینک"
 
@@ -335,7 +340,8 @@ msgid "Bill photo (optional)"
 msgstr "بل کی تصویر (اختیاری)"
 
 #: apps/accounting/forms.py:42 apps/accounting/forms.py:89
-#: apps/fees/forms.py:163 apps/fees/forms.py:283 apps/people/forms.py:313
+#: apps/fees/forms.py:163 apps/fees/forms.py:283 apps/inventory/forms.py:69
+#: apps/people/forms.py:313
 msgid "The date is in the future."
 msgstr "یہ تاریخ آنے والی ہے۔"
 
@@ -374,6 +380,7 @@ msgid "Receipt / cheque / transaction no."
 msgstr "رسید / چیک / ٹرانزیکشن نمبر"
 
 #: apps/accounting/forms.py:95 apps/fees/forms.py:178
+#: apps/inventory/views.py:231
 msgid "Choose the bank the money came in."
 msgstr "وہ بینک منتخب کریں جس میں رقم آئی۔"
 
@@ -388,7 +395,7 @@ msgstr "اس دن کے آغاز پر بیلنس"
 
 #: apps/accounting/models.py:45 apps/accounting/models.py:102
 #: apps/fees/forms.py:136 apps/fees/models.py:178 apps/fees/views.py:838
-#: apps/payroll/views.py:64 apps/setup/forms.py:35
+#: apps/inventory/models.py:87 apps/payroll/views.py:64 apps/setup/forms.py:35
 #: templates/fees/_day_breakdown.html:12 templates/payroll/salaries.html:9
 #: templates/payroll/salaries.html:14 templates/setup/fees.html:53
 msgid "Bank"
@@ -430,9 +437,10 @@ msgid "Recorded by"
 msgstr "کس نے درج کیا"
 
 #: apps/accounting/views.py:61 apps/accounting/views.py:186
-#: apps/fees/models.py:280 apps/hr/models.py:213 apps/payroll/models.py:43
-#: templates/accounting/incomes.html:20 templates/accounting/index.html:38
-#: templates/fees/student.html:76
+#: apps/fees/models.py:280 apps/hr/models.py:213 apps/inventory/views.py:321
+#: apps/payroll/models.py:43 templates/accounting/incomes.html:20
+#: templates/accounting/index.html:38 templates/fees/student.html:76
+#: templates/inventory/receipt.html:13 templates/inventory/sales.html:32
 msgid "Cancelled"
 msgstr "منسوخ"
 
@@ -466,7 +474,7 @@ msgstr "دیگر آمدنی"
 msgid "Income of Rs %(a)s recorded."
 msgstr "%(a)s روپے آمدنی درج ہو گئی۔"
 
-#: apps/accounting/views.py:241
+#: apps/accounting/views.py:241 apps/inventory/views.py:273
 msgid "Give a reason for cancelling."
 msgstr "منسوخی کی وجہ لکھیں۔"
 
@@ -526,7 +534,10 @@ msgstr "بچت / خسارہ"
 msgid "Profit and loss"
 msgstr "نفع و نقصان"
 
-#: apps/accounting/views.py:318
+#: apps/accounting/views.py:318 apps/inventory/forms.py:49
+#: apps/inventory/views.py:55 apps/inventory/views.py:312
+#: templates/inventory/index.html:28 templates/inventory/receipt.html:16
+#: templates/inventory/sales.html:24 templates/inventory/sell.html:18
 msgid "Item"
 msgstr "مد"
 
@@ -571,10 +582,11 @@ msgstr "بچت / خسارہ (روپے)"
 #: apps/accounting/views.py:345 apps/reports/views.py:77
 #: apps/reports/views.py:81 templates/accounting/branches.html:24
 #: templates/core/design_system.html:62 templates/fees/family_receive.html:22
+#: templates/inventory/receipt.html:18 templates/inventory/sell.html:24
 #: templates/reports/class_strength.html:17
 #: templates/reports/class_strength.html:20
 msgid "Total"
-msgstr ""
+msgstr "کل"
 
 #: apps/accounts/context_processors.py:43
 msgid "Overview"
@@ -697,8 +709,10 @@ msgstr "میرا ٹائم ٹیبل"
 msgid "Finance"
 msgstr "مالیات"
 
-#: apps/accounts/context_processors.py:88 templates/fees/index.html:18
+#: apps/accounts/context_processors.py:88 apps/inventory/forms.py:20
+#: apps/inventory/views.py:55 templates/fees/index.html:18
 #: templates/fees/quick.html:2 templates/fees/quick.html:4
+#: templates/inventory/index.html:28
 msgid "Barcode"
 msgstr "بارکوڈ"
 
@@ -756,31 +770,45 @@ msgstr "کیش اور بینک بک"
 msgid "Profit & loss"
 msgstr "نفع و نقصان"
 
-#: apps/accounts/context_processors.py:101 apps/fees/views.py:1000
+#: apps/accounts/context_processors.py:100 apps/reports/catalogue.py:255
+#: templates/inventory/index.html:2 templates/inventory/index.html:5
+#: templates/inventory/item.html:4 templates/inventory/item_form.html:4
+#: templates/inventory/sales.html:4 templates/inventory/sell.html:4
+#: templates/inventory/stock_form.html:4
+msgid "Shop & stock"
+msgstr "دکان اور اسٹاک"
+
+#: apps/accounts/context_processors.py:101 templates/inventory/index.html:7
+#: templates/inventory/sales.html:7 templates/inventory/sell.html:2
+#: templates/inventory/sell.html:6
+msgid "Sell"
+msgstr "فروخت"
+
+#: apps/accounts/context_processors.py:103 apps/fees/views.py:1000
 #: templates/fees/index.html:24 templates/fees/royalty.html:2
 #: templates/fees/royalty_branch.html:2
 msgid "Royalty"
 msgstr "رائلٹی"
 
-#: apps/accounts/context_processors.py:106
-#: apps/accounts/context_processors.py:108 apps/hr/views.py:85
+#: apps/accounts/context_processors.py:108
+#: apps/accounts/context_processors.py:110 apps/hr/views.py:85
 #: apps/notices/models.py:40 apps/reports/catalogue.py:198
 #: templates/academics/holidays.html:24 templates/hr/index.html:2
 #: templates/hr/index.html:5
 msgid "Staff"
 msgstr "عملہ"
 
-#: apps/accounts/context_processors.py:109 templates/hr/day.html:2
+#: apps/accounts/context_processors.py:111 templates/hr/day.html:2
 #: templates/hr/day.html:4
 msgid "Staff attendance"
 msgstr "عملے کی حاضری"
 
-#: apps/accounts/context_processors.py:110 apps/reports/catalogue.py:209
+#: apps/accounts/context_processors.py:112 apps/reports/catalogue.py:209
 #: templates/hr/index.html:22
 msgid "Monthly sheet"
 msgstr "ماہانہ شیٹ"
 
-#: apps/accounts/context_processors.py:111 apps/attendance/models.py:20
+#: apps/accounts/context_processors.py:113 apps/attendance/models.py:20
 #: apps/reports/catalogue.py:210 apps/reports/views.py:136
 #: templates/attendance/today.html:41 templates/hr/_leave_balance.html:3
 #: templates/hr/index.html:23 templates/hr/leaves.html:2
@@ -789,33 +817,33 @@ msgstr "ماہانہ شیٹ"
 msgid "Leave"
 msgstr "چھٹی"
 
-#: apps/accounts/context_processors.py:112 apps/payroll/views.py:70
+#: apps/accounts/context_processors.py:114 apps/payroll/views.py:70
 #: apps/reports/catalogue.py:211 templates/payroll/index.html:2
 #: templates/payroll/index.html:5 templates/payroll/salaries.html:4
 msgid "Payroll"
 msgstr "تنخواہیں"
 
-#: apps/accounts/context_processors.py:113 apps/core/views.py:108
+#: apps/accounts/context_processors.py:115 apps/core/views.py:108
 #: templates/hr/mine.html:2 templates/hr/mine.html:4
 msgid "My attendance"
 msgstr "میری حاضری"
 
-#: apps/accounts/context_processors.py:124
+#: apps/accounts/context_processors.py:126
 msgid "Settings"
 msgstr "ترتیبات"
 
-#: apps/accounts/context_processors.py:126 templates/setup/branches.html:4
+#: apps/accounts/context_processors.py:128 templates/setup/branches.html:4
 #: templates/setup/fees.html:4 templates/setup/hub.html:2
 #: templates/setup/hub.html:4 templates/setup/sections.html:4
 #: templates/setup/sessions.html:4 templates/setup/users.html:4
 msgid "Setup"
 msgstr "سیٹ اپ"
 
-#: apps/accounts/context_processors.py:127 templates/setup/hub.html:11
+#: apps/accounts/context_processors.py:129 templates/setup/hub.html:11
 msgid "Advanced setup"
 msgstr "اعلیٰ سیٹ اپ"
 
-#: apps/accounts/context_processors.py:128 templates/core/design_system.html:2
+#: apps/accounts/context_processors.py:130 templates/core/design_system.html:2
 #: templates/core/design_system.html:6
 msgid "Design system"
 msgstr "ڈیزائن سسٹم"
@@ -935,15 +963,18 @@ msgstr "پاکستانی موبائل نمبر درج کریں، مثلاً 0300
 msgid "Date of birth is in the future"
 msgstr "تاریخ پیدائش آنے والے وقت کی ہے"
 
-#: apps/admissions/forms.py:73
+#: apps/admissions/forms.py:73 apps/inventory/forms.py:50
+#: apps/inventory/views.py:106 templates/inventory/item.html:19
 msgid "What happened"
 msgstr "کیا ہوا"
 
 #: apps/admissions/forms.py:75 apps/admissions/models.py:100
 #: apps/fees/forms.py:151 apps/fees/forms.py:192 apps/fees/forms.py:271
+#: apps/inventory/forms.py:60 apps/inventory/views.py:106
 #: templates/attendance/_people.html:3 templates/attendance/take.html:20
 #: templates/core/design_system.html:80 templates/fees/student.html:71
 #: templates/hr/_days.html:3 templates/hr/day.html:20
+#: templates/inventory/item.html:19
 msgid "Note"
 msgstr "نوٹ"
 
@@ -1022,8 +1053,8 @@ msgid "School event"
 msgstr "سکول کی تقریب"
 
 #: apps/admissions/models.py:27 apps/admissions/models.py:49
-#: apps/fees/models.py:183 apps/people/models.py:125
-#: templates/people/_student_fields.html:31
+#: apps/fees/models.py:183 apps/inventory/models.py:25
+#: apps/people/models.py:125 templates/people/_student_fields.html:31
 msgid "Other"
 msgstr "دیگر"
 
@@ -1184,24 +1215,25 @@ msgstr ""
 "%(section)s کی حاضری محفوظ ہو گئی: %(present)s حاضر، %(absent)s غیر حاضر۔"
 
 #: apps/attendance/views.py:186 apps/fees/views.py:263 apps/hr/views.py:87
-#: apps/people/forms.py:109 apps/people/views.py:98 apps/reports/views.py:114
-#: templates/admissions/index.html:33 templates/admissions/index.html:41
-#: templates/core/design_system.html:56 templates/fees/concessions.html:23
-#: templates/fees/family_vouchers.html:21 templates/fees/student.html:36
-#: templates/fees/student.html:64 templates/fees/vouchers.html:13
-#: templates/fees/vouchers.html:25 templates/hr/_days.html:3
-#: templates/hr/day.html:20 templates/hr/index.html:30
-#: templates/hr/leaves.html:22 templates/jobs/index.html:8
-#: templates/people/student_detail.html:51
+#: apps/inventory/views.py:319 apps/people/forms.py:109 apps/people/views.py:98
+#: apps/reports/views.py:114 templates/admissions/index.html:33
+#: templates/admissions/index.html:41 templates/core/design_system.html:56
+#: templates/fees/concessions.html:23 templates/fees/family_vouchers.html:21
+#: templates/fees/student.html:36 templates/fees/student.html:64
+#: templates/fees/vouchers.html:13 templates/fees/vouchers.html:25
+#: templates/hr/_days.html:3 templates/hr/day.html:20
+#: templates/hr/index.html:30 templates/hr/leaves.html:22
+#: templates/jobs/index.html:8 templates/people/student_detail.html:51
 #: templates/people/student_list.html:23 templates/people/student_list.html:41
 #: templates/reports/new_admissions.html:18 templates/setup/branches.html:13
 msgid "Status"
 msgstr "حیثیت"
 
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/fees/views.py:262
-#: apps/fees/views.py:790 apps/fees/views.py:837 apps/people/views.py:97
-#: apps/reports/views.py:113 templates/exams/award_list.html:15
-#: templates/fees/find.html:6 templates/fees/student.html:5
+#: apps/fees/views.py:790 apps/fees/views.py:837 apps/inventory/views.py:318
+#: apps/people/views.py:97 apps/reports/views.py:113
+#: templates/exams/award_list.html:15 templates/fees/find.html:6
+#: templates/fees/student.html:5 templates/inventory/receipt.html:14
 #: templates/parents/child.html:6 templates/people/leave.html:6
 #: templates/people/student_detail.html:8
 #: templates/people/student_detail.html:51
@@ -1226,9 +1258,9 @@ msgid "Name"
 msgstr "نام"
 
 #: apps/attendance/views.py:186 apps/fees/forms.py:40 apps/fees/views.py:262
-#: apps/fees/views.py:790 apps/notices/views.py:151 apps/people/forms.py:44
-#: apps/people/views.py:97 apps/reports/views.py:77 apps/reports/views.py:113
-#: apps/reports/views.py:136 apps/setup/forms.py:20
+#: apps/fees/views.py:790 apps/inventory/views.py:55 apps/notices/views.py:151
+#: apps/people/forms.py:44 apps/people/views.py:97 apps/reports/views.py:77
+#: apps/reports/views.py:113 apps/reports/views.py:136 apps/setup/forms.py:20
 #: templates/academics/index.html:17 templates/admissions/index.html:31
 #: templates/admissions/index.html:41 templates/admissions/report.html:20
 #: templates/attendance/_people.html:3 templates/attendance/absentees.html:12
@@ -1237,9 +1269,9 @@ msgstr "نام"
 #: templates/exams/award_list.html:8 templates/exams/date_sheet.html:12
 #: templates/fees/defaulters.html:10 templates/fees/defaulters.html:31
 #: templates/fees/family_receive.html:14 templates/fees/vouchers.html:11
-#: templates/fees/vouchers.html:25 templates/parents/codes.html:7
-#: templates/people/_student_fields.html:13 templates/people/promotion.html:17
-#: templates/people/student_detail.html:51
+#: templates/fees/vouchers.html:25 templates/inventory/index.html:28
+#: templates/parents/codes.html:7 templates/people/_student_fields.html:13
+#: templates/people/promotion.html:17 templates/people/student_detail.html:51
 #: templates/people/student_detail.html:60
 #: templates/people/student_list.html:15 templates/people/student_list.html:41
 #: templates/reports/attendance_month.html:11
@@ -1557,7 +1589,7 @@ msgstr "کچھ نمبر درست کرنے ہیں۔ کچھ بھی محفوظ نہ
 msgid "Remarks saved."
 msgstr "تاثرات محفوظ ہو گئے۔"
 
-#: apps/exams/views.py:291
+#: apps/exams/views.py:291 apps/inventory/views.py:93
 #, python-format
 msgid "%(name)s saved."
 msgstr "%(name)s محفوظ ہو گیا۔"
@@ -1755,9 +1787,10 @@ msgstr "وصول شدہ رقم"
 msgid "Date paid"
 msgstr "ادائیگی کی تاریخ"
 
-#: apps/fees/forms.py:136 apps/fees/views.py:842 apps/payroll/views.py:65
-#: templates/fees/_day_breakdown.html:11 templates/fees/collections.html:23
-#: templates/fees/quick.html:16 templates/fees/receipt.html:14
+#: apps/fees/forms.py:136 apps/fees/views.py:842 apps/inventory/models.py:86
+#: apps/payroll/views.py:65 templates/fees/_day_breakdown.html:11
+#: templates/fees/collections.html:23 templates/fees/quick.html:16
+#: templates/fees/receipt.html:14
 msgid "Cash"
 msgstr "نقد"
 
@@ -1812,7 +1845,8 @@ msgstr "روکے جانے تک خالی چھوڑ دیں۔"
 #: templates/fees/concessions.html:23 templates/fees/receipt.html:28
 #: templates/fees/student.html:44 templates/fees/student.html:64
 #: templates/fees/student.html:77 templates/hr/day.html:30
-#: templates/hr/leaves.html:8 templates/payroll/index.html:46
+#: templates/hr/leaves.html:8 templates/inventory/receipt.html:25
+#: templates/payroll/index.html:46
 msgid "Reason"
 msgstr "وجہ"
 
@@ -2264,6 +2298,7 @@ msgstr "فیس وصولی"
 
 #: apps/fees/views.py:837 templates/fees/family_receive.html:36
 #: templates/fees/receipt.html:2 templates/fees/student.html:52
+#: templates/inventory/receipt.html:12
 msgid "Receipt"
 msgstr "رسید"
 
@@ -2440,8 +2475,8 @@ msgstr "رخصت کی قسم"
 #: apps/hr/forms.py:143 templates/accounting/book.html:12
 #: templates/accounting/branches.html:10
 #: templates/accounting/profit_loss.html:12 templates/admissions/report.html:7
-#: templates/fees/collections.html:9 templates/notices/compose.html:13
-#: templates/reports/new_admissions.html:10
+#: templates/fees/collections.html:9 templates/inventory/sales.html:11
+#: templates/notices/compose.html:13 templates/reports/new_admissions.html:10
 msgid "To"
 msgstr "تک"
 
@@ -2871,6 +2906,260 @@ msgstr "رخصت کی درخواست محفوظ ہو گئی۔ پرنسپل کی 
 msgid "Leave request withdrawn."
 msgstr "رخصت کی درخواست واپس لے لی گئی۔"
 
+#: apps/inventory/forms.py:17
+msgid "Item name"
+msgstr "چیز کا نام"
+
+#: apps/inventory/forms.py:18 apps/inventory/views.py:55
+#: apps/inventory/views.py:312 templates/inventory/index.html:22
+#: templates/inventory/index.html:28
+msgid "Category"
+msgstr "قسم"
+
+#: apps/inventory/forms.py:19
+msgid "For class"
+msgstr "کلاس کے لیے"
+
+#: apps/inventory/forms.py:21 apps/inventory/views.py:55
+#: templates/inventory/index.html:28 templates/inventory/item.html:14
+msgid "Sale price (Rs)"
+msgstr "قیمتِ فروخت (روپے)"
+
+#: apps/inventory/forms.py:22 apps/inventory/views.py:56
+#: templates/inventory/item.html:15
+msgid "Reorder level"
+msgstr "دوبارہ منگوانے کی حد"
+
+#: apps/inventory/forms.py:23 apps/notices/forms.py:58 apps/setup/forms.py:26
+#: apps/setup/forms.py:206 apps/setup/forms.py:231
+#: templates/notices/templates.html:10 templates/setup/fees.html:17
+#: templates/setup/fees.html:30 templates/setup/fees.html:42
+msgid "In use"
+msgstr "رائج"
+
+#: apps/inventory/forms.py:25
+msgid "Leave empty for items not tied to one class."
+msgstr "جو چیز کسی ایک کلاس کے لیے نہیں، اس کے لیے خالی چھوڑ دیں۔"
+
+#: apps/inventory/forms.py:39
+msgid "Another item already has this barcode."
+msgstr "یہ بارکوڈ کسی اور چیز کا ہے۔"
+
+#: apps/inventory/forms.py:45
+msgid "Stock received"
+msgstr "اسٹاک آیا"
+
+#: apps/inventory/forms.py:46
+msgid "Issued free (e.g. to a teacher)"
+msgstr "مفت دیا گیا (مثلاً استاد کو)"
+
+#: apps/inventory/forms.py:47 apps/inventory/models.py:64
+msgid "Stock count correction"
+msgstr "گنتی کے بعد درستی"
+
+#: apps/inventory/forms.py:52 apps/inventory/views.py:106
+#: templates/inventory/item.html:19 templates/inventory/receipt.html:16
+#: templates/inventory/sell.html:13 templates/inventory/sell.html:18
+msgid "Quantity"
+msgstr "تعداد"
+
+#: apps/inventory/forms.py:53
+msgid "For a correction: + for extra found, − for missing."
+msgstr "درستی کے لیے: زائد ملے تو +، کم ہوں تو −"
+
+#: apps/inventory/forms.py:57
+msgid "Purchase price per item (Rs)"
+msgstr "فی عدد قیمتِ خرید (روپے)"
+
+#: apps/inventory/forms.py:60
+msgid "e.g. supplier, bill number"
+msgstr "مثلاً سپلائر، بل نمبر"
+
+#: apps/inventory/forms.py:75
+msgid "Quantity cannot be zero."
+msgstr "تعداد صفر نہیں ہو سکتی۔"
+
+#: apps/inventory/forms.py:77
+msgid "Enter the quantity without a minus sign."
+msgstr "تعداد مائنس کے نشان کے بغیر لکھیں۔"
+
+#: apps/inventory/models.py:22
+msgid "Books"
+msgstr "کتابیں"
+
+#: apps/inventory/models.py:23
+msgid "Stationery"
+msgstr "اسٹیشنری"
+
+#: apps/inventory/models.py:24
+msgid "Uniform"
+msgstr "یونیفارم"
+
+#: apps/inventory/models.py:27 apps/notices/models.py:99
+msgid "name"
+msgstr "نام"
+
+#: apps/inventory/models.py:28
+msgid "category"
+msgstr "قسم"
+
+#: apps/inventory/models.py:35
+msgid "class"
+msgstr "کلاس"
+
+#: apps/inventory/models.py:38
+msgid "barcode"
+msgstr "بارکوڈ"
+
+#: apps/inventory/models.py:38
+msgid "Printed on the item, or your own code"
+msgstr "چیز پر چھپا ہوا، یا اپنا کوڈ"
+
+#: apps/inventory/models.py:40
+msgid "sale price (Rs)"
+msgstr "قیمتِ فروخت (روپے)"
+
+#: apps/inventory/models.py:42
+msgid "reorder level"
+msgstr "دوبارہ منگوانے کی حد"
+
+#: apps/inventory/models.py:42
+msgid "Warn when stock falls to this"
+msgstr "اسٹاک اتنا رہ جائے تو خبردار کریں"
+
+#: apps/inventory/models.py:44
+msgid "in use"
+msgstr "زیرِ استعمال"
+
+#: apps/inventory/models.py:60 templates/admissions/detail.html:26
+msgid "Received"
+msgstr "موصول"
+
+#: apps/inventory/models.py:61
+msgid "Sold"
+msgstr "فروخت ہوا"
+
+#: apps/inventory/models.py:62
+msgid "Issued free"
+msgstr "مفت دیا گیا"
+
+#: apps/inventory/models.py:63
+msgid "Returned"
+msgstr "واپس آیا"
+
+#: apps/inventory/models.py:69
+msgid "Positive in, negative out"
+msgstr "مثبت: آمد، منفی: اخراج"
+
+#: apps/inventory/models.py:70
+msgid "Purchase price, for stock received"
+msgstr "قیمتِ خرید، آنے والے اسٹاک کے لیے"
+
+#: apps/inventory/models.py:88
+msgid "Add to the student's fee account"
+msgstr "طالب علم کے فیس کھاتے میں ڈالیں"
+
+#: apps/inventory/views.py:54 apps/reports/catalogue.py:264
+msgid "Stock in hand"
+msgstr "موجود اسٹاک"
+
+#: apps/inventory/views.py:55 templates/inventory/index.html:28
+#: templates/inventory/item.html:13
+msgid "In stock"
+msgstr "اسٹاک میں"
+
+#: apps/inventory/views.py:56
+msgid "Value at sale price (Rs)"
+msgstr "قیمتِ فروخت پر مالیت (روپے)"
+
+#: apps/inventory/views.py:105 templates/inventory/item.html:17
+msgid "Stock card"
+msgstr "اسٹاک کارڈ"
+
+#: apps/inventory/views.py:106 templates/inventory/item.html:19
+msgid "Purchase price (Rs)"
+msgstr "قیمتِ خرید (روپے)"
+
+#: apps/inventory/views.py:106 templates/inventory/item.html:19
+msgid "By"
+msgstr "از"
+
+#: apps/inventory/views.py:136
+#, python-format
+msgid "Only %(n)s in stock."
+msgstr "اسٹاک میں صرف %(n)s ہیں۔"
+
+#: apps/inventory/views.py:139
+#, python-format
+msgid "Stock of %(name)s updated."
+msgstr "%(name)s کا اسٹاک درج ہو گیا۔"
+
+#: apps/inventory/views.py:183
+#, python-format
+msgid "No item found for «%(c)s». Scan again or type more of the name."
+msgstr "«%(c)s» کی کوئی چیز نہیں ملی۔ دوبارہ اسکین کریں یا نام مزید لکھیں۔"
+
+#: apps/inventory/views.py:225
+msgid "Add at least one item."
+msgstr "کم از کم ایک چیز شامل کریں۔"
+
+#: apps/inventory/views.py:227
+#, python-format
+msgid "No student with admission no. %(n)s in this branch."
+msgstr "اس برانچ میں داخلہ نمبر %(n)s کا کوئی طالب علم نہیں۔"
+
+#: apps/inventory/views.py:229
+msgid "Enter the student's admission no. to add the amount to their fee account."
+msgstr "رقم فیس کھاتے میں ڈالنے کے لیے طالب علم کا داخلہ نمبر لکھیں۔"
+
+#: apps/inventory/views.py:239
+#, python-format
+msgid "Not enough stock of %(name)s."
+msgstr "%(name)s کا اسٹاک کافی نہیں۔"
+
+#: apps/inventory/views.py:242
+#, python-format
+msgid "Sale %(n)s saved: Rs %(t)s."
+msgstr "فروخت %(n)s محفوظ: %(t)s روپے۔"
+
+#: apps/inventory/views.py:276
+msgid "Sale cancelled. The items are back in stock and the money entry is cancelled."
+msgstr "فروخت منسوخ ہو گئی۔ چیزیں اسٹاک میں واپس آ گئیں اور رقم کا اندراج منسوخ ہو گیا۔"
+
+#: apps/inventory/views.py:311
+msgid "Sales by item"
+msgstr "چیز وار فروخت"
+
+#: apps/inventory/views.py:312 templates/inventory/sales.html:24
+msgid "Quantity sold"
+msgstr "فروخت شدہ تعداد"
+
+#: apps/inventory/views.py:317 apps/reports/catalogue.py:265
+#: templates/inventory/index.html:10 templates/inventory/receipt.html:4
+#: templates/inventory/sales.html:2 templates/inventory/sales.html:6
+#: templates/inventory/sell.html:7
+msgid "Sales"
+msgstr "فروخت"
+
+#: apps/inventory/views.py:318 templates/inventory/receipt.html:12
+#: templates/inventory/sales.html:29
+msgid "Sale no."
+msgstr "فروخت نمبر"
+
+#: apps/inventory/views.py:318 templates/inventory/sales.html:29
+msgid "Customer / student"
+msgstr "خریدار / طالب علم"
+
+#: apps/inventory/views.py:318 templates/inventory/receipt.html:20
+#: templates/inventory/sales.html:29 templates/inventory/sell.html:28
+msgid "Paid by"
+msgstr "ادائیگی"
+
+#: apps/inventory/views.py:318 templates/inventory/receipt.html:21
+#: templates/inventory/sales.html:29
+msgid "Sold by"
+msgstr "فروخت کنندہ"
+
 #: apps/jobs/models.py:19 templates/hr/_leave_balance.html:3
 msgid "Waiting"
 msgstr "زیرِ انتظار"
@@ -2900,13 +3189,6 @@ msgstr "اختیاری: PDF یا تصویر، 5 MB تک۔"
 #: apps/notices/forms.py:41
 msgid "Attach a PDF, JPG or PNG file."
 msgstr "PDF، JPG یا PNG فائل لگائیں۔"
-
-#: apps/notices/forms.py:58 apps/setup/forms.py:26 apps/setup/forms.py:206
-#: apps/setup/forms.py:231 templates/notices/templates.html:10
-#: templates/setup/fees.html:17 templates/setup/fees.html:30
-#: templates/setup/fees.html:42
-msgid "In use"
-msgstr "رائج"
 
 #: apps/notices/messaging.py:13
 msgid "Student's name"
@@ -3000,10 +3282,6 @@ msgstr "کب تک دکھائیں"
 #: apps/notices/models.py:59
 msgid "attachment"
 msgstr "منسلکہ فائل"
-
-#: apps/notices/models.py:99
-msgid "name"
-msgstr "نام"
 
 #: apps/notices/models.py:100
 msgid "message"
@@ -3947,6 +4225,32 @@ msgstr "نقد رقم اور ہر بینک: ابتدائی بیلنس، آمد �
 msgid "Fees received and other income, less expenses, for any dates."
 msgstr "وصول شدہ فیس اور دیگر آمدنی، اخراجات نکال کر، کسی بھی تاریخوں کے لیے۔"
 
+#: apps/reports/catalogue.py:258 templates/inventory/index.html:15
+msgid "Stock value at sale price (Rs)"
+msgstr "قیمتِ فروخت پر اسٹاک کی مالیت (روپے)"
+
+#: apps/reports/catalogue.py:259 templates/inventory/index.html:16
+#: templates/inventory/index.html:23
+msgid "Low stock"
+msgstr "کم اسٹاک"
+
+#: apps/reports/catalogue.py:260 templates/inventory/index.html:17
+#: templates/inventory/index.html:23
+msgid "Out of stock"
+msgstr "اسٹاک ختم"
+
+#: apps/reports/catalogue.py:261 templates/inventory/index.html:18
+msgid "Sold this month (Rs)"
+msgstr "اس ماہ فروخت (روپے)"
+
+#: apps/reports/catalogue.py:264
+msgid "Every item with stock, sale price and value; low and out of stock."
+msgstr "ہر چیز کا اسٹاک، قیمتِ فروخت اور مالیت؛ کم اور ختم اسٹاک۔"
+
+#: apps/reports/catalogue.py:265
+msgid "Each sale with how it was paid, and totals by item, for any dates."
+msgstr "ہر فروخت اور اس کی ادائیگی کا طریقہ، اور چیز وار کل، کسی بھی تاریخوں کے لیے۔"
+
 #: apps/reports/views.py:77 apps/reports/views.py:114
 #: templates/admissions/detail.html:6 templates/admissions/index.html:43
 #: templates/people/student_list.html:47
@@ -4127,6 +4431,7 @@ msgstr "یہ موبائل نمبر کسی دوسرے لاگ اِن میں است
 
 #: apps/setup/views.py:77 templates/admissions/form.html:9
 #: templates/exams/ratings.html:23 templates/hr/employee_form.html:8
+#: templates/inventory/stock_form.html:10
 msgid "Save"
 msgstr "محفوظ کریں"
 
@@ -4423,6 +4728,7 @@ msgid "This holiday will be removed."
 msgstr "یہ چھٹی ختم کر دی جائے گی۔"
 
 #: templates/academics/holidays.html:26 templates/academics/periods.html:11
+#: templates/inventory/sell.html:22
 msgid "Remove"
 msgstr "ہٹائیں"
 
@@ -4592,6 +4898,7 @@ msgstr "حسابات"
 #: templates/fees/vouchers.html:16 templates/hr/day.html:7
 #: templates/hr/employee.html:30 templates/hr/index.html:32
 #: templates/hr/mine.html:12 templates/hr/month.html:5
+#: templates/inventory/index.html:25 templates/inventory/sales.html:13
 #: templates/payroll/index.html:9 templates/reports/attendance_month.html:7
 #: templates/reports/new_admissions.html:12 templates/setup/branches.html:15
 #: templates/setup/users.html:15
@@ -4924,10 +5231,6 @@ msgstr "موجودہ سکول"
 msgid "Source"
 msgstr "ذریعہ"
 
-#: templates/admissions/detail.html:26
-msgid "Received"
-msgstr "موصول"
-
 #: templates/admissions/detail.html:30
 msgid "Record a follow-up"
 msgstr "فالو اپ درج کریں"
@@ -4998,7 +5301,8 @@ msgid "All"
 msgstr "سب"
 
 #: templates/admissions/index.html:30 templates/core/design_system.html:68
-#: templates/hr/index.html:28 templates/people/student_list.html:13
+#: templates/hr/index.html:28 templates/inventory/index.html:21
+#: templates/inventory/sales.html:12 templates/people/student_list.html:13
 #: templates/setup/branches.html:11 templates/setup/users.html:11
 msgid "Search"
 msgstr "تلاش"
@@ -5016,14 +5320,16 @@ msgid "Child"
 msgstr "بچہ"
 
 #: templates/admissions/index.html:51 templates/core/design_system.html:101
-#: templates/fees/vouchers.html:37 templates/people/student_list.html:58
-#: templates/setup/branches.html:26 templates/setup/users.html:27
+#: templates/fees/vouchers.html:37 templates/inventory/_pages.html:1
+#: templates/people/student_list.html:58 templates/setup/branches.html:26
+#: templates/setup/users.html:27
 msgid "Previous"
 msgstr "پچھلا"
 
 #: templates/admissions/index.html:51 templates/core/design_system.html:101
-#: templates/fees/vouchers.html:37 templates/people/student_list.html:60
-#: templates/setup/branches.html:26 templates/setup/users.html:27
+#: templates/fees/vouchers.html:37 templates/inventory/_pages.html:1
+#: templates/people/student_list.html:60 templates/setup/branches.html:26
+#: templates/setup/users.html:27
 msgid "Next"
 msgstr "اگلا"
 
@@ -6148,11 +6454,11 @@ msgid_plural "Received (Rs), %(n)s payments"
 msgstr[0] "وصول (روپے)، %(n)s ادائیگی"
 msgstr[1] "وصول (روپے)، %(n)s ادائیگیاں"
 
-#: templates/fees/_day_breakdown.html:4
+#: templates/fees/_day_breakdown.html:4 templates/inventory/sales.html:17
 msgid "Cash (Rs)"
 msgstr "نقد (روپے)"
 
-#: templates/fees/_day_breakdown.html:5
+#: templates/fees/_day_breakdown.html:5 templates/inventory/sales.html:18
 msgid "Bank (Rs)"
 msgstr "بینک (روپے)"
 
@@ -6793,7 +7099,7 @@ msgstr[0] "%(n)s واؤچر پرنٹ کریں (PDF)"
 msgstr[1] "%(n)s واؤچر پرنٹ کریں (PDF)"
 
 #: templates/fees/vouchers.html:21 templates/includes_list_tools.html:3
-#: templates/payroll/index.html:26
+#: templates/inventory/sales.html:22 templates/payroll/index.html:26
 msgid "Excel"
 msgstr "ایکسل"
 
@@ -6802,8 +7108,9 @@ msgid "In"
 msgstr "آمد"
 
 #: templates/hr/_days.html:3 templates/hr/day.html:20
+#: templates/inventory/index.html:33
 msgid "Out"
-msgstr "روانگی"
+msgstr "ختم"
 
 #: templates/hr/_days.html:3
 msgid "Hours"
@@ -7080,6 +7387,181 @@ msgstr "مسئلہ"
 #: templates/hr/staff_import.html:25 templates/people/student_import.html:41
 msgid "Download template"
 msgstr "ٹیمپلیٹ ڈاؤن لوڈ کریں"
+
+#: templates/inventory/index.html:5
+msgid "Books, uniforms and stationery the branch keeps and sells. Stock changes only through stock received, sales and corrections, each one recorded."
+msgstr "برانچ میں رکھی اور بیچی جانے والی کتابیں، یونیفارم اور اسٹیشنری۔ اسٹاک صرف آمد، فروخت اور درستی سے بدلتا ہے، اور ہر ایک کا ریکارڈ رہتا ہے۔"
+
+#: templates/inventory/index.html:8 templates/inventory/item.html:8
+#: templates/inventory/stock_form.html:2 templates/inventory/stock_form.html:5
+msgid "Stock in / out"
+msgstr "اسٹاک آمد / اخراج"
+
+#: templates/inventory/index.html:9 templates/inventory/item_form.html:2
+#: templates/inventory/item_form.html:5
+msgid "Add item"
+msgstr "چیز شامل کریں"
+
+#: templates/inventory/index.html:14
+msgid "Items in use"
+msgstr "زیرِ استعمال چیزیں"
+
+#: templates/inventory/index.html:21
+msgid "Name or barcode"
+msgstr "نام یا بارکوڈ"
+
+#: templates/inventory/index.html:22
+msgid "All categories"
+msgstr "تمام اقسام"
+
+#: templates/inventory/index.html:23
+msgid "Stock"
+msgstr "اسٹاک"
+
+#: templates/inventory/index.html:23
+msgid "All stock"
+msgstr "تمام اسٹاک"
+
+#: templates/inventory/index.html:24
+msgid "Include items not in use"
+msgstr "غیر مستعمل چیزیں بھی دکھائیں"
+
+#: templates/inventory/index.html:28
+msgid "Value (Rs)"
+msgstr "مالیت (روپے)"
+
+#: templates/inventory/index.html:30 templates/inventory/item.html:6
+msgid "Not in use"
+msgstr "زیرِ استعمال نہیں"
+
+#: templates/inventory/index.html:33
+msgid "Low"
+msgstr "کم"
+
+#: templates/inventory/index.html:37
+msgid "No items match."
+msgstr "کوئی چیز نہیں ملی۔"
+
+#: templates/inventory/index.html:37
+msgid "No items yet. Add the books, uniforms and stationery the branch sells."
+msgstr "ابھی کوئی چیز نہیں۔ برانچ میں بکنے والی کتابیں، یونیفارم اور اسٹیشنری شامل کریں۔"
+
+#: templates/inventory/item.html:9 templates/inventory/item_form.html:2
+#: templates/inventory/item_form.html:5
+msgid "Change item"
+msgstr "چیز میں تبدیلی"
+
+#: templates/inventory/item.html:28
+msgid "No stock recorded for this item yet."
+msgstr "اس چیز کا ابھی کوئی اسٹاک درج نہیں۔"
+
+#: templates/inventory/item_form.html:6
+msgid "Stock is not entered here: after saving, use Stock in / out for stock received."
+msgstr "اسٹاک یہاں درج نہیں ہوتا: محفوظ کرنے کے بعد آنے والا اسٹاک «اسٹاک آمد / اخراج» میں درج کریں۔"
+
+#: templates/inventory/item_form.html:10
+msgid "Save item"
+msgstr "چیز محفوظ کریں"
+
+#: templates/inventory/receipt.html:2 templates/inventory/receipt.html:6
+#, python-format
+msgid "Sale %(n)s"
+msgstr "فروخت %(n)s"
+
+#: templates/inventory/receipt.html:7
+msgid "Print receipt"
+msgstr "رسید پرنٹ کریں"
+
+#: templates/inventory/receipt.html:7
+msgid "New sale"
+msgstr "نئی فروخت"
+
+#: templates/inventory/receipt.html:16 templates/inventory/sell.html:18
+msgid "Price (Rs)"
+msgstr "قیمت (روپے)"
+
+#: templates/inventory/receipt.html:20
+msgid "will appear on the next fee voucher under Others."
+msgstr "اگلے فیس واؤچر پر «دیگر» میں آئے گا۔"
+
+#: templates/inventory/receipt.html:23 templates/inventory/receipt.html:24
+#: templates/inventory/receipt.html:25
+msgid "Cancel sale"
+msgstr "فروخت منسوخ کریں"
+
+#: templates/inventory/receipt.html:24
+msgid "The items go back into stock and the money entry is cancelled. The sale is kept, marked cancelled."
+msgstr "چیزیں اسٹاک میں واپس آ جائیں گی اور رقم کا اندراج منسوخ ہو جائے گا۔ فروخت کا ریکارڈ منسوخ کے نشان کے ساتھ رہے گا۔"
+
+#: templates/inventory/sales.html:12
+msgid "Sale no., name or admission no."
+msgstr "فروخت نمبر، نام یا داخلہ نمبر"
+
+#: templates/inventory/sales.html:16
+msgid "Total sales (Rs)"
+msgstr "کل فروخت (روپے)"
+
+#: templates/inventory/sales.html:19
+msgid "Added to fee accounts (Rs)"
+msgstr "فیس کھاتوں میں ڈالی گئی (روپے)"
+
+#: templates/inventory/sales.html:21
+msgid "By item"
+msgstr "چیز وار"
+
+#: templates/inventory/sales.html:27
+msgid "All sales"
+msgstr "تمام فروخت"
+
+#: templates/inventory/sales.html:38
+msgid "No sales for these dates."
+msgstr "ان تاریخوں میں کوئی فروخت نہیں۔"
+
+#: templates/inventory/sell.html:6
+msgid "Scan each item's barcode (or type its name), then choose how it is paid. The sale is recorded in your name."
+msgstr "ہر چیز کا بارکوڈ اسکین کریں (یا نام لکھیں)، پھر ادائیگی کا طریقہ چنیں۔ فروخت آپ کے نام سے درج ہو گی۔"
+
+#: templates/inventory/sell.html:10
+msgid "Barcode or name"
+msgstr "بارکوڈ یا نام"
+
+#: templates/inventory/sell.html:14
+msgid "Add"
+msgstr "شامل کریں"
+
+#: templates/inventory/sell.html:20
+#, python-format
+msgid "Only %(n)s in stock"
+msgstr "اسٹاک میں صرف %(n)s"
+
+#: templates/inventory/sell.html:29
+msgid "Student's admission no."
+msgstr "طالب علم کا داخلہ نمبر"
+
+#: templates/inventory/sell.html:29
+msgid "Needed to add the amount to the fee account; optional for cash."
+msgstr "فیس کھاتے میں ڈالنے کے لیے ضروری؛ نقد کے لیے اختیاری۔"
+
+#: templates/inventory/sell.html:30
+msgid "Or customer name"
+msgstr "یا خریدار کا نام"
+
+#: templates/inventory/sell.html:33
+#, python-format
+msgid "Complete sale — Rs %(t)s"
+msgstr "فروخت مکمل کریں — %(t)s روپے"
+
+#: templates/inventory/sell.html:35
+msgid "Empty the list"
+msgstr "فہرست خالی کریں"
+
+#: templates/inventory/sell.html:36
+msgid "Scan or type an item to start a sale."
+msgstr "فروخت شروع کرنے کے لیے کوئی چیز اسکین کریں یا لکھیں۔"
+
+#: templates/inventory/stock_form.html:6
+msgid "Record stock received from a supplier, items given free, or a correction after counting. Sales are recorded on the Sell page."
+msgstr "سپلائر سے آیا اسٹاک، مفت دی گئی چیزیں، یا گنتی کے بعد درستی درج کریں۔ فروخت «فروخت» کے صفحے پر درج ہوتی ہے۔"
 
 #: templates/jobs/detail.html:7
 #, python-format

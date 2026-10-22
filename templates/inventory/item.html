@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ item.name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'inventory:index' %}">‹ {% trans "Shop & stock" %}</a></p>
+<div class="page-header">
+  <div><h1>{{ item.name }}</h1><p class="lede">{{ item.get_category_display }}{% if item.class_level %} · {{ item.class_level }}{% endif %}{% if item.barcode %} · <span class="num">{{ item.barcode }}</span>{% endif %}{% if not item.is_active %} · {% trans "Not in use" %}{% endif %}</p></div>
+  <div class="actions">
+    {% if can_receive %}<a class="button" href="{% url 'inventory:stock' %}?item={{ item.id }}">{% icon "package" %}{% trans "Stock in / out" %}</a>{% endif %}
+    {% if can_manage %}<a class="button quiet" href="{% url 'inventory:item_edit' item.id %}">{% trans "Change item" %}</a>{% endif %}
+  </div>
+</div>
+<div class="figures">
+  <div class="figure{% if qty <= 0 %} danger{% elif qty <= item.reorder_level %} attention{% endif %}"><div class="value">{{ qty }}</div><div class="label">{% trans "In stock" %}</div></div>
+  <div class="figure"><div class="value money">{{ item.sale_price|rupees }}</div><div class="label">{% trans "Sale price (Rs)" %}</div></div>
+  <div class="figure"><div class="value">{{ item.reorder_level }}</div><div class="label">{% trans "Reorder level" %}</div></div>
+</div>
+<h2>{% trans "Stock card" %}</h2>
+{% if page.object_list %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "What happened" %}</th><th class="num">{% trans "Quantity" %}</th><th class="num">{% trans "Purchase price (Rs)" %}</th><th>{% trans "Note" %}</th><th>{% trans "By" %}</th></tr></thead>
+  <tbody>{% for m in page %}<tr>
+    <td>{{ m.date|date:"d M Y" }}</td><td>{{ m.get_kind_display }}</td>
+    <td class="num"><bdi>{% if m.quantity > 0 %}+{% endif %}{{ m.quantity }}</bdi></td>
+    <td class="num money">{% if m.unit_cost is not None %}{{ m.unit_cost|rupees }}{% else %}—{% endif %}</td>
+    <td>{% if m.sale_id %}<a href="{% url 'inventory:receipt' m.sale_id %}">{{ m.note }}</a>{% else %}{{ m.note|default:"—" }}{% endif %}</td>
+    <td>{{ m.created_by.get_full_name|default:m.created_by.username }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>{% include "inventory/_pages.html" %}
+{% else %}<div class="card empty-state">{% icon "package" %}<p>{% trans "No stock recorded for this item yet." %}</p></div>{% endif %}
+{% endblock %}

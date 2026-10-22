@@ -1,0 +1,39 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Sales" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'inventory:index' %}">‹ {% trans "Shop & stock" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Sales" %}</h1><p class="lede">{{ branch.name }} · {{ start|date:"d M Y" }} – {{ end|date:"d M Y" }}</p></div>
+  {% if can_sell %}<div class="actions"><a class="button" href="{% url 'inventory:sell' %}">{% icon "shopping-cart" %}{% trans "Sell" %}</a></div>{% endif %}
+</div>
+<form method="get" class="filter-inline">
+  <label for="from">{% trans "From" %}</label><input type="date" id="from" name="from" value="{{ start|date:'Y-m-d' }}">
+  <label for="to">{% trans "To" %}</label><input type="date" id="to" name="to" value="{{ end|date:'Y-m-d' }}">
+  <input name="q" value="{{ q }}" placeholder="{% trans 'Sale no., name or admission no.' %}" aria-label="{% trans 'Search' %}">
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+</form>
+<div class="figures">
+  <div class="figure"><div class="value money">{{ total|rupees }}</div><div class="label">{% trans "Total sales (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ totals.cash|rupees }}</div><div class="label">{% trans "Cash (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ totals.bank|rupees }}</div><div class="label">{% trans "Bank (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ totals.fees|rupees }}</div><div class="label">{% trans "Added to fee accounts (Rs)" %}</div></div>
+</div>
+{% if by_item %}<h2>{% trans "By item" %}</h2>
+<div class="list-tools no-print"><a class="button quiet sm" href="{% list_url format='xlsx' by='item' %}">{% icon "file-spreadsheet" %}{% trans "Excel" %}</a></div>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Item" %}</th><th class="num">{% trans "Quantity sold" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>{% for i, q, a in by_item %}<tr><td>{{ i }}</td><td class="num">{{ q }}</td><td class="num money">{{ a|rupees }}</td></tr>{% endfor %}</tbody>
+</table></div>{% endif %}
+<h2>{% trans "All sales" %}</h2>
+{% if page.object_list %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Sale no." %}</th><th>{% trans "Date" %}</th><th>{% trans "Customer / student" %}</th><th>{% trans "Paid by" %}</th><th>{% trans "Sold by" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>{% for s in page %}<tr{% if s.is_cancelled %} class="muted"{% endif %}>
+    <td class="num"><a href="{% url 'inventory:receipt' s.id %}">{{ s.number }}</a></td><td>{{ s.date|date:"d M" }}</td>
+    <td>{{ s.customer|default:"—" }}{% if s.student %} <span class="muted small num">{{ s.student.admission_no }}</span>{% endif %}{% if s.is_cancelled %} <span class="badge muted">{% trans "Cancelled" %}</span>{% endif %}</td>
+    <td>{{ s.get_paid_by_display }}{% if s.bank %} ({{ s.bank.name }}){% endif %}</td>
+    <td>{{ s.sold_by.get_full_name|default:s.sold_by.username }}</td>
+    <td class="num money">{% if s.is_cancelled %}<s>{{ s.total|rupees }}</s>{% else %}{{ s.total|rupees }}{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>{% include "inventory/_pages.html" %}
+{% else %}<div class="card empty-state">{% icon "receipt" %}<p>{% trans "No sales for these dates." %}</p></div>{% endif %}
+{% endblock %}
