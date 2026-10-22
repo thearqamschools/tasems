@@ -8,6 +8,7 @@
   <title>{% block title %}{% trans "TASEMS" %}{% endblock %} · {% trans "The Arqam Schools" %}</title>
   <link rel="stylesheet" href="{% static 'css/tasems.css' %}">
   <link rel="icon" href="{% static 'img/arqam-logo-192.png' %}">
+  {% block head %}{% endblock %}
   <script>try{if(localStorage.getItem("tasems.sidebar")==="collapsed")document.documentElement.classList.add("sidebar-collapsed")}catch(e){}</script>
 </head>
 <body{% if request.GET.print == "1" %} data-autoprint{% endif %}>

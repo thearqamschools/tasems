@@ -46,7 +46,8 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 | Lead's changes (19 Oct 2026) | 46 items collected one by one (`CHANGE_REQUESTS.md`), built in four batches: students (class/section, family details, plain admission numbers, no Urdu entry), inquiries, attendance, staff (designations, CV), fees (Cash/Bank with branch banks, who received, today's totals, Barcode quick receive, receipt photos, discount types at admission), royalty paid/pending ledger, expenses | **Done (19 Oct 2026), not deployed** — demo updated |
 | M4 — Student lifecycle | Student photo, profile sections, brothers and sisters; leave school with leaving/character certificates (numbered PDFs); promotion to next session (copy sections, promote/keep/graduate); ID cards; defaulters by family | **Done (22 Oct 2026), not deployed** |
 | M5 | Module restyle: Excel/Print on every list, print layout, consistent filters and empty states, parent portal on phones | Done 22 Oct 2026 (printed documents keep their approved layouts) |
-| M6–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M9 Accounting started with expenses) |
+| M6 | Reports centre, family vouchers and family fee collection, background printing of large PDFs | Done 22 Oct 2026 |
+| M7–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M9 Accounting started with expenses) |
 
 ## Known gaps and pending inputs
 

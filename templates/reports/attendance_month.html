@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Monthly attendance by class" %}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'reports:index' %}#attendance">‹ {% trans "Reports" %}</a></p>
+<h1>{% trans "Monthly attendance by class" %}</h1>
+<p class="lede">{{ month|date:"F Y" }}</p>
+<form method="get" class="filter-inline"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
+{% if rows %}
+{% include "includes_list_tools.html" %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th class="num">{% trans "Register days" %}</th><th class="num">{% trans "Attendance %" %}</th><th class="num">{% trans "Absences" %}</th><th class="num">{% trans "Leave" %}</th><th class="num">{% trans "Late" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td>{{ r.section.class_level }}</td><td>{{ r.section.name }}</td><td class="num">{{ r.days }}</td>
+    <td class="num">{% if r.rate is None %}—{% else %}{{ r.rate }}%{% endif %}</td>
+    <td class="num">{{ r.absent }}</td><td class="num">{{ r.leave }}</td><td class="num">{{ r.late }}</td></tr>{% endfor %}</tbody>
+</table></div>
+<p class="muted small">{% trans "Attendance % = (present + late) ÷ all marked." %}</p>
+{% else %}<div class="card empty-state">{% icon "calendar-check" %}<p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
+{% endblock %}

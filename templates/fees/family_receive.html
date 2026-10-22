@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Family fee" %}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'fees:family_vouchers' %}?month={{ fv.month|date:'Y-m' }}">‹ {% trans "Family vouchers" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Family fee" %} · <span class="num">{{ fv.number }}</span></h1>
+  <p class="lede">{{ fv.father_name|default:"—" }} · <span class="num">{{ fv.father_cnic }}</span>{% if fv.phone %} · <span class="num">{{ fv.phone }}</span>{% endif %} · {{ fv.month|date:"F Y" }}</p></div>
+  <div class="actions"><a class="button quiet" href="{% url 'fees:family_voucher_pdf' fv.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Print family voucher" %}</a></div>
+</div>
+{% if fv.status == "paid" %}<ul class="messages"><li class="success">{% icon "circle-check" %}<span>{% trans "This family voucher is paid." %}</span></li></ul>
+{% elif fv.status == "replaced" %}<ul class="messages"><li class="warning">{% icon "triangle-alert" %}<span>{% trans "A newer family voucher replaced this one. Use the newer one." %}</span></li></ul>{% endif %}
+
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th class="num">{% trans "Voucher ID" %}</th><th class="num">{% trans "On the family voucher (Rs)" %}</th><th class="num">{% trans "To pay today (Rs)" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td><a href="{% url 'fees:student' r.student.id %}">{{ r.student.full_name }}</a> <span class="muted num">{{ r.student.admission_no }}</span></td>
+    <td>{{ r.voucher.section|default:"—" }}</td>
+    <td class="num">{{ r.voucher.number }}{% if r.voucher.id != r.printed.voucher_id %} <span class="badge muted">{% trans "newer" %}</span>{% endif %}</td>
+    <td class="num">{{ r.printed.amount|rupees }}</td>
+    <td class="num">{{ r.due|rupees }}{% if r.fine %} <span class="muted small">({% blocktrans with f=r.fine|rupees %}includes late fine {{ f }}{% endblocktrans %})</span>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+  <tfoot><tr><th colspan="3">{% trans "Total" %}</th><th class="num">{{ fv.payable|rupees }}</th><th class="num">{{ total|rupees }}</th></tr></tfoot>
+</table></div>
+
+{% if fv.status == "open" and total > 0 %}
+<form method="post" class="card" enctype="multipart/form-data" data-payment-form data-confirm="{% blocktrans with a=total|rupees %}Rs {{ a }} will be recorded, each child's full amount on their own voucher.{% endblocktrans %}" data-confirm-button="{% trans 'Save payment' %}">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <button class="button" type="submit">{% blocktrans with a=total|rupees %}Receive Rs {{ a }} for the family{% endblocktrans %}</button>
+</form>
+{% endif %}
+
+{% if payments %}
+<h2>{% trans "Payments" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Student" %}</th><th class="num">{% trans "Receipt" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+  <tbody>{% for p in payments %}<tr{% if p.is_reversed %} class="muted"{% endif %}><td>{{ p.paid_on|date:"d M Y" }}</td><td>{{ p.student.full_name }}</td><td class="num"><a href="{% url 'fees:receipt' p.id %}">{{ p.receipt_no }}</a></td><td class="num">{% if p.is_reversed %}<s>{{ p.amount|rupees }}</s>{% else %}{{ p.amount|rupees }}{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endblock %}

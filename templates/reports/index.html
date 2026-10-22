@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Reports" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{% trans "Reports" %}</h1>
+  <p class="lede">{% blocktrans with b=branch.name %}{{ b }}: today's figures and every printable report in one place. Each report opens with its own filters, Excel and Print.{% endblocktrans %}</p></div>
+</div>
+<nav class="tabs no-print" aria-label="{% trans 'Reports' %}">{% for m in modules %}<a href="#{{ m.key }}">{{ m.title }}</a>{% endfor %}</nav>
+{% for m in modules %}
+<section class="report-module" id="{{ m.key }}" aria-labelledby="h-{{ m.key }}">
+  <h2 id="h-{{ m.key }}">{% icon m.icon %} {{ m.title }}</h2>
+  {% if m.figures %}<div class="figures">{% for value, label, tone, money in m.figures %}
+    <div class="figure {{ tone }}"><div class="value{% if money %} money{% endif %}">{% if money %}{{ value|rupees }}{% else %}{{ value }}{% endif %}</div><div class="label">{{ label }}</div></div>
+  {% endfor %}</div>{% endif %}
+  <div class="setup-cards">{% for r in m.reports %}
+    <a class="setup-card" href="{{ r.url }}">{% icon "file-text" %}<span><strong>{{ r.title }}</strong><small class="muted">{{ r.text }}</small></span></a>
+  {% endfor %}</div>
+</section>
+{% endfor %}
+{% endblock %}

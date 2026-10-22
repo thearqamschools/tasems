@@ -7,6 +7,12 @@ from apps.organisation.models import AcademicSession
 MAX_SWITCHER_BRANCHES = 400
 
 
+def _has_print_jobs(user):
+    from apps.jobs.models import Job
+
+    return Job.objects.filter(requested_by=user).exists()
+
+
 def _menu(user, branch):
     """The sidebar: groups of (url, label, icon). Only pages this user may open are listed; every
     item uses the same permission the page itself checks, so the menu never leads to a refusal."""
@@ -21,7 +27,26 @@ def _menu(user, branch):
         if items:
             groups.append((label, items))
 
-    group(_("Overview"), [(reverse("home"), _("Dashboard"), "layout-dashboard")])
+    reports = branch is not None and any(
+        perm(p)
+        for p in (
+            "people.view_student",
+            "attendance.view_attendancerecord",
+            "fees.view_voucher",
+            "admissions.view_inquiry",
+            "exams.view_mark",
+            "hr.view_employee",
+            "accounting.view_expense",
+        )
+    )
+    group(
+        _("Overview"),
+        [
+            (reverse("home"), _("Dashboard"), "layout-dashboard"),
+            reports and (reverse("reports:index"), _("Reports"), "file-text"),
+            _has_print_jobs(user) and (reverse("jobs:index"), _("My print jobs"), "printer"),
+        ],
+    )
 
     attendance_items = []
     if perm("attendance.view_attendancerecord"):
@@ -58,6 +83,7 @@ def _menu(user, branch):
             fees and (reverse("fees:index"), _("Fees"), "wallet"),
             perm("fees.add_voucher") and (reverse("fees:generate"), _("Generate vouchers"), "receipt"),
             fees and (reverse("fees:vouchers"), _("Vouchers"), "list-checks"),
+            fees and (reverse("fees:family_vouchers"), _("Family vouchers"), "users"),
             fees and (reverse("fees:defaulters"), _("Defaulters"), "triangle-alert"),
             fees and (reverse("fees:collections"), _("Daily collection"), "coins"),
             fees and (reverse("fees:concessions"), _("Discounts"), "badge-percent"),

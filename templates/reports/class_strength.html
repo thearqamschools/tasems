@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Class strength" %}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'reports:index' %}#students">‹ {% trans "Reports" %}</a></p>
+<h1>{% trans "Class strength" %}</h1>
+<p class="lede">{% if session %}{% blocktrans with s=session.name %}Active students in each class and section, session {{ s }}.{% endblocktrans %}{% else %}{% trans "No current academic session is set." %}{% endif %}</p>
+{% if unplaced %}<div class="callout attention">{% icon "triangle-alert" %}<div>{% blocktrans count n=unplaced %}{{ n }} active student is not placed in a section this session and is not counted below.{% plural %}{{ n }} active students are not placed in a section this session and are not counted below.{% endblocktrans %} <a href="{% url 'people:student_list' %}">{% trans "Students" %}</a></div></div>{% endif %}
+{% if rows %}
+<div class="figures">
+  <div class="figure"><div class="value">{{ totals.total }}</div><div class="label">{% trans "Students in classes" %}</div></div>
+  <div class="figure"><div class="value">{{ totals.boys }}</div><div class="label">{% trans "Boys" %}</div></div>
+  <div class="figure"><div class="value">{{ totals.girls }}</div><div class="label">{% trans "Girls" %}</div></div>
+  <div class="figure"><div class="value">{{ totals.hifz }}</div><div class="label">{% trans "Hifz students" %}</div></div>
+</div>
+{% include "includes_list_tools.html" %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Boys" %}</th><th class="num">{% trans "Girls" %}</th><th class="num">{% trans "Total" %}</th><th class="num">{% trans "Hifz" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td>{{ r.section.class_level }}</td><td>{{ r.section.name }}</td><td>{{ r.section.campus|default:"—" }}</td>
+    <td class="num">{{ r.boys }}</td><td class="num">{{ r.girls }}</td><td class="num"><strong>{{ r.total }}</strong></td><td class="num">{{ r.hifz }}</td></tr>{% endfor %}</tbody>
+  <tfoot><tr><th colspan="3">{% trans "Total" %}</th><th class="num">{{ totals.boys }}</th><th class="num">{{ totals.girls }}</th><th class="num">{{ totals.total }}</th><th class="num">{{ totals.hifz }}</th></tr></tfoot>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "users" %}<p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
+{% endblock %}

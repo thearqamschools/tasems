@@ -231,6 +231,14 @@ class QuickReceiveForm(PaymentForm):
         del self.fields["amount"]
 
 
+class FamilyReceiveForm(PaymentForm):
+    """Family voucher: the whole amount due for every child is recorded; only date and Cash/Bank are asked."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        del self.fields["amount"]
+
+
 class ConcessionForm(forms.ModelForm):
     starts_on = MonthField(label=_("From month"))
     ends_on = MonthField(label=_("Until month"), required=False, help_text=_("Leave empty until stopped."))

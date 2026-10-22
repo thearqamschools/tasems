@@ -29,7 +29,7 @@
   <thead><tr><th class="num">{% trans "Row" %}</th><th>{% trans "Voucher ID" %}</th><th>{% trans "Student" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th>{% trans "Date" %}</th><th>{% trans "Transaction ID" %}</th><th>{% trans "Check" %}</th></tr></thead>
   <tbody>{% for r in result.rows %}<tr>
     <td class="num">{{ r.number }}</td><td class="num">{{ r.voucher_no }}</td>
-    <td>{% if r.voucher %}{{ r.voucher.student.full_name }}{% else %}—{% endif %}</td>
+    <td>{{ r.who|default:"—" }}</td>
     <td class="num">{{ r.amount|rupees }}</td><td>{{ r.paid_on|date:"d M Y"|default:"—" }}</td><td>{{ r.reference|default:"—" }}</td>
     <td>{% if r.ok %}<span class="badge">{% trans "OK" %}</span>{% else %}<span class="badge attention">{{ r.problem }}</span>{% endif %}</td>
   </tr>{% endfor %}</tbody>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block head %}{% if not job.finished %}<meta http-equiv="refresh" content="3">{% endif %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'jobs:index' %}">‹ {% trans "My print jobs" %}</a></p>
+<h1>{{ job.title }}</h1>
+<p class="lede">{{ job.branch.name }} · {% blocktrans with t=job.created_at|date:"d M Y, H:i" %}asked for at {{ t }}{% endblocktrans %}</p>
+<div class="card job-card" aria-live="polite">
+  {% if job.status == "done" %}
+    <p><span class="badge ok">{{ job.get_status_display }}</span></p>
+    <p><a class="button" href="{% url 'jobs:download' job.id %}">{% icon "download" %}{% trans "Download PDF" %}</a></p>
+    <p class="muted small">{% trans "The file is kept for 7 days, then removed. Make it again if you need it later." %}</p>
+  {% elif job.status == "failed" %}
+    <div class="callout danger">{% icon "circle-alert" %}<div><strong>{{ job.get_status_display }}</strong><br>{{ job.error }}</div></div>
+  {% else %}
+    <p><span class="badge attention">{{ job.get_status_display }}</span>
+    {% if job.total %}{% blocktrans with d=job.done t=job.total %}{{ d }} of {{ t }} done{% endblocktrans %}{% endif %}</p>
+    <span class="meter wide"><span style="inline-size:{{ job.percent }}%"></span></span>
+    <p class="muted small">{% trans "A large PDF is made in the background so the page does not time out. This page updates by itself; you can also leave it and come back from “My print jobs”." %}</p>
+  {% endif %}
+</div>
+{% endblock %}

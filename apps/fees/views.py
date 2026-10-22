@@ -26,11 +26,12 @@ from apps.diary.models import DiaryLayout
 from apps.organisation.models import AcademicSession, Branch
 from apps.people.models import Enrolment, Student
 
-from . import exchange, reports
+from . import exchange, family, reports
 from . import services as S
 from .barcode import voucher_barcode
 from .forms import (
     ConcessionForm,
+    FamilyReceiveForm,
     GenerateForm,
     IssueForm,
     MonthField,
@@ -44,6 +45,7 @@ from .models import (
     BranchFeeSettings,
     Charge,
     Concession,
+    FamilyVoucher,
     FeeHead,
     FeeRate,
     Method,
@@ -133,6 +135,11 @@ def find(request, branch, q):
         voucher = Voucher.objects.filter(branch=branch, number=int(digits)).first()
         if voucher:
             return redirect("fees:receive", voucher_id=voucher.id)
+        fv = FamilyVoucher.objects.filter(branch=branch, number=int(digits)).first()
+        if fv:
+            if request.user.has_branch_perm(S.PAY_PERM, branch.id):
+                return redirect("fees:family_receive", family_id=fv.id)
+            return redirect("fees:family_voucher_pdf", family_id=fv.id)
     student = Student.objects.filter(branch=branch, admission_no__iexact=q).first()
     if student:
         return redirect("fees:student", student_id=student.id)
@@ -367,7 +374,14 @@ def _pdf_response(pdf, name):
     return response
 
 
-MAX_PRINT = 600
+MAX_PRINT = 100  # more than this is made in the background (Reports → print jobs), so the page never times out
+
+
+def _queue_print(request, branch, kind, title, params):
+    from apps.jobs.models import Job
+
+    job = Job.objects.create(branch=branch, kind=kind, title=title, params=params, requested_by=request.user)
+    return redirect("jobs:detail", job_id=job.id)
 
 
 @login_required
@@ -378,10 +392,14 @@ def vouchers_pdf(request):
     if not voucher_list:
         raise Http404
     if len(voucher_list) > MAX_PRINT:
-        messages.error(
-            request, _("Too many vouchers to print at once (%(n)s at most). Choose a class.") % {"n": MAX_PRINT}
+        count = qs.count()
+        return _queue_print(
+            request,
+            branch,
+            "vouchers",
+            _("%(n)s vouchers, %(m)s") % {"n": count, "m": f"{month:%B %Y}"},
+            {"query": request.GET.urlencode()},
         )
-        return redirect(f"{_url('fees:vouchers')}?{request.GET.urlencode()}")
     return _pdf_response(render_vouchers_pdf(branch, voucher_list), f"Vouchers-{month:%Y-%m}")
 
 
@@ -856,6 +874,10 @@ def quick_receive(request):
             else None
         )
         due = S.amount_due_now(voucher, d["paid_on"])[0] if voucher else S.ZERO
+        if voucher is None and digits.isdigit():
+            fv = FamilyVoucher.objects.filter(branch=branch, number=int(digits)).first()
+            if fv is not None:  # a family voucher: show the children and take the whole family's fees there
+                return redirect("fees:family_receive", family_id=fv.id)
         if voucher is None:
             form.add_error("voucher_number", _("There is no voucher with this ID in this branch."))
         elif voucher.status == Voucher.Status.CANCELLED:
@@ -1098,3 +1120,145 @@ def payments_import(request):
         return redirect(f"{_url('fees:collections')}?from={first:%Y-%m-%d}&to={today:%Y-%m-%d}")
 
     return render(request, "fees/payments_import.html", context)
+
+
+# --- Family vouchers (M6) --------------------------------------------------------------------
+
+
+def family_pdf_html(branch, family_vouchers):
+    context = _voucher_context(branch, [])
+    context["items"] = [
+        {
+            "fv": fv,
+            "rows": [{"v": i.voucher, "amount": i.amount} for i in fv.items.all()],
+            "barcode": voucher_barcode(fv.number),
+        }
+        for fv in family_vouchers
+    ]
+    return render_to_string("fees/family_voucher_document.html", context)
+
+
+def render_family_pdf(branch, family_vouchers):
+    from weasyprint import HTML
+
+    return HTML(string=family_pdf_html(branch, family_vouchers), base_url=str(settings.BASE_DIR)).write_pdf()
+
+
+def _family_qs(branch):
+    return FamilyVoucher.objects.filter(branch=branch).prefetch_related(
+        "items__voucher__student", "items__voucher__section__class_level"
+    )
+
+
+@login_required
+def family_vouchers(request):
+    branch = _branch(request)
+    month = _month(request)
+    can_make = request.user.has_branch_perm(S.VOUCHER_PERM, branch.id)
+    if request.method == "POST":
+        if not can_make:
+            raise PermissionDenied
+        made, kept = family.make(branch, month, request.user)
+        if made or kept:
+            messages.success(
+                request,
+                _("%(m)s family vouchers made; %(k)s already made and unchanged.") % {"m": len(made), "k": len(kept)},
+            )
+        else:
+            messages.warning(request, _("No families with two or more children have open vouchers for this month."))
+        return redirect(f"{_url('fees:family_vouchers')}?month={month:%Y-%m}")
+    made = list(_family_qs(branch).filter(month=month).exclude(status=FamilyVoucher.Status.REPLACED))
+    pending = [f for f in family.families(branch, month) if f["cnic"] not in {fv.father_cnic for fv in made}]
+    return render(
+        request,
+        "fees/family_vouchers.html",
+        {
+            "month": month,
+            "made": made,
+            "pending": pending,
+            "open_count": sum(1 for fv in made if fv.status == FamilyVoucher.Status.OPEN),
+            "can_make": can_make,
+            "can_pay": request.user.has_branch_perm(S.PAY_PERM, branch.id),
+        },
+    )
+
+
+@login_required
+def family_vouchers_pdf(request):
+    branch = _branch(request)
+    month = _month(request)
+    items = list(_family_qs(branch).filter(month=month, status=FamilyVoucher.Status.OPEN).order_by("father_name"))
+    if not items:
+        raise Http404
+    if len(items) > MAX_PRINT:
+        return _queue_print(
+            request,
+            branch,
+            "family_vouchers",
+            _("%(n)s family vouchers, %(m)s") % {"n": len(items), "m": f"{month:%B %Y}"},
+            {"month": month.isoformat()},
+        )
+    return _pdf_response(render_family_pdf(branch, items), f"Family-vouchers-{month:%Y-%m}")
+
+
+@login_required
+def family_voucher_pdf(request, family_id):
+    branch = _branch(request)
+    fv = _family_qs(branch).filter(pk=family_id).first()
+    if fv is None:
+        raise Http404
+    return _pdf_response(render_family_pdf(branch, [fv]), f"Family-voucher-{fv.number}")
+
+
+@login_required
+def family_receive(request, family_id):
+    """Family fee collection: every child's whole amount due today, in one go."""
+    branch = _branch(request, S.PAY_PERM)
+    fv = _family_qs(branch).filter(pk=family_id).first()
+    if fv is None:
+        raise Http404
+    today = timezone.localdate()
+    form = FamilyReceiveForm(
+        request.POST or None,
+        request.FILES or None,
+        initial={"paid_on": today, "how": PaymentForm.CASH},
+        branch=branch,
+    )
+    paid_on = today
+    if request.method == "POST" and form.is_valid():
+        paid_on = form.cleaned_data["paid_on"]
+    rows, total = family.due_now(fv, paid_on)
+    if request.method == "POST" and form.is_valid():
+        if fv.status != FamilyVoucher.Status.OPEN:
+            form.add_error(None, _("This family voucher is already paid or was replaced."))
+        elif total <= 0:
+            form.add_error(None, _("Nothing is owed by this family."))
+        else:
+            d = form.cleaned_data
+            payments = family.receive(
+                fv,
+                d["paid_on"],
+                d["method"],
+                request.user,
+                bank=d["bank"],
+                reference=d["reference"],
+                note=d["note"],
+                attachment=d["attachment"],
+            )
+            messages.success(
+                request,
+                _("Family voucher %(n)s paid: Rs %(a)s for %(c)s children.")
+                % {"n": fv.number, "a": rupees(sum(p.amount for p in payments)), "c": len(payments)},
+            )
+            return redirect("fees:family_receive", family_id=fv.id)
+    return render(
+        request,
+        "fees/family_receive.html",
+        {
+            "fv": fv,
+            "rows": rows,
+            "total": total,
+            "form": form,
+            "payments": fv.payments.select_related("student").order_by("pk"),
+        },
+    )

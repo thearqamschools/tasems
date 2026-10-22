@@ -1,0 +1,78 @@
+{% load i18n tasems_tags %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Family fee vouchers</title>
+{% include "fees/_voucher_style.html" %}
+<style>
+  .family-title { text-align: center; font-weight: 700; font-size: 8pt; letter-spacing: 0.08em; margin: 1mm 0 0; }
+  .kids td.name { text-align: start; }
+  .kids th.id, .kids td.id { width: 20mm; }
+  .kids th.amt, .kids td.amt { width: 22mm; }
+  .kids th.cls, .kids td.cls { width: 30mm; }
+</style></head>
+<body>
+{% for item in items %}{% with f=item.fv %}
+<div class="page">
+{% for copy in copies %}
+  <div class="copy">
+    <div class="head">
+      <div class="school">
+        <div><img src="{% official_logo layout media_base font_base %}" alt="The Arqam Schools"></div>
+        <div>
+          <div class="name">THE ARQAM SCHOOLS</div>
+          <div class="addr">{{ branch.address|default:branch.city }}</div>
+          {% if branch.phone %}<div class="addr">Ph: {{ branch.phone }}</div>{% endif %}
+        </div>
+      </div>
+      <div class="mid">
+        <div class="label">{{ copy }}</div>
+        {{ item.barcode }}
+        <div class="num">{{ f.number }}</div>
+      </div>
+      <div class="bank">
+        <div class="details">
+          {% if fs.bank_name %}<b>{{ fs.bank_name }}</b>{% if fs.bank_branch %}, {{ fs.bank_branch }}{% endif %}<br>
+          {% if fs.account_title %}{{ fs.account_title }}<br>{% endif %}
+          A/C # <b>{{ fs.account_number|default:"—" }}</b>
+          {% else %}<span class="missing">Bank details not set</span>{% endif %}
+        </div>
+        <div class="stamp">{% if forloop.counter == 2 %}Bank stamp &amp; signature{% else %}Received by{% endif %}</div>
+      </div>
+    </div>
+    <div class="family-title">FAMILY FEE VOUCHER · {{ f.month|date:"F Y"|upper }}</div>
+    <div class="info">
+      <span class="k">Voucher ID:</span><span class="v">{{ f.number }}</span>
+      <span class="k">Father:</span><span class="v" style="grid-column: span 3">{{ f.father_name|default:"—" }}</span>
+      <span class="k">Children:</span><span class="v">{{ item.rows|length }}</span>
+      <span class="due">Due Date<b>{{ f.due_on|date:"d/m/Y" }}</b></span>
+      <span class="k">CNIC:</span><span class="v">{{ f.father_cnic }}</span>
+      <span class="k">Mobile:</span><span class="v" style="grid-column: span 3">{{ f.phone|default:"—" }}</span>
+    </div>
+    <table class="fees kids">
+      <thead><tr><th>Student</th><th class="id">Adm. No.</th><th class="cls">Class</th><th class="id">Own voucher</th><th>Months</th><th class="amt">Amount</th></tr></thead>
+      <tbody>
+        {% for r in item.rows %}<tr>
+          <td class="name">{{ r.v.student.full_name }}</td><td>{{ r.v.student.admission_no }}</td>
+          <td>{{ r.v.section.class_level.name|default:"—" }} {{ r.v.section.name|default:"" }}</td><td>{{ r.v.number }}</td>
+          <td>{{ r.v.first_month|date:"M Y" }}{% if r.v.last_month != r.v.first_month %} – {{ r.v.last_month|date:"M Y" }}{% endif %}</td>
+          <td>{{ r.amount|rupees }}</td>
+        </tr>{% endfor %}
+        <tr class="total"><td class="name" colspan="5">Total for the family</td><td>{{ f.payable|rupees }}</td></tr>
+      </tbody>
+    </table>
+    <div class="lower">
+      <div class="notes">
+        <div>Pay this one voucher for all the children above, or each child's own voucher separately.</div>
+        <div>Issued {{ f.issued_on|date:"d/m/Y" }}. Amounts include any earlier unpaid months and fines.</div>
+      </div>
+      <table class="pay">
+        <tr class="main"><td>Payable by Due Date:</td><td>{{ f.payable|rupees }}</td></tr>
+        <tr><td>Surcharge:</td><td>{{ f.late_fine|rupees }}</td></tr>
+        <tr><td>Payable After Due Date:</td><td>{{ f.payable_after_due|rupees }}</td></tr>
+      </table>
+    </div>
+    {% if fs.voucher_note %}<div class="footnote">{{ fs.voucher_note }}</div>{% endif %}
+  </div>
+  {% if not forloop.last %}<div class="cut">cut here</div>{% endif %}
+{% endfor %}
+</div>
+{% endwith %}{% endfor %}
+</body></html>

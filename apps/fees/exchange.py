@@ -18,7 +18,7 @@ from django.utils.translation import gettext as _
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, PatternFill
 
-from .models import Payment, Voucher
+from .models import FamilyVoucher, Payment, Voucher
 from .services import ZERO, record_payment
 
 MAX_ROWS = 5000
@@ -134,7 +134,14 @@ class PaidRow:
     paid_on: dt.date | None
     reference: str
     voucher: Voucher | None = None
+    family: FamilyVoucher | None = None  # a family voucher's ID: pays every child's own voucher
     problem: str = ""
+
+    @property
+    def who(self):
+        if self.family:
+            return _("Family of %(f)s") % {"f": self.family.father_name or self.family.father_cnic}
+        return self.voucher.student.full_name if self.voucher else ""
 
     @property
     def ok(self):
@@ -223,12 +230,16 @@ def read_paid_file(content, *, branch, method, default_date, today):
                 if digits
                 else None
             )
-            if row.voucher is None:
+            if row.voucher is None and digits:
+                row.family = FamilyVoucher.objects.filter(branch=branch, number=int(digits)).first()
+            if row.family is not None:
+                _check_family_row(row)
+            elif row.voucher is None:
                 row.problem = _("No voucher with this ID in this branch")
             elif row.voucher.status == Voucher.Status.CANCELLED:
                 row.problem = _("Voucher was cancelled")
         if not row.problem:
-            key = (row.voucher.pk, row.amount, row.paid_on, row.reference)
+            key = ((row.voucher or row.family).pk, bool(row.family), row.amount, row.paid_on, row.reference)
             if key in seen:
                 row.problem = _("Same payment repeated in this file (row %(r)s)") % {"r": seen[key]}
             seen.setdefault(key, number)
@@ -240,7 +251,26 @@ def read_paid_file(content, *, branch, method, default_date, today):
     return result
 
 
+def _check_family_row(row):
+    from .family import due_now
+
+    if row.family.status == FamilyVoucher.Status.REPLACED:
+        row.problem = _("Family voucher was replaced by a newer one")
+    elif row.family.status == FamilyVoucher.Status.PAID:
+        row.problem = _("Already recorded")
+    else:
+        total = due_now(row.family, row.paid_on)[1]
+        if row.amount != total:
+            # Splitting a different amount between the children is a decision for the office, not the file.
+            row.problem = _("Family voucher: Rs %(a)s paid but Rs %(t)s is due; record it on the family page") % {
+                "a": f"{row.amount:,.0f}",
+                "t": f"{total:,.0f}",
+            }
+
+
 def already_recorded(row, method):
+    if row.family is not None:
+        return Payment.objects.filter(family_voucher=row.family, is_reversed=False).exists()
     qs = Payment.objects.filter(voucher=row.voucher, method=method, is_reversed=False)
     if row.reference:
         return qs.filter(reference=row.reference).exists()
@@ -250,9 +280,14 @@ def already_recorded(row, method):
 @transaction.atomic
 def record_paid_rows(rows, *, method, user, note):
     """Records the good rows. Each payment goes through the normal rules (late fine, allocation)."""
+    from .family import receive
+
     payments = []
     for r in rows:
         if not r.ok:
+            continue
+        if r.family is not None:
+            payments.extend(receive(r.family, r.paid_on, method, user, reference=r.reference, note=note or ""))
             continue
         payments.append(
             record_payment(

@@ -14,6 +14,7 @@
 <nav class="quick-actions" aria-label="{% trans 'Quick actions' %}">
   {% if can.generate %}<a href="{% url 'fees:generate' %}">{% icon "receipt" %}<span>{% trans "Generate vouchers" %}</span></a>{% endif %}
   <a href="{% url 'fees:vouchers' %}?month={{ month|date:'Y-m' }}">{% icon "list-checks" %}<span>{% trans "Vouchers" %}</span></a>
+  <a href="{% url 'fees:family_vouchers' %}?month={{ month|date:'Y-m' }}">{% icon "users" %}<span>{% trans "Family vouchers" %}</span></a>
   {% if can.pay %}<a href="{% url 'fees:quick' %}">{% icon "scan-barcode" %}<span>{% trans "Barcode" %}</span></a>
   <a href="{% url 'fees:payments_import' %}">{% icon "download" %}<span>{% trans "Payments from a file (JazzCash)" %}</span></a>{% endif %}
   <a href="{% url 'fees:jazzcash_export' %}?month={{ month|date:'Y-m' }}">{% icon "file-spreadsheet" %}<span>{% trans "Voucher list for JazzCash (Excel)" %}</span></a>

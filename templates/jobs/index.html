@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "My print jobs" %}{% endblock %}
+{% block content %}
+<h1>{% trans "My print jobs" %}</h1>
+<p class="lede">{% trans "Large PDFs you asked for in the last 7 days." %}</p>
+{% if jobs %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Asked for" %}</th><th>{% trans "What" %}</th><th>{% trans "Branch" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
+  <tbody>{% for j in jobs %}<tr>
+    <td>{{ j.created_at|date:"d M, H:i" }}</td><td><a href="{% url 'jobs:detail' j.id %}">{{ j.title }}</a></td><td>{{ j.branch.name }}</td>
+    <td>{% if j.status == "done" %}<span class="badge ok">{{ j.get_status_display }}</span>{% elif j.status == "failed" %}<span class="badge danger">{{ j.get_status_display }}</span>{% else %}<span class="badge attention">{{ j.get_status_display }}</span>{% endif %}</td>
+    <td>{% if j.status == "done" %}<a href="{% url 'jobs:download' j.id %}">{% trans "Download PDF" %}</a>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "printer" %}<p>{% trans "No print jobs. Printing more than 100 vouchers at once makes one here." %}</p></div>{% endif %}
+{% endblock %}

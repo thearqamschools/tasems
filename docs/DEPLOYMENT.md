@@ -11,6 +11,13 @@ This sets up TASEMS on one Linux server with HTTPS, a protected database, nightl
 | Domain | e.g. `tasems.thearqam.com` | A DNS record pointing to the server's IP |
 | Software | Docker Engine with the Compose plugin | Nothing else is installed on the host |
 
+### Background worker (M6, D-074)
+Large PDFs (more than 100 vouchers at once) are made by `python manage.py run_jobs`, which must run next to the
+web server from the same image and database. On the Render demo `deploy/render-start.sh` starts it. On any
+other server run it as a second always-on process (systemd service or a second container with the command
+`python manage.py run_jobs`). Without it, large print requests wait in "My print jobs" and are made as soon as
+the worker starts. Finished files are removed after 7 days.
+
 ## 2. First installation
 
 ```bash

@@ -631,7 +631,17 @@ def amount_due_now(voucher, on_date=None):
 
 @transaction.atomic
 def record_payment(
-    student, amount, paid_on, method, user, voucher=None, reference="", note="", bank=None, attachment=None
+    student,
+    amount,
+    paid_on,
+    method,
+    user,
+    voucher=None,
+    reference="",
+    note="",
+    bank=None,
+    attachment=None,
+    family_voucher=None,
 ):
     if voucher is not None and voucher.student_id != student.id:
         raise ValueError("Voucher belongs to another student.")
@@ -648,6 +658,7 @@ def record_payment(
         reference=reference,
         note=note,
         received_by=user,
+        family_voucher=family_voucher,
     )
     if attachment:
         payment.attachment = attachment

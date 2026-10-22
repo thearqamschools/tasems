@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.22.0 — 2026-10-22 — M6: reports centre, family vouchers, background printing
+
+Added
+- **Reports** (Overview → Reports): for each module the person may open — Students, Attendance, Fees,
+  Admissions, Exams, Staff, Expenses — four of today's figures and the list of printable reports.
+- New reports: **Class strength** (boys, girls, Hifz per class and section, with totals), **New admissions**
+  between two dates, **Monthly attendance by class** (register days, attendance %, absences, leave, late).
+  All with Excel and Print.
+- **Family vouchers** (Finance → Family vouchers): all children of one father (same CNIC) on one voucher with
+  one Voucher ID from the same counter as other vouchers (never repeated). Three copies with barcode, each
+  child's own voucher ID and amount, and the family total. Receiving it (family page, Barcode page, search, or
+  a JazzCash file) pays each child's own voucher in full; a JazzCash amount that does not match the family total
+  is refused rather than split by guesswork. A family whose children's vouchers change gets a new family voucher;
+  the old one is marked replaced.
+- **Background printing**: printing more than 100 vouchers or family vouchers at once makes the PDF in the
+  background; a page shows progress and the download link ("My print jobs"). Only the person who asked can
+  download it; files are removed after 7 days. Replaces the old "600 at most" limit.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.21.0 — 2026-10-22 — M5: module restyle (lists, print, parent portal)
 
 Added

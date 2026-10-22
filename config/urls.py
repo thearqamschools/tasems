@@ -24,6 +24,8 @@ urlpatterns = [
     path("exams/", include("apps.exams.urls")),
     path("fees/", include("apps.fees.urls")),
     path("expenses/", include("apps.accounting.urls")),
+    path("reports/", include("apps.reports.urls")),
+    path("print-jobs/", include("apps.jobs.urls")),
     path("staff/", include("apps.hr.urls")),
     path("parents/", include("apps.parents.urls")),
     path("admissions/", include("apps.admissions.urls")),

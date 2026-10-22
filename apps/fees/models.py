@@ -365,6 +365,9 @@ class Charge(BranchOwnedModel):
 class Payment(BranchOwnedModel):
     student = models.ForeignKey("people.Student", on_delete=models.PROTECT, related_name="fee_payments")
     voucher = models.ForeignKey(Voucher, on_delete=models.PROTECT, null=True, blank=True, related_name="payments")
+    family_voucher = models.ForeignKey(
+        "FamilyVoucher", on_delete=models.PROTECT, null=True, blank=True, related_name="payments"
+    )
     amount = models.DecimalField(**MONEY, validators=[MinValueValidator(Decimal("1"))])
     paid_on = models.DateField()
     method = models.CharField(max_length=20, choices=Method.choices)
@@ -496,3 +499,50 @@ class RoyaltyPayment(BranchOwnedModel):
 
     def __str__(self):
         return f"{self.branch} royalty {self.month:%b %Y}: {self.amount}"
+
+
+@audited
+class FamilyVoucher(BranchOwnedModel):
+    """All children of one family (same father's CNIC) on one voucher with one Voucher ID (M6). The number
+    comes from the same counter as student vouchers, so no two vouchers of any kind share an ID. Paying it
+    pays each child's own voucher in full."""
+
+    class Status(models.TextChoices):
+        OPEN = "open", _("Not paid")
+        PAID = "paid", _("Paid")
+        REPLACED = "replaced", _("Replaced by a newer family voucher")
+
+    number = models.PositiveBigIntegerField(unique=True)
+    father_cnic = models.CharField(max_length=13)
+    father_name = models.CharField(max_length=150, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    month = models.DateField(help_text=_("First day of the month the vouchers are for"))
+    issued_on = models.DateField()
+    due_on = models.DateField()
+    payable = models.DecimalField(**MONEY, default=0)
+    late_fine = models.DecimalField(**MONEY, default=0)
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.OPEN, db_index=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["-month", "father_name"]
+        indexes = [models.Index(fields=["branch", "month"]), models.Index(fields=["branch", "father_cnic"])]
+
+    def __str__(self):
+        return f"Family voucher {self.number} — {self.father_name or self.father_cnic}"
+
+    @property
+    def payable_after_due(self):
+        return self.payable + self.late_fine
+
+
+class FamilyVoucherItem(BranchOwnedModel):
+    """One child's voucher on a family voucher, with the amount printed for it."""
+
+    family_voucher = models.ForeignKey(FamilyVoucher, on_delete=models.CASCADE, related_name="items")
+    voucher = models.ForeignKey(Voucher, on_delete=models.PROTECT, related_name="family_items")
+    amount = models.DecimalField(**MONEY, default=0)
+
+    class Meta:
+        ordering = ["pk"]
+        constraints = [models.UniqueConstraint(fields=["family_voucher", "voucher"], name="one_item_per_voucher")]
