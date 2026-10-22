@@ -109,6 +109,7 @@ def _menu(user, branch):
             staff and (reverse("hr:day"), _("Staff attendance"), "user-check"),
             staff and (reverse("hr:month"), _("Monthly sheet"), "file-spreadsheet"),
             staff and (reverse("hr:leaves"), _("Leave"), "inbox"),
+            perm("payroll.view_payrollrun") and (reverse("payroll:index"), _("Payroll"), "wallet"),
             getattr(user, "employee", None) is not None and (reverse("hr:mine"), _("My attendance"), "clock"),
         ],
     )

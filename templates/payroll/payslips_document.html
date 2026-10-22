@@ -1,0 +1,45 @@
+{% load tasems_tags %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Payslips</title>
+<style>
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
+  @page { size: A4; margin: 10mm 12mm; }
+  body { margin: 0; font-family: "PSans", sans-serif; color: #14182b; font-size: 9.5pt; }
+  .slip { height: 132mm; box-sizing: border-box; border: .6pt solid #3e4095; border-radius: 2mm; padding: 5mm 6mm; margin-bottom: 6mm; page-break-inside: avoid; position: relative; }
+  .slip:nth-of-type(2n) { page-break-after: always; }
+  .head { display: flex; align-items: center; gap: 3mm; border-bottom: 1mm solid #ed3237; padding-bottom: 2mm; }
+  .head img { width: 13mm; height: 13mm; }
+  .school { font-weight: 700; font-size: 13pt; color: #3e4095; }
+  .branch { font-size: 8pt; color: #3b4157; }
+  .title { margin-inline-start: auto; text-align: right; }
+  .title b { display: block; font-size: 11pt; letter-spacing: .06em; }
+  table { width: 100%; border-collapse: collapse; margin-top: 3mm; }
+  th, td { padding: 1.4mm 2mm; border-bottom: .4pt solid #d6d9e6; text-align: left; }
+  th { color: #3b4157; font-weight: 400; width: 45%; }
+  td.amt { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.net td, tr.net th { font-weight: 700; font-size: 11pt; border-top: .8pt solid #14182b; color: #14182b; }
+  .who { display: grid; grid-template-columns: 1fr 1fr; gap: 1mm 6mm; margin-top: 3mm; font-size: 9pt; }
+  .who b { font-weight: 700; }
+  .sign { position: absolute; left: 6mm; right: 6mm; bottom: 5mm; display: flex; justify-content: space-between; font-size: 8pt; }
+  .sign div { width: 55mm; border-top: .5pt solid #14182b; text-align: center; padding-top: .6mm; }
+</style></head>
+<body>
+{% for p in slips %}<div class="slip">
+  <div class="head"><img src="{% official_logo layout media_base font_base %}" alt="">
+    <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}{% if branch.phone %} · {{ branch.phone }}{% endif %}</div></div>
+    <div class="title"><b>PAYSLIP</b>{{ run.month|date:"F Y" }}</div></div>
+  <div class="who">
+    <div>Name: <b>{{ p.employee.full_name }}</b></div><div>Employee code: <b>{{ p.employee.code }}</b></div>
+    <div>Designation: <b>{{ p.designation|default:"—" }}</b></div><div>Paid by: <b>{% if p.bank_name %}{{ p.bank_name }} · {{ p.account_number }}{% else %}Cash{% endif %}</b></div>
+  </div>
+  <table>
+    <tr><th>Monthly salary</th><td class="amt">Rs {{ p.monthly_salary|rupees }}</td></tr>
+    <tr><th>Days in the month / days on the staff</th><td class="amt">{{ p.days_in_month }} / {{ p.days_employed }}</td></tr>
+    <tr><th>Absent days</th><td class="amt">{{ p.absent_days }}</td></tr>
+    <tr><th>Unpaid leave days</th><td class="amt">{{ p.leave_days }}</td></tr>
+    <tr><th>Deduction (salary ÷ {{ p.days_in_month }} × {{ p.unpaid_days }} days)</th><td class="amt">Rs {{ p.deduction|rupees }}</td></tr>
+    <tr class="net"><th>Net pay</th><td class="amt">Rs {{ p.net_pay|rupees }}</td></tr>
+  </table>
+  <div class="sign"><div>Received by</div><div>Principal</div></div>
+</div>{% endfor %}
+</body></html>

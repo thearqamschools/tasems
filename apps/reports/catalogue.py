@@ -208,6 +208,8 @@ def build(user, branch, session, today):
                     Report(_("Staff attendance today"), _("Time in and out, late and absent staff."), reverse("hr:day")),
                     Report(_("Monthly sheet"), _("Every staff member's month, day by day, with unpaid days for payroll."), reverse("hr:month")),
                     Report(_("Leave"), _("Leave waiting for approval and decided."), reverse("hr:leaves")),
+                    *([Report(_("Payroll"), _("Each staff member's salary, days cut and net pay; payslips and bank sheet."), reverse("payroll:index"))]
+                      if perm("payroll.view_payrollrun") else []),
                 ],
             )
         )  # fmt: skip

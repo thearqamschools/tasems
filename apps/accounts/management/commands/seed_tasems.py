@@ -273,8 +273,19 @@ ADM_WORK = ADM_VIEW + ["admissions.add_inquiry", "admissions.change_inquiry", "a
 NOTICE_POST = ["notices.view_notice", "notices.add_notice", "notices.change_notice", "notices.send_messages"]
 TEMPLATE_EDIT = ["notices.view_messagetemplate", "notices.add_messagetemplate", "notices.change_messagetemplate"]
 
+# Payroll (M10): principals set salaries and finalise the month; accountants and supervisors see it.
+PAYROLL_VIEW = ["payroll.view_employeepay", "payroll.view_payrollrun", "payroll.view_payslip"]
+PAYROLL_MANAGE = PAYROLL_VIEW + [
+    "payroll.add_employeepay",
+    "payroll.change_employeepay",
+    "payroll.add_payrollrun",
+    "payroll.change_payrollrun",
+    "payroll.finalise_payroll",
+]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": NOTICE_POST
+    "network_admin": PAYROLL_VIEW
+    + NOTICE_POST
     + TEMPLATE_EDIT
     + ATT_VIEW
     + DIARY_DESIGN
@@ -284,7 +295,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "head_office_admin": NOTICE_POST
+    "head_office_admin": PAYROLL_VIEW
+    + NOTICE_POST
     + ATT_VIEW
     + DIARY_DESIGN
     + EXAM_SETUP
@@ -293,9 +305,26 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ROYALTY_VIEW + HR_VIEW + ADM_VIEW,
-    "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ROYALTY_VIEW + HR_VIEW + ADM_VIEW,
-    "principal": NOTICE_POST
+    "regional_director": PAYROLL_VIEW
+    + ATT_VIEW
+    + DIARY_VIEW
+    + EXAM_VIEW
+    + FEE_VIEW
+    + FEE_APPROVE
+    + ROYALTY_VIEW
+    + HR_VIEW
+    + ADM_VIEW,
+    "branch_owner": PAYROLL_VIEW
+    + ATT_VIEW
+    + DIARY_VIEW
+    + EXAM_VIEW
+    + FEE_VIEW
+    + FEE_APPROVE
+    + ROYALTY_VIEW
+    + HR_VIEW
+    + ADM_VIEW,
+    "principal": PAYROLL_MANAGE
+    + NOTICE_POST
     + ATT_MANAGE
     + DIARY_MANAGE
     + EXAM_MANAGE
@@ -305,7 +334,10 @@ EXTRA_PERMISSIONS = {
     + HR_MANAGE
     + ADM_WORK,
     "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
-    "accountant": FEE_COLLECT + EXPENSE_WORK + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
+    "accountant": PAYROLL_VIEW
+    + FEE_COLLECT
+    + EXPENSE_WORK
+    + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
     "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"] + ADM_WORK,
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": ATT_MARK + DIARY_WRITE,

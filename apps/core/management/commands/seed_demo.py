@@ -120,6 +120,15 @@ class Command(BaseCommand):
                 self.style.SUCCESS("Demo network created. Sign in as demo-network to see both head offices.")
             )
         self.royalty_and_expenses()
+        self.demo_salaries()
+
+    def demo_salaries(self):
+        """Fictional salaries for the demo staff (added once), so the Payroll page has something to show."""
+        from apps.hr.models import Employee
+        from apps.payroll.models import EmployeePay
+
+        for e in Employee.objects.filter(code__startswith=PREFIX, pay__isnull=True):
+            EmployeePay.objects.create(branch=e.branch, employee=e, monthly_salary=Decimal(25000 + 5000 * (e.pk % 3)))
 
     # ------------------------------------------------------------------------------------------
     def build(self, password):

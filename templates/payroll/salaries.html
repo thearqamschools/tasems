@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Salaries and bank details" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'payroll:index' %}">‹ {% trans "Payroll" %}</a></p>
+<h1>{% trans "Salaries and bank details" %}</h1>
+<p class="lede">{{ branch.name }} · {% trans "Fixed monthly salary of each staff member. Leave the bank empty for salary paid in cash. Every change is recorded in the history." %}</p>
+<form method="post">{% csrf_token %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Monthly salary (Rs)" %}</th><th>{% trans "Bank" %}</th><th>{% trans "Account title" %}</th><th>{% trans "Account number / IBAN" %}</th></tr></thead>
+  <tbody>{% for e, pay in rows %}<tr>
+    <td>{{ e.full_name }} <span class="muted small num">{{ e.code }}</span></td><td>{{ e.designation }}</td>
+    {% if can_edit %}
+    <td><input name="salary_{{ e.id }}" value="{{ pay.monthly_salary|default_if_none:''|floatformat:'-2' }}" inputmode="decimal" dir="ltr" aria-label="{% trans 'Monthly salary (Rs)' %}" style="max-inline-size:9rem"></td>
+    <td><input name="bank_name_{{ e.id }}" value="{{ pay.bank_name|default:'' }}" maxlength="80" aria-label="{% trans 'Bank' %}"></td>
+    <td><input name="account_title_{{ e.id }}" value="{{ pay.account_title|default:'' }}" maxlength="120" aria-label="{% trans 'Account title' %}"></td>
+    <td><input name="account_number_{{ e.id }}" value="{{ pay.account_number|default:'' }}" maxlength="40" dir="ltr" aria-label="{% trans 'Account number / IBAN' %}"></td>
+    {% else %}
+    <td class="num money">{% if pay %}{{ pay.monthly_salary|rupees }}{% else %}—{% endif %}</td><td>{{ pay.bank_name|default:"—" }}</td><td>{{ pay.account_title|default:"" }}</td><td class="num">{{ pay.account_number|default:"" }}</td>
+    {% endif %}
+  </tr>{% empty %}<tr><td colspan="6" class="muted">{% trans "No staff records yet." %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% if can_edit and rows %}<div class="actions"><button class="button" type="submit">{% trans "Save salaries" %}</button></div>{% endif %}
+</form>
+{% endblock %}

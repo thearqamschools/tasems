@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.26.0 — 2026-10-22 — M10: payroll
+
+Added
+- **Payroll** (Staff → Payroll), on the project lead's rules of 22 Oct 2026: every staff member has a fixed monthly
+  salary; each day of absence or unpaid leave is cut at salary ÷ days in that month (half days and late arrivals
+  are not cut). Someone who joins or leaves during the month is paid for the days on the staff.
+- **Salaries and bank details** page (principals); salaries are kept apart from the staff record so only people
+  with payroll rights see them; every change is in the history.
+- **Finalise the month** (once it is over): payslips keep the figures even if attendance changes later; a month
+  can be reopened with a reason. **Payslips** as PDF (two per A4, official logo) and a **bank sheet** in Excel.
+- Who: principals set salaries and finalise; accountants, branch owners, regional directors and head office see
+  payroll. Fictional salaries added to the demo staff.
+- docs/AI_COST_ESTIMATE.md: the paid service the AI features need and an estimate of its cost.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.25.0 — 2026-10-22 — M9: accounting
 
 Added
