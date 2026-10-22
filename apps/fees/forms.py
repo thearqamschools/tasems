@@ -26,36 +26,70 @@ class MonthField(forms.DateField):
 
 
 class GenerateForm(forms.Form):
-    first_month = MonthField(label=_("From month"))
+    """Generate vouchers: month → class (Hifz Boys / Girls apart) → section → which other fees to add."""
+
+    HIFZ_BOYS, HIFZ_GIRLS = "hifz-boys", "hifz-girls"
+
+    first_month = MonthField(label=_("Month"))
     last_month = MonthField(
-        label=_("To month"), help_text=_("Same as 'From' for one month. E.g. June to July in July.")
+        label=_("Until month (optional)"),
+        required=False,
+        help_text=_("Only to make one voucher for several months, e.g. June and July together."),
     )
     due_on = forms.DateField(label=_("Due date"), widget=DATE)
-    sections = forms.ModelMultipleChoiceField(
-        queryset=Section.objects.none(),
+    level = forms.ChoiceField(label=_("Class"), required=False)
+    section_name = forms.ChoiceField(label=_("Section"), required=False)
+    heads = forms.ModelMultipleChoiceField(
+        queryset=FeeHead.objects.none(),
         required=False,
-        label=_("Only these classes"),
-        help_text=_("Leave empty for the whole branch."),
-        widget=forms.SelectMultiple(attrs={"size": 8}),
+        widget=forms.CheckboxSelectMultiple,
+        label=_("Add these fees as well"),
+        help_text=_("The monthly fee is always on the voucher. Earlier unpaid months and their fines come too."),
     )
 
     def __init__(self, *args, branch, session, **kwargs):
         super().__init__(*args, **kwargs)
-        if session:
-            self.fields["sections"].queryset = (
-                Section.objects.filter(branch=branch, session=session, is_active=True)
-                .select_related("class_level")
-                .order_by("class_level__sort_order", "name")
-            )
+        self.branch, self.session = branch, session
+        sections = Section.objects.filter(branch=branch, session=session, is_active=True).select_related("class_level")
+        self.sections = list(sections)
+        levels = []
+        for sec in sorted(self.sections, key=lambda s: s.class_level.sort_order):
+            if sec.class_level.code != "hifz" and (str(sec.class_level_id), sec.class_level.name) not in levels:
+                levels.append((str(sec.class_level_id), sec.class_level.name))
+        if any(s.class_level.code == "hifz" and s.gender_group != "girls" for s in self.sections):
+            levels.append((self.HIFZ_BOYS, _("Hifz Boys")))
+        if any(s.class_level.code == "hifz" and s.gender_group != "boys" for s in self.sections):
+            levels.append((self.HIFZ_GIRLS, _("Hifz Girls")))
+        self.fields["level"].choices = [("", _("All classes")), *levels]
+        names = sorted({s.name for s in self.sections})
+        self.fields["section_name"].choices = [("", _("All sections")), *[(n, n) for n in names]]
+        self.fields["heads"].queryset = FeeHead.objects.filter(is_active=True).exclude(
+            kind__in=[FeeHead.Kind.MONTHLY, FeeHead.Kind.FINE, FeeHead.Kind.ONE_TIME]
+        )
 
     def clean(self):
         data = super().clean()
-        first, last = data.get("first_month"), data.get("last_month")
-        if first and last:
-            if last < first:
-                self.add_error("last_month", _("'To month' is before 'From month'."))
-            elif (last.year - first.year) * 12 + last.month - first.month >= 12:
-                self.add_error("last_month", _("At most 12 months on one voucher."))
+        if data.get("first_month") and not data.get("last_month"):
+            data["last_month"] = data["first_month"]
+        if data.get("first_month") and data.get("last_month") and data["last_month"] < data["first_month"]:
+            self.add_error("last_month", _("The last month is before the first month."))
+        if "level" not in self.fields:
+            return data
+        level, name = data.get("level"), data.get("section_name")
+        chosen = self.sections
+        if level == self.HIFZ_BOYS:
+            chosen = [s for s in chosen if s.class_level.code == "hifz" and s.gender_group != "girls"]
+        elif level == self.HIFZ_GIRLS:
+            chosen = [s for s in chosen if s.class_level.code == "hifz" and s.gender_group != "boys"]
+        elif level:
+            chosen = [s for s in chosen if str(s.class_level_id) == level]
+        if name:
+            chosen = [s for s in chosen if s.name == name]
+        if (level or name) and not chosen:
+            self.add_error("section_name", _("No section matches this class and section."))
+        data["section_ids"] = [s.id for s in chosen] if (level or name) else None
+        # Hifz classes are often mixed: Hifz Boys / Girls also means only the boys or only the girls.
+        data["gender"] = {self.HIFZ_BOYS: "male", self.HIFZ_GIRLS: "female"}.get(level)
         return data
 
 
@@ -72,7 +106,8 @@ class IssueForm(GenerateForm):
 
     def __init__(self, *args, one_time, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.pop("sections")
+        for name in ("level", "section_name", "heads"):  # one student: class and fees are chosen below
+            self.fields.pop(name)
         self.one_time = one_time  # [(head, suggested amount)]
         for head, amount in one_time:
             self.fields[f"h_{head.code}"] = forms.BooleanField(required=False, label=head.name)
@@ -146,6 +181,38 @@ class PaymentForm(forms.Form):
         data["method"] = Method.BANK if data.get("how") == self.BANK else Method.COUNTER
         if not self.allow_partial and self.full_amount and data.get("amount") and data["amount"] < self.full_amount:
             self.add_error("amount", _("This branch accepts only the full amount."))
+        return data
+
+
+class VoucherEditForm(forms.Form):
+    """While receiving: change the other fees on this voucher or add one. The monthly fee stays as it is."""
+
+    add_head = forms.ModelChoiceField(queryset=FeeHead.objects.none(), required=False, label=_("Add a fee"))
+    add_amount = forms.DecimalField(required=False, min_value=1, max_digits=12, decimal_places=2, label=_("Amount"))
+    note = forms.CharField(required=False, max_length=200, label=_("Note"))
+
+    def __init__(self, *args, charges, heads, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.charges = charges  # this voucher's charges that may be changed
+        self.fields["add_head"].queryset = heads
+        for c in charges:
+            self.fields[f"c_{c.id}"] = forms.DecimalField(
+                min_value=0,
+                max_digits=12,
+                decimal_places=2,
+                initial=c.amount,
+                label=f"{c.head.name} ({c.month:%b %Y})",
+            )
+
+    def charge_fields(self):
+        return [self[f"c_{c.id}"] for c in self.charges]
+
+    def clean(self):
+        data = super().clean()
+        if data.get("add_head") and not data.get("add_amount"):
+            self.add_error("add_amount", _("Enter the amount."))
+        data["amounts"] = {c.id: data[f"c_{c.id}"] for c in self.charges if data.get(f"c_{c.id}") is not None}
+        data["additions"] = [(data["add_head"], data["add_amount"])] if data.get("add_head") else []
         return data
 
 

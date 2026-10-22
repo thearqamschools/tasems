@@ -116,18 +116,17 @@
     </div>
 
     <table class="fees">
-      <thead><tr><th class="month">Fee Month</th>{% for h in heads %}<th>{{ h.short_name }}</th>{% endfor %}<th>Arrears</th><th>Total</th></tr></thead>
+      <thead><tr><th class="month">Fee Month</th>{% for h in heads %}<th>{{ h.short_name }}</th>{% endfor %}<th>Total</th></tr></thead>
       <tbody>
-        {% for label, cells, arrears, total in t.rows %}<tr>
+        {% for label, cells, total in t.rows %}<tr>
           <td class="month">{{ label }}</td>
-          {% if arrears is not None %}{% for h in heads %}<td></td>{% endfor %}<td>{{ arrears|rupees }}</td>
-          {% else %}{% for h in heads %}{% with a=cells|get_item:h.id %}<td{% if not a %} class="zero"{% endif %}>{{ a|default:0|rupees }}</td>{% endwith %}{% endfor %}
-          <td class="zero">0</td>{% endif %}
+          {% for h in heads %}{% with a=cells|get_item:h.id %}<td{% if not a %} class="zero"{% endif %}>{{ a|default:0|rupees }}</td>{% endwith %}{% endfor %}
           <td>{{ total|rupees }}</td>
         </tr>{% endfor %}
+        {% if t.advance %}<tr><td class="month">Advance paid</td>{% for h in heads %}<td></td>{% endfor %}<td>-{{ t.advance|rupees }}</td></tr>{% endif %}
         <tr class="total"><td class="month">Total</td>
           {% for h in heads %}{% with a=t.totals|get_item:h.id %}<td>{{ a|default:0|rupees }}</td>{% endwith %}{% endfor %}
-          <td>{{ t.arrears|rupees }}</td><td>{{ t.total|rupees }}</td></tr>
+          <td>{{ t.total|rupees }}</td></tr>
       </tbody>
     </table>
 

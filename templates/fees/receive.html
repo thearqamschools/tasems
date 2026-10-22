@@ -17,6 +17,27 @@
   <button class="button" type="submit">{% trans "Save payment" %}</button>
 </form>
 
+{% if edit_form %}
+<details class="card voucher-edit"{% if edit_form.errors %} open{% endif %}>
+  <summary>{% trans "Change other fees on this voucher" %}</summary>
+  <p class="muted">{% blocktrans with n=voucher.number %}Change or remove Other, AC, Generator, Summer vacation, Annual and similar fees, or add one. The monthly fee and the late fine cannot be changed. The Voucher ID ({{ n }}) stays the same.{% endblocktrans %}</p>
+  <form method="post" action="{% url 'fees:edit_voucher' voucher.id %}">{% csrf_token %}
+    {% if locked %}<div class="table-wrap"><table>
+      <thead><tr><th>{% trans "Fixed fee" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+      <tbody>{% for c in locked %}<tr><td>{{ c.head.name }} ({{ c.month|date:"M Y" }})</td><td class="num">{{ c.amount|rupees }}</td></tr>{% endfor %}</tbody>
+    </table></div>{% endif %}
+    <div class="form-grid">
+      {% for field in edit_form.charge_fields %}{% include "includes_field.html" %}{% endfor %}
+      {% with field=edit_form.add_head %}{% include "includes_field.html" %}{% endwith %}
+      {% with field=edit_form.add_amount %}{% include "includes_field.html" %}{% endwith %}
+      {% with field=edit_form.note %}{% include "includes_field.html" %}{% endwith %}
+    </div>
+    <p class="help">{% trans "Enter 0 to remove a fee." %}</p>
+    <button class="button secondary" type="submit">{% trans "Save changes to the voucher" %}</button>
+  </form>
+</details>
+{% endif %}
+
 {% if unpaid %}
 <h2>{% trans "What is owed" %}</h2>
 <div class="table-wrap"><table>

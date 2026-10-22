@@ -38,6 +38,7 @@ from .forms import (
     QuickReceiveForm,
     ReasonForm,
     RoyaltyPaymentForm,
+    VoucherEditForm,
 )
 from .models import (
     BranchFeeSettings,
@@ -161,17 +162,27 @@ def generate(request):
     this_month = month_start(timezone.localdate())
     initial = {
         "first_month": this_month,
-        "last_month": this_month,
         "due_on": S.default_due_date(branch, this_month),
+        # Annual charges are ticked in April and summer vacation in July, as usual; others when needed.
+        "heads": [h for h in FeeHead.objects.filter(is_active=True) if this_month.month in (h.charge_months or [])],
     }
     form = GenerateForm(request.POST or None, branch=branch, session=session, initial=initial)
     preview = None
     if request.method == "POST" and form.is_valid():
         d = form.cleaned_data
-        section_ids = [s.id for s in d["sections"]] or None
+        section_ids = d["section_ids"]
+        chosen = {h.id for h in d["heads"]}
         if "confirm" in request.POST:
             result = S.generate_vouchers(
-                branch, session, d["first_month"], d["last_month"], d["due_on"], request.user, section_ids
+                branch,
+                session,
+                d["first_month"],
+                d["last_month"],
+                d["due_on"],
+                request.user,
+                section_ids,
+                chosen,
+                d["gender"],
             )
             created = result["created"]
             if created:
@@ -186,7 +197,7 @@ def generate(request):
                 f"{_url('fees:vouchers')}?month={d['first_month']:%Y-%m}"
                 + "".join(f"&section={i}" for i in section_ids or [])
             )
-        enrolments = list(S.enrolled_students(branch, session, section_ids))
+        enrolments = list(S.enrolled_students(branch, session, section_ids, d["gender"]))
         months = S.months_between(d["first_month"], d["last_month"])
         done = S.covered([e.student_id for e in enrolments], months)
         unplaced = (
@@ -194,11 +205,14 @@ def generate(request):
             .exclude(enrolments__session=session)
             .count()
         )
+        book = S.RateBook(branch)
         preview = {
             "total": len(enrolments),
             "new": len(enrolments) - len(done),
             "done": len(done),
             "unplaced": unplaced,
+            # Ticked fees this branch has no amount for: nothing would be added.
+            "no_rate": [h for h in d["heads"] if not book.has_any(h)],
         }
     return render(
         request,
@@ -256,6 +270,7 @@ def vouchers(request):
             "statuses": Voucher.Status.choices,
             "query": request.GET.urlencode(),
             "can_pay": request.user.has_branch_perm(S.PAY_PERM, branch.id),
+            "can_generate": request.user.has_branch_perm(S.VOUCHER_PERM, branch.id),
         },
     )
 
@@ -542,6 +557,8 @@ def receive(request, voucher_id):
         "fees/receive.html",
         {
             "form": form,
+            "edit_form": None if newer or voucher.status == Voucher.Status.CANCELLED else _edit_form(voucher),
+            "locked": voucher.charges.filter(is_cancelled=False, head__kind__in=S.LOCKED_KINDS).select_related("head"),
             "voucher": voucher,
             "student": st,
             "due": due,
@@ -551,6 +568,41 @@ def receive(request, voucher_id):
             "newer": newer,
         },
     )
+
+
+def _edit_form(voucher, data=None):
+    charges = list(
+        voucher.charges.filter(is_cancelled=False)
+        .exclude(head__kind__in=S.LOCKED_KINDS)
+        .exclude(source=Charge.Source.FINE)
+        .select_related("head")
+    )
+    return VoucherEditForm(data, charges=charges, heads=S.editable_heads())
+
+
+@login_required
+@require_POST
+def edit_voucher(request, voucher_id):
+    """Receive page: the receiver changes the other fees on the voucher; the Voucher ID stays the same."""
+    branch = _branch(request, S.PAY_PERM)
+    voucher = _voucher(branch, voucher_id)
+    form = _edit_form(voucher, request.POST)
+    if form.is_valid():
+        d = form.cleaned_data
+        try:
+            changed = S.edit_voucher(voucher, d["amounts"], d["additions"], request.user, note=d["note"])
+        except ValueError as exc:
+            messages.error(request, str(exc))
+        else:
+            if changed:
+                messages.success(
+                    request, _("Voucher %(n)s changed. Its Voucher ID stays the same.") % {"n": voucher.number}
+                )
+            else:
+                messages.info(request, _("Nothing was changed."))
+    else:
+        messages.error(request, _("The voucher was not changed: check the amounts."))
+    return redirect("fees:receive", voucher_id=voucher.id)
 
 
 @login_required

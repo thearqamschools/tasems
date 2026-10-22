@@ -1,7 +1,10 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Vouchers" %}{% endblock %}
 {% block content %}
-<h1>{% trans "Vouchers" %} · {{ month|date:"F Y" }}</h1>
+<div class="page-header">
+  <div><h1>{% trans "Vouchers" %} · {{ month|date:"F Y" }}</h1></div>
+  {% if can_generate %}<div class="actions"><a class="button" href="{% url 'fees:generate' %}">{% icon "receipt" %}{% trans "Generate vouchers" %}</a></div>{% endif %}
+</div>
 <form method="get" class="card">
   <div class="form-grid">
     <div class="field"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"></div>

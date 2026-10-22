@@ -25,45 +25,68 @@ def columns():
 class VoucherTable:
     voucher: Voucher
     heads: list
-    rows: list = field(default_factory=list)  # (label, {head_id: amount}, arrears, total)
+    rows: list = field(default_factory=list)  # (label, {head_id: amount}, total)
     totals: dict = field(default_factory=dict)
-    arrears: Decimal = ZERO
+    advance: Decimal = ZERO  # money paid in advance, taken off the total
     total: Decimal = ZERO
     discounts: list = field(default_factory=list)  # (reason, amount)
 
 
+def owed_by_month(voucher):
+    """What this voucher asks for, month by month and head by head: every charge billed on it or on the
+    student's earlier vouchers, less what had been paid when the voucher was made (oldest months first).
+    Unpaid earlier months therefore show under their own month (no "arrears" line), fines included."""
+    charges = list(
+        Charge.objects.filter(student_id=voucher.student_id, is_cancelled=False, voucher_id__lte=voucher.pk)
+        .select_related("head")
+        .order_by("month", "head__sort_order", "pk")
+    )
+    paid = (
+        Payment.objects.filter(
+            student_id=voucher.student_id, is_reversed=False, created_at__lte=voucher.created_at
+        ).aggregate(t=Sum("amount"))["t"]
+        or ZERO
+    )
+    owed = []
+    for c in charges:
+        take = min(paid, c.amount)
+        paid -= take
+        if c.amount - take > 0:
+            owed.append((c, c.amount - take))
+    return owed, paid  # what is left of the payments is an advance
+
+
 def voucher_table(voucher, heads=None):
     heads = heads if heads is not None else columns()
-    table = VoucherTable(voucher=voucher, heads=heads, arrears=voucher.arrears)
+    owed, advance = owed_by_month(voucher)
+    table = VoucherTable(voucher=voucher, heads=heads, advance=advance)
     by_month = defaultdict(lambda: defaultdict(lambda: ZERO))
     discounts = defaultdict(lambda: ZERO)
-    for c in voucher.charges.filter(is_cancelled=False).select_related("head"):
-        by_month[c.month][c.head_id] += c.amount
+    for c, left in owed:
+        by_month[c.month][c.head_id] += left
+    for c in voucher.charges.filter(is_cancelled=False):
         if c.discount and c.discount_reason != "Agreed fee":  # an agreed fee is the child's fee, not a discount
             discounts[c.discount_reason or "Discount"] += c.discount
     months = sorted(by_month)
     if len(months) > MAX_ROWS:
-        # Many months on one voucher (paid together): one combined row keeps every copy on its third of the page.
+        # Many months on one voucher: the older ones share one row so every copy stays on its third of the page.
+        older, recent = months[: -(MAX_ROWS - 1)], months[-(MAX_ROWS - 1) :]
         cells = defaultdict(lambda: ZERO)
-        for m in months:
+        for m in older:
             for head_id, amount in by_month[m].items():
                 cells[head_id] += amount
-        label = f"{months[0]:%b_%Y} – {months[-1]:%b_%Y}"
-        table.rows.append((label, dict(cells), None, sum(cells.values(), ZERO)))
-    else:
-        for month in months:
-            cells = by_month[month]
-            table.rows.append((month.strftime("%b_%Y"), dict(cells), None, sum(cells.values(), ZERO)))
-    if voucher.arrears:
-        table.rows.insert(
-            0, ("Previous dues" if voucher.arrears > 0 else "Advance", {}, voucher.arrears, voucher.arrears)
-        )
+        label = f"{older[0]:%b_%Y} – {older[-1]:%b_%Y}"
+        table.rows.append((label, dict(cells), sum(cells.values(), ZERO)))
+        months = recent
+    for month in months:
+        cells = by_month[month]
+        table.rows.append((month.strftime("%b_%Y"), dict(cells), sum(cells.values(), ZERO)))
     totals = defaultdict(lambda: ZERO)
-    for _label, cells, _arr, _t in table.rows:
+    for _label, cells, _t in table.rows:
         for head_id, amount in cells.items():
             totals[head_id] += amount
     table.totals = dict(totals)
-    table.total = voucher.payable
+    table.total = max(sum(totals.values(), ZERO) - advance, ZERO)
     table.discounts = sorted(discounts.items())
     return table
 

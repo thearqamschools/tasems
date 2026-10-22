@@ -56,7 +56,7 @@ def _menu(user, branch):
         [
             perm("fees.add_payment") and (reverse("fees:quick"), _("Barcode"), "scan-barcode"),
             fees and (reverse("fees:index"), _("Fees"), "wallet"),
-            perm("fees.add_voucher") and (reverse("fees:generate"), _("Make vouchers"), "receipt"),
+            perm("fees.add_voucher") and (reverse("fees:generate"), _("Generate vouchers"), "receipt"),
             fees and (reverse("fees:vouchers"), _("Vouchers"), "list-checks"),
             fees and (reverse("fees:defaulters"), _("Defaulters"), "triangle-alert"),
             fees and (reverse("fees:collections"), _("Daily collection"), "coins"),

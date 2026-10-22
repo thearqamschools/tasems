@@ -607,3 +607,10 @@ section > h2:first-child { margin-block-start: 0; }
 .profile-photo.empty { display: grid; place-items: center; color: var(--ink-soft); }
 .profile-photo.empty svg { inline-size: 40px; block-size: 40px; }
 
+/* Generate vouchers: fee heads as a row of tick boxes */
+.fee-heads { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); margin: var(--space-4) 0; }
+.fee-heads > div { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+.fee-heads label { display: inline-flex; gap: var(--space-2); align-items: center; font-weight: 400; }
+
+.voucher-edit { margin-block: var(--space-3); }
+.voucher-edit .table-wrap { margin-block: var(--space-2); }

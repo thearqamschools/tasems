@@ -93,6 +93,8 @@ def test_heads_and_samanabad_rates_are_seeded(seeded):
         "Tuition",
         "Annual",
         "S.V.W.",
+        "Generator",
+        "AC",
         "Gen. Exp.",
         "Others",
         "Fine",
@@ -168,7 +170,10 @@ def test_unpaid_month_moves_forward_with_a_fine(fees):
     assert oct_.arrears == D(4300)
     assert oct_.payable == D(8800)  # September 4300 + fine 200 + October 4300
     table = reports.voucher_table(oct_)
-    assert table.rows[0][0] == "Previous dues" and table.total == D(8800)
+    # No "arrears" line: September's unpaid fee and its fine show under September (22 Oct 2026).
+    assert [r[0] for r in table.rows] == ["Sep_2026", "Oct_2026"] and table.total == D(8800)
+    tuition, fine = FeeHead.objects.get(code="tuition"), FeeHead.objects.get(code="fine")
+    assert table.rows[0][1] == {tuition.id: D(4300), fine.id: D(200)} and table.rows[1][1] == {tuition.id: D(4300)}
 
 
 def test_on_time_payment_has_no_fine(fees):
@@ -580,3 +585,78 @@ def test_jazzcash_paid_file_is_checked_then_recorded(fees, login_as):
     upload.seek(0)  # the same file again: everything already recorded
     again = client.post("/fees/payments/import/", {"step": "check", "method": "jazzcash", "file": upload})
     assert "Already recorded" in again.content.decode() and not again.context["token"]
+
+
+def test_generate_by_class_hifz_and_section(fees, login_as):
+    a, b = fees["student"]("class-4"), fees["student"]("class-4")
+    Enrolment.objects.filter(student=b).update(section=fees["section"]("class-4", "B"))
+    boys, girls = fees["student"]("hifz"), fees["student"]("hifz")
+    Student.objects.filter(pk=girls.pk).update(gender="female")
+    girls_section = Section.objects.create(
+        branch=fees["branch"],
+        session=fees["session"],
+        class_level=ClassLevel.objects.get(code="hifz"),
+        name="G",
+        gender_group="girls",
+    )
+    Enrolment.objects.filter(student=girls).update(section=girls_section)
+    client = login_as(fees["user"])
+    page = client.get("/fees/generate/").content.decode()
+    assert "Hifz Boys" in page and "Hifz Girls" in page and "All classes" in page
+    level = ClassLevel.objects.get(code="class-4").id
+    client.post("/fees/generate/", {**GENERATE, "level": level, "section_name": "B"})
+    assert [voucher_of(s) is not None for s in (a, b, boys, girls)] == [False, True, False, False]
+    client.post("/fees/generate/", {**GENERATE, "level": "hifz-girls"})
+    assert [voucher_of(s) is not None for s in (a, b, boys, girls)] == [False, True, False, True]
+    client.post("/fees/generate/", GENERATE)  # all classes: the rest
+    assert all(voucher_of(s) for s in (a, b, boys, girls))
+    numbers = [voucher_of(s).number for s in (a, b, boys, girls)]
+    assert len(set(numbers)) == 4  # every Voucher ID is different
+
+
+def test_ticked_fees_are_added_and_unticked_ones_are_not(fees, login_as):
+    child = fees["student"]("class-4")
+    gen, ac = FeeHead.objects.get(code="generator"), FeeHead.objects.get(code="ac")
+    FeeRate.objects.create(branch=fees["branch"], head=ac, amount=D(500), effective_from=dt.date(2026, 4, 1))
+    client = login_as(fees["user"])
+    april = {**GENERATE, "first_month": "2026-04", "last_month": "2026-04", "due_on": "2026-04-10"}
+    TODAY["date"] = dt.date(2026, 4, 2)
+    page = client.get("/fees/generate/").content.decode()
+    assert "AC charges" in page and "Generator charges" in page
+    preview = client.post("/fees/generate/", {k: v for k, v in april.items() if k != "confirm"} | {"heads": [gen.id]})
+    assert "Generator charges" in preview.content.decode() and not Voucher.objects.exists()  # no amount set: warned
+    client.post("/fees/generate/", {**april, "heads": [ac.id]})  # annual not ticked, even in April
+    assert amounts(voucher_of(child)) == {"tuition": D(4300), "ac": D(500)}
+
+
+def test_receiver_changes_other_fees_but_not_the_monthly_fee(fees, login_as):
+    child = fees["student"]("class-4")
+    client = login_as(fees["user"])
+    client.post("/fees/generate/", GENERATE)
+    v = voucher_of(child)
+    number = v.number
+    tuition = v.charges.get(head__code="tuition")
+    page = client.get(f"/fees/voucher/{v.id}/receive/").content.decode()
+    assert "Change other fees on this voucher" in page and f"c_{tuition.id}" not in page
+    others, ac = FeeHead.objects.get(code="others"), FeeHead.objects.get(code="ac")
+    client.post(f"/fees/voucher/{v.id}/edit/", {"add_head": ac.id, "add_amount": "700", "note": "AC in October"})
+    v.refresh_from_db()
+    ac_charge = v.charges.get(head=ac)
+    assert (v.number, v.payable, ac_charge.month) == (number, D(5000), OCT)
+    client.post(f"/fees/voucher/{v.id}/edit/", {f"c_{ac_charge.id}": "300", "add_head": others.id, "add_amount": "100"})
+    v.refresh_from_db()
+    assert v.payable == D(4700) and amounts(v) == {"tuition": D(4300), "ac": D(300), "others": D(100)}
+    extra = v.charges.get(head=others)
+    client.post(
+        f"/fees/voucher/{v.id}/edit/", {f"c_{ac_charge.id}": "0", f"c_{extra.id}": "100", f"c_{tuition.id}": "1"}
+    )
+    v.refresh_from_db()
+    tuition.refresh_from_db()
+    assert tuition.amount == D(4300) and v.payable == D(4400)  # the monthly fee field is ignored; AC removed
+    with pytest.raises(ValueError):
+        S.edit_voucher(v, {tuition.id: D(1)}, [], fees["user"])
+    assert S.amount_due_now(v)[0] == D(4400)
+    done = client.post(f"/fees/voucher/{v.id}/receive/", {"amount": "4400", "paid_on": "2026-10-14", "how": "cash"})
+    assert done.status_code == 302
+    v.refresh_from_db()
+    assert v.status == Voucher.Status.PAID and v.number == number

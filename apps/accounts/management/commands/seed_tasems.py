@@ -328,6 +328,9 @@ FEE_HEADS = [
     ("tuition", "Monthly (tuition) fee", "Tuition", "ماہانہ فیس", "monthly", []),
     ("annual", "Annual charges", "Annual", "سالانہ چارجز", "yearly", [4]),
     ("summer_work", "Summer vacation work", "S.V.W.", "سمر ویکیشن ورک", "seasonal", [7]),
+    # Added only when ticked while making vouchers (22 Oct 2026); each branch sets the amount.
+    ("generator", "Generator charges", "Generator", "جنریٹر چارجز", "seasonal", []),
+    ("ac", "AC charges", "AC", "اے سی چارجز", "seasonal", []),
     ("general", "General expenses", "Gen. Exp.", "متفرق اخراجات", "other", []),
     ("others", "Other charges", "Others", "دیگر", "other", []),
     ("fine", "Late fee fine", "Fine", "جرمانہ", "fine", []),

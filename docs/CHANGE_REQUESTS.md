@@ -127,7 +127,7 @@ heading "Family details" · no second father mobile · item 5 order used for bot
 | 3 — Fees | 20, 27–33, 43–46 | Done 19 Oct 2026 |
 | 4 — Royalty, expenses | 39–42 | Done 19 Oct 2026 (expenses = first part of M9 Accounting; cash/bank book and P&L follow) |
 
-# Round 2 (from 22 Oct 2026) — collect only, do NOT implement until the lead says so
+# Round 2 (from 22 Oct 2026) — approved for processing ("ہاں فائنل ہے، اب سب بنا دیں") and built 22 Oct 2026
 
 ## Vouchers — Generate vouchers
 R2-1. "Generate vouchers" option inside Vouchers. Screen: Month (e.g. October) → Class (All classes, each class, then Hifz Boys and Hifz Girls) → Section (All sections or one section).
@@ -142,3 +142,13 @@ R2-5. Remove the "Arrears" column from vouchers. Unpaid amounts show under their
 R2-6. When a new month's voucher is made, all earlier unpaid months come on it month by month (Oct + Nov, or 3–5 months), with their fines — one combined voucher.
 R2-7. Edit a voucher when receiving payment (from Pay / Vouchers): the person receiving can change Other charges, AC charges, Summer vacation, Annual charges etc. (add or reduce), and the amount paid — but NOT the monthly (tuition) fee. The Voucher ID stays the same after editing.
    (Note for processing: today unpaid vouchers are "carried to a newer voucher" (superseded) and earlier dues appear as one Arrears figure; partial payments are allowed per branch setting. Editing must be recorded in the history with who changed what.)
+
+## Round 2 — how it was built (22 Oct 2026)
+| Item | Where | Notes |
+|---|---|---|
+| R2-1 | Vouchers → "Generate vouchers" (also in the Finance menu) | Month (and optional "until month"), due date, Class (All classes, each class, Hifz Boys, Hifz Girls), Section (All or one). Hifz Boys/Girls also filter by the student's gender, because Hifz sections are often mixed. |
+| R2-2 | Same screen, "Add these fees as well" | Tick boxes for every fee head except the monthly fee (always added), the late fine (automatic) and admission/registration (one student's voucher). Annual is pre-ticked in April and Summer vacation in its months, but only ticked fees are added. A ticked fee with no amount set for the branch is warned about on the check step. |
+| R2-3 | — | Voucher IDs come from one network-wide counter (never repeated, tested); admission numbers stay unique per branch. |
+| R2-4 | Fee heads | "Generator charges" and "AC charges" added (after Summer vacation work). **Default:** their amounts are set per branch in Setup → Fee rates and vouchers, and they are added only when ticked. |
+| R2-5 / R2-6 | Voucher print | No Arrears column. Each unpaid month has its own row (fines in that month's row); with more than 3 months the oldest share one row so all three copies fit on the page. An advance shows as "Advance paid". |
+| R2-7 | Receive fee page → "Change other fees on this voucher" | Change, remove (0) or add other fees (Other, AC, Generator, Summer vacation, Annual…) on the student's newest voucher. The monthly fee and the late fine are shown as fixed and refused by the server. The Voucher ID stays the same; the amount on the voucher is recalculated; every change is in the history (who, which fee, from → to). The amount received was already editable when the branch allows part payments. |

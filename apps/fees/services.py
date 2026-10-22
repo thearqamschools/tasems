@@ -83,6 +83,9 @@ class RateBook:
                 best = (key, r)
         return best[1] if best else None
 
+    def has_any(self, head):
+        return bool(self.rates.get(head.id))
+
 
 def first_children(branch):
     """father's CNIC → id of the child who pays the full fee (earliest admitted active child)."""
@@ -133,6 +136,22 @@ def automatic_heads(month, heads):
             yield head
         elif head.kind in (FeeHead.Kind.YEARLY, FeeHead.Kind.SEASONAL) and month.month in (head.charge_months or []):
             yield head
+
+
+def heads_for(months, heads, chosen):
+    """(head, month) pairs to charge. Without a choice: the monthly fee, plus yearly/seasonal fees in their
+    months. With the ticked fees of "Generate vouchers": the monthly fee every month, a ticked yearly/seasonal
+    fee in its months (or once, in the last month, when none of its months is included), other ticked fees once."""
+    if chosen is None:
+        return [(h, m) for m in months for h in automatic_heads(m, heads)]
+    pairs = []
+    for head in heads:
+        if head.kind == FeeHead.Kind.MONTHLY:
+            pairs += [(head, m) for m in months]
+        elif head.id in chosen:
+            own = [m for m in months if m.month in (head.charge_months or [])]
+            pairs += [(head, m) for m in (own or [months[-1]])]
+    return pairs
 
 
 # --- Balances and allocation -----------------------------------------------------------------
@@ -266,18 +285,23 @@ def reserve_numbers(count):
     return iter(range(first, first + count))
 
 
-def enrolled_students(branch, session, section_ids=None):
-    """Active students placed in a section this session, with their section."""
+def enrolled_students(branch, session, section_ids=None, gender=None):
+    """Active students placed in a section this session, with their section (only boys or girls if `gender`)."""
     qs = Enrolment.objects.filter(branch=branch, session=session, student__status=Student.Status.ACTIVE).select_related(
         "student", "section", "section__class_level"
     )
     if section_ids:
         qs = qs.filter(section_id__in=section_ids)
+    if gender:
+        qs = qs.filter(student__gender=gender)
     return qs.order_by("section__class_level__sort_order", "section__name", "roll_no", "student__first_name")
 
 
-def _issue(student, section, months, due_on, user, numbers, book, heads, firsts, concessions, extras, fee_settings):
-    """Creates one voucher. `extras` = [(head, gross, discount, reason, month, note)] chosen by staff."""
+def _issue(
+    student, section, months, due_on, user, numbers, book, heads, firsts, concessions, extras, fee_settings, chosen=None
+):
+    """Creates one voucher. `extras` = [(head, gross, discount, reason, month, note)] chosen by staff;
+    `chosen` = ids of the other fees ticked on "Generate vouchers" (None: the usual automatic fees)."""
     today = timezone.localdate()
     apply_late_fines(student, today, user)
 
@@ -287,14 +311,13 @@ def _issue(student, section, months, due_on, user, numbers, book, heads, firsts,
     existing = set(
         live_charges(student).filter(source=Charge.Source.AUTO, month__in=months).values_list("head_id", "month")
     )
-    for month in months:
-        for head in automatic_heads(month, heads):
-            if (head.id, month) in existing:
-                continue
-            priced = price(head, book.rate(head, level_id, month), month, sibling, concessions)
-            if priced:
-                gross, discount, reason = priced
-                new.append((head, month, gross, discount, reason, Charge.Source.AUTO, ""))
+    for head, month in heads_for(months, heads, chosen):
+        if (head.id, month) in existing:
+            continue
+        priced = price(head, book.rate(head, level_id, month), month, sibling, concessions)
+        if priced:
+            gross, discount, reason = priced
+            new.append((head, month, gross, discount, reason, Charge.Source.AUTO, ""))
     for head, gross, discount, reason, month, note in extras:
         new.append((head, month, gross, discount, reason, Charge.Source.MANUAL, note))
 
@@ -360,11 +383,13 @@ def covered(student_ids, months):
 
 
 @transaction.atomic
-def generate_vouchers(branch, session, first_month, last_month, due_on, user, section_ids=None):
+def generate_vouchers(
+    branch, session, first_month, last_month, due_on, user, section_ids=None, chosen=None, gender=None
+):
     """Monthly vouchers for every active student of the branch (or of the chosen sections).
     Students who already have a voucher for one of these months are skipped."""
     months = months_between(first_month, last_month)
-    enrolments = list(enrolled_students(branch, session, section_ids))
+    enrolments = list(enrolled_students(branch, session, section_ids, gender))
     done = covered([e.student_id for e in enrolments], months)
     todo = [e for e in enrolments if e.student_id not in done]
     numbers = reserve_numbers(len(todo))
@@ -385,6 +410,7 @@ def generate_vouchers(branch, session, first_month, last_month, due_on, user, se
             concessions[e.student_id],
             [],
             fee_settings,
+            chosen,
         )
         for e in todo
     ]
@@ -400,6 +426,8 @@ def generate_vouchers(branch, session, first_month, last_month, due_on, user, se
                 "numbers": f"{vouchers[0].number}–{vouchers[-1].number}",
                 "due_on": str(due_on),
                 "sections": section_ids or "all",
+                "gender": gender or "all",
+                "other_fees": sorted(chosen) if chosen is not None else "automatic",
             },
         )
     return {"created": vouchers, "skipped": len(done)}
@@ -512,6 +540,82 @@ def cancel_charge(charge, user, reason):
         branch_id=charge.branch_id,
         changes={"is_cancelled": {"from": False, "to": True}, "reason": reason},
     )
+
+
+LOCKED_KINDS = (FeeHead.Kind.MONTHLY, FeeHead.Kind.FINE)
+
+
+def editable_heads():
+    """Fees the receiver may change or add on a voucher; the monthly fee and the late fine are fixed."""
+    return FeeHead.objects.filter(is_active=True).exclude(kind__in=LOCKED_KINDS)
+
+
+def latest_voucher(student):
+    return Voucher.objects.filter(student=student).exclude(status=Voucher.Status.CANCELLED).order_by("-pk").first()
+
+
+@transaction.atomic
+def edit_voucher(voucher, amounts, additions, user, note=""):
+    """While receiving: change the other fees on the student's newest voucher, keeping its Voucher ID.
+    `amounts` = {charge_id: new amount} (0 removes it); `additions` = [(head, amount)]."""
+    if voucher.status == Voucher.Status.CANCELLED or latest_voucher(voucher.student) != voucher:
+        raise ValueError(_("Only the student's newest voucher can be changed."))
+    student, delta, changes = voucher.student, ZERO, []
+    charges = {c.id: c for c in voucher.charges.filter(is_cancelled=False).select_related("head")}
+    for charge_id, new in amounts.items():
+        charge = charges.get(charge_id)
+        if charge is None:
+            raise ValueError("Charge is not on this voucher.")
+        if charge.head.kind in LOCKED_KINDS or charge.source == Charge.Source.FINE:
+            raise ValueError(_("The monthly fee and the late fine cannot be changed."))
+        if new == charge.amount:
+            continue
+        changes.append(
+            {"fee": charge.head.name, "month": f"{charge.month:%Y-%m}", "from": str(charge.amount), "to": str(new)}
+        )
+        delta += new - charge.amount
+        if new <= 0:
+            charge.is_cancelled, charge.cancelled_by = True, user
+            charge.cancel_reason = (f"Removed while receiving voucher {voucher.number}. {note}").strip()[:200]
+        else:
+            charge.gross, charge.amount = new + charge.discount, new
+        charge.save()
+    for head, amount in additions:
+        if head.kind in LOCKED_KINDS:
+            raise ValueError(_("The monthly fee and the late fine cannot be changed."))
+        if amount <= 0:
+            continue
+        Charge.objects.create(
+            branch_id=student.branch_id,
+            student=student,
+            head=head,
+            month=voucher.last_month,
+            gross=amount,
+            amount=amount,
+            source=Charge.Source.MANUAL,
+            note=note[:200],
+            voucher=voucher,
+            created_by=user,
+        )
+        changes.append({"fee": head.name, "month": f"{voucher.last_month:%Y-%m}", "from": "0", "to": str(amount)})
+        delta += amount
+    if not changes:
+        return []
+    voucher.current += delta
+    voucher.payable = max(voucher.payable + delta, ZERO)
+    voucher.save(update_fields=["current", "payable", "updated_at"])
+    reallocate(student)
+    refresh_status(student)
+    AuditEvent.objects.create(
+        actor=user,
+        action=AuditEvent.Action.UPDATE,
+        model_label="fees.Voucher",
+        object_id=str(voucher.pk),
+        object_repr=str(voucher)[:255],
+        branch_id=voucher.branch_id,
+        changes={"fees_changed": changes, "note": note},
+    )
+    return changes
 
 
 # --- Payments --------------------------------------------------------------------------------

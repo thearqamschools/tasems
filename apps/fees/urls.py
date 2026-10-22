@@ -13,6 +13,7 @@ urlpatterns = [
     path("voucher/<int:voucher_id>/pdf/", views.voucher_pdf, name="voucher_pdf"),
     path("voucher/<int:voucher_id>/cancel/", views.cancel_voucher, name="cancel_voucher"),
     path("voucher/<int:voucher_id>/receive/", views.receive, name="receive"),
+    path("voucher/<int:voucher_id>/edit/", views.edit_voucher, name="edit_voucher"),
     path("receipt/<int:payment_id>/", views.receipt, name="receipt"),
     path("receipt/<int:payment_id>/reverse/", views.reverse_payment, name="reverse_payment"),
     path("receipt/<int:payment_id>/attachment/", views.payment_attachment, name="payment_attachment"),

@@ -1,13 +1,16 @@
 {% extends "base.html" %}{% load i18n %}
-{% block title %}{% trans "Make monthly vouchers" %}{% endblock %}
+{% block title %}{% trans "Generate vouchers" %}{% endblock %}
 {% block content %}
-<h1>{% trans "Make monthly vouchers" %}</h1>
-<p class="lede">{% trans "Monthly fee, and annual or summer charges in their months, for every student placed in a class. Brothers and sisters get the sibling fee and approved discounts are applied. Unpaid balances and late fines are carried onto the new voucher." %}</p>
+<p><a href="{% url 'fees:vouchers' %}">‹ {% trans "Vouchers" %}</a></p>
+<h1>{% trans "Generate vouchers" %}</h1>
+<p class="lede">{% trans "Choose the month, the class and section, and any other fees to add. Brothers and sisters get the sibling fee and approved discounts are applied. Earlier unpaid months and their fines come onto the new voucher, month by month. Every voucher gets its own Voucher ID that is never repeated." %}</p>
 {% for w in warnings %}<ul class="messages"><li class="warning">{{ w }}</li></ul>{% endfor %}
 <form method="post" class="card">{% csrf_token %}
   {{ form.non_field_errors }}
-  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="form-grid">{% for field in form %}{% if field.name != "heads" %}{% include "includes_field.html" %}{% endif %}{% endfor %}</div>
+  <fieldset class="fee-heads"><legend>{{ form.heads.label }}</legend>{{ form.heads }}<p class="help muted">{{ form.heads.help_text }}</p></fieldset>
   {% if preview %}
+  {% for h in preview.no_rate %}<ul class="messages"><li class="warning">{% blocktrans with n=h.name %}{{ n }}: no amount is set for this branch (Setup → Fee rates and vouchers), so it will not be added.{% endblocktrans %}</li></ul>{% endfor %}
   <div class="figures">
     <div class="figure"><div class="value">{{ preview.new }}</div><div class="label">{% trans "Vouchers to make" %}</div></div>
     <div class="figure"><div class="value">{{ preview.done }}</div><div class="label">{% trans "Already have one (skipped)" %}</div></div>

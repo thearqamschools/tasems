@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.19.0 — 2026-10-22 — Project lead's changes, round 2: vouchers
+
+Added
+- Vouchers → "Generate vouchers": month, class (All, each class, Hifz Boys, Hifz Girls), section, and tick boxes for the other fees to add.
+- Fee heads "Generator charges" and "AC charges" (amounts per branch in Fee rates).
+- Receive fee: "Change other fees on this voucher" — change, remove or add other fees; the monthly fee and late fine cannot be changed; the Voucher ID stays the same; changes are recorded in the history.
+
+Changed
+- Vouchers no longer have an Arrears column: unpaid months show month by month with their fines.
+- Menu "Make vouchers" is now "Generate vouchers".
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.18.0 — 2026-10-22 — M4: student lifecycle
 
 Added
