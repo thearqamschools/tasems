@@ -167,11 +167,14 @@ class HRSettings(TimeStampedModel):
 
 @audited
 class Holiday(TimeStampedModel):
-    """A day off for staff: for the whole network (branch empty) or one branch."""
+    """A day off for the whole network (branch empty) or one branch: for students (no registers or diary),
+    for staff (not counted absent), or both (M7 holiday calendar)."""
 
     branch = models.ForeignKey("organisation.Branch", on_delete=models.CASCADE, null=True, blank=True, related_name="+")
     date = models.DateField(db_index=True)
     name = models.CharField(max_length=100)
+    students_off = models.BooleanField(_("students off"), default=True)
+    staff_off = models.BooleanField(_("staff off"), default=True)
 
     class Meta:
         ordering = ["date"]

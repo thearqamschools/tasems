@@ -161,9 +161,34 @@ def build(user, branch, session, today):
                 _("Exams & Results"),
                 "graduation-cap",
                 [],
-                [Report(_("Results by class"), _("Marks entered, result sheets and printed result cards for each class."), reverse("exams:index"))],
+                [
+                    Report(_("Results by class"), _("Marks entered, result sheets and printed result cards for each class."), reverse("exams:index")),
+                    Report(_("Date sheets, exam slips and award lists"), _("Open an exam for its date sheet; open a class for exam slips with photo and award lists."), reverse("exams:index")),
+                ],
             )
         )  # fmt: skip
+
+    if perm("academics.view_section"):
+        modules.append(
+            Module(
+                "academics",
+                _("Timetable and calendar"),
+                "clock",
+                [],
+                [
+                    Report(
+                        _("Timetable"),
+                        _("Each class's week and each teacher's week; clashes are shown."),
+                        reverse("academics:index"),
+                    ),
+                    Report(
+                        _("Holiday calendar"),
+                        _("Holidays of this session for students and staff."),
+                        reverse("academics:holidays"),
+                    ),
+                ],
+            )
+        )
 
     if perm("hr.view_employee"):
         s = metrics.staff_today(branch, today)

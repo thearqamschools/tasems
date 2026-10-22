@@ -103,7 +103,7 @@ def write(request, section_id, date):
         raise PermissionDenied
     diary = Diary.objects.filter(section=section, date=day_).first()
     existing = {e.subject_id: e for e in diary.entries.all()} if diary else {}
-    default_deadline = services.next_school_day(section.class_level, day_)
+    default_deadline = services.next_school_day(section.class_level, day_, section.branch_id)
 
     subjects = services.subjects_for(section)
     if request.method == "POST":

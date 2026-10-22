@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Subject teachers" %} · {{ section }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Subject teachers" %} · {{ section }}</h1>
+  <p class="lede">{% blocktrans with t=section.class_teacher.get_full_name|default:"—" %}Class teacher: {{ t }}{% endblocktrans %}</p></div>
+  <div class="actions"><a class="button secondary" href="{% url 'academics:section_timetable' section.id %}">{% trans "Timetable" %}</a></div>
+</div>
+<form method="post" class="card">{% csrf_token %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>{% trans "Subject" %}</th><th>{% trans "Teacher" %}</th></tr></thead>
+    <tbody>{% for subject, teacher in rows %}<tr><td>{{ subject.name }}</td>
+      <td>{% if can_edit %}<select name="s_{{ subject.id }}" aria-label="{{ subject.name }}"><option value="">—</option>{% for t in teachers %}<option value="{{ t.id }}" {% if teacher.id == t.id %}selected{% endif %}>{{ t.get_full_name|default:t.username }}</option>{% endfor %}</select>{% else %}{{ teacher.get_full_name|default:"—" }}{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="2" class="muted">{% trans "No subjects are set for this class yet (Advanced setup → Curriculum subjects)." %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% if can_edit %}
+  <div class="form-grid">
+    <div class="field"><label for="add_subject">{% trans "Another subject (optional)" %}</label><select id="add_subject" name="add_subject"><option value="">—</option>{% for s in other_subjects %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="add_teacher">{% trans "Its teacher" %}</label><select id="add_teacher" name="add_teacher"><option value="">—</option>{% for t in teachers %}<option value="{{ t.id }}">{{ t.get_full_name|default:t.username }}</option>{% endfor %}</select></div>
+  </div>
+  <p class="muted small">{% trans "Only people with a login in this branch can be chosen." %}</p>
+  <button class="button" type="submit">{% trans "Save subject teachers" %}</button>
+  {% endif %}
+</form>
+{% endblock %}

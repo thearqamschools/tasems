@@ -124,3 +124,76 @@ class Section(BranchOwnedModel):
         if self.class_teacher_id and self.branch_id:
             if self.branch_id not in self.class_teacher.accessible_branch_ids():
                 raise ValidationError({"class_teacher": _("This teacher is not assigned to this branch.")})
+
+
+# --- Subject teachers and timetable (M7) ------------------------------------------------------
+
+WEEKDAYS = [
+    (0, _("Monday")),
+    (1, _("Tuesday")),
+    (2, _("Wednesday")),
+    (3, _("Thursday")),
+    (4, _("Friday")),
+    (5, _("Saturday")),
+]
+
+
+@audited
+class SectionSubject(BranchOwnedModel):
+    """Who teaches a subject to a section this session."""
+
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name="subject_teachers")
+    subject = models.ForeignKey(Subject, on_delete=models.PROTECT, related_name="+")
+    teacher = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="subject_sections"
+    )
+
+    class Meta:
+        ordering = ["section", "subject__name"]
+        constraints = [models.UniqueConstraint(fields=["section", "subject"], name="one_teacher_per_section_subject")]
+
+    def __str__(self):
+        return f"{self.section} {self.subject}: {self.teacher or '—'}"
+
+
+@audited
+class Period(BranchOwnedModel):
+    """The branch's bell times: period 1, 2, … and breaks. The same for every class of the branch."""
+
+    number = models.PositiveSmallIntegerField(help_text=_("Order in the day: 1, 2, 3 …"))
+    label = models.CharField(max_length=30, blank=True, help_text=_("e.g. Break, Assembly. Empty for a period."))
+    starts_at = models.TimeField()
+    ends_at = models.TimeField()
+    is_break = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["number"]
+        constraints = [models.UniqueConstraint(fields=["branch", "number"], name="unique_period_number")]
+
+    def __str__(self):
+        name = self.label or _("Period %(n)s") % {"n": self.number}
+        return f"{name} ({self.starts_at:%H:%M}–{self.ends_at:%H:%M})"
+
+    def clean(self):
+        if self.starts_at and self.ends_at and self.ends_at <= self.starts_at:
+            raise ValidationError({"ends_at": _("The period must end after it starts.")})
+
+
+@audited
+class TimetableEntry(BranchOwnedModel):
+    """One cell of a class timetable: this section has this subject in this period on this day.
+    The teacher is the section's teacher for that subject (SectionSubject)."""
+
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name="timetable")
+    weekday = models.PositiveSmallIntegerField(choices=WEEKDAYS)
+    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name="entries")
+    subject = models.ForeignKey(Subject, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["weekday", "period__number"]
+        constraints = [
+            models.UniqueConstraint(fields=["section", "weekday", "period"], name="one_subject_per_section_slot")
+        ]
+
+    def __str__(self):
+        return f"{self.section} {self.get_weekday_display()} {self.period.number}: {self.subject}"

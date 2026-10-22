@@ -1,0 +1,46 @@
+{% load tasems_tags %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Exam slips</title>
+<style>
+  @font-face { font-family: "SlipSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "SlipSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
+  @page { size: A4; margin: 8mm; }
+  body { margin: 0; font-family: "SlipSans", sans-serif; color: #14182b; font-size: 8pt; }
+  .sheet { display: flex; flex-wrap: wrap; gap: 4mm; }
+  .slip { width: 95mm; height: 136mm; box-sizing: border-box; border: .6pt solid #3e4095; border-radius: 2mm; overflow: hidden; page-break-inside: avoid; position: relative; }
+  .top { background: #3e4095; color: #fff; display: flex; align-items: center; gap: 2mm; padding: 2mm 3mm; border-bottom: 1mm solid #ed3237; }
+  .top img { width: 10mm; height: 10mm; background: #fff; border-radius: 50%; }
+  .top .school { font-weight: 700; font-size: 11pt; line-height: 1.1; }
+  .top .branch { font-size: 6.5pt; opacity: .9; }
+  .title { text-align: center; font-weight: 700; font-size: 9pt; letter-spacing: .08em; margin: 1.5mm 0 0; }
+  .exam { text-align: center; font-size: 8pt; color: #3b4157; margin: 0 0 1.5mm; }
+  .main { display: flex; gap: 3mm; padding: 0 3mm; }
+  .photo { width: 22mm; height: 28mm; object-fit: cover; border: .5pt solid #b8bdd0; border-radius: 1mm; background: #f4f5fa; flex: none; }
+  .facts { line-height: 1.55; font-size: 8pt; }
+  .facts .name { font-weight: 700; font-size: 10pt; color: #3e4095; line-height: 1.2; }
+  table { width: calc(100% - 6mm); margin: 2mm 3mm 0; border-collapse: collapse; }
+  th, td { border: .4pt solid #b8bdd0; padding: .7mm 1.2mm; font-size: 7.2pt; text-align: left; }
+  th { background: #eef0f8; }
+  .sign { position: absolute; left: 3mm; right: 3mm; bottom: 3mm; display: flex; justify-content: space-between; font-size: 7pt; }
+  .sign div { width: 36mm; border-top: .5pt solid #14182b; text-align: center; padding-top: .5mm; }
+</style></head>
+<body><div class="sheet">
+{% for c in slips %}<div class="slip">
+  <div class="top"><img src="{% official_logo layout media_base font_base %}" alt=""><div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}</div></div></div>
+  <p class="title">EXAMINATION SLIP</p>
+  <p class="exam">{{ exam.name }}</p>
+  <div class="main">
+    {% if c.photo %}<img class="photo" src="{{ c.photo }}" alt="">{% else %}<div class="photo"></div>{% endif %}
+    <div class="facts">
+      <div class="name">{{ c.s.full_name }}</div>
+      {% if c.s.gender == "female" %}D/o{% else %}S/o{% endif %} <b>{{ c.s.father_name|default:"—" }}</b><br>
+      Class <b>{{ section.class_level }}</b> · Section <b>{{ section.name }}</b><br>
+      Admission No. <b>{{ c.s.admission_no }}</b>{% if c.e.roll_no %} · Roll No. <b>{{ c.e.roll_no }}</b>{% endif %}
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>Date</th><th>Day</th><th>Subject</th><th>Time</th></tr></thead>
+    <tbody>{% for p in papers %}<tr><td>{{ p.date|date:"d M"|default:"—" }}</td><td>{{ p.date|date:"D" }}</td><td>{{ p.subject.name }}</td><td>{% if p.starts_at %}{{ p.starts_at|time:"H:i" }}{% if p.ends_at %}–{{ p.ends_at|time:"H:i" }}{% endif %}{% endif %}</td></tr>{% endfor %}</tbody>
+  </table>
+  <div class="sign"><div>Class teacher</div><div>Principal</div></div>
+</div>{% endfor %}
+</div></body></html>

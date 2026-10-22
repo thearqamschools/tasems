@@ -55,7 +55,7 @@ image. Choice of library to be recorded as a decision before Milestone 6.
 | M4 ✅ | Student lifecycle (done 22 Oct 2026; parent directory, admission form print and staff cards to follow) | Profile with tabs, photos, session rollover & promotion, withdrawal/transfer workflow, leaving & character certificates, student/staff ID cards, experience certificate, parent directory with family tree and family-wise defaulters, printable admission forms | M1, M3 | 9–12 days |
 | M5 ✅ | Module restyle (done 22 Oct 2026) | Apply components to students, attendance, diary, exams, fees, admissions, staff, parent portal; consistent filters and exports | M1 | 8–12 days |
 | M6 ✅ | Reports centre + background printing (done 22 Oct 2026) | One reports hub (each module: KPI cards + printable report set, as in the reference), Excel/PDF everywhere, family vouchers, job queue for large PDFs | M5 | 6–8 days |
-| M7 | Academic management | Subject-teacher assignment, timetable, holiday calendar, date sheets, exam slips with photo, award lists | M3 | 6–8 days |
+| M7 ✅ | Academic management (done 22 Oct 2026) | Subject-teacher assignment, timetable, holiday calendar, date sheets, exam slips with photo, award lists | M3 | 6–8 days |
 | M8 | Notices & parent communication | Circulars in portal and staff home; message templates with placeholders; PWA for parents; SMS/WhatsApp provider later | M1 | 4–6 days (+ provider) |
 | M9 ✱ (started: expenses, royalty ledger, 19 Oct 2026) | Accounting | Expenses, other income, cash/bank book, branch P&L, head-office consolidation | M3 | 10–15 days |
 | M10 ✱ | Payroll | Salary structures, monthly run from staff attendance, payslips, bank sheet | M3 | 8–12 days |

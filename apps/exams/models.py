@@ -175,6 +175,8 @@ class Paper(TimeStampedModel):
     subject = models.ForeignKey("academics.Subject", on_delete=models.PROTECT, related_name="+")
     total_marks = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     date = models.DateField(null=True, blank=True)
+    starts_at = models.TimeField(_("starts at"), null=True, blank=True)
+    ends_at = models.TimeField(_("ends at"), null=True, blank=True)
 
     class Meta:
         ordering = ["class_level__sort_order", "subject__name"]

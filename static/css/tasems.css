@@ -638,3 +638,19 @@ section > h2:first-child { margin-block-start: 0; }
 .report-module { margin-block-end: var(--space-6); scroll-margin-block-start: var(--space-4); }
 .report-module h2 { display: flex; align-items: center; gap: var(--space-2); }
 .report-module .setup-card small { display: block; font-weight: 400; }
+
+/* Timetable grid (M7) */
+.timetable th[scope="row"] { white-space: nowrap; }
+.timetable th[scope="row"] span { display: block; }
+.timetable .tt-period { font-weight: 700; color: var(--ink); }
+.timetable td { vertical-align: top; min-inline-size: 7rem; }
+.timetable select { min-inline-size: 7rem; }
+.timetable tr.tt-break td, .timetable tr.tt-break th { background: var(--paper); }
+.periods-table input[type="number"] { inline-size: 5rem; }
+
+/* Date sheet and award list (M7) */
+.date-sheet { break-inside: avoid; }
+.award-head { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-block: var(--space-3); }
+.award-table td.award-mark { min-inline-size: 7rem; }
+.signatures { display: flex; justify-content: space-between; gap: var(--space-5); margin-block-start: var(--space-8, 4rem); }
+.signatures div { flex: 1; max-inline-size: 14rem; border-block-start: 1px solid var(--ink); text-align: center; padding-block-start: var(--space-1); }

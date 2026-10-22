@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% if mine %}{% trans "My timetable" %}{% else %}{% trans "Timetable" %} · {{ teacher.get_full_name }}{% endif %}{% endblock %}
+{% block content %}
+{% if not mine %}<p class="no-print"><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>{% endif %}
+<div class="page-header">
+  <div><h1>{% if mine %}{% trans "My timetable" %}{% else %}{{ teacher.get_full_name|default:teacher.username }}{% endif %}</h1>
+  {% if grid %}<p class="lede">{% blocktrans count n=grid.count %}{{ n }} period a week{% plural %}{{ n }} periods a week{% endblocktrans %}</p>{% endif %}</div>
+  <div class="actions"><button class="button quiet" type="button" data-print>{% icon "printer" %}{% trans "Print" %}</button></div>
+</div>
+{% if grid and grid.periods and grid.count %}
+<div class="table-wrap"><table class="timetable">
+  <thead><tr><th>{% trans "Period" %}</th>{% for d, label in grid.days %}<th>{{ label }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for r in grid.rows %}<tr{% if r.period.is_break %} class="tt-break"{% endif %}>
+    <th scope="row"><span class="tt-period">{{ r.period.label|default:r.period.number }}</span><span class="muted small num">{{ r.period.starts_at|time:"H:i" }}–{{ r.period.ends_at|time:"H:i" }}</span></th>
+    {% if r.period.is_break %}<td colspan="{{ grid.days|length }}" class="muted">{{ r.period.label|default:_("Break") }}</td>
+    {% else %}{% for entries in r.cells %}<td>{% for e in entries %}<strong>{{ e.section }}</strong><br><span class="muted small">{{ e.subject.name }}</span>{% if not forloop.last %}<br><span class="badge danger">{% trans "Clash" %}</span><br>{% endif %}{% empty %}<span class="muted">—</span>{% endfor %}</td>{% endfor %}{% endif %}
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "clock" %}<p>{% if mine %}{% trans "No periods are given to you in any class timetable yet." %}{% else %}{% trans "No periods are given to this teacher in any class timetable yet." %}{% endif %}</p></div>{% endif %}
+{% endblock %}

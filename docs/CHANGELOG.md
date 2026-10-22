@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.23.0 — 2026-10-22 — M7: academic management
+
+Added
+- **Subject teachers**: for each section, who teaches each subject (Academics → Timetable → Subject teachers).
+- **Timetable**: the branch's bell times (periods and breaks), each class's week (Monday–Friday, and Saturday for
+  classes that come on Saturday), each teacher's week and "My timetable" for teachers. A timetable that would put a
+  teacher in two classes at the same time is not saved; clashes caused later are listed on the Timetable page.
+  Printable.
+- **Holiday calendar**: holidays of the session for this branch, or for every branch (head office). Each holiday is
+  for students, staff or both. On a students' holiday no attendance register or diary is due; on a staff holiday
+  staff are not counted absent. Existing holidays count for both.
+- **Date sheet** for each exam (date and time of every paper), printable by class. Dates of a network-wide exam are
+  set only by network exam setup, since they print for every branch.
+- **Exam slips** (admit cards) with the student's photo, class, roll number and the class's date sheet, four per A4.
+- **Award list** for each paper and section (roll no., name, marks entered or blank, signatures), with Excel.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.22.0 — 2026-10-22 — M6: reports centre, family vouchers, background printing
 
 Added

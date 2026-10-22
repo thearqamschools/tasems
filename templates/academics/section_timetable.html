@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Timetable" %} · {{ section }}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Timetable" %} · {{ section }}</h1>
+  <p class="lede">{{ section.session }}{% if section.class_teacher %} · {% blocktrans with t=section.class_teacher.get_full_name %}Class teacher: {{ t }}{% endblocktrans %}{% endif %}</p></div>
+  <div class="actions">
+    {% if can_edit and not editing %}<a class="button" href="?edit=1">{% trans "Change timetable" %}</a>{% endif %}
+    <a class="button secondary" href="{% url 'academics:section_subjects' section.id %}">{% trans "Subject teachers" %}</a>
+    {% if not editing %}<button class="button quiet" type="button" data-print>{% icon "printer" %}{% trans "Print" %}</button>{% endif %}
+  </div>
+</div>
+{% if errors %}<div class="callout danger">{% icon "circle-alert" %}<div><strong>{% trans "Not saved: a teacher would be in two classes at once." %}</strong><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div></div>{% endif %}
+{% if missing_teachers and editing %}<div class="callout attention">{% icon "info" %}<div>{% trans "These subjects have no teacher yet, so clashes cannot be checked for them:" %} {% for s in missing_teachers %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}.</div></div>{% endif %}
+{% if not grid.periods %}<div class="card empty-state">{% icon "clock" %}<p>{% trans "Bell times are not set for this branch yet." %}</p>{% if can_edit %}<div class="actions"><a class="button" href="{% url 'academics:periods' %}">{% trans "Set bell times" %}</a></div>{% endif %}</div>
+{% else %}
+{% if editing %}<form method="post">{% csrf_token %}{% endif %}
+<div class="table-wrap"><table class="timetable">
+  <thead><tr><th>{% trans "Period" %}</th>{% for d, label in grid.days %}<th>{{ label }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for r in grid.rows %}<tr{% if r.period.is_break %} class="tt-break"{% endif %}>
+    <th scope="row"><span class="tt-period">{{ r.period.label|default:r.period.number }}</span><span class="muted small num">{{ r.period.starts_at|time:"H:i" }}–{{ r.period.ends_at|time:"H:i" }}</span></th>
+    {% if r.period.is_break %}<td colspan="{{ grid.days|length }}" class="muted">{{ r.period.label|default:_("Break") }}</td>
+    {% else %}{% for c in r.cells %}<td>
+      {% if editing %}<select name="c_{{ c.day }}_{{ r.period.id }}" aria-label="{{ r.period }}"><option value="">—</option>{% for s in subjects %}<option value="{{ s.id }}" {% if c.entry.subject_id == s.id %}selected{% endif %}>{{ s.name }}</option>{% endfor %}</select>
+      {% elif c.entry %}<strong>{{ c.entry.subject.name }}</strong>{% if c.teacher %}<br><span class="muted small">{{ c.teacher.get_full_name|default:c.teacher.username }}</span>{% endif %}
+      {% else %}<span class="muted">—</span>{% endif %}
+    </td>{% endfor %}{% endif %}
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% if editing %}<div class="actions"><button class="button" type="submit">{% trans "Save timetable" %}</button><a class="button quiet" href="{% url 'academics:section_timetable' section.id %}">{% trans "Cancel" %}</a></div></form>{% endif %}
+{% endif %}
+{% endblock %}

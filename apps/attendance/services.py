@@ -4,6 +4,7 @@ import datetime as dt
 from collections import defaultdict
 
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 
 from apps.core.models import AuditEvent
@@ -28,22 +29,37 @@ def roster(section):
 SATURDAY, SUNDAY = 5, 6
 
 
-def is_school_day(class_level, date):
-    """Sunday is off for everyone; on Saturday only classes marked `attends_on_saturday` come."""
+def student_holiday(date, branch_id=None):
+    """The holiday students have on `date` in this branch (or network-wide), or None."""
+    from apps.hr.models import Holiday
+
+    qs = Holiday.objects.filter(date=date, students_off=True)
+    qs = qs.filter(Q(branch__isnull=True) | Q(branch_id=branch_id)) if branch_id else qs.filter(branch__isnull=True)
+    return qs.order_by("branch_id").first()
+
+
+def is_school_day(class_level, date, branch_id=None):
+    """Sunday is off for everyone; on Saturday only classes marked `attends_on_saturday` come; no school on a
+    students' holiday of the branch or the network (holiday calendar)."""
     if date.weekday() == SUNDAY:
         return False
-    if date.weekday() == SATURDAY:
-        return class_level.attends_on_saturday
-    return True
+    if date.weekday() == SATURDAY and not class_level.attends_on_saturday:
+        return False
+    return student_holiday(date, branch_id) is None
 
 
 def in_school(sections, date):
     """Filters a Section queryset to the sections that attend school on `date`."""
+    from apps.hr.models import Holiday
+
     if date.weekday() == SUNDAY:
         return sections.none()
     if date.weekday() == SATURDAY:
-        return sections.filter(class_level__attends_on_saturday=True)
-    return sections
+        sections = sections.filter(class_level__attends_on_saturday=True)
+    off = Holiday.objects.filter(date=date, students_off=True)
+    if off.filter(branch__isnull=True).exists():
+        return sections.none()
+    return sections.exclude(branch_id__in=off.values("branch_id"))
 
 
 def can_mark(user, section, date):
@@ -52,7 +68,7 @@ def can_mark(user, section, date):
     today = timezone.localdate()
     if date > today or date < section.session.starts_on or date > section.session.ends_on:
         return False
-    if not is_school_day(section.class_level, date):
+    if not is_school_day(section.class_level, date, section.branch_id):
         return False
     if user.has_branch_perm(CHANGE_PERM, section.branch_id):
         return True

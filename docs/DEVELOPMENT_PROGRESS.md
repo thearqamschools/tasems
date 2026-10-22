@@ -47,7 +47,8 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 | M4 — Student lifecycle | Student photo, profile sections, brothers and sisters; leave school with leaving/character certificates (numbered PDFs); promotion to next session (copy sections, promote/keep/graduate); ID cards; defaulters by family | **Done (22 Oct 2026), not deployed** |
 | M5 | Module restyle: Excel/Print on every list, print layout, consistent filters and empty states, parent portal on phones | Done 22 Oct 2026 (printed documents keep their approved layouts) |
 | M6 | Reports centre, family vouchers and family fee collection, background printing of large PDFs | Done 22 Oct 2026 |
-| M7–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M9 Accounting started with expenses) |
+| M7 | Subject teachers, timetable, holiday calendar, date sheets, exam slips with photo, award lists | Done 22 Oct 2026 |
+| M8–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M9 Accounting started with expenses) |
 
 ## Known gaps and pending inputs
 

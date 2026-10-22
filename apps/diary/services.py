@@ -41,10 +41,10 @@ def subjects_for(section):
     return [(s, i) for i, s in enumerate(Subject.objects.filter(is_active=True).order_by("name"))]
 
 
-def next_school_day(class_level, date):
+def next_school_day(class_level, date, branch_id=None):
     day = date + dt.timedelta(days=1)
     for _ in range(14):
-        if is_school_day(class_level, day):
+        if is_school_day(class_level, day, branch_id):
             return day
         day += dt.timedelta(days=1)
     return date + dt.timedelta(days=1)
@@ -54,7 +54,11 @@ def can_edit(user, section, date):
     """Class teachers write their own sections' diaries for today or up to a week ahead;
     principals and coordinators can write or correct any section, any school day of the session."""
     session = section.session
-    if date < session.starts_on or date > session.ends_on or not is_school_day(section.class_level, date):
+    if (
+        date < session.starts_on
+        or date > session.ends_on
+        or not is_school_day(section.class_level, date, section.branch_id)
+    ):
         return False
     if user.has_branch_perm(CHANGE_PERM, section.branch_id):
         return True

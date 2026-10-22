@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Bell times" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>
+<h1>{% trans "Bell times" %}</h1>
+<p class="lede">{% blocktrans with b=branch.name %}Periods and breaks of {{ b }}, the same for every class. Tick "Break" for assembly or lunch; breaks are shown on timetables but get no subject.{% endblocktrans %}</p>
+<form method="post" class="card">{% csrf_token %}
+  {{ formset.management_form }}
+  {% for e in formset.non_form_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
+  <div class="table-wrap"><table class="periods-table">
+    <thead><tr><th>{% trans "No." %}</th><th>{% trans "Name (optional)" %}</th><th>{% trans "Starts" %}</th><th>{% trans "Ends" %}</th><th>{% trans "Break" %}</th><th>{% trans "Remove" %}</th></tr></thead>
+    <tbody>{% for f in formset %}<tr>
+      {% for h in f.hidden_fields %}{{ h }}{% endfor %}
+      <td>{{ f.number }}{{ f.number.errors }}</td><td>{{ f.label }}</td><td>{{ f.starts_at }}{{ f.starts_at.errors }}</td><td>{{ f.ends_at }}{{ f.ends_at.errors }}</td>
+      <td>{{ f.is_break }}</td><td>{% if f.instance.pk %}{{ f.DELETE }}{% endif %}</td>
+    </tr>{% if f.non_field_errors %}<tr><td colspan="6">{{ f.non_field_errors }}</td></tr>{% endif %}{% endfor %}</tbody>
+  </table></div>
+  <p class="muted small">{% trans "Three empty rows are added each time; save to get more." %}</p>
+  <button class="button" type="submit">{% trans "Save bell times" %}</button>
+</form>
+{% endblock %}

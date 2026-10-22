@@ -45,9 +45,9 @@ def dates_between(start, end):
 def holidays(branch, start, end):
     """date → holiday name; a branch's own holiday wins over a network-wide one."""
     out = {}
-    for h in Holiday.objects.filter(Q(branch__isnull=True) | Q(branch=branch), date__gte=start, date__lte=end).order_by(
-        "branch_id"
-    ):
+    for h in Holiday.objects.filter(
+        Q(branch__isnull=True) | Q(branch=branch), date__gte=start, date__lte=end, staff_off=True
+    ).order_by("branch_id"):
         if h.date not in out or h.branch_id:
             out[h.date] = h.name
     return out

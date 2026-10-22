@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Date sheet" %} · {{ exam.name }}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'exams:index' %}">‹ {% trans "Exams & Results" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Date sheet" %}</h1><p class="lede">{{ exam.name }} · {{ branch.name }}</p></div>
+  <div class="actions">
+    {% if can_edit and not editing %}<a class="button" href="?edit=1&class={{ level_id }}">{% trans "Change dates and times" %}</a>{% endif %}
+    {% if not editing %}<button class="button quiet" type="button" data-print>{% icon "printer" %}{% trans "Print" %}</button>{% endif %}
+  </div>
+</div>
+<form method="get" class="filter-inline"><label for="class">{% trans "Class" %}</label>
+  <select id="class" name="class"><option value="">{% trans "All classes" %}</option>{% for l in levels %}<option value="{{ l.id }}" {% if level_id == l.id|stringformat:"s" %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+  {% if editing %}<input type="hidden" name="edit" value="1">{% endif %}<button class="button quiet" type="submit">{% trans "Show" %}</button></form>
+{% if editing and not exam.branch_id %}<div class="callout attention">{% icon "info" %}<div>{% trans "This exam is for the whole network: the dates you save print on every branch's date sheet and exam slips." %}</div></div>{% endif %}
+{% if sheet %}
+{% if editing %}<form method="post">{% csrf_token %}{% endif %}
+{% for level, papers in sheet %}
+<section class="date-sheet">
+  <h2>{{ level }}</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Day" %}</th><th>{% trans "Subject" %}</th><th>{% trans "Time" %}</th><th class="num">{% trans "Total marks" %}</th></tr></thead>
+    <tbody>{% for p in papers %}<tr>
+      {% if editing %}
+      <td><input type="date" name="date_{{ p.id }}" value="{{ p.date|date:'Y-m-d' }}" aria-label="{{ p.subject.name }}"></td><td></td><td>{{ p.subject.name }}</td>
+      <td class="filter-inline" style="margin:0"><input type="time" name="starts_at_{{ p.id }}" value="{{ p.starts_at|time:'H:i' }}" aria-label="{% trans 'Starts' %}"> – <input type="time" name="ends_at_{{ p.id }}" value="{{ p.ends_at|time:'H:i' }}" aria-label="{% trans 'Ends' %}"></td>
+      {% else %}
+      <td>{{ p.date|date:"d M Y"|default:"—" }}</td><td>{{ p.date|date:"l" }}</td><td><strong>{{ p.subject.name }}</strong></td>
+      <td class="num">{% if p.starts_at %}{{ p.starts_at|time:"H:i" }}{% if p.ends_at %} – {{ p.ends_at|time:"H:i" }}{% endif %}{% else %}—{% endif %}</td>
+      {% endif %}
+      <td class="num">{{ p.total_marks }}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endfor %}
+{% if editing %}<div class="actions"><button class="button" type="submit">{% trans "Save date sheet" %}</button><a class="button quiet" href="?class={{ level_id }}">{% trans "Cancel" %}</a></div></form>{% endif %}
+{% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "This exam has no papers for these classes yet. Head office adds them under Advanced setup → Exams." %}</p></div>{% endif %}
+{% endblock %}

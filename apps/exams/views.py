@@ -1,5 +1,7 @@
 """Examination screens: exams for the branch, marks entry, section results, result cards."""
 
+import datetime as dt
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -7,6 +9,7 @@ from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from apps.academics.models import Section
@@ -317,3 +320,116 @@ def _class_subjects(section):
     from apps.diary.services import subjects_for
 
     return subjects_for(section)
+
+
+# --- Date sheet, exam slips, award lists (M7) ------------------------------------------------
+
+
+@login_required
+def date_sheet(request, exam_id):
+    from apps.academics.models import ClassLevel
+
+    from . import documents
+
+    branch = _branch(request)
+    session = AcademicSession.objects.filter(is_current=True).first()
+    exam = _exams(branch, session).filter(pk=exam_id).first() if session else None
+    if exam is None:
+        raise Http404
+    can_edit = documents.can_edit_date_sheet(request.user, exam, branch)
+    # The branch's classes; network exam setup sees every class of a network exam, since its dates apply to all.
+    all_levels = (
+        ClassLevel.objects.filter(pk__in=exam.papers.values("class_level"))
+        if can_edit and not exam.branch_id
+        else ClassLevel.objects.filter(sections__branch=branch, sections__session=session).distinct()
+    )
+    levels = all_levels
+    level_id = request.GET.get("class", "")
+    if level_id.isdigit():
+        levels = levels.filter(pk=level_id)
+    editing = can_edit and (request.GET.get("edit") == "1" or request.method == "POST")
+    if request.method == "POST":
+        if not can_edit:
+            raise PermissionDenied
+        errors = 0
+        for p in exam.papers.filter(class_level__in=levels):
+            values = {k: request.POST.get(f"{k}_{p.id}", "").strip() for k in ("date", "starts_at", "ends_at")}
+            try:
+                p.date = dt.date.fromisoformat(values["date"]) if values["date"] else None
+                p.starts_at = dt.time.fromisoformat(values["starts_at"]) if values["starts_at"] else None
+                p.ends_at = dt.time.fromisoformat(values["ends_at"]) if values["ends_at"] else None
+            except ValueError:
+                errors += 1
+                continue
+            p.save(update_fields=["date", "starts_at", "ends_at", "updated_at"])
+        if errors:
+            messages.warning(request, _("%(n)s papers had a date or time that could not be read.") % {"n": errors})
+        else:
+            messages.success(request, _("Date sheet saved."))
+        return redirect(f"{reverse('exams:date_sheet', args=[exam.id])}?class={level_id}")
+    return render(
+        request,
+        "exams/date_sheet.html",
+        {
+            "exam": exam,
+            "branch": branch,
+            "sheet": documents.date_sheet(exam, levels),
+            "levels": all_levels,
+            "level_id": level_id,
+            "can_edit": can_edit,
+            "editing": editing,
+        },
+    )
+
+
+@login_required
+def exam_slips(request, exam_id, section_id):
+    from . import documents
+
+    branch = _branch(request)
+    section = _section(request, branch, section_id)
+    exam = _exams(branch, section.session).filter(pk=exam_id).first()
+    if exam is None:
+        raise Http404
+    enrolments = services.roster(section)
+    student_id = request.GET.get("student", "")
+    if student_id.isdigit():
+        enrolments = [e for e in enrolments if e.student_id == int(student_id)]
+    if not enrolments:
+        raise Http404
+    response = HttpResponse(documents.slips_pdf(exam, section, enrolments), content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="Exam slips {section} {exam.name}.pdf"'
+    return response
+
+
+@login_required
+def award_list(request, paper_id, section_id):
+    from apps.core import exports
+
+    branch = _branch(request)
+    section = _section(request, branch, section_id)
+    paper = Paper.objects.filter(pk=paper_id, class_level=section.class_level).select_related("exam", "subject").first()
+    if paper is None or not _exams(branch, section.session).filter(pk=paper.exam_id).exists():
+        raise Http404
+    marks = {m.student_id: m for m in Mark.objects.filter(paper=paper, section=section)}
+    rows = [{"e": e, "mark": marks.get(e.student_id)} for e in services.roster(section)]
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Award list") + f" {section} {paper.subject.name}",
+            [_("Roll no."), _("Admission no."), _("Name"), _("Father name"), _("Marks obtained"), _("Total marks")],
+            (
+                [
+                    r["e"].roll_no,
+                    r["e"].student.admission_no,
+                    r["e"].student.full_name,
+                    r["e"].student.father_name,
+                    (r["mark"].obtained if r["mark"].status == Mark.Status.PRESENT else r["mark"].get_status_display())
+                    if r["mark"]
+                    else "",
+                    paper.total_marks,
+                ]
+                for r in rows
+            ),
+            branch=branch,
+        )
+    return render(request, "exams/award_list.html", {"paper": paper, "section": section, "rows": rows})
