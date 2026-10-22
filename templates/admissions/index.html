@@ -14,7 +14,6 @@
 </div>
 <div class="actions">
   <a class="button quiet" href="{% url 'admissions:report' %}">{% trans "Report" %}</a>
-  <a class="button quiet" href="?{{ query }}&format=xlsx">{% trans "Download Excel" %}</a>
 </div>
 {% if visits %}
 <h2>{% trans "Campus visits today" %}</h2>
@@ -37,7 +36,8 @@
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
 </form>
 {% if page.object_list %}
-<div class="table-wrap" style="margin-top:1rem"><table>
+{% include "includes_list_tools.html" %}
+<div class="table-wrap"><table>
   <thead><tr><th>{% trans "Child" %}</th><th>{% trans "Class" %}</th><th>{% trans "Parent" %}</th><th>{% trans "Mobile" %}</th><th>{% trans "Status" %}</th><th>{% trans "Next follow-up" %}</th><th>{% trans "Source" %}</th></tr></thead>
   <tbody>{% for i in page.object_list %}<tr>
     <td><a href="{% url 'admissions:detail' i.id %}">{{ i.child_name }}</a>{% if i.is_hifz %} <span class="badge muted">{% trans "Hifz" %}</span>{% endif %}</td>

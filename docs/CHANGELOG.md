@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.21.0 — 2026-10-22 — M5: module restyle (lists, print, parent portal)
+
+Added
+- **Excel and Print on every list**: Students, Absent students, Vouchers, Defaulters (each student and by family), Fee collection, Royalty (statement and branch), Staff, Expenses, Admission inquiries, Monthly staff sheet. The Excel file holds every row that matches the filters (not only the page on screen), with the school, branch and date on top. Print on a list with several pages prints the whole list.
+- Printouts show only the list: menus, filters and buttons are hidden; a line with the branch and the date is printed on top; the DEMO marker stays on demo printouts.
+
+Changed
+- Filters look the same everywhere (a filter card, or a compact row for a single date or month).
+- Empty lists show the same "nothing here" panel with an icon.
+- Fees home: the row of nine buttons is now a grid of quick links with icons ("Generate vouchers", "Barcode" added).
+- Parent portal on phones: the top bar fits on one line, fee vouchers are shown as cards (month, Voucher ID, due date, amount, Paid or PDF), no sideways scrolling; the school's phone numbers are shown when no child is linked.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.20.0 — 2026-10-22 — Project lead's follow-ups to round 2
 
 Changed

@@ -6,7 +6,6 @@ import io
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
@@ -14,6 +13,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from apps.academics.models import ClassLevel
+from apps.core import exports
 from apps.core.branch import current_branch
 from apps.organisation.models import AcademicSession
 from apps.people.forms import StudentForm
@@ -89,7 +89,7 @@ def index(request):
         request,
         "admissions/index.html",
         {
-            "page": Paginator(qs, 50).get_page(request.GET.get("page")),
+            "page": exports.paginate(request, qs, 50),
             "view": view,
             "figures": {
                 "due": open_qs.filter(next_follow_up__lte=today).count(),

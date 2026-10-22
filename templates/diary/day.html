@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Daily Diary" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Daily Diary" %}</h1>
@@ -34,7 +34,7 @@
     <td>{% if r.can_edit %}<a href="{% url 'diary:write' r.section.id date|date:'Y-m-d' %}">{% if r.diary %}{% trans "Edit" %}{% else %}{% trans "Write diary" %}{% endif %}</a>{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "No classes have a diary on this day." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "notebook-pen" %}<p>{% trans "No classes have a diary on this day." %}</p></div>{% endif %}
 
 {% if week_form %}
 <h2>{% trans "Theme of the week" %}</h2>

@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{{ exam.name }} — {{ section }}{% endblock %}
 {% block content %}
 <h1>{{ section }}: {{ exam.name }}</h1>
@@ -10,7 +10,7 @@
     <td class="num">{% if n < students %}<span class="badge attention">{{ n }}/{{ students }}</span>{% else %}{{ n }}/{{ students }}{% endif %}</td>
     <td>{% if can_enter %}<a href="{% url 'exams:enter_marks' p.id section.id %}">{% trans "Enter marks" %}</a>{% endif %}</td></tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "This exam has no papers for this class yet. Head office adds them under Advanced setup → Exams." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "This exam has no papers for this class yet. Head office adds them under Advanced setup → Exams." %}</p></div>{% endif %}
 <div class="actions">
   <a class="button secondary" href="{% url 'exams:section_results' section.id %}{% if exam.kind == 'mid' %}?card=mid{% endif %}">{% trans "See results" %}</a>
   {% if can_remark %}<a class="button quiet" href="{% url 'exams:remarks' exam.id section.id %}">{% trans "Remarks for result cards" %}</a>{% endif %}

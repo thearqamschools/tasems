@@ -8,7 +8,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator
 from django.db.models import Count, Prefetch, Q
 from django.db.models.functions import Length
 from django.http import FileResponse, Http404, HttpResponse
@@ -17,6 +16,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from apps.academics.models import ClassLevel, Section
+from apps.core import exports
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
 from apps.fees.services import balance as fee_balance
@@ -91,7 +91,33 @@ def student_list(request):
         ),
     ).order_by(Length("admission_no"), "admission_no")
 
-    page = Paginator(students, PAGE_SIZE).get_page(request.GET.get("page"))
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Students"),
+            [_("Admission no."), _("Name"), _("Father name"), _("Class"), _("Section"), _("Parent mobile"),
+             _("Father CNIC"), _("Gender"), _("Date of birth"), _("Admission date"), _("Status")],
+            (
+                [
+                    st.admission_no,
+                    st.full_name,
+                    st.father_name,
+                    *(
+                        [st.current_enrolments[0].section.class_level.name, st.current_enrolments[0].section.name]
+                        if session and st.current_enrolments
+                        else ["", ""]
+                    ),
+                    ", ".join(link.guardian.phone for link in st.primary_links),
+                    st.father_cnic,
+                    st.get_gender_display(),
+                    st.date_of_birth,
+                    st.admission_date,
+                    st.get_status_display(),
+                ]
+                for st in students
+            ),
+            branch=branch,
+        )  # fmt: skip
+    page = exports.paginate(request, students, PAGE_SIZE)
     params = request.GET.copy()
     params.pop("page", None)
     return render(

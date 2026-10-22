@@ -14,10 +14,10 @@
 </div>
 
 <h2>{{ month|date:"F Y" }}</h2>
-<form method="get" class="actions"><label for="month">{% trans "Month" %}</label>
-  <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto">
+<form method="get" class="card">
+  <div class="form-grid"><div class="field"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"></div></div>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
-  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button></form>
+</form>
 <div class="figures">
   <div class="figure"><div class="value money">{{ total|rupees }}</div><div class="label">{% trans "Spent this month (Rs)" %}</div></div>
   <div class="figure"><div class="value money">{{ cash_total|rupees }}</div><div class="label">{% trans "From cash (Rs)" %}</div></div>
@@ -29,7 +29,7 @@
 </table></div>{% endif %}
 
 <h2>{% trans "All expenses" %}</h2>
-{% if expenses %}<div class="table-wrap"><table>
+{% if expenses %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
   <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Expense head" %}</th><th>{% trans "What for" %}</th><th>{% trans "Paid to" %}</th><th>{% trans "Paid from" %}</th><th>{% trans "Recorded by" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th></th></tr></thead>
   <tbody>{% for e in expenses %}<tr{% if e.is_cancelled %} class="muted"{% endif %}>
     <td>{{ e.date|date:"d M" }}</td><td>{{ e.head.name }}</td>

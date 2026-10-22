@@ -3,16 +3,17 @@
 {% block content %}
 <h1>{% trans "Royalty statement" %} · {{ month|date:"F Y" }}</h1>
 <p class="lede">{% trans "Royalty is each franchise's percentage of all fees received during the month. Company-owned campuses are listed at 0%." %}</p>
-<form method="get" class="actions"><label for="month">{% trans "Month" %}</label>
-  <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto">
+<form method="get" class="card">
+  <div class="form-grid"><div class="field"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"></div></div>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
-  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button></form>
+</form>
 <div class="figures">
   <div class="figure"><div class="value money">{{ total_base|rupees }}</div><div class="label">{% trans "Franchise fees received (Rs)" %}</div></div>
   <div class="figure"><div class="value money">{{ total_royalty|rupees }}</div><div class="label">{% trans "Royalty for the month (Rs)" %}</div></div>
   <div class="figure"><div class="value money">{{ total_paid|rupees }}</div><div class="label">{% trans "Paid for the month (Rs)" %}</div></div>
   <div class="figure {% if total_due > 0 %}attention{% endif %}"><div class="value money">{{ total_due|rupees }}</div><div class="label">{% trans "Total due, all months (Rs)" %}</div></div>
 </div>
+{% include "includes_list_tools.html" %}
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Branch" %}</th><th>{% trans "Ownership" %}</th><th class="num">{% trans "Billed for the month" %}</th><th class="num">{% trans "Received in the month" %}</th><th class="num">%</th><th class="num">{% trans "Royalty (Rs)" %}</th><th class="num">{% trans "Paid (Rs)" %}</th><th class="num">{% trans "Pending (Rs)" %}</th><th class="num">{% trans "Total due (Rs)" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr>

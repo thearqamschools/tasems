@@ -24,26 +24,27 @@
 {% elif tab == "fees" %}
 <div class="figures"><div class="figure {% if balance > 0 %}attention{% endif %}"><div class="value">Rs {{ balance|rupees }}</div><div class="label">{% if balance < 0 %}{% trans "Paid in advance" %}{% else %}{% trans "Fee due now" %}{% endif %}</div></div></div>
 <h2>{% trans "Fee vouchers" %}</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Voucher ID" %}</th><th>{% trans "Months" %}</th><th>{% trans "Due date" %}</th><th class="num">Rs</th><th></th></tr></thead>
-  <tbody>{% for v in vouchers %}<tr><td class="num">{{ v.number }}</td><td>{{ v.first_month|date:"M Y" }}{% if v.last_month != v.first_month %} – {{ v.last_month|date:"M Y" }}{% endif %}</td><td>{{ v.due_on|date:"d M" }}</td><td class="num">{{ v.payable|rupees }}</td>
-    <td>{% if v.status == "paid" %}<span class="badge">{{ v.get_status_display }}</span>{% elif v.status == "open" %}<a href="{% url 'parents:voucher' child.id v.id %}" target="_blank" rel="noopener">{% trans "Voucher (PDF)" %}</a>{% else %}<span class="badge muted">{{ v.get_status_display }}</span>{% endif %}</td></tr>
-  {% empty %}<tr><td colspan="5" class="muted">{% trans "No vouchers yet." %}</td></tr>{% endfor %}</tbody>
-</table></div>
+{% if vouchers %}<ul class="voucher-lines">{% for v in vouchers %}<li class="card">
+  <div><strong>{{ v.first_month|date:"F Y" }}{% if v.last_month != v.first_month %} – {{ v.last_month|date:"F Y" }}{% endif %}</strong>
+    <div class="muted small">{% trans "Voucher ID" %} <span class="num">{{ v.number }}</span> · {% trans "Due date" %} {{ v.due_on|date:"d M" }}</div></div>
+  <div><span class="amount num">Rs {{ v.payable|rupees }}</span>
+    {% if v.status == "paid" %}<span class="badge ok">{{ v.get_status_display }}</span>{% elif v.status == "open" %}<a class="button sm" href="{% url 'parents:voucher' child.id v.id %}" target="_blank" rel="noopener">{% trans "Voucher (PDF)" %}</a>{% else %}<span class="badge muted">{{ v.get_status_display }}</span>{% endif %}</div>
+</li>{% endfor %}</ul>
+{% else %}<div class="card empty-state">{% icon "receipt" %}<p>{% trans "No vouchers yet." %}</p></div>{% endif %}
 <p class="muted">{% trans "You can pay with JazzCash, the Bank Alfalah app, at any Askari Bank branch or at school. The ways to pay are on the back of the voucher." %}</p>
 {% if payments %}<h2>{% trans "Payments received" %}</h2>
 <div class="table-wrap"><table><tbody>{% for p in payments %}<tr><td>{{ p.paid_on|date:"d M Y" }}</td><td>{{ p.get_method_display }}</td><td class="num">Rs {{ p.amount|rupees }}</td><td class="num">{{ p.receipt_no }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
 
 {% elif tab == "results" %}
 {% for e in exams %}<a class="card child-card" href="{% url 'parents:result' child.id e.id %}" target="_blank" rel="noopener"><div class="child-name">{{ e.name }}</div><div class="muted">{% if e.kind == "mid" %}{% trans "Progress report (PDF)" %}{% else %}{% trans "Result card (PDF)" %}{% endif %}</div></a>
-{% empty %}<div class="card"><p>{% trans "No results have been published yet." %}</p></div>{% endfor %}
+{% empty %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "No results have been published yet." %}</p></div>{% endfor %}
 
 {% else %}
 {% for d in diaries %}<details class="card diary-item" {% if forloop.first %}open{% endif %}>
   <summary><strong>{{ d.date|date:"l, d M Y" }}</strong></summary>
-  <img src="{% url 'parents:diary' child.id d.id 'png' %}" alt="{% trans 'Daily diary' %} {{ d.date|date:'d M Y' }}" loading="lazy" style="width:100%;height:auto;margin-top:.5rem;border:1px solid var(--line)">
+  <img src="{% url 'parents:diary' child.id d.id 'png' %}" alt="{% trans 'Daily diary' %} {{ d.date|date:'d M Y' }}" loading="lazy" class="diary-image">
   <p><a href="{% url 'parents:diary' child.id d.id 'pdf' %}" target="_blank" rel="noopener">{% trans "Open as PDF" %}</a></p>
 </details>
-{% empty %}<div class="card"><p>{% trans "No diary has been shared yet." %}</p></div>{% endfor %}
+{% empty %}<div class="card empty-state">{% icon "notebook-pen" %}<p>{% trans "No diary has been shared yet." %}</p></div>{% endfor %}
 {% endif %}
 {% endblock %}

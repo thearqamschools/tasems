@@ -89,3 +89,14 @@ def official_logo(layout, media_base, font_base):
     if layout is not None and getattr(layout, "left_logo", None):
         return f"{media_base}{layout.left_logo.name}"
     return f"{font_base[: -len('fonts/')]}img/arqam-logo-512.png"
+
+
+@register.simple_tag(takes_context=True)
+def list_url(context, **extra):
+    """This page's address with its filters, without the page number, plus `extra` (e.g. format="xlsx")."""
+    params = context["request"].GET.copy()
+    for key in ("page", "format", "print"):
+        params.pop(key, None)
+    for key, value in extra.items():
+        params[key] = value
+    return "?" + params.urlencode()

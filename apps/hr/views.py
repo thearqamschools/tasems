@@ -16,6 +16,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
+from apps.core import exports
 from apps.core.branch import current_branch
 from apps.organisation.models import AcademicSession
 
@@ -79,6 +80,19 @@ def index(request):
         qs = qs.filter(
             Q(full_name__icontains=q) | Q(code__iexact=q) | Q(phone__icontains=q) | Q(designation__icontains=q)
         )
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Staff"),
+            [_("Code"), _("Name"), _("Father / husband name"), _("Designation"), _("Type"), _("Mobile"), _("CNIC"),
+             _("Campus"), _("Qualification"), _("Joining date"), _("Machine ID"), _("Status")],
+            (
+                [e.code, e.full_name, e.father_name or e.husband_name, e.designation, e.get_staff_type_display(),
+                 e.phone, e.cnic, str(e.campus or ""), e.qualification, e.joined_on, e.machine_id,
+                 e.get_status_display()]
+                for e in qs.order_by("staff_type", "full_name")
+            ),
+            branch=branch,
+        )  # fmt: skip
     _rows, counts = S.day_summary(branch, today)
     hr = HRSettings.for_branch(branch)
     return render(

@@ -27,6 +27,6 @@
 {% if leaves %}<div class="table-wrap" style="margin-top:.75rem"><table><tbody>{% for l in leaves %}<tr><td>{{ l.leave_type }}</td><td>{{ l.starts_on|date:"d M" }} – {{ l.ends_on|date:"d M Y" }}</td><td class="num">{{ l.days }}</td><td>{{ l.get_status_display }}</td><td class="muted">{{ l.reason }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
 
 <h2>{% trans "Attendance" %} · {{ month|date:"F Y" }}</h2>
-<form method="get" class="actions"><input type="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
+<form method="get" class="filter-inline"><input type="month" name="month" value="{{ month|date:'Y-m' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
 {% include "hr/_days.html" %}
 {% endblock %}

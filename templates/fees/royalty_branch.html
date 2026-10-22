@@ -1,16 +1,17 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Royalty" %} · {{ branch.name }}{% endblock %}
 {% block content %}
-<p><a href="{% url 'fees:royalty' %}?month={{ month|date:'Y-m' }}">‹ {% trans "Royalty statement" %}</a></p>
+<p class="no-print"><a href="{% url 'fees:royalty' %}?month={{ month|date:'Y-m' }}">‹ {% trans "Royalty statement" %}</a></p>
 <h1>{{ branch.name }}</h1>
 <p class="lede">{% blocktrans with p=branch.royalty_percent|floatformat %}Royalty {{ p }}% of the fees received each month. Unpaid royalty carries forward.{% endblocktrans %}</p>
 <div class="figures">
   <div class="figure {% if ledger.total_due > 0 %}attention{% endif %}"><div class="value money">{{ ledger.total_due|rupees }}</div><div class="label">{% blocktrans with m=month|date:"F Y" %}Total due up to {{ m }} (Rs){% endblocktrans %}</div></div>
 </div>
-<form method="get" class="actions"><label for="month">{% trans "Up to month" %}</label>
-  <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto">
+<form method="get" class="card">
+  <div class="form-grid"><div class="field"><label for="month">{% trans "Up to month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"></div></div>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
-  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button></form>
+</form>
+{% include "includes_list_tools.html" %}
 
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Month" %}</th><th class="num">{% trans "Fees received (Rs)" %}</th><th class="num">{% trans "Royalty (Rs)" %}</th><th class="num">{% trans "Paid (Rs)" %}</th><th class="num">{% trans "Pending (Rs)" %}</th><th class="num">{% trans "Total due (Rs)" %}</th></tr></thead>

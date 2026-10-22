@@ -224,4 +224,12 @@
       if (first) first.click();
     });
   });
+
+  // ---------- Print: <button data-print>; a full list opened with ?print=1 prints itself ----------
+  document.addEventListener("click", function (event) {
+    if (event.target.closest("[data-print]")) window.print();
+  });
+  if (document.body.hasAttribute("data-autoprint")) {
+    window.addEventListener("load", function () { window.print(); });
+  }
 })();

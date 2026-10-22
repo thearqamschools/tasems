@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Take register" %}{% endblock %}
 {% block content %}
 <h1>{{ section }}</h1>
@@ -27,7 +27,7 @@
   </div>
 </form>
 {% else %}
-<div class="card"><p>{% trans "No students are placed in this section for the current session." %}</p></div>
+<div class="card empty-state">{% icon "users" %}<p>{% trans "No students are placed in this section for the current session." %}</p></div>
 {% endif %}
 
 <script>

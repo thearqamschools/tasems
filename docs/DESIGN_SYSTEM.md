@@ -53,6 +53,8 @@ left-to-right inside Urdu text (`class="num"`).
 | Empty state | `<div class="card empty-state">{% icon "inbox" %}<p>…</p><div class="actions">…</div></div>` |
 | Risky action | `<form method="post" data-confirm="What will happen" data-confirm-button="Cancel voucher">` + `.button.danger` |
 | Disclosure | `<details><summary>…</summary>…</details>` (used for actions that need a reason) |
+| List tools (Excel + Print) | `{% include "includes_list_tools.html" %}` above the table; the view answers `?format=xlsx` with `apps.core.exports.xlsx_response(title, headers, rows, branch=…)` and pages with `exports.paginate(request, items, per_page)` so `?print=1` prints every row |
+| Compact filter | `<form method="get" class="filter-inline">` for one date or month; larger filters use the filter card |
 | Tabs, pagination | `<nav class="tabs">` with `aria-current="page"`; `<nav class="pagination">` |
 | Quick actions | `<nav class="quick-actions">` of links with an icon |
 | Meter | `<span class="meter"><span style="inline-size:42%"></span></span>` (`.wide` for full width) |

@@ -18,7 +18,7 @@
   </tbody></table></div>
 </div>
 <div class="actions">
-  <button class="button" type="button" onclick="window.print()">{% trans "Print" %}</button>
+  <button class="button" type="button" data-print>{% trans "Print" %}</button>
   <a class="button secondary" href="{% url 'fees:index' %}">{% trans "Next payment" %}</a>
   <a class="button quiet" href="{% url 'fees:student' payment.student_id %}">{% trans "Fee account" %}</a>
 </div>

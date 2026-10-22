@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from apps.academics.models import ClassLevel, Section
+from apps.core import exports
 from apps.core.branch import current_branch
 from apps.organisation.models import AcademicSession, Branch
 from apps.people.forms import section_order
@@ -179,6 +180,20 @@ def absentees(request):
                 "streak": streaks.get(r.student_id, 0),
             }
         )
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Absent students") + f" {date:%d-%m-%Y}",
+            [_("Status"), _("Admission no."), _("Name"), _("Class"), _("Section"), _("Days in a row"),
+             _("Father mobile"), _("Mother mobile")],
+            (
+                [g["record"].get_status_display(), g["record"].student.admission_no, g["record"].student.full_name,
+                 g["record"].section.class_level.name, g["record"].section.name,
+                 g["streak"] if g["record"].status == Status.ABSENT else "", g["father"], g["mother"]]
+                for status in (Status.ABSENT, Status.LEAVE, Status.LATE)
+                for g in groups[status]
+            ),
+            branch=branch,
+        )  # fmt: skip
     sections = Section.objects.filter(branch=branch, session__is_current=True)
     return render(
         request,

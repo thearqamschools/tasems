@@ -8,7 +8,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
@@ -19,6 +18,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from apps.academics.models import Section
+from apps.core import exports
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
 from apps.core.templatetags.tasems_tags import rupees
@@ -249,7 +249,19 @@ def _filtered_vouchers(request, branch):
 def vouchers(request):
     branch = _branch(request)
     qs, month, section_ids, status = _filtered_vouchers(request, branch)
-    page = Paginator(qs, 100).get_page(request.GET.get("page"))
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Vouchers") + f" {month:%b %Y}",
+            [_("Voucher ID"), _("Admission no."), _("Student"), _("Father name"), _("Class"), _("From month"),
+             _("Until month"), _("Due date"), _("Payable (Rs)"), _("Status")],
+            (
+                [v.number, v.student.admission_no, v.student.full_name, v.student.father_name,
+                 str(v.section or ""), v.first_month, v.last_month, v.due_on, v.payable, v.get_status_display()]
+                for v in qs
+            ),
+            branch=branch,
+        )  # fmt: skip
+    page = exports.paginate(request, qs, 100)
     session = _session()
     sections = (
         Section.objects.filter(branch=branch, session=session)
@@ -743,6 +755,29 @@ def defaulters(request):
             family["due"] += r["due"]
             family["phone"] = family["phone"] or r["phone"]
         families = sorted(grouped.values(), key=lambda f: -f["due"])
+    if exports.wants_xlsx(request):
+        if by_family:
+            return exports.xlsx_response(
+                _("Defaulters by family"),
+                [_("Father"), _("Parent mobile"), _("Children"), _("Owed (Rs)")],
+                (
+                    [f["father"], f["phone"],
+                     ", ".join(f"{r['student'].full_name} ({r['section'] or ''})" for r in f["children"]), f["due"]]
+                    for f in families
+                ),
+                branch=branch,
+            )  # fmt: skip
+        return exports.xlsx_response(
+            _("Defaulters"),
+            [_("Admission no."), _("Student"), _("Father name"), _("Class"), _("Parent mobile"), _("Months unpaid"),
+             _("Since"), _("Owed (Rs)")],
+            (
+                [r["student"].admission_no, r["student"].full_name, r["student"].father_name, str(r["section"] or ""),
+                 r["phone"], r["months"], r["oldest"], r["due"]]
+                for r in out
+            ),
+            branch=branch,
+        )  # fmt: skip
     return render(
         request,
         "fees/defaulters.html",
@@ -776,6 +811,23 @@ def collections(request):
     if (date_to - date_from).days > 92:
         date_to = date_from + dt.timedelta(days=92)
     summary = reports.collections(branch, date_from, date_to)
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Fee collection")
+            + f" {date_from:%d-%m-%Y}"
+            + (f" to {date_to:%d-%m-%Y}" if date_to != date_from else ""),
+            [_("Date"), _("Receipt"), _("Voucher ID"), _("Admission no."), _("Student"), _("Father name"),
+             _("Received in"), _("Bank"), _("Transaction ID / slip number"), _("Received by"), _("Amount (Rs)"),
+             _("Reversed")],
+            (
+                [p.paid_on, p.receipt_no, p.voucher.number if p.voucher else "", p.student.admission_no,
+                 p.student.full_name, p.student.father_name, _("Cash") if p.method == "counter" else p.method_label,
+                 p.bank.name if p.bank else "", p.reference, p.receiver, p.amount,
+                 _("Yes") if p.is_reversed else ""]
+                for p in summary["payments"]
+            ),
+            branch=branch,
+        )  # fmt: skip
     return render(
         request,
         "fees/collections.html",
@@ -862,6 +914,17 @@ def royalty(request):
     for r in rows:
         r.paid, r.total_due = balances[r.branch.id]["paid"], balances[r.branch.id]["total_due"]
     franchise = [r for r in rows if r.branch.ownership == Branch.Ownership.FRANCHISE]
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Royalty statement") + f" {month:%b %Y}",
+            [_("Branch"), _("Ownership"), _("Billed for the month"), _("Received in the month"), "%",
+             _("Royalty (Rs)"), _("Paid (Rs)"), _("Pending (Rs)"), _("Total due (Rs)")],
+            (
+                [r.branch.name, r.branch.get_ownership_display(), r.billed, r.collected, r.percent, r.royalty,
+                 r.paid, r.royalty - r.paid, r.total_due]
+                for r in rows
+            ),
+        )  # fmt: skip
     return render(
         request,
         "fees/royalty.html",
@@ -909,13 +972,27 @@ def royalty_branch(request, branch_id):
             return redirect(f"{reverse('fees:royalty_branch', args=[branch.id])}?month={month:%Y-%m}")
     elif request.method == "POST":
         raise PermissionDenied
+    ledger = reports.royalty_ledger(branch, month)
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Royalty"),
+            [_("Month"), _("Fees received (Rs)"), _("Royalty (Rs)"), _("Paid (Rs)"), _("Pending (Rs)"),
+             _("Total due (Rs)")],
+            (
+                ([[_("Brought forward from earlier months"), "", "", "", "", ledger["carried"]]]
+                 if ledger["carried"] else [])
+                + [[f"{r['month']:%b %Y}", r["collected"], r["due"], r["paid"], r["left"], r["total_due"]]
+                   for r in ledger["rows"]]
+            ),
+            branch=branch,
+        )  # fmt: skip
     return render(
         request,
         "fees/royalty_branch.html",
         {
             "branch": branch,
             "month": month,
-            "ledger": reports.royalty_ledger(branch, month),
+            "ledger": ledger,
             "payments": RoyaltyPayment.objects.filter(branch=branch).select_related("received_by")[:50],
             "form": form,
         },

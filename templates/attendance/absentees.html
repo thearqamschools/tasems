@@ -1,8 +1,11 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Absent students" %}{% endblock %}
 {% block content %}
-<h1>{% trans "Absent students" %}</h1>
-<p class="lede">{{ date|date:"l, d F Y" }}</p>
+<div class="page-header">
+  <div><h1>{% trans "Absent students" %}</h1>
+  <p class="lede">{{ date|date:"l, d F Y" }}</p></div>
+  <div class="actions"><a class="button quiet" href="{% url 'attendance:today' %}?date={{ date|date:'Y-m-d' }}">{% trans "Back to attendance" %}</a></div>
+</div>
 <form method="get" class="card no-print">
   <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
   <div class="form-grid">
@@ -15,16 +18,13 @@
   </div>
   <div class="actions" style="margin:0"><button class="button" type="submit">{% trans "Show" %}</button></div>
 </form>
-<div class="actions no-print">
-  <a class="button quiet" href="{% url 'attendance:today' %}?date={{ date|date:'Y-m-d' }}">{% trans "Back to attendance" %}</a>
-  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
-</div>
+{% include "includes_list_tools.html" %}
 
 {% if long_absences %}
-<div class="card" style="border-color:var(--attention);margin-bottom:1rem">
-  <h2 style="margin-top:0">{% trans "Absent 3 or more days in a row" %}</h2>
+<div class="callout attention">{% icon "triangle-alert" %}<div>
+  <strong>{% trans "Absent 3 or more days in a row" %}</strong>
   <ul>{% for a in long_absences %}<li>{{ a.record.student.full_name }} ({{ a.record.section.class_level }} · {{ a.record.section.name }}) — {% blocktrans count n=a.streak %}{{ n }} day{% plural %}{{ n }} days{% endblocktrans %}{% if a.father %} · <a href="tel:{{ a.father }}" class="num">{{ a.father }}</a>{% endif %}{% if a.mother %} · <a href="tel:{{ a.mother }}" class="num">{{ a.mother }}</a>{% endif %}</li>{% endfor %}</ul>
-</div>
+</div></div>
 {% endif %}
 
 {% with items=absent %}<h2>{% trans "Absent" %} ({{ items|length }})</h2>{% include "attendance/_people.html" %}{% endwith %}

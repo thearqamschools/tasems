@@ -2,11 +2,11 @@
 {% block title %}{% trans "Admissions report" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Admissions report" %}</h1>
-<form method="get" class="actions">
-  <label for="from">{% trans "From" %}</label><input type="date" id="from" name="from" value="{{ start|date:'Y-m-d' }}" style="width:auto">
-  <label for="to">{% trans "To" %}</label><input type="date" id="to" name="to" value="{{ end|date:'Y-m-d' }}" style="width:auto">
+<form method="get" class="filter-inline">
+  <label for="from">{% trans "From" %}</label><input type="date" id="from" name="from" value="{{ start|date:'Y-m-d' }}">
+  <label for="to">{% trans "To" %}</label><input type="date" id="to" name="to" value="{{ end|date:'Y-m-d' }}">
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
-  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
+  <button class="button quiet" type="button" data-print>{% trans "Print" %}</button>
 </form>
 <div class="figures">
   <div class="figure"><div class="value">{{ total }}</div><div class="label">{% trans "Inquiries received" %}</div></div>

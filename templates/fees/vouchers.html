@@ -15,10 +15,12 @@
   </div>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
 </form>
-<div class="actions">
-  {% if page.paginator.count %}<a class="button" href="{% url 'fees:vouchers_pdf' %}?{{ query }}" target="_blank" rel="noopener">{% blocktrans count n=page.paginator.count %}Print {{ n }} voucher (PDF){% plural %}Print {{ n }} vouchers (PDF){% endblocktrans %}</a>{% endif %}
-</div>
 {% if page.object_list %}
+<div class="list-tools no-print">
+  <a class="button sm" href="{% url 'fees:vouchers_pdf' %}?{{ query }}" target="_blank" rel="noopener">{% icon "printer" %}{% blocktrans count n=page.paginator.count %}Print {{ n }} voucher (PDF){% plural %}Print {{ n }} vouchers (PDF){% endblocktrans %}</a>
+  <a class="button quiet sm" href="{% list_url format='xlsx' %}">{% icon "file-spreadsheet" %}{% trans "Excel" %}</a>
+  {% if page.has_other_pages %}<a class="button quiet sm" href="{% list_url print='1' %}">{% icon "printer" %}{% trans "Print list" %}</a>{% else %}<button class="button quiet sm" type="button" data-print>{% icon "printer" %}{% trans "Print list" %}</button>{% endif %}
+</div>
 <div class="table-wrap"><table>
   <thead><tr><th class="num">{% trans "Voucher" %}</th><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Months" %}</th><th>{% trans "Due" %}</th><th class="num">{% trans "Payable (Rs)" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
   <tbody>{% for v in page.object_list %}<tr>

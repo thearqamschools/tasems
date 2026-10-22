@@ -3,15 +3,19 @@
 {% block content %}
 <h1>{% trans "Defaulters" %}</h1>
 <p class="lede">{% trans "Students with fees not paid for months already billed." %}</p>
-<form method="get" class="actions">
-  <label for="months">{% trans "Unpaid for at least" %}</label>
-  <select id="months" name="months" style="width:auto">{% for n in "123456" %}<option value="{{ n }}" {% if n|add:0 == min_months %}selected{% endif %}>{% blocktrans count m=n|add:0 %}{{ m }} month{% plural %}{{ m }} months{% endblocktrans %}</option>{% endfor %}</select>
-  <select name="section" style="width:auto"><option value="">{% trans "All classes" %}</option>{% for s in sections %}<option value="{{ s.id }}" {% if section_filter == s.id|stringformat:"d" %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
-  <select name="by" style="width:auto" aria-label="{% trans 'List' %}"><option value="">{% trans "Each student" %}</option><option value="family" {% if by_family %}selected{% endif %}>{% trans "By family" %}</option></select>
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="months">{% trans "Unpaid for at least" %}</label>
+      <select id="months" name="months">{% for n in "123456" %}<option value="{{ n }}" {% if n|add:0 == min_months %}selected{% endif %}>{% blocktrans count m=n|add:0 %}{{ m }} month{% plural %}{{ m }} months{% endblocktrans %}</option>{% endfor %}</select></div>
+    <div class="field"><label for="section">{% trans "Class" %}</label>
+      <select id="section" name="section"><option value="">{% trans "All classes" %}</option>{% for s in sections %}<option value="{{ s.id }}" {% if section_filter == s.id|stringformat:"d" %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="by">{% trans "List" %}</label>
+      <select id="by" name="by"><option value="">{% trans "Each student" %}</option><option value="family" {% if by_family %}selected{% endif %}>{% trans "By family" %}</option></select></div>
+  </div>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
-  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
 </form>
 <div class="figures"><div class="figure attention"><div class="value">{{ total|rupees }}</div><div class="label">{% blocktrans count n=rows|length %}Owed by {{ n }} student (Rs){% plural %}Owed by {{ n }} students (Rs){% endblocktrans %}</div></div></div>
+{% if rows %}{% include "includes_list_tools.html" %}{% endif %}
 {% if by_family and families %}
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Father" %}</th><th>{% trans "Parent mobile" %}</th><th>{% trans "Children" %}</th><th class="num">{% trans "Owed (Rs)" %}</th></tr></thead>
@@ -32,5 +36,5 @@
     <td class="num">{{ r.months }}</td><td>{{ r.oldest|date:"M Y" }}</td><td class="num">{{ r.due|rupees }}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "No defaulters." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "circle-check" %}<p>{% trans "No defaulters." %}</p></div>{% endif %}
 {% endblock %}

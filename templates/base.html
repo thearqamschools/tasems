@@ -10,7 +10,7 @@
   <link rel="icon" href="{% static 'img/arqam-logo-192.png' %}">
   <script>try{if(localStorage.getItem("tasems.sidebar")==="collapsed")document.documentElement.classList.add("sidebar-collapsed")}catch(e){}</script>
 </head>
-<body>
+<body{% if request.GET.print == "1" %} data-autoprint{% endif %}>
 {% if DEMO_MODE %}<div class="demo-banner" role="note">{% trans "DEMO — fictional data for testing. Do not enter real student information." %}</div>{% endif %}
 {% block body %}
 <a class="skip-link" href="#content">{% trans "Skip to content" %}</a>
@@ -83,6 +83,7 @@
       </div>
     </header>
     <main id="content" tabindex="-1">
+      <p class="print-header">{% if not current_branch or "Arqam" not in current_branch.name %}{% trans "The Arqam Schools" %} · {% endif %}{% if current_branch %}{% if LANG == "ur" and current_branch.name_ur %}{{ current_branch.name_ur }}{% else %}{{ current_branch.name }}{% endif %} · {% endif %}{% now "d M Y, H:i" %}</p>
       {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{% if m.tags == "error" %}{% icon "circle-alert" %}{% elif m.tags == "warning" %}{% icon "triangle-alert" %}{% elif m.tags == "success" %}{% icon "circle-check" %}{% else %}{% icon "info" %}{% endif %}<span>{{ m }}</span></li>{% endfor %}</ul>{% endif %}
       {% block content %}{% endblock %}
     </main>

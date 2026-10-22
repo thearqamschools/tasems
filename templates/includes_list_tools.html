@@ -1,0 +1,5 @@
+{% load i18n tasems_tags %}{# Excel download and print for a list. With: page (paginated lists print every row), xlsx=False to hide Excel. #}
+<div class="list-tools no-print">
+  {% if xlsx is not False %}<a class="button quiet sm" href="{% list_url format='xlsx' %}">{% icon "file-spreadsheet" %}{% trans "Excel" %}</a>{% endif %}
+  {% if page.has_other_pages %}<a class="button quiet sm" href="{% list_url print='1' %}">{% icon "printer" %}{% trans "Print" %}</a>{% else %}<button class="button quiet sm" type="button" data-print>{% icon "printer" %}{% trans "Print" %}</button>{% endif %}
+</div>

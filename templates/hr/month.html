@@ -1,9 +1,9 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Monthly staff attendance" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Monthly staff attendance" %} · {{ month|date:"F Y" }}</h1>
-<form method="get" class="actions"><input type="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Show" %}</button>
-  <a class="button" href="?month={{ month|date:'Y-m' }}&format=xlsx">{% trans "Download Excel (for payroll)" %}</a></form>
+<form method="get" class="filter-inline"><input type="month" name="month" value="{{ month|date:'Y-m' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
+{% include "includes_list_tools.html" %}
 <p class="muted">{% trans "P present · L late · H half day · A absent · LV leave · HD holiday · – off day" %}<br>{% trans "Unpaid = absent days + days of unpaid leave; salary is deducted for these." %}</p>
 <div class="table-wrap"><table class="sheet-table" style="font-size:.78rem">
   <thead><tr><th>{% trans "Name" %}</th>{% for d in dates %}<th class="num">{{ d.day }}</th>{% endfor %}<th class="num">P</th><th class="num">L</th><th class="num">H</th><th class="num">A</th><th class="num">LV</th><th class="num" title="{% trans 'Absent + unpaid leave' %}">{% trans "Unpaid" %}</th></tr></thead>

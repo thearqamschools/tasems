@@ -2,9 +2,9 @@
 {% block title %}{% trans "Staff attendance" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Staff attendance" %} · {{ date|date:"l d M Y" }}</h1>
-<form method="get" class="actions">
+<form method="get" class="filter-inline">
   <a class="button quiet" href="?date={{ previous|date:'Y-m-d' }}">‹ {% trans "Previous day" %}</a>
-  <input type="date" name="date" value="{{ date|date:'Y-m-d' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Show" %}</button>
+  <input type="date" name="date" value="{{ date|date:'Y-m-d' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button>
   {% if next %}<a class="button quiet" href="?date={{ next|date:'Y-m-d' }}">{% trans "Next day" %} ›</a>{% endif %}
   {% if can_correct %}<a class="button quiet" href="?date={{ date|date:'Y-m-d' }}&refresh=1">{% trans "Work out again" %}</a>{% endif %}
 </form>

@@ -2,12 +2,15 @@
 {% block title %}{% trans "Daily collection" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Fee collection" %}</h1>
-<form method="get" class="actions">
-  <label for="from">{% trans "From" %}</label><input type="date" id="from" name="from" value="{{ date_from|date:'Y-m-d' }}" style="width:auto">
-  <label for="to">{% trans "To" %}</label><input type="date" id="to" name="to" value="{{ date_to|date:'Y-m-d' }}" style="width:auto">
+<p class="lede">{{ date_from|date:"d M Y" }}{% if date_to != date_from %} – {{ date_to|date:"d M Y" }}{% endif %}</p>
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="from">{% trans "From" %}</label><input type="date" id="from" name="from" value="{{ date_from|date:'Y-m-d' }}"></div>
+    <div class="field"><label for="to">{% trans "To" %}</label><input type="date" id="to" name="to" value="{{ date_to|date:'Y-m-d' }}"></div>
+  </div>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
-  <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
 </form>
+{% if payments %}{% include "includes_list_tools.html" %}{% endif %}
 {% include "fees/_day_breakdown.html" with day=summary %}
 <h2>{% trans "Payments" %}</h2>
 {% if payments %}
@@ -22,5 +25,5 @@
     <td class="num">{% if p.is_reversed %}<s>{{ p.amount|rupees }}</s>{% else %}{{ p.amount|rupees }}{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card"><p>{% trans "No payments in these dates." %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "inbox" %}<p>{% trans "No payments in these dates." %}</p></div>{% endif %}
 {% endblock %}

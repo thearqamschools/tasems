@@ -122,13 +122,13 @@ main:focus { outline: none; }
   border-block-end: 3px solid var(--accent);
   padding: 0.75rem 1rem;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 1.25rem;
+  gap: 0.5rem;
 }
 .topbar a { color: inherit; text-decoration: none; }
 .topbar .school { font-weight: 700; font-size: var(--step-0); letter-spacing: 0.01em; }
-.topbar .branch-name { font-size: var(--step-1); font-weight: 600; flex: 1 1 16rem; }
+.topbar .school { flex: 1; min-inline-size: 0; }
+.topbar .school small { display: block; font-weight: 400; font-size: var(--step--2); opacity: 0.85; letter-spacing: 0; }
 .topbar form { margin: 0; }
 .topbar select, .topbar button {
   background: transparent;
@@ -384,6 +384,12 @@ textarea.ur { font-family: var(--font-ur); line-height: 2.1; }
 .child-facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-top: 0.5rem; font-size: var(--step--1); }
 .child-facts .due { color: var(--accent-ink); }
 .diary-item { margin-block-end: 0.75rem; }
+.diary-image { inline-size: 100%; block-size: auto; margin-block-start: var(--space-2); border: 1px solid var(--line); }
+/* A fee voucher as one line that fits a phone */
+.voucher-lines { list-style: none; padding: 0; margin: 0 0 var(--space-3); display: grid; gap: var(--space-2); }
+.voucher-lines li { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-3); }
+.voucher-lines li > div:last-child { text-align: end; display: grid; gap: var(--space-1); justify-items: end; }
+.voucher-lines .amount { font-weight: 700; font-size: var(--step-1); white-space: nowrap; }
 
 /* ---------- Official logo (used exactly as provided) ---------- */
 .topbar .school { display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -589,11 +595,24 @@ section > h2:first-child { margin-block-start: 0; }
 .setup-card:hover { border-color: var(--brand); color: var(--ink); }
 
 /* ---------- 15. Print & motion ---------- */
+/* Compact filter: one or two inputs in a row (date, month) */
+.filter-inline { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-block: var(--space-3); }
+.filter-inline input, .filter-inline select { inline-size: auto; }
+.list-tools { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end; margin-block: var(--space-3) var(--space-2); }
+.print-header { display: none; }
 @media print {
-  .topbar, .appbar, .sidebar, .sidebar-scrim, .skip-link, .actions, .no-print, .dialog { display: none !important; }
+  .topbar, .appbar, .sidebar, .sidebar-scrim, .skip-link, .actions, .no-print, .dialog,
+  form[method="get"], .tabs, .pagination, .messages, .quick-actions { display: none !important; }
   .app { display: block !important; }
-  body { background: #fff; }
+  body { background: #fff; font-size: 10pt; }
+  main { padding: 0 !important; }
+  .print-header { display: block; font-size: 9pt; color: #555; border-bottom: 1px solid #999; padding-bottom: 2mm; margin-bottom: 4mm; }
   .card, .table-wrap, .figure { box-shadow: none; }
+  .table-wrap { overflow: visible !important; border: 0; }
+  table { font-size: 9pt; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 

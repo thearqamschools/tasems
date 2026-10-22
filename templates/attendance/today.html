@@ -6,7 +6,7 @@
 <nav class="actions" aria-label="{% trans 'Choose day' %}">
   <a class="button quiet" href="?date={{ previous_day|date:'Y-m-d' }}">{% trans "Previous day" %}</a>
   {% if not is_today %}<a class="button quiet" href="?">{% trans "Today" %}</a>{% endif %}
-  <form method="get" style="display:flex;gap:.5rem"><label class="visually-hidden" for="d">{% trans "Date" %}</label><input type="date" id="d" name="date" value="{{ date|date:'Y-m-d' }}" style="width:auto"><button class="button quiet" type="submit">{% trans "Go" %}</button></form>
+  <form method="get" class="filter-inline" style="margin:0"><label class="visually-hidden" for="d">{% trans "Date" %}</label><input type="date" id="d" name="date" value="{{ date|date:'Y-m-d' }}"><button class="button quiet" type="submit">{% trans "Go" %}</button></form>
   <a class="button secondary" href="{% url 'attendance:absentees' %}?date={{ date|date:'Y-m-d' }}">{% trans "Absent students" %}</a>
   {% if multi_branch %}<a class="button secondary" href="{% url 'attendance:branches' %}?date={{ date|date:'Y-m-d' }}">{% trans "All my branches" %}</a>{% endif %}
 </nav>

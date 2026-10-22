@@ -14,7 +14,8 @@
   </div>
 </a>
 {% empty %}
-<div class="card"><p>{% trans "No children are linked to your mobile number. Please contact the school office." %}</p></div>
+<div class="card empty-state">{% icon "users" %}<p>{% trans "No children are linked to your mobile number. Please contact the school office." %}</p>
+  <p class="num">041-2660265 · WhatsApp 0339-2406479</p></div>
 {% endfor %}
 <p><a href="{% url 'parents:account' %}">{% trans "Change password" %}</a></p>
 {% endblock %}

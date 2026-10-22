@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
+from apps.core import exports
 from apps.core.branch import current_branch
 from apps.core.templatetags.tasems_tags import rupees
 from apps.fees import reports as fee_reports
@@ -53,6 +54,19 @@ def index(request):
     by_head = defaultdict(lambda: ZERO)
     for e in live:
         by_head[e.head.name] += e.amount
+    if exports.wants_xlsx(request):
+        return exports.xlsx_response(
+            _("Expenses") + f" {month:%b %Y}",
+            [_("Date"), _("Expense head"), _("What for"), _("Paid to"), _("Paid from"), _("Reference"),
+             _("Recorded by"), _("Amount (Rs)"), _("Cancelled")],
+            (
+                [e.date, e.head.name, e.description, e.paid_to, e.paid_from_label, e.reference,
+                 e.recorded_by.get_full_name() or e.recorded_by.username, e.amount,
+                 e.cancel_reason or _("Yes") if e.is_cancelled else ""]
+                for e in expenses
+            ),
+            branch=branch,
+        )  # fmt: skip
     # Today's cash in hand: cash fees received minus cash spent (bank money is not in the drawer).
     fees_today = fee_reports.collections(branch, today, today)
     cash_spent_today = sum(

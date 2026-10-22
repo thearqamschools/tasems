@@ -5,34 +5,35 @@
 <p class="lede">{{ branch.name }} · {{ month|date:"F Y" }}</p>
 {% for w in warnings %}<ul class="messages"><li class="warning">{{ w }}</li></ul>{% endfor %}
 
-<form method="get" class="card" style="margin-bottom:1rem">
+<form method="get" class="card">
   <div class="field"><label for="q">{% trans "Voucher number, admission number or name" %}</label>
     <input type="search" id="q" name="q" autofocus dir="ltr" inputmode="search" placeholder="{% trans 'Scan or type the voucher number' %}"></div>
   <button class="button" type="submit">{% trans "Find" %}</button>
 </form>
 
-<div class="actions">
-  {% if can.generate %}<a class="button" href="{% url 'fees:generate' %}">{% trans "Make monthly vouchers" %}</a>{% endif %}
-  <a class="button secondary" href="{% url 'fees:vouchers' %}?month={{ month|date:'Y-m' }}">{% trans "Vouchers" %}</a>
-  {% if can.pay %}<a class="button quiet" href="{% url 'fees:payments_import' %}">{% trans "Payments from a file (JazzCash)" %}</a>{% endif %}
-  <a class="button quiet" href="{% url 'fees:jazzcash_export' %}?month={{ month|date:'Y-m' }}">{% trans "Voucher list for JazzCash (Excel)" %}</a>
-  <a class="button quiet" href="{% url 'fees:defaulters' %}">{% trans "Defaulters" %}</a>
-  <a class="button quiet" href="{% url 'fees:collections' %}">{% trans "Daily collection" %}</a>
-  <a class="button quiet" href="{% url 'fees:concessions' %}">{% trans "Special discounts" %}{% if pending %} ({{ pending }}){% endif %}</a>
-  {% if can.royalty %}<a class="button quiet" href="{% url 'fees:royalty' %}">{% trans "Royalty" %}</a>{% endif %}
-</div>
+<nav class="quick-actions" aria-label="{% trans 'Quick actions' %}">
+  {% if can.generate %}<a href="{% url 'fees:generate' %}">{% icon "receipt" %}<span>{% trans "Generate vouchers" %}</span></a>{% endif %}
+  <a href="{% url 'fees:vouchers' %}?month={{ month|date:'Y-m' }}">{% icon "list-checks" %}<span>{% trans "Vouchers" %}</span></a>
+  {% if can.pay %}<a href="{% url 'fees:quick' %}">{% icon "scan-barcode" %}<span>{% trans "Barcode" %}</span></a>
+  <a href="{% url 'fees:payments_import' %}">{% icon "download" %}<span>{% trans "Payments from a file (JazzCash)" %}</span></a>{% endif %}
+  <a href="{% url 'fees:jazzcash_export' %}?month={{ month|date:'Y-m' }}">{% icon "file-spreadsheet" %}<span>{% trans "Voucher list for JazzCash (Excel)" %}</span></a>
+  <a href="{% url 'fees:defaulters' %}">{% icon "triangle-alert" %}<span>{% trans "Defaulters" %}</span></a>
+  <a href="{% url 'fees:collections' %}">{% icon "coins" %}<span>{% trans "Daily collection" %}</span></a>
+  <a href="{% url 'fees:concessions' %}">{% icon "badge-percent" %}<span>{% trans "Special discounts" %}{% if pending %} ({{ pending }}){% endif %}</span></a>
+  {% if can.royalty %}<a href="{% url 'fees:royalty' %}">{% icon "landmark" %}<span>{% trans "Royalty" %}</span></a>{% endif %}
+</nav>
 
 <h2>{% if day == today %}{% trans "Received today" %}{% else %}{% blocktrans with d=day|date:"d M Y" %}Received on {{ d }}{% endblocktrans %}{% endif %}</h2>
-<form method="get" class="actions"><label for="day">{% trans "Date" %}</label>
-  <input type="date" id="day" name="day" value="{{ day|date:'Y-m-d' }}" style="width:auto">
+<form method="get" class="filter-inline"><label for="day">{% trans "Date" %}</label>
+  <input type="date" id="day" name="day" value="{{ day|date:'Y-m-d' }}">
   <input type="hidden" name="month" value="{{ month|date:'Y-m' }}">
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
   <a class="button quiet" href="{% url 'fees:collections' %}?from={{ day|date:'Y-m-d' }}">{% trans "List of payments" %}</a></form>
 {% include "fees/_day_breakdown.html" with day=day_summary %}
 
 <h2>{{ month|date:"F Y" }}</h2>
-<form method="get" class="actions"><label for="month">{% trans "Month" %}</label>
-  <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}" style="width:auto">
+<form method="get" class="filter-inline"><label for="month">{% trans "Month" %}</label>
+  <input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}">
   <button class="button quiet" type="submit">{% trans "Show" %}</button></form>
 
 <div class="figures">
