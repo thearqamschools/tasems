@@ -197,7 +197,9 @@ def admit(request, pk):
         "father_phone": inquiry.phone,
         "class_level": inquiry.class_level_id,
     }
-    form = StudentForm(request.POST or None, initial=initial, branch=branch, session=session, user=request.user)
+    form = StudentForm(
+        request.POST or None, request.FILES or None, initial=initial, branch=branch, session=session, user=request.user
+    )
     if request.method == "POST" and form.is_valid():
         d = form.cleaned_data
         student = form.save_all()

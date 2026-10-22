@@ -1,13 +1,25 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{{ student.full_name }}{% endblock %}
 {% block content %}
-<h1>{{ student.full_name }}</h1>
-<p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p>
+<div class="profile-head">
+  {% if student.photo %}<img class="profile-photo" src="{% url 'people:student_photo' student.pk %}" alt="{% trans 'Photo' %}" width="96" height="120">
+  {% else %}<span class="profile-photo empty" aria-hidden="true">{% icon "users" %}</span>{% endif %}
+  <div><h1>{{ student.full_name }}</h1>
+<p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p></div>
+</div>
+<nav class="tabs no-print" aria-label="{% trans 'Sections of this page' %}">
+  <a href="#details">{% trans "Details" %}</a><a href="#family">{% trans "Family details" %}</a>
+  {% if siblings %}<a href="#siblings">{% trans "Brothers and sisters" %}</a>{% endif %}<a href="#classes">{% trans "Classes by session" %}</a>
+  {% if history %}<a href="#history">{% trans "Record history" %}</a>{% endif %}
+</nav>
 <div class="actions">{% if can_edit %}<a class="button" href="{% url 'people:student_edit' student.pk %}">{% trans "Edit student" %}</a>{% endif %}
 {% if perms.fees.view_voucher %}<a class="button quiet" href="{% url 'fees:student' student.pk %}">{% trans "Fee account" %}</a>{% endif %}
+<a class="button quiet" href="{% url 'people:id_cards' %}?student={{ student.pk }}">{% trans "ID card" %}</a>
+{% if can_edit %}<a class="button quiet" href="{% url 'people:certificate_new' student.pk %}">{% trans "Character certificate" %}</a>
+{% if student.status == "active" %}<a class="button quiet" href="{% url 'people:student_leave' student.pk %}">{% trans "Leave school" %}</a>{% endif %}{% endif %}
 {% if perms.people.change_guardian %}<form method="post" action="{% url 'parents:codes' %}" style="display:inline">{% csrf_token %}<input type="hidden" name="student" value="{{ student.pk }}"><button class="button quiet" type="submit">{% trans "Parent login code" %}</button></form>{% endif %}</div>
 
-<div class="table-wrap"><table><tbody>
+<div class="table-wrap" id="details"><table><tbody>
   <tr><th>{% trans "Gender" %}</th><td>{{ student.get_gender_display }}</td></tr>
   <tr><th>{% trans "Date of birth" %}</th><td>{{ student.date_of_birth|date:"d M Y"|default:"—" }}</td></tr>
   <tr><th>{% trans "Admission date" %}</th><td>{{ student.admission_date|date:"d M Y" }}</td></tr>
@@ -22,7 +34,7 @@
   {% if student.notes %}<tr><th>{% trans "Notes" %}</th><td>{{ student.notes|linebreaksbr }}</td></tr>{% endif %}
 </tbody></table></div>
 
-<h2>{% trans "Family details" %}</h2>
+<h2 id="family">{% trans "Family details" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Relationship" %}</th><th>{% trans "Name" %}</th><th>{% trans "Mobile / WhatsApp" %}</th><th>{% trans "Occupation" %}</th><th>{% trans "Organisation" %}</th></tr></thead>
   <tbody>{% for l in links %}<tr>
@@ -32,15 +44,35 @@
   </tr>{% empty %}<tr><td colspan="5"><span class="badge attention">{% trans "No parent contact recorded" %}</span></td></tr>{% endfor %}</tbody>
 </table></div>
 
-<h2>{% trans "Classes by session" %}</h2>
+{% if siblings %}
+<h2 id="siblings">{% trans "Brothers and sisters" %}</h2>
+<p class="muted">{% trans "Same father's CNIC in this branch (the sibling fee uses the same rule)." %}</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Admission no." %}</th><th>{% trans "Name" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Status" %}</th></tr></thead>
+  <tbody>{% for s in siblings %}<tr><td class="num" style="text-align:start">{{ s.admission_no }}</td><td><a href="{% url 'people:student_detail' s.pk %}">{{ s.full_name }}</a></td>
+    {% for e in s.current_enrolments %}<td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td>{% empty %}<td colspan="2">—</td>{% endfor %}
+    <td>{{ s.get_status_display }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+
+<h2 id="classes">{% trans "Classes by session" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Roll no." %}</th></tr></thead>
   <tbody>{% for e in enrolments %}<tr><td>{{ e.session }}</td><td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td><td>{{ e.section.campus.name|default:"—" }}</td><td class="num">{{ e.roll_no|default:"—" }}</td></tr>
   {% empty %}<tr><td colspan="5">{% trans "Not placed in any class yet." %}</td></tr>{% endfor %}</tbody>
 </table></div>
 
+{% if certificates %}
+<h2 id="certificates">{% trans "Certificates" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Certificate" %}</th><th class="num">{% trans "No." %}</th><th>{% trans "Date" %}</th><th>{% trans "Issued by" %}</th><th></th></tr></thead>
+  <tbody>{% for c in certificates %}<tr><td>{{ c.get_kind_display }}</td><td class="num">{{ c.number }}</td><td>{{ c.issued_on|date:"d M Y" }}</td>
+    <td>{{ c.issued_by.get_full_name|default:c.issued_by.username }}</td><td><a class="button quiet sm" href="{% url 'people:certificate_pdf' student.pk c.pk %}">{% trans "Print" %}</a></td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+
 {% if history %}
-<h2>{% trans "Record history" %}</h2>
+<h2 id="history">{% trans "Record history" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "When" %}</th><th>{% trans "Who" %}</th><th>{% trans "What" %}</th></tr></thead>
   <tbody>{% for h in history %}<tr><td>{{ h.occurred_at|date:"d M Y, H:i" }}</td><td>{{ h.actor|default:"—" }}</td>

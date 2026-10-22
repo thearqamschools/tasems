@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Promotion to next session" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Promotion to next session" %}</h1>
+{% if not upcoming %}
+<div class="callout attention">{% icon "triangle-alert" %}<div>{% blocktrans %}The next academic session is not set up yet. Head office adds it in Setup → Academic sessions; then come back here.{% endblocktrans %}</div></div>
+{% else %}
+<p class="lede">{% blocktrans with a=current b=upcoming %}From {{ a }} to {{ b }}. Nothing changes in {{ a }}: each class gets its place in {{ b }}, which becomes current when head office switches the session.{% endblocktrans %}</p>
+<div class="card">
+  <h2 style="margin-top:0">{% trans "Step 1 · Sections for next session" %}</h2>
+  <p>{% blocktrans count n=upcoming_sections %}{{ n }} section is ready in the next session.{% plural %}{{ n }} sections are ready in the next session.{% endblocktrans %}</p>
+  {% if can_copy %}<form method="post" class="actions" data-confirm="{% trans 'Every section of this year is made in the next session (class teachers are chosen again later). Sections already there are not changed.' %}" data-confirm-button="{% trans 'Copy sections' %}">{% csrf_token %}
+    <input type="hidden" name="action" value="copy"><button class="button secondary" type="submit">{% trans "Copy this year's sections to next session" %}</button></form>{% endif %}
+</div>
+<h2>{% trans "Step 2 · Class by class" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th class="num">{% trans "Students" %}</th><th class="num">{% trans "Done" %}</th><th></th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td>{{ r.section.class_level }}</td><td>{{ r.section.name }}</td><td class="num">{{ r.students }}</td>
+    <td class="num">{% if r.students and r.done >= r.students %}<span class="badge ok">{% trans "Done" %}</span>{% else %}{{ r.done }}{% endif %}</td>
+    <td>{% if r.students %}<a class="button quiet sm" href="{% url 'people:promotion_section' r.section.id %}">{% trans "Open" %}</a>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endblock %}

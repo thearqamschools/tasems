@@ -1,0 +1,59 @@
+{% load i18n tasems_tags %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>{{ c.get_kind_display }} {{ c.number }}</title>
+<style>
+  @font-face { font-family: "CertSerif"; src: url("{{ font_base }}NotoSerif-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "CertSerif"; src: url("{{ font_base }}NotoSerif-Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "CertUrdu"; src: url("{{ font_base }}NotoNastaliqUrdu-Regular.ttf"); }
+  @page { size: A4; margin: 14mm; }
+  body { font-family: "CertSerif", serif; color: #14182b; font-size: 11.5pt; line-height: 1.6; margin: 0; }
+  .frame { border: 2.5pt double #3e4095; padding: 12mm 14mm; height: 268mm; box-sizing: border-box; position: relative; }
+  .head { text-align: center; }
+  .head img { width: 26mm; height: 26mm; }
+  .school { font-size: 22pt; font-weight: 700; color: #3e4095; margin: 2mm 0 0; letter-spacing: .02em; }
+  .school-ur { font-family: "CertUrdu"; color: #ed3237; font-size: 13pt; margin: 0; line-height: 1.8; }
+  .branch { margin: 0; color: #3b4157; font-size: 10.5pt; }
+  .rule { border: 0; border-top: 1.2pt solid #ed3237; margin: 5mm 0; }
+  h1 { text-align: center; font-size: 17pt; color: #3e4095; margin: 2mm 0 1mm; text-transform: uppercase; letter-spacing: .08em; }
+  .meta { display: flex; justify-content: space-between; font-size: 10.5pt; margin: 4mm 0 8mm; }
+  .body p { text-align: justify; margin: 0 0 4mm; }
+  .facts { width: 100%; border-collapse: collapse; margin: 4mm 0 6mm; font-size: 11pt; }
+  .facts th { text-align: left; width: 45mm; font-weight: 400; color: #3b4157; padding: 1.5mm 0; vertical-align: top; }
+  .facts td { font-weight: 700; padding: 1.5mm 0; border-bottom: .5pt dotted #b8bdd0; }
+  .sign { position: absolute; bottom: 22mm; left: 14mm; right: 14mm; display: flex; justify-content: space-between; }
+  .sign div { width: 60mm; text-align: center; border-top: .8pt solid #14182b; padding-top: 1.5mm; font-size: 10pt; }
+  .foot { position: absolute; bottom: 7mm; left: 0; right: 0; text-align: center; font-size: 8pt; color: #5a6078; }
+</style></head>
+<body><div class="frame">
+  <div class="head">
+    <img src="{% official_logo layout media_base font_base %}" alt="">
+    <p class="school">The Arqam Schools</p>
+    <p class="school-ur">دی ارقم سکولز</p>
+    <p class="branch">{{ branch.name }}{% if branch.address %} · {{ branch.address }}{% endif %}{% if branch.phone %} · {{ branch.phone }}{% endif %}</p>
+  </div>
+  <hr class="rule">
+  <h1>{{ c.get_kind_display }}</h1>
+  <div class="meta"><span>No. <strong>{{ c.number }}</strong></span><span>Date: <strong>{{ c.issued_on|date:"d F Y" }}</strong></span></div>
+  <table class="facts">
+    <tr><th>Name</th><td>{{ s.full_name }}</td></tr>
+    <tr><th>{% if female %}Daughter{% else %}Son{% endif %} of</th><td>{{ s.father_name|default:"—" }}</td></tr>
+    <tr><th>Admission No.</th><td>{{ s.admission_no }}</td></tr>
+    <tr><th>Date of birth</th><td>{{ s.date_of_birth|date:"d F Y"|default:"—" }}</td></tr>
+    <tr><th>Date of admission</th><td>{{ s.admission_date|date:"d F Y" }}</td></tr>
+    {% if c.kind == "leaving" %}<tr><th>Date of leaving</th><td>{{ c.left_on|date:"d F Y"|default:"—" }}</td></tr>
+    <tr><th>Class at leaving</th><td>{{ c.last_class|default:"—" }}</td></tr>
+    {% if c.reason %}<tr><th>Reason for leaving</th><td>{{ c.reason }}</td></tr>{% endif %}
+    <tr><th>Fee dues</th><td>{% if c.dues_cleared %}Cleared{% else %}Not cleared{% endif %}</td></tr>{% endif %}
+    <tr><th>Conduct</th><td>{{ c.get_conduct_display }}</td></tr>
+  </table>
+  <div class="body">
+    {% if c.kind == "leaving" %}
+    <p>Certified that {{ s.full_name }}, {% if female %}daughter{% else %}son{% endif %} of {{ s.father_name|default:"—" }}, was a student of this school from {{ s.admission_date|date:"d F Y" }} to {{ c.left_on|date:"d F Y" }}. According to the school record the above particulars are correct.</p>
+    {% else %}
+    <p>Certified that {{ s.full_name }}, {% if female %}daughter{% else %}son{% endif %} of {{ s.father_name|default:"—" }}, {% if s.status == "active" %}is a student of this school, studying in {{ c.last_class|default:"—" }}{% else %}was a student of this school{% endif %}. To the best of our knowledge {% if female %}her{% else %}his{% endif %} conduct and character remained {{ c.get_conduct_display|lower }}.</p>
+    <p>We wish {% if female %}her{% else %}him{% endif %} success in life.</p>
+    {% endif %}
+    {% if c.remarks %}<p>Remarks: {{ c.remarks }}</p>{% endif %}
+  </div>
+  <div class="sign"><div>Principal</div><div>School stamp</div></div>
+  <p class="foot">The Arqam Schools · www.thearqam.com · Issued through TASEMS</p>
+</div></body></html>

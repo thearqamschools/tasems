@@ -7,6 +7,7 @@
     {% with field=form.current_address %}{% include "includes_field.html" %}{% endwith %}
     {% with field=form.permanent_address %}{% include "includes_field.html" %}{% endwith %}
   </div>
+  <div class="form-grid">{% with field=form.photo %}{% include "includes_field.html" %}{% endwith %}</div>
   {% with field=form.is_hifz %}<div class="field"><label>{{ field }} {{ field.label }}</label></div>{% endwith %}
   </fieldset>
   <fieldset><legend>{% trans "Class" %}{% if session %} · {{ session }}{% endif %}</legend><div class="form-grid">

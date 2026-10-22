@@ -1,21 +1,26 @@
+import io
 import json
 
 from django import forms
+from django.core.files.base import ContentFile
 from django.db import transaction
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from PIL import Image, ImageOps
 
 from apps.academics.models import ClassLevel, Section
 from apps.core.phone import format_cnic, normalize_cnic, normalize_mobile
 from apps.fees.models import DiscountType
 from apps.fees.services import discount_at_admission
 
-from .models import Student
+from .models import Certificate, Student
 from .services import family_of, next_admission_no, save_student
 
 DATE = forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")
 
 
 # Classes that choose Biology or Computer.
+PHOTO_MAX_BYTES = 5 * 1024 * 1024
 SUBJECT_GROUP_CLASSES = {"pre-9", "class-9", "class-10"}
 # Usual section names of every class (Setup → Classes and sections can use others).
 SECTION_NAMES = ["Rose", "Jasmine", "Daisy", "Pansy", "Tulip"]
@@ -85,6 +90,7 @@ class StudentForm(forms.ModelForm):
             "subject_group",
             "reference",
             "notes",
+            "photo",
         ]
         labels = {
             "admission_no": _("Admission number"),
@@ -101,6 +107,7 @@ class StudentForm(forms.ModelForm):
             "reference": _("Reference"),
             "notes": _("Notes"),
             "status": _("Status"),
+            "photo": _("Photo"),
         }
         widgets = {
             "date_of_birth": DATE,
@@ -114,6 +121,7 @@ class StudentForm(forms.ModelForm):
             "current_address": forms.Textarea(attrs={"rows": 2}),
             "permanent_address": forms.Textarea(attrs={"rows": 2}),
             "notes": forms.Textarea(attrs={"rows": 3}),
+            "photo": forms.ClearableFileInput(attrs={"accept": "image/*", "capture": "user"}),
         }
 
     def __init__(self, *args, branch, session, user=None, **kwargs):
@@ -174,6 +182,23 @@ class StudentForm(forms.ModelForm):
                     self.initial.setdefault(f"{role}_{field}", values[field])
             if not self.initial.get("father_name"):
                 self.initial["father_name"] = self.instance.father_name
+
+    def clean_photo(self):
+        """A passport-size photo: any common image, made a small JPEG (for the profile and ID card)."""
+        photo = self.cleaned_data.get("photo")
+        if not photo or photo == self.instance.photo or getattr(photo, "size", None) is None:
+            return photo
+        if photo.size > PHOTO_MAX_BYTES:
+            raise forms.ValidationError(_("The photo is larger than 5 MB."))
+        try:
+            image = Image.open(photo)
+            image = ImageOps.exif_transpose(image).convert("RGB")
+        except (OSError, ValueError) as error:
+            raise forms.ValidationError(_("This file is not a photo (use JPG or PNG).")) from error
+        image.thumbnail((600, 600))
+        out = io.BytesIO()
+        image.save(out, "JPEG", quality=85)
+        return ContentFile(out.getvalue(), name="photo.jpg")
 
     def clean_admission_no(self):
         value = self.cleaned_data["admission_no"].strip()
@@ -269,3 +294,26 @@ class StudentForm(forms.ModelForm):
         if data.get("discount_type"):
             discount_at_admission(student, data["discount_type"], self.user)
         return student
+
+
+class LeaveForm(forms.Form):
+    status = forms.ChoiceField(
+        choices=[(v, label) for v, label in Student.Status.choices if v != Student.Status.ACTIVE],
+        label=_("Leaving as"),
+    )
+    left_on = forms.DateField(label=_("Date of leaving"), widget=DATE)
+    reason = forms.CharField(max_length=200, required=False, label=_("Reason"))
+    certificate = forms.BooleanField(required=False, initial=True, label=_("Issue a school leaving certificate"))
+    conduct = forms.ChoiceField(choices=Certificate.Conduct.choices, initial="good", label=_("Conduct"))
+    dues_cleared = forms.BooleanField(required=False, label=_("Fee dues are cleared"))
+
+    def clean_left_on(self):
+        value = self.cleaned_data["left_on"]
+        if value > timezone.localdate():
+            raise forms.ValidationError(_("The date is in the future."))
+        return value
+
+
+class CertificateForm(forms.Form):
+    conduct = forms.ChoiceField(choices=Certificate.Conduct.choices, initial="good", label=_("Conduct"))
+    remarks = forms.CharField(max_length=200, required=False, label=_("Remarks (optional)"))

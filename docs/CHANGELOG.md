@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.18.0 — 2026-10-22 — M4: student lifecycle
+
+Added
+- Student photo (resized, private) on the profile; profile sections (details, family, brothers and sisters, classes, certificates, history); brothers and sisters by father's CNIC.
+- Leave school: withdrawn / left, transferred out or graduated, with fees owed shown first; school leaving certificate and character certificate as numbered A4 PDFs with the official logo.
+- Promotion to the next session: copy this year's sections, then class by class promote, keep in the same class, graduate (Class 10) or leave out; nothing changes in the current year.
+- Student ID cards (credit-card size, 10 per A4 sheet) for one student or a class/section, with photo and admission-number barcode.
+- Defaulters by family (one row per father, children and total owed).
+
+Changed
+- The demo server starts even when demo data cannot be loaded (e.g. other students were entered).
+
+Not deployed.
+
 ## 0.17.0 — 2026-10-19 — Project lead's changes, batch 4: royalty and expenses
 
 Added

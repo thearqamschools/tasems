@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Leave school" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'people:student_detail' student.pk %}">‹ {{ student.full_name }}</a></p>
+<h1>{% trans "Leave school" %}</h1>
+<p class="lede">{{ student.full_name }} · {% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span></p>
+{% if owed > 0 %}<div class="callout attention">{% icon "triangle-alert" %}<div>{% blocktrans with a=owed|rupees %}Rs {{ a }} is still owed in fees. Collect it first, or untick "Fee dues are cleared" so the certificate says so.{% endblocktrans %}</div></div>
+{% else %}<div class="callout">{% icon "circle-check" %}<div>{% trans "No fees are owed." %}</div></div>{% endif %}
+<form method="post" class="card" data-confirm="{% trans 'The student will no longer appear in registers and new fee vouchers. The record and history stay.' %}" data-confirm-button="{% trans 'Leave school' %}">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% if field.name == "certificate" or field.name == "dues_cleared" %}<div class="field"><label>{{ field }} {{ field.label }}</label></div>{% else %}{% include "includes_field.html" %}{% endif %}{% endfor %}</div>
+  <div class="actions"><button class="button danger" type="submit">{% trans "Leave school" %}</button>
+  <a class="button quiet" href="{% url 'people:student_detail' student.pk %}">{% trans "Cancel" %}</a></div>
+</form>
+{% endblock %}

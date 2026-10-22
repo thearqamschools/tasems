@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Promotion" %} · {{ section.class_level }} {{ section.name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'people:promotion' %}">‹ {% trans "Promotion to next session" %}</a></p>
+<h1>{{ section.class_level }} · {{ section.name }}</h1>
+<p class="lede">{% if next_level %}{% blocktrans with n=next_level u=upcoming %}Promoted students go to {{ n }} in {{ u }}.{% endblocktrans %}{% else %}{% blocktrans with u=upcoming %}This class has no next class: students graduate or stay.{% endblocktrans %}{% endif %}</p>
+{% if missing %}<div class="callout attention">{% icon "triangle-alert" %}<div>{% trans "The next session has no matching section yet. Copy this year's sections first (previous page), or choose a section for each student." %}</div></div>{% endif %}
+<form method="post">{% csrf_token %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Decision" %}</th><th>{% trans "Next session" %}</th><th></th></tr></thead>
+  <tbody>{% for r in rows %}{% with sid=r.enrolment.student_id %}<tr>
+    <td><a href="{% url 'people:student_detail' sid %}">{{ r.enrolment.student.full_name }}</a> <span class="muted small num">{{ r.enrolment.student.admission_no }}</span></td>
+    <td><select name="action-{{ sid }}" aria-label="{% trans 'Decision' %}">{% for value, label in actions %}<option value="{{ value }}" {% if value == r.action %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></td>
+    <td><select name="to-{{ sid }}" aria-label="{% trans 'Next session' %}"><option value="">{% trans "Usual section" %}</option>
+      {% for c in choices %}<option value="{{ c.id }}" {% if r.target and c.id == r.target.id %}selected{% endif %}>{{ c.class_level }} · {{ c.name }}</option>{% endfor %}</select></td>
+    <td>{% if r.done %}<span class="badge ok">{% trans "Placed" %}</span>{% endif %}</td>
+  </tr>{% endwith %}{% endfor %}</tbody>
+</table></div>
+<div class="actions"><button class="button" type="submit">{% trans "Save decisions" %}</button></div>
+</form>
+{% endblock %}

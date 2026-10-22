@@ -28,6 +28,7 @@
   </div>
   <div class="actions" style="margin:0">
     <button class="button" type="submit">{% trans "Show students" %}</button>
+    {% if level_id or section_name %}<a class="button quiet" href="{% url 'people:id_cards' %}?class={{ level_id }}&amp;section={{ section_name|urlencode }}">{% trans "Print ID cards" %}</a>{% endif %}
     {% if perms.people.change_guardian %}<a class="button quiet" href="{% url 'parents:codes' %}">{% trans "Parent access codes" %}</a>{% endif %}
   </div>
 </form>

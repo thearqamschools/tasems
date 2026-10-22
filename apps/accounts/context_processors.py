@@ -40,6 +40,7 @@ def _menu(user, branch):
             *attendance_items,
             perm("people.add_student")
             and (reverse("people:student_import"), _("Import from Excel"), "file-spreadsheet"),
+            perm("people.add_enrolment") and (reverse("people:promotion"), _("Promotion"), "graduation-cap"),
         ],
     )
     group(

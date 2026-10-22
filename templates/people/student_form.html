@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{% if student %}{% blocktrans with n=student.full_name %}Edit {{ n }}{% endblocktrans %}{% else %}{% trans "Add a student" %}{% endif %}</h1>
 <p class="lede">{% trans "Fields marked * are required." %}</p>
-<form method="post" class="card" novalidate>{% csrf_token %}
+<form method="post" class="card" novalidate enctype="multipart/form-data">{% csrf_token %}
 {% include "people/_student_fields.html" %}
   <div class="actions">
     <button class="button" type="submit">{% trans "Save student" %}</button>

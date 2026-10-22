@@ -5,6 +5,8 @@ the student in a section, so history is kept year to year. Students have no
 logins; guardians (parents) will get portal logins in a later phase.
 """
 
+import secrets
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -35,6 +37,11 @@ class Guardian(BranchOwnedModel):
 
     def __str__(self):
         return f"{self.full_name} ({self.phone})"
+
+
+def photo_path(student, filename):
+    """Private folder and a random name; shown only through TASEMS to staff of the branch."""
+    return f"private/student-photos/{student.branch_id}/{secrets.token_hex(16)}.jpg"
 
 
 @audited
@@ -72,6 +79,7 @@ class Student(BranchOwnedModel):
     )
     reference = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
+    photo = models.ImageField(upload_to=photo_path, blank=True)
     admission_date = models.DateField()
     is_hifz = models.BooleanField(_("Hifz student"), default=False)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE, db_index=True)
@@ -91,6 +99,12 @@ class Student(BranchOwnedModel):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
+
+    def siblings(self):
+        """Brothers and sisters in this branch: the same father's CNIC (the rule used for the sibling fee)."""
+        if not self.father_cnic:
+            return Student.objects.none()
+        return Student.objects.filter(branch_id=self.branch_id, father_cnic=self.father_cnic).exclude(pk=self.pk)
 
 
 class StudentLinkQuerySet(BranchScopedQuerySet):
@@ -177,3 +191,37 @@ class Enrolment(BranchOwnedModel):
                 }
         if errors:
             raise ValidationError(errors)
+
+
+@audited
+class Certificate(BranchOwnedModel):
+    """A leaving or character certificate. Numbered per branch; reprints show the same number."""
+
+    class Kind(models.TextChoices):
+        LEAVING = "leaving", _("School leaving certificate")
+        CHARACTER = "character", _("Character certificate")
+
+    class Conduct(models.TextChoices):
+        EXCELLENT = "excellent", _("Excellent")
+        VERY_GOOD = "very_good", _("Very good")
+        GOOD = "good", _("Good")
+        SATISFACTORY = "satisfactory", _("Satisfactory")
+
+    student = models.ForeignKey(Student, on_delete=models.PROTECT, related_name="certificates")
+    kind = models.CharField(max_length=10, choices=Kind.choices)
+    number = models.PositiveIntegerField()
+    issued_on = models.DateField()
+    conduct = models.CharField(max_length=15, choices=Conduct.choices, default=Conduct.GOOD)
+    last_class = models.CharField(max_length=80, blank=True, help_text=_("Class and section at the time of leaving"))
+    left_on = models.DateField(null=True, blank=True)
+    reason = models.CharField(max_length=200, blank=True)
+    dues_cleared = models.BooleanField(default=True)
+    remarks = models.CharField(max_length=200, blank=True)
+    issued_by = models.ForeignKey("accounts.User", on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["-issued_on", "-number"]
+        constraints = [models.UniqueConstraint(fields=["branch", "kind", "number"], name="unique_certificate_number")]
+
+    def __str__(self):
+        return f"{self.get_kind_display()} {self.number} — {self.student}"

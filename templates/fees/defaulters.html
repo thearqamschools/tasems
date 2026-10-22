@@ -7,11 +7,22 @@
   <label for="months">{% trans "Unpaid for at least" %}</label>
   <select id="months" name="months" style="width:auto">{% for n in "123456" %}<option value="{{ n }}" {% if n|add:0 == min_months %}selected{% endif %}>{% blocktrans count m=n|add:0 %}{{ m }} month{% plural %}{{ m }} months{% endblocktrans %}</option>{% endfor %}</select>
   <select name="section" style="width:auto"><option value="">{% trans "All classes" %}</option>{% for s in sections %}<option value="{{ s.id }}" {% if section_filter == s.id|stringformat:"d" %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select name="by" style="width:auto" aria-label="{% trans 'List' %}"><option value="">{% trans "Each student" %}</option><option value="family" {% if by_family %}selected{% endif %}>{% trans "By family" %}</option></select>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
   <button class="button quiet" type="button" onclick="window.print()">{% trans "Print" %}</button>
 </form>
 <div class="figures"><div class="figure attention"><div class="value">{{ total|rupees }}</div><div class="label">{% blocktrans count n=rows|length %}Owed by {{ n }} student (Rs){% plural %}Owed by {{ n }} students (Rs){% endblocktrans %}</div></div></div>
-{% if rows %}
+{% if by_family and families %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Father" %}</th><th>{% trans "Parent mobile" %}</th><th>{% trans "Children" %}</th><th class="num">{% trans "Owed (Rs)" %}</th></tr></thead>
+  <tbody>{% for f in families %}<tr>
+    <td>{{ f.father|default:"—" }}</td>
+    <td>{% if f.phone %}<a href="tel:{{ f.phone }}" class="num">{{ f.phone }}</a>{% else %}—{% endif %}</td>
+    <td>{% for r in f.children %}<a href="{% url 'fees:student' r.student.id %}">{{ r.student.full_name }}</a> <span class="muted small">{{ r.section.class_level|default:"" }} {{ r.section.name|default:"" }} · {{ r.due|rupees }}</span>{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+    <td class="num"><strong>{{ f.due|rupees }}</strong></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% elif rows %}
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Parent mobile" %}</th><th class="num">{% trans "Months unpaid" %}</th><th>{% trans "Since" %}</th><th class="num">{% trans "Owed (Rs)" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr>

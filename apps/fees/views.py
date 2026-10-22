@@ -677,10 +677,26 @@ def defaulters(request):
             continue
         out.append({**r, "student": students[r["student_id"]], "section": sec, "phone": phones.get(r["student_id"])})
     out.sort(key=lambda r: (-r["months"], -r["due"]))
+    by_family = request.GET.get("by") == "family"
+    families = []
+    if by_family:
+        # One row per family: brothers and sisters share the father's CNIC (students without one stand alone).
+        grouped = {}
+        for r in out:
+            key = r["student"].father_cnic or f"student-{r['student'].id}"
+            family = grouped.setdefault(
+                key, {"father": r["student"].father_name, "phone": r["phone"], "children": [], "due": S.ZERO}
+            )
+            family["children"].append(r)
+            family["due"] += r["due"]
+            family["phone"] = family["phone"] or r["phone"]
+        families = sorted(grouped.values(), key=lambda f: -f["due"])
     return render(
         request,
         "fees/defaulters.html",
         {
+            "by_family": by_family,
+            "families": families,
             "rows": out,
             "total": sum((r["due"] for r in out), S.ZERO),
             "min_months": min_months,

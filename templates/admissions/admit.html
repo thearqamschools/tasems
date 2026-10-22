@@ -4,7 +4,7 @@
 <h1>{% trans "Make student record" %}</h1>
 <p class="lede">{% blocktrans with c=inquiry.child_name l=inquiry.class_level.name %}{{ c }} — {{ l }}. Check the details, give an admission number and choose the section. After saving you can make the admission fee voucher.{% endblocktrans %}</p>
 {% if not session %}<ul class="messages"><li class="warning">{% trans "No current academic session is set, so the class cannot be chosen yet." %}</li></ul>{% endif %}
-<form method="post" class="card" novalidate>{% csrf_token %}
+<form method="post" class="card" novalidate enctype="multipart/form-data">{% csrf_token %}
 {% include "people/_student_fields.html" %}
   <div class="actions"><button class="button" type="submit">{% trans "Save student" %}</button>
   <a class="button quiet" href="{% url 'admissions:detail' inquiry.id %}">{% trans "Back" %}</a></div>

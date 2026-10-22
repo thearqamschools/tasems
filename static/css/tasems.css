@@ -600,3 +600,10 @@ section > h2:first-child { margin-block-start: 0; }
 /* Student form: one heading per family member */
 .family-title { font-size: var(--step-0); margin: var(--space-4) 0 var(--space-2); color: var(--ink-soft); }
 .family-title:first-of-type { margin-top: 0; }
+
+/* Student profile: photo beside the name */
+.profile-head { display: flex; gap: var(--space-4); align-items: center; }
+.profile-photo { inline-size: 96px; block-size: 120px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--paper); flex: none; }
+.profile-photo.empty { display: grid; place-items: center; color: var(--ink-soft); }
+.profile-photo.empty svg { inline-size: 40px; block-size: 40px; }
+
