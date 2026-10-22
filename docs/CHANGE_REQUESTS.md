@@ -126,3 +126,11 @@ heading "Family details" · no second father mobile · item 5 order used for bot
 | 2 — Inquiries, attendance, staff | 21–26, 34–38 | Done 19 Oct 2026 (designation → login permissions: table to approve) |
 | 3 — Fees | 20, 27–33, 43–46 | Done 19 Oct 2026 |
 | 4 — Royalty, expenses | 39–42 | Done 19 Oct 2026 (expenses = first part of M9 Accounting; cash/bank book and P&L follow) |
+
+# Round 2 (from 22 Oct 2026) — collect only, do NOT implement until the lead says so
+
+## Vouchers — Generate vouchers
+R2-1. "Generate vouchers" option inside Vouchers. Screen: Month (e.g. October) → Class (All classes, each class, then Hifz Boys and Hifz Girls) → Section (All sections or one section).
+R2-2. Below that, the voucher contents (fee heads) are listed with tick boxes, to choose what to add this time: e.g. summer vacation fee, AC charges, annual charges, and every other fee head.
+R2-3. Generating gives each voucher a unique Voucher ID that never repeats. Admission numbers are also unique and cannot be created twice.
+   (Note for processing: "Make vouchers" exists under Finance (needs voucher permission; not shown to demo-network) with month range, due date and a multi-select of sections; voucher numbers are already unique across the network and admission numbers unique per branch. Request = inside Vouchers, Class → Section dropdowns with Hifz Boys/Girls, and fee-head tick boxes.)
