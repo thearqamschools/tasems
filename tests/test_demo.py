@@ -22,7 +22,8 @@ def test_demo_data_fills_an_empty_database(monkeypatch, settings):
     monkeypatch.setenv("DEMO_PASSWORD", "Demo-pass-2026!")
     call_command("seed_demo", verbosity=0)
     samanabad = Student.objects.filter(branch__code="fsd-samanabad")
-    assert samanabad.count() == 32 and not Student.objects.exclude(reference="Demo data (fictional)").exists()
+    assert samanabad.count() == 32 + 6  # 6 in the demo Hifz section
+    assert not Student.objects.exclude(reference="Demo data (fictional)").exists()
     assert all(s.admission_no.isdigit() for s in Student.objects.all())  # plain numbers, like the old software
     assert User.objects.get(username="demo-principal").check_password("Demo-pass-2026!")
     assert Diary.objects.filter(status="published").exists() and Mark.objects.exists()

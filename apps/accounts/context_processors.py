@@ -76,6 +76,7 @@ def _menu(user, branch):
             perm("exams.view_mark") and (reverse("exams:index"), _("Exams & Results"), "graduation-cap"),
             perm("academics.view_section") and (reverse("academics:index"), _("Timetable"), "clock"),
             perm("academics.view_section") and (reverse("academics:holidays"), _("Holiday calendar"), "calendar-check"),
+            perm("hifz.view_hifzlesson") and (reverse("hifz:index"), _("Hifz"), "book-open"),
             perm("academics.view_section")
             and user.subject_sections.exists()
             and (reverse("academics:my_timetable"), _("My timetable"), "calendar-check"),

@@ -168,6 +168,30 @@ def build(user, branch, session, today):
             )
         )  # fmt: skip
 
+    if perm("hifz.view_hifzlesson"):
+        from apps.hifz import services as hifz
+        from apps.hifz.models import PARAS, HifzLesson
+
+        students = hifz.hifz_students(branch, session)
+        heard = HifzLesson.objects.filter(branch=branch, date=today, status=HifzLesson.Status.HEARD).count()
+        complete = sum(1 for p in hifz.passed_paras(students).values() if len(p) == PARAS)
+        modules.append(
+            Module(
+                "hifz",
+                _("Hifz-e-Quran"),
+                "book-open",
+                [
+                    (students.count(), _("Hifz students"), "", False),
+                    (heard, _("Sabaq heard today"), "", False),
+                    (complete, _("Hifz completed (30 paras)"), "ok" if complete else "", False),
+                ],
+                [
+                    Report(_("Hifz sheet of the day"), _("Each Hifz section: recorded or not, sabaq heard."), reverse("hifz:index")),
+                    Report(_("Hifz progress"), _("Paras memorised, current para, days heard, not ready and mistakes for any month."), reverse("hifz:report")),
+                ],
+            )
+        )  # fmt: skip
+
     if perm("academics.view_section"):
         modules.append(
             Module(

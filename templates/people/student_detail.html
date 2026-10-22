@@ -14,6 +14,7 @@
 </nav>
 <div class="actions">{% if can_edit %}<a class="button" href="{% url 'people:student_edit' student.pk %}">{% trans "Edit student" %}</a>{% endif %}
 {% if perms.fees.view_voucher %}<a class="button quiet" href="{% url 'fees:student' student.pk %}">{% trans "Fee account" %}</a>{% endif %}
+{% if hifz %}<a class="button quiet" href="{% url 'hifz:student' student.pk %}">{% trans "Hifz record" %}</a>{% endif %}
 <a class="button quiet" href="{% url 'people:id_cards' %}?student={{ student.pk }}">{% trans "ID card" %}</a>
 {% if can_edit %}<a class="button quiet" href="{% url 'people:certificate_new' student.pk %}">{% trans "Character certificate" %}</a>
 {% if student.status == "active" %}<a class="button quiet" href="{% url 'people:student_leave' student.pk %}">{% trans "Leave school" %}</a>{% endif %}{% endif %}

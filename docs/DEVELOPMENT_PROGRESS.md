@@ -52,7 +52,8 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 | M9 | Accounting: other income, cash & bank book with opening balances, profit & loss, branch-wise statement | Done 22 Oct 2026 |
 | M10 | Payroll: fixed salaries, per-day cut for absence and unpaid leave, finalise and lock, payslips, bank sheet | Done 22 Oct 2026 (per-day rate = salary ÷ days in the month, to confirm) |
 | M11 | Shop & stock: items with barcode, stock ledger, sale counter (cash / bank / fee account), receipts, cancel, stock and sales reports | Done 22 Oct 2026 |
-| M12–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M13 AI: cost estimate in AI_COST_ESTIMATE.md, needs approval) |
+| M12 | Hifz-e-Quran: daily Sabaq / Sabqi / Manzil with mistakes, para tests, 30-para progress, section report, parent tab | Done 23 Oct 2026 |
+| M13 | See `INTEGRATION_ROADMAP.md` | Not started (AI: cost estimate in AI_COST_ESTIMATE.md, needs approval) |
 
 ## Known gaps and pending inputs
 

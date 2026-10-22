@@ -289,8 +289,15 @@ INVENTORY_VIEW = ["inventory.view_item", "inventory.view_stockmove", "inventory.
 INVENTORY_WORK = INVENTORY_VIEW + ["inventory.add_sale", "inventory.add_saleline", "inventory.add_stockmove"]
 INVENTORY_MANAGE = INVENTORY_WORK + ["inventory.add_item", "inventory.change_item", "inventory.change_sale"]
 
+# Hifz (M12): Hifz teachers record their own sections' daily lessons; principals and coordinators record and
+# correct any section and record para tests; supervisors see progress.
+HIFZ_VIEW = ["hifz.view_hifzlesson", "hifz.view_paratest"]
+HIFZ_WRITE = HIFZ_VIEW + ["hifz.add_hifzlesson"]
+HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.add_paratest", "hifz.change_paratest"]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": INVENTORY_VIEW
+    "network_admin": HIFZ_VIEW
+    + INVENTORY_VIEW
     + PAYROLL_VIEW
     + NOTICE_POST
     + TEMPLATE_EDIT
@@ -302,7 +309,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "head_office_admin": INVENTORY_VIEW
+    "head_office_admin": HIFZ_VIEW
+    + INVENTORY_VIEW
     + PAYROLL_VIEW
     + NOTICE_POST
     + ATT_VIEW
@@ -313,7 +321,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "regional_director": INVENTORY_VIEW
+    "regional_director": HIFZ_VIEW
+    + INVENTORY_VIEW
     + PAYROLL_VIEW
     + ATT_VIEW
     + DIARY_VIEW
@@ -323,7 +332,8 @@ EXTRA_PERMISSIONS = {
     + ROYALTY_VIEW
     + HR_VIEW
     + ADM_VIEW,
-    "branch_owner": INVENTORY_VIEW
+    "branch_owner": HIFZ_VIEW
+    + INVENTORY_VIEW
     + PAYROLL_VIEW
     + ATT_VIEW
     + DIARY_VIEW
@@ -333,7 +343,8 @@ EXTRA_PERMISSIONS = {
     + ROYALTY_VIEW
     + HR_VIEW
     + ADM_VIEW,
-    "principal": INVENTORY_MANAGE
+    "principal": HIFZ_MANAGE
+    + INVENTORY_MANAGE
     + PAYROLL_MANAGE
     + NOTICE_POST
     + ATT_MANAGE
@@ -344,7 +355,7 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_MANAGE
     + HR_MANAGE
     + ADM_WORK,
-    "academic_coordinator": ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "academic_coordinator": HIFZ_MANAGE + ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
     "accountant": INVENTORY_WORK
     + PAYROLL_VIEW
     + FEE_COLLECT
@@ -352,7 +363,7 @@ EXTRA_PERMISSIONS = {
     + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
     "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"] + ADM_WORK,
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
-    "hifz_teacher": ATT_MARK + DIARY_WRITE,
+    "hifz_teacher": HIFZ_WRITE + ATT_MARK + DIARY_WRITE,
     "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,
 }
 

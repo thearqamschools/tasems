@@ -152,8 +152,8 @@ Salary structure, allowances/deductions, payslips, bank sheet: **not built; reve
 | Syllabus / lesson-plan tracking | Not built | D |
 
 ## 17. Hifz Management — **D** ✱
-Sabaq, Sabqi, Manzil, mistakes, milestones, parent reports. **Deferred by the project lead (D-050).**
-Only an `is_hifz` flag on students exists.
+Sabaq, Sabqi, Manzil, mistakes, milestones, parent reports. Built in M12 (23 Oct 2026, D-081): daily sheet per
+Hifz section, para tests, 30-para progress, section report, parents' Hifz tab.
 
 ## 18. AI Teacher Assistant — **D** ✱
 Provider chosen (Claude API, D-026). **Deferred (D-027)** until textbook PDFs and API billing are ready. Paid per use.

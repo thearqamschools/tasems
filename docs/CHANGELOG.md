@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.28.0 — 2026-10-23 — M12: Hifz-e-Quran
+
+Added
+- **Hifz** (Academics → Hifz): for each Hifz section, the day's sheet — for every student the Sabaq (para, surah
+  and ayaat, lines, mistakes), Sabqi and Manzil (paras revised, mistakes), a grade and remarks; status Heard /
+  Not ready / Absent. The para continues from the last lesson; students absent or on leave in the attendance
+  register start as absent. Hifz students in regular classes (marked Hifz on their record) are included.
+- **Para tests**: principals and coordinators record a para heard in full (passed / to repeat, mistakes); paras
+  memorised before joining can be entered once. Passed paras fill a 30-para grid; all 30 = Hifz complete.
+- **Hifz record** of each student (also linked from the student's page): paras memorised, current para, days heard,
+  not ready, average mistakes, para tests and the month's lessons, with Excel.
+- **Hifz progress report** by section and month (Excel and Print), and a Hifz section in Reports.
+- **Parents**: a Hifz tab for Hifz children — paras memorised, current para and the last 14 lessons.
+- Who: Hifz teachers (Qari) record their own section for the day; principals and coordinators record or correct
+  any school day and record para tests; branch owners, regional directors and head office view. Saturday counts
+  as a Hifz day, as for attendance. Corrections are recorded in the history.
+- Demo: a fictional Hifz section with a Qari login (demo-qari), six boys and three weeks of lessons.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.27.0 — 2026-10-22 — M11: shop & stock
 
 Added

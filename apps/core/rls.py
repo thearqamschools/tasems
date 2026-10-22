@@ -48,6 +48,8 @@ RLS_TABLES = [
     "inventory_stockmove",
     "inventory_sale",
     "inventory_saleline",
+    "hifz_hifzlesson",
+    "hifz_paratest",
     "hr_employee",
     "hr_leaverequest",
     "hr_punch",

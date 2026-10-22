@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Hifz sheet" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hifz:index' %}?date={{ date|date:'Y-m-d' }}">‹ {% trans "Hifz-e-Quran" %}</a></p>
+<h1>{{ section }}</h1>
+<p class="lede">{{ date|date:"l, d F Y" }} · {% trans "Para continues from the last lesson; students absent on the register start as absent." %}</p>
+{% if already_saved %}<ul class="messages"><li class="warning">{% trans "This sheet was already saved. Changes you save are recorded in the history." %}</li></ul>{% endif %}
+{% if lines %}
+<form method="post" novalidate>{% csrf_token %}
+{% for r, f in lines %}
+<fieldset class="card hifz-line{% if f.errors %} has-error{% endif %}">
+  <legend><span class="num muted">{{ r.enrolment.roll_no|default:"" }}</span> {{ r.enrolment.student.full_name }}</legend>
+  {% if f.errors %}<p class="error">{% for field in f %}{% for e in field.errors %}{{ field.label }}: {{ e }} {% endfor %}{% endfor %}</p>{% endif %}
+  <div class="hifz-grid">
+    <label>{% trans "Status" %}{{ f.status }}</label>
+    <label>{% trans "Para" %}{{ f.sabaq_para }}</label>
+    <label class="wide">{% trans "Sabaq" %}{{ f.sabaq }}</label>
+    <label>{% trans "Lines" %}{{ f.sabaq_lines }}</label>
+    <label>{% trans "Mistakes" %}{{ f.sabaq_mistakes }}</label>
+    <label>{% trans "Sabqi" %}{{ f.sabqi }}</label>
+    <label>{% trans "Mistakes" %}{{ f.sabqi_mistakes }}</label>
+    <label>{% trans "Manzil" %}{{ f.manzil }}</label>
+    <label>{% trans "Mistakes" %}{{ f.manzil_mistakes }}</label>
+    <label>{% trans "Grade" %}{{ f.grade }}</label>
+    <label class="wide">{% trans "Remarks" %}{{ f.remarks }}</label>
+  </div>
+</fieldset>
+{% endfor %}
+<div class="actions sticky-save"><button class="button" type="submit">{% trans "Save Hifz sheet" %}</button></div>
+</form>
+{% else %}<div class="card empty-state">{% icon "users" %}<p>{% trans "No Hifz students are placed in this section for the current session." %}</p></div>{% endif %}
+{% endblock %}

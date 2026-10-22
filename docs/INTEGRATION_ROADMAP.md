@@ -60,7 +60,7 @@ image. Choice of library to be recorded as a decision before Milestone 6.
 | M9 ✅ (done 22 Oct 2026) | Accounting | Expenses, other income, cash/bank book, branch P&L, head-office consolidation | M3 | 10–15 days |
 | M10 ✅ | Payroll (done 22 Oct 2026) | Salary structures, monthly run from staff attendance, payslips, bank sheet | M3 | 8–12 days |
 | M11 ✅ | Inventory (done 22 Oct 2026) | Items, stock, issue, point of sale with barcode scan and receipt, sales linked to vouchers, stock reports | M9 | 7–9 days |
-| M12 ✱ | Hifz | Per D-050 when un-deferred | M4 | 8–10 days |
+| M12 ✅ | Hifz (done 23 Oct 2026) | Daily Sabaq, Sabqi, Manzil with mistakes; para tests; progress; parents' view | M4 | 8–10 days |
 | M13 ✱ | AI | Rules-based at-risk analytics first (free), then Teacher Assistant, Question Paper Generator, AI summaries (Claude API) | Textbook PDFs, API billing | 12–18 days |
 
 \* Rough working days for one developer working with Claude, including tests and docs; excludes school-side

@@ -1,0 +1,51 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Hifz record" %} — {{ student.full_name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hifz:report' %}{% if enrolment %}?section={{ enrolment.section_id }}{% endif %}">‹ {% trans "Hifz progress" %}</a></p>
+<div class="page-header">
+  <div><h1>{{ student.full_name }}</h1><p class="lede">{% if enrolment %}{{ enrolment.section }} · {% endif %}{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span></p></div>
+  <div class="actions"><a class="button quiet" href="{% url 'people:student_detail' student.id %}">{% trans "Student record" %}</a></div>
+</div>
+<div class="figures">
+  <div class="figure{% if summary.complete %} ok{% endif %}"><div class="value">{{ summary.paras }} / 30</div><div class="label">{% trans "Paras memorised" %}</div></div>
+  <div class="figure"><div class="value">{{ summary.current|default:"—" }}</div><div class="label">{% trans "Current para" %}</div></div>
+  <div class="figure"><div class="value">{{ summary.heard }}</div><div class="label">{% trans "Days heard this month" %}</div></div>
+  <div class="figure{% if summary.not_ready %} attention{% endif %}"><div class="value">{{ summary.not_ready }}</div><div class="label">{% trans "Not ready this month" %}</div></div>
+  <div class="figure"><div class="value">{{ summary.mistakes|default_if_none:"—" }}</div><div class="label">{% trans "Average mistakes" %}</div></div>
+</div>
+{% if summary.complete %}<ul class="messages"><li class="success">{% trans "All 30 paras memorised — Hifz complete." %}</li></ul>{% endif %}
+<h2>{% trans "Paras" %}</h2>
+<ol class="para-grid">{% for n, t in grid %}<li class="{% if t %}done{% elif n == summary.current %}current{% endif %}" title="{% if t %}{% trans 'Passed' %} {{ t.tested_on|date:'d M Y' }}{% endif %}"><span class="num">{{ n }}</span>{% if t %}<small>{{ t.tested_on|date:"M y" }}</small>{% endif %}</li>{% endfor %}</ol>
+<p class="small muted"><span class="para-key done"></span> {% trans "Passed" %} · <span class="para-key current"></span> {% trans "Current para" %}</p>
+
+{% if can_test %}<details class="card"{% if form.errors %} open{% endif %}><summary>{% trans "Record a para test" %}</summary>
+<form method="post">{% csrf_token %}{{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save test" %}</button></div>
+</form></details>{% endif %}
+
+{% if tests %}<h2>{% trans "Para tests" %}</h2><div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Date" %}</th><th class="num">{% trans "Para" %}</th><th>{% trans "Result" %}</th><th class="num">{% trans "Mistakes" %}</th><th>{% trans "Remarks" %}</th><th>{% trans "Tested by" %}</th><th></th></tr></thead>
+  <tbody>{% for t in tests %}<tr{% if t.is_cancelled %} class="muted"{% endif %}>
+    <td>{{ t.tested_on|date:"d M Y" }}</td><td class="num">{{ t.para }}</td>
+    <td>{% if t.is_cancelled %}<span class="badge muted">{% trans "Cancelled" %}</span>{% elif t.result == "passed" %}<span class="badge ok">{{ t.get_result_display }}</span>{% else %}<span class="badge attention">{{ t.get_result_display }}</span>{% endif %}{% if t.before_joining %} <span class="small muted">{% trans "before joining" %}</span>{% endif %}</td>
+    <td class="num">{{ t.mistakes }}</td><td>{{ t.remarks|default:"—" }}</td><td>{{ t.tested_by.get_full_name|default:t.tested_by.username }}</td>
+    <td>{% if perms.hifz.change_paratest and not t.is_cancelled %}<form method="post" action="{% url 'hifz:cancel_test' student.id t.id %}" data-confirm="{% trans 'Cancel this para test? It stays in the history.' %}" data-confirm-button="{% trans 'Cancel test' %}">{% csrf_token %}<button class="button quiet sm" type="submit">{% trans "Cancel" %}</button></form>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>{% endif %}
+
+<h2>{% trans "Daily lessons" %}</h2>
+<div class="actions"><a class="button quiet sm" href="?month={{ previous|date:'Y-m' }}">‹</a><strong>{{ month|date:"F Y" }}</strong>{% if next %}<a class="button quiet sm" href="?month={{ next|date:'Y-m' }}">›</a>{% endif %}</div>
+{% if lessons %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Date" %}</th><th>{% trans "Status" %}</th><th class="num">{% trans "Para" %}</th><th>{% trans "Sabaq" %}</th><th class="num">{% trans "Lines" %}</th><th>{% trans "Sabqi" %}</th><th>{% trans "Manzil" %}</th><th class="num">{% trans "Mistakes" %}</th><th>{% trans "Grade" %}</th><th>{% trans "Remarks" %}</th></tr></thead>
+  <tbody>{% for x in lessons %}<tr>
+    <td>{{ x.date|date:"D d M" }}</td>
+    <td>{% if x.status == "heard" %}{{ x.get_status_display }}{% else %}<span class="badge {% if x.status == 'absent' %}muted{% else %}attention{% endif %}">{{ x.get_status_display }}</span>{% endif %}</td>
+    <td class="num">{{ x.sabaq_para|default:"" }}</td><td>{{ x.sabaq }}</td><td class="num">{{ x.sabaq_lines|default:"" }}</td>
+    <td>{{ x.sabqi }}</td><td>{{ x.manzil }}</td>
+    <td class="num">{% if x.status == "heard" %}<span title="{% trans 'Sabaq' %} {{ x.sabaq_mistakes }} · {% trans 'Sabqi' %} {{ x.sabqi_mistakes }} · {% trans 'Manzil' %} {{ x.manzil_mistakes }}">{{ x.mistakes }}</span>{% endif %}</td>
+    <td>{{ x.get_grade_display }}</td><td>{{ x.remarks }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "book-open" %}<p>{% trans "No lessons recorded this month." %}</p></div>{% endif %}
+{% endblock %}

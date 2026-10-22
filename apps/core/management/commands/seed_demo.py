@@ -122,6 +122,7 @@ class Command(BaseCommand):
         self.royalty_and_expenses()
         self.demo_salaries()
         self.demo_stock()
+        self.demo_hifz(password)
 
     def demo_salaries(self):
         """Fictional salaries for the demo staff (added once), so the Payroll page has something to show."""
@@ -156,6 +157,66 @@ class Command(BaseCommand):
             )  # fmt: skip
             if qty:
                 stock.move(item, "received", qty, today, user, note="Demo opening stock")
+
+    def demo_hifz(self, password):
+        """A fictional Hifz section with a Qari login (demo-qari), six boys, their lessons for the last three
+        weeks and some para tests (added once)."""
+        from apps.attendance.services import is_school_day
+        from apps.hifz import services as hifz
+        from apps.hifz.models import HifzLesson
+
+        branch = Branch.objects.get(code="fsd-samanabad")
+        session = AcademicSession.objects.filter(is_current=True).first()
+        principal = User.objects.filter(username="demo-principal").first()
+        level = ClassLevel.objects.get(code="hifz")
+        if session is None or principal is None or Section.objects.filter(branch=branch, class_level=level).exists():
+            return
+        qari = User.objects.filter(username="demo-qari").first()
+        if qari is None:
+            qari = User.objects.create_user(
+                username="demo-qari", password=password, first_name="Demo", last_name="Qari"
+            )
+            RoleAssignment.objects.create(
+                user=qari, role=Role.objects.get(code="hifz_teacher"), scope=Scope.BRANCH, branch=branch
+            )
+        sec = Section.objects.create(
+            branch=branch, session=session, class_level=level, name="Boys", gender_group="boys", class_teacher=qari
+        )
+        rng = random.Random(2028)
+        today = timezone.localdate()
+        kids = []
+        for i in range(6):
+            s = Student.objects.create(
+                branch=branch, admission_no=str(4900 + i), reference=DEMO_MARK, first_name=BOYS[i],
+                last_name=rng.choice(SURNAMES), gender="male", date_of_birth=dt.date(2015, 1 + i, 5),
+                admission_date=dt.date(today.year - 1, 4, 1),
+                father_name=f"{rng.choice(FATHERS)} {rng.choice(SURNAMES)}",
+                is_hifz=True,
+            )  # fmt: skip
+            Enrolment.objects.create(branch=branch, student=s, session=session, section=sec, roll_no=i + 1)
+            kids.append(s)
+            done = 2 + i * 3  # paras already memorised
+            for para in range(1, done + 1):
+                hifz.record_test(s, para, today - dt.timedelta(days=20 * (done - para) + 25), "passed",
+                                 rng.randint(0, 3), principal)  # fmt: skip
+        for back in range(21, -1, -1):
+            day = today - dt.timedelta(days=back)
+            if not is_school_day(level, day, branch.id):
+                continue
+            for i, s in enumerate(kids):
+                status = rng.choices(["heard", "not_ready", "absent"], [88, 8, 4])[0]
+                para = 3 + i * 3
+                hifz_values = {
+                    "status": status, "sabaq_para": para, "sabaq": "",
+                    "sabaq_lines": rng.randint(7, 15) if status == "heard" else None,
+                    "sabaq_mistakes": rng.randint(0, 4) if status == "heard" else 0, "sabqi": str(para - 1),
+                    "sabqi_mistakes": rng.randint(0, 3) if status == "heard" else 0, "manzil": f"{max(para - 3, 1)}",
+                    "manzil_mistakes": rng.randint(0, 3) if status == "heard" else 0,
+                    "grade": rng.choice(["excellent", "good", "good", "average"]) if status == "heard" else "",
+                    "remarks": "",
+                }  # fmt: skip
+                if not HifzLesson.objects.filter(student=s, date=day).exists():
+                    hifz.save_sheet(sec, day, {s.id: hifz_values}, qari)
 
     # ------------------------------------------------------------------------------------------
     def build(self, password):

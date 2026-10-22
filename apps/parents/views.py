@@ -209,7 +209,8 @@ def child(request, student_id):
     st = _child(request, student_id)
     session, enrolment = _current(st)
     tab = request.GET.get("tab", "diary")
-    context = {"child": st, "enrolment": enrolment, "tab": tab}
+    is_hifz = st.is_hifz or bool(enrolment and enrolment.section.class_level.code == "hifz")
+    context = {"child": st, "enrolment": enrolment, "tab": tab, "is_hifz": is_hifz}
     today = timezone.localdate()
     if tab == "attendance":
         try:
@@ -241,6 +242,16 @@ def child(request, student_id):
         )
     elif tab == "results":
         context["exams"] = _published_exams(st, session)
+    elif tab == "hifz" and context["is_hifz"]:
+        from apps.hifz import services as hifz
+        from apps.hifz.models import PARAS
+
+        passed = hifz.passed_paras([st]).get(st.id, {})
+        context.update(
+            grid=[(n, passed.get(n)) for n in range(1, PARAS + 1)],
+            summary=hifz.progress([st], today.replace(day=1), today)[0],
+            lessons=st.hifz_lessons.order_by("-date")[:14],
+        )
     else:
         sections = Enrolment.objects.filter(student=st).values_list("section_id", flat=True)
         context["diaries"] = Diary.objects.filter(

@@ -9,6 +9,7 @@
   <a href="?tab=attendance" {% if tab == "attendance" %}aria-current="page"{% endif %}>{% trans "Attendance" %}</a>
   <a href="?tab=fees" {% if tab == "fees" %}aria-current="page"{% endif %}>{% trans "Fees" %}</a>
   <a href="?tab=results" {% if tab == "results" %}aria-current="page"{% endif %}>{% trans "Results" %}</a>
+  {% if is_hifz %}<a href="?tab=hifz" {% if tab == "hifz" %}aria-current="page"{% endif %}>{% trans "Hifz" %}</a>{% endif %}
 </nav>
 
 {% if tab == "attendance" %}
@@ -34,6 +35,19 @@
 <p class="muted">{% trans "You can pay with JazzCash, the Bank Alfalah app, at any Askari Bank branch or at school. The ways to pay are on the back of the voucher." %}</p>
 {% if payments %}<h2>{% trans "Payments received" %}</h2>
 <div class="table-wrap"><table><tbody>{% for p in payments %}<tr><td>{{ p.paid_on|date:"d M Y" }}</td><td>{{ p.get_method_display }}</td><td class="num">Rs {{ p.amount|rupees }}</td><td class="num">{{ p.receipt_no }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+
+{% elif tab == "hifz" and is_hifz %}
+<div class="figures">
+  <div class="figure{% if summary.complete %} ok{% endif %}"><div class="value">{{ summary.paras }} / 30</div><div class="label">{% trans "Paras memorised" %}</div></div>
+  <div class="figure"><div class="value">{{ summary.current|default:"—" }}</div><div class="label">{% trans "Current para" %}</div></div>
+  <div class="figure"><div class="value">{{ summary.heard }}</div><div class="label">{% trans "Days heard this month" %}</div></div>
+</div>
+<ol class="para-grid">{% for n, t in grid %}<li class="{% if t %}done{% elif n == summary.current %}current{% endif %}"><span class="num">{{ n }}</span></li>{% endfor %}</ol>
+<h2>{% trans "Recent lessons" %}</h2>
+<div class="table-wrap"><table><tbody>{% for x in lessons %}<tr><td>{{ x.date|date:"D d M" }}</td>
+  <td>{% if x.status == "heard" %}{% trans "Para" %} {{ x.sabaq_para|default:"" }} {{ x.sabaq }}{% if x.grade %} · {{ x.get_grade_display }}{% endif %}{% else %}<span class="badge{% if x.status == 'not_ready' %} attention{% else %} muted{% endif %}">{{ x.get_status_display }}</span>{% endif %}</td>
+  <td class="num">{% if x.status == "heard" %}{% blocktrans count n=x.mistakes %}{{ n }} mistake{% plural %}{{ n }} mistakes{% endblocktrans %}{% endif %}</td><td class="muted">{{ x.remarks }}</td></tr>
+{% empty %}<tr><td class="muted">{% trans "No Hifz lessons recorded yet." %}</td></tr>{% endfor %}</tbody></table></div>
 
 {% elif tab == "results" %}
 {% for e in exams %}<a class="card child-card" href="{% url 'parents:result' child.id e.id %}" target="_blank" rel="noopener"><div class="child-name">{{ e.name }}</div><div class="muted">{% if e.kind == "mid" %}{% trans "Progress report (PDF)" %}{% else %}{% trans "Result card (PDF)" %}{% endif %}</div></a>

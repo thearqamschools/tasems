@@ -166,6 +166,8 @@ def student_detail(request, pk):
             "can_edit": can_edit,
             "history": history,
             "certificates": student.certificates.select_related("issued_by"),
+            "hifz": request.user.has_branch_perm("hifz.view_hifzlesson", student.branch_id)
+            and (student.is_hifz or student.enrolments.filter(section__class_level__code="hifz").exists()),
         },
     )
 

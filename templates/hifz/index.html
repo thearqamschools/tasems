@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Hifz" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{% trans "Hifz-e-Quran" %}</h1><p class="lede">{{ branch.name }} · {{ date|date:"l, d F Y" }} · {% trans "Each Hifz student's Sabaq, Sabqi and Manzil for the day, with mistakes." %}</p></div>
+  <div class="actions"><a class="button quiet" href="{% url 'hifz:report' %}">{% icon "file-spreadsheet" %}{% trans "Progress report" %}</a></div>
+</div>
+<form method="get" class="filter-inline">
+  <a class="button quiet sm" href="?date={{ previous_day|date:'Y-m-d' }}" aria-label="{% trans 'Previous day' %}">‹</a>
+  <label for="date">{% trans "Date" %}</label><input type="date" id="date" name="date" value="{{ date|date:'Y-m-d' }}">
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+  {% if not is_today %}<a class="button quiet sm" href="?date={{ next_day|date:'Y-m-d' }}" aria-label="{% trans 'Next day' %}">›</a>{% endif %}
+</form>
+<div class="figures">
+  <div class="figure"><div class="value">{{ kpi.students }}</div><div class="label">{% trans "Hifz students" %}</div></div>
+  <div class="figure"><div class="value">{{ kpi.heard }}</div><div class="label">{% trans "Sabaq heard this day" %}</div></div>
+  <div class="figure"><div class="value">{{ kpi.paras }}</div><div class="label">{% trans "Paras passed this month" %}</div></div>
+  <div class="figure ok"><div class="value">{{ kpi.complete }}</div><div class="label">{% trans "Hifz completed (30 paras)" %}</div></div>
+</div>
+{% if rows %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Section" %}</th><th>{% trans "Teacher" %}</th><th class="num">{% trans "Students" %}</th><th class="num">{% trans "Recorded" %}</th><th class="num">{% trans "Heard" %}</th><th></th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td><a href="{% url 'hifz:report' %}?section={{ r.section.id }}">{{ r.section }}</a></td>
+    <td>{{ r.section.class_teacher.get_full_name|default:"—" }}</td>
+    <td class="num">{{ r.students }}</td>
+    <td class="num">{% if r.done.saved %}{{ r.done.saved }}{% else %}<span class="badge attention">{% trans "Not yet" %}</span>{% endif %}</td>
+    <td class="num">{{ r.done.heard }}</td>
+    <td>{% if r.can_record %}<a class="button sm" href="{% url 'hifz:record' r.section.id date|date:'Y-m-d' %}">{% if r.done.saved %}{% trans "Correct" %}{% else %}{% trans "Record" %}{% endif %}</a>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "book-open" %}<p>{% trans "No Hifz sections this session. Make a section of the Hifz-e-Quran class, or mark students as Hifz students." %}</p></div>{% endif %}
+{% endblock %}
