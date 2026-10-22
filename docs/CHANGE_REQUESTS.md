@@ -134,3 +134,11 @@ R2-1. "Generate vouchers" option inside Vouchers. Screen: Month (e.g. October) �
 R2-2. Below that, the voucher contents (fee heads) are listed with tick boxes, to choose what to add this time: e.g. summer vacation fee, AC charges, annual charges, and every other fee head.
 R2-3. Generating gives each voucher a unique Voucher ID that never repeats. Admission numbers are also unique and cannot be created twice.
    (Note for processing: "Make vouchers" exists under Finance (needs voucher permission; not shown to demo-network) with month range, due date and a multi-select of sections; voucher numbers are already unique across the network and admission numbers unique per branch. Request = inside Vouchers, Class → Section dropdowns with Hifz Boys/Girls, and fee-head tick boxes.)
+
+## Vouchers — heads, arrears month by month, editing at receipt (22 Oct 2026)
+R2-4. New fee head "AC charges", placed next to "Generator charges".
+   (Note: TASEMS has no "Generator charges" head yet — heads today: Admission, Registration, Monthly fee, Annual, Summer vacation work, General expenses, Other charges, Late fine. Add both.)
+R2-5. Remove the "Arrears" column from vouchers. Unpaid amounts show under their own month: e.g. if October is unpaid, the October row shows October's amounts.
+R2-6. When a new month's voucher is made, all earlier unpaid months come on it month by month (Oct + Nov, or 3–5 months), with their fines — one combined voucher.
+R2-7. Edit a voucher when receiving payment (from Pay / Vouchers): the person receiving can change Other charges, AC charges, Summer vacation, Annual charges etc. (add or reduce), and the amount paid — but NOT the monthly (tuition) fee. The Voucher ID stays the same after editing.
+   (Note for processing: today unpaid vouchers are "carried to a newer voucher" (superseded) and earlier dues appear as one Arrears figure; partial payments are allowed per branch setting. Editing must be recorded in the history with who changed what.)
