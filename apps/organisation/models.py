@@ -70,14 +70,32 @@ class Branch(TimeStampedModel):
     city = models.CharField(max_length=80)
     address = models.TextField(blank=True)
     phone = models.CharField(max_length=60, blank=True)
+    reference_prefix = models.CharField(
+        _("reference number start"),
+        max_length=40,
+        blank=True,
+        help_text=_(
+            "Printed before this branch's certificate numbers, e.g. HO-FAISALABAD-FSD gives HO-FAISALABAD-FSD-0001. "
+            "Each branch has its own. Empty: the branch code is used."
+        ),
+    )
     is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["head_office__name", "name"]
         verbose_name_plural = "branches"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["reference_prefix"], condition=~models.Q(reference_prefix=""), name="unique_reference_prefix"
+            )
+        ]
 
     def __str__(self):
         return self.name
+
+    @property
+    def certificate_prefix(self):
+        return (self.reference_prefix or self.code).upper()
 
     def clean(self):
         if self.region_id and self.region.head_office_id != self.head_office_id:

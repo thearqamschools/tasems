@@ -329,9 +329,9 @@ FEE_HEADS = [
     ("annual", "Annual charges", "Annual", "سالانہ چارجز", "yearly", [4]),
     ("summer_work", "Summer vacation work", "S.V.W.", "سمر ویکیشن ورک", "seasonal", [7]),
     # Added only when ticked while making vouchers (22 Oct 2026); each branch sets the amount.
-    ("generator", "Generator charges", "Generator", "جنریٹر چارجز", "seasonal", []),
     ("ac", "AC charges", "AC", "اے سی چارجز", "seasonal", []),
-    ("general", "General expenses", "Gen. Exp.", "متفرق اخراجات", "other", []),
+    # "Gen. Exp." on the school's voucher is the generator expense (project lead, 22 Oct 2026).
+    ("general", "Generator expenses", "Gen. Exp.", "جنریٹر اخراجات", "other", []),
     ("others", "Other charges", "Others", "دیگر", "other", []),
     ("fine", "Late fee fine", "Fine", "جرمانہ", "fine", []),
 ]
@@ -452,6 +452,8 @@ class Command(BaseCommand):
                 "phone": "041-2660265, 041-2406479",
             },
         )
+        # Certificate reference numbers (project lead, 22 Oct 2026); head office can change it in Setup.
+        Branch.objects.filter(code="fsd-samanabad", reference_prefix="").update(reference_prefix="HO-FAISALABAD-FSD")
 
         for code, name, name_ur, scopes, perm_names, mfa in ROLES:
             role, _ = Role.objects.update_or_create(

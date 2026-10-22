@@ -232,7 +232,7 @@ def certificate_pdf(request, pk, cert_id):
         raise Http404
     response = HttpResponse(certificates.render_pdf(cert), content_type="application/pdf")
     response["Content-Disposition"] = (
-        f'inline; filename="{cert.get_kind_display()} {cert.number} - {student.full_name}.pdf"'
+        f'inline; filename="{cert.get_kind_display()} {cert.reference or cert.number} - {student.full_name}.pdf"'
     )
     return response
 

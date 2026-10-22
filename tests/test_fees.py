@@ -93,7 +93,6 @@ def test_heads_and_samanabad_rates_are_seeded(seeded):
         "Tuition",
         "Annual",
         "S.V.W.",
-        "Generator",
         "AC",
         "Gen. Exp.",
         "Others",
@@ -616,15 +615,17 @@ def test_generate_by_class_hifz_and_section(fees, login_as):
 
 def test_ticked_fees_are_added_and_unticked_ones_are_not(fees, login_as):
     child = fees["student"]("class-4")
-    gen, ac = FeeHead.objects.get(code="generator"), FeeHead.objects.get(code="ac")
+    sv, ac = FeeHead.objects.get(code="summer_work"), FeeHead.objects.get(code="ac")
     FeeRate.objects.create(branch=fees["branch"], head=ac, amount=D(500), effective_from=dt.date(2026, 4, 1))
     client = login_as(fees["user"])
     april = {**GENERATE, "first_month": "2026-04", "last_month": "2026-04", "due_on": "2026-04-10"}
     TODAY["date"] = dt.date(2026, 4, 2)
     page = client.get("/fees/generate/").content.decode()
-    assert "AC charges" in page and "Generator charges" in page
-    preview = client.post("/fees/generate/", {k: v for k, v in april.items() if k != "confirm"} | {"heads": [gen.id]})
-    assert "Generator charges" in preview.content.decode() and not Voucher.objects.exists()  # no amount set: warned
+    assert "AC charges" in page and "Generator expenses" in page and "Generator charges" not in page
+    preview = client.post("/fees/generate/", {k: v for k, v in april.items() if k != "confirm"} | {"heads": [sv.id]})
+    assert (
+        "Summer vacation work: no amount is set" in preview.content.decode() and not Voucher.objects.exists()
+    )  # no amount set: warned
     client.post("/fees/generate/", {**april, "heads": [ac.id]})  # annual not ticked, even in April
     assert amounts(voucher_of(child)) == {"tuition": D(4300), "ac": D(500)}
 

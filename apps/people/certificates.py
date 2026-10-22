@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 
 from apps.diary.models import DiaryLayout
+from apps.organisation.models import Branch
 
 from .models import Certificate
 
@@ -30,12 +31,16 @@ def mark_left(student, status, left_on, user):
 
 @transaction.atomic
 def issue(student, kind, user, **details):
-    highest = Certificate.objects.filter(branch_id=student.branch_id, kind=kind).aggregate(n=Max("number"))["n"]
+    # One series per branch for both kinds, so the reference (prefix + number) is never repeated.
+    branch = Branch.objects.select_for_update().get(pk=student.branch_id)  # one number at a time per branch
+    highest = Certificate.objects.filter(branch_id=branch.id).aggregate(n=Max("number"))["n"]
+    number = (highest or 0) + 1
     return Certificate.objects.create(
         branch_id=student.branch_id,
         student=student,
         kind=kind,
-        number=(highest or 0) + 1,
+        number=number,
+        reference=f"{branch.certificate_prefix}-{number:04d}",
         issued_on=timezone.localdate(),
         last_class=details.pop("last_class", None) or last_class(student),
         issued_by=user,

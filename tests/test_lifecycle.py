@@ -89,15 +89,22 @@ def test_leaving_with_certificate_and_numbering(org, make_user, login_as):
     s.refresh_from_db()
     cert = Certificate.objects.get(student=s)
     assert s.status == "transferred" and s.status_changed_on == dt.date(2026, 10, 10)
-    assert (cert.kind, cert.number, cert.reason) == ("leaving", 1, "Moved city")
+    assert (cert.kind, cert.reference, cert.reason) == ("leaving", "HO-FAISALABAD-FSD-0001", "Moved city")
     assert response.url == f"/students/{s.pk}/certificates/{cert.pk}.pdf"
     pdf = client.get(response.url)
     assert pdf.status_code == 200 and pdf.content.startswith(b"%PDF")
     other = kid(org["samanabad"], "302")
     client.post(f"/students/{other.pk}/certificates/new/", {"conduct": "good"})
     client.post(f"/students/{other.pk}/certificates/new/", {"conduct": "excellent"})
-    numbers = sorted(Certificate.objects.filter(kind="character").values_list("number", flat=True))
-    assert numbers == [1, 2]  # character certificates have their own numbers
+    refs = sorted(Certificate.objects.filter(kind="character").values_list("reference", flat=True))
+    assert refs == ["HO-FAISALABAD-FSD-0002", "HO-FAISALABAD-FSD-0003"]  # one series per branch, never repeated
+    franchise = org["fsd_franchise"]
+    franchise.reference_prefix = "F1-FAISALABAD-FSD"
+    franchise.save()
+    elsewhere = kid(franchise, "303")
+    owner = login_as(make_user("principal", Scope.BRANCH, franchise))
+    owner.post(f"/students/{elsewhere.pk}/certificates/new/", {"conduct": "good"})
+    assert Certificate.objects.get(student=elsewhere).reference == "F1-FAISALABAD-FSD-0001"  # each branch its own
     teacher = login_as(make_user("class_teacher", Scope.BRANCH, org["samanabad"]))
     assert teacher.get(f"/students/{other.pk}/leave/").status_code == 403
 

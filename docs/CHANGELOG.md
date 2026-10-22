@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.20.0 — 2026-10-22 — Project lead's follow-ups to round 2
+
+Changed
+- Fee head "Generator charges" removed (switched off instead if it was already used); AC charges stay. "Gen. Exp." is now named "Generator expenses", as on the school's voucher.
+- Leaving and character certificates are printed on the school's letterhead: no logo, school name, border or footer, only the certificate title, with room at the top and bottom of the page.
+- Certificate reference numbers: each branch has its own start (Setup → Branches, "reference number start"), e.g. HO-FAISALABAD-FSD-0001 for the head office campus. One series per branch for both certificates, never repeated. Older certificates keep their number with L/C added.
+
+Added
+- Expense heads: the usual school list (salaries, rent, utilities, books, exams, labs, IT, furniture, repairs, building, security, advertising, events, sports, refreshments, medical, staff welfare, training, postage, bank charges, taxes, royalty, other). Branch-own heads are not offered for now.
+- docs/DESIGNATION_PERMISSIONS.md: the current designation → login role table, for the project lead to mark changes.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.19.0 — 2026-10-22 — Project lead's changes, round 2: vouchers
 
 Added

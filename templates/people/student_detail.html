@@ -66,7 +66,7 @@
 <h2 id="certificates">{% trans "Certificates" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Certificate" %}</th><th class="num">{% trans "No." %}</th><th>{% trans "Date" %}</th><th>{% trans "Issued by" %}</th><th></th></tr></thead>
-  <tbody>{% for c in certificates %}<tr><td>{{ c.get_kind_display }}</td><td class="num">{{ c.number }}</td><td>{{ c.issued_on|date:"d M Y" }}</td>
+  <tbody>{% for c in certificates %}<tr><td>{{ c.get_kind_display }}</td><td class="num" dir="ltr">{{ c.reference|default:c.number }}</td><td>{{ c.issued_on|date:"d M Y" }}</td>
     <td>{{ c.issued_by.get_full_name|default:c.issued_by.username }}</td><td><a class="button quiet sm" href="{% url 'people:certificate_pdf' student.pk c.pk %}">{% trans "Print" %}</a></td></tr>{% endfor %}</tbody>
 </table></div>
 {% endif %}

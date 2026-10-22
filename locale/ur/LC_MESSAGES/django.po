@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 12:13+0500\n"
+"POT-Creation-Date: 2026-10-22 13:40+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgstr "حفظ القرآن"
 #: apps/accounts/models.py:106 apps/exams/models.py:113
 #: apps/exams/models.py:147 apps/fees/models.py:69 apps/hr/models.py:190
 #: apps/organisation/models.py:21 apps/organisation/models.py:41
-#: apps/organisation/models.py:59 apps/organisation/models.py:99
+#: apps/organisation/models.py:59 apps/organisation/models.py:117
 msgid "name (Urdu)"
 msgstr "نام (اردو)"
 
@@ -60,16 +60,16 @@ msgstr "یہ جماعت ہفتے کو سکول آتی ہے، اس لیے اس د
 msgid "Content is written right-to-left (Urdu, Islamiat, Arabic, Nazra)."
 msgstr "مواد دائیں سے بائیں لکھا جاتا ہے (اردو، اسلامیات، عربی، ناظرہ)۔"
 
-#: apps/academics/models.py:82 apps/organisation/models.py:93
+#: apps/academics/models.py:82 apps/organisation/models.py:111
 msgid "Boys and girls"
 msgstr "لڑکے اور لڑکیاں"
 
-#: apps/academics/models.py:83 apps/organisation/models.py:94
+#: apps/academics/models.py:83 apps/organisation/models.py:112
 #: templates/people/student_import.html:15
 msgid "Boys"
 msgstr "لڑکے"
 
-#: apps/academics/models.py:84 apps/organisation/models.py:95
+#: apps/academics/models.py:84 apps/organisation/models.py:113
 #: templates/people/student_import.html:15
 msgid "Girls"
 msgstr "لڑکیاں"
@@ -390,20 +390,20 @@ msgstr ""
 msgid "Whole network"
 msgstr "پورا نیٹ ورک"
 
-#: apps/accounts/models.py:22 apps/setup/forms.py:44 apps/setup/forms.py:294
+#: apps/accounts/models.py:22 apps/setup/forms.py:44 apps/setup/forms.py:295
 #: templates/attendance/branches.html:7 templates/core/home.html:47
 #: templates/core/home.html:73 templates/setup/branches.html:12
 #: templates/setup/branches.html:19 templates/setup/branches.html:33
 msgid "Head office"
 msgstr "ہیڈ آفس"
 
-#: apps/accounts/models.py:23 apps/setup/forms.py:45 apps/setup/forms.py:295
+#: apps/accounts/models.py:23 apps/setup/forms.py:45 apps/setup/forms.py:296
 #: templates/core/home.html:48 templates/core/home.html:73
 #: templates/setup/branches.html:19 templates/setup/branches.html:33
 msgid "Region"
 msgstr "ریجن"
 
-#: apps/accounts/models.py:24 apps/setup/forms.py:296
+#: apps/accounts/models.py:24 apps/setup/forms.py:297
 #: templates/attendance/branches.html:7 templates/core/home.html:73
 #: templates/fees/royalty.html:17 templates/setup/branches.html:19
 msgid "Branch"
@@ -431,7 +431,7 @@ msgstr "TASEMS نے بنایا ہے؛ احتیاط سے تبدیل کریں۔"
 msgid "This role cannot be assigned at this scope."
 msgstr "یہ کردار اس سطح پر نہیں دیا جا سکتا۔"
 
-#: apps/accounts/models.py:166 apps/setup/forms.py:326
+#: apps/accounts/models.py:166 apps/setup/forms.py:327
 msgid "End date is before start date."
 msgstr "آخری تاریخ شروع کی تاریخ سے پہلے ہے۔"
 
@@ -1728,7 +1728,7 @@ msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مث
 msgid "Type of leave"
 msgstr "رخصت کی قسم"
 
-#: apps/hr/forms.py:142 apps/setup/forms.py:297
+#: apps/hr/forms.py:142 apps/setup/forms.py:298
 #: templates/admissions/report.html:6 templates/fees/collections.html:6
 #: templates/fees/student.html:64 templates/setup/fees.html:12
 #: templates/setup/user_detail.html:25
@@ -2166,11 +2166,19 @@ msgid ""
 "Head office royalty on monthly fee collections. Company-owned branches use 0."
 msgstr "ماہانہ فیس وصولی پر ہیڈ آفس کی رائلٹی۔ کمپنی کی برانچوں کے لیے 0۔"
 
-#: apps/organisation/models.py:84
+#: apps/organisation/models.py:74
+msgid "reference number start"
+msgstr "ریفرنس نمبر کا آغاز"
+
+#: apps/organisation/models.py:78
+msgid "Printed before this branch's certificate numbers, e.g. HO-FAISALABAD-FSD gives HO-FAISALABAD-FSD-0001. Each branch has its own. Empty: the branch code is used."
+msgstr "اس برانچ کے سرٹیفکیٹ نمبر سے پہلے چھپتا ہے، مثلاً HO-FAISALABAD-FSD سے HO-FAISALABAD-FSD-0001 بنتا ہے۔ ہر برانچ کا اپنا ہوتا ہے۔ خالی ہو تو برانچ کوڈ استعمال ہوتا ہے۔"
+
+#: apps/organisation/models.py:102
 msgid "Region belongs to a different head office."
 msgstr "یہ ریجن کسی اور ہیڈ آفس کا ہے۔"
 
-#: apps/organisation/models.py:98
+#: apps/organisation/models.py:116
 msgid "e.g. Boys Campus, Girls Campus, Main Building"
 msgstr "مثلاً بوائز کیمپس، گرلز کیمپس، مین بلڈنگ"
 
@@ -2300,11 +2308,11 @@ msgstr "بہن بھائی (والد کا ایک ہی شناختی کارڈ) کو
 msgid "Admission number"
 msgstr "داخلہ نمبر"
 
-#: apps/people/forms.py:97 apps/setup/forms.py:342
+#: apps/people/forms.py:97 apps/setup/forms.py:343
 msgid "First name"
 msgstr "پہلا نام"
 
-#: apps/people/forms.py:98 apps/setup/forms.py:343
+#: apps/people/forms.py:98 apps/setup/forms.py:344
 msgid "Last name"
 msgstr "آخری نام"
 
@@ -2326,7 +2334,7 @@ msgstr "تاریخ داخلہ"
 msgid "Father CNIC"
 msgstr "والد کا شناختی کارڈ نمبر"
 
-#: apps/people/forms.py:103 apps/setup/forms.py:345
+#: apps/people/forms.py:103 apps/setup/forms.py:346
 #: templates/people/student_detail.html:30
 msgid "Email"
 msgstr "ای میل"
@@ -2615,7 +2623,15 @@ msgstr "اچھا"
 msgid "Satisfactory"
 msgstr "تسلی بخش"
 
-#: apps/people/models.py:215
+#: apps/people/models.py:214
+msgid "reference no."
+msgstr "ریفرنس نمبر"
+
+#: apps/people/models.py:214
+msgid "e.g. HO-FAISALABAD-FSD-0001; never repeated"
+msgstr "مثلاً HO-FAISALABAD-FSD-0001؛ کبھی دہرایا نہیں جاتا"
+
+#: apps/people/models.py:218
 msgid "Class and section at the time of leaving"
 msgstr "چھوڑتے وقت جماعت اور سیکشن"
 
@@ -2822,60 +2838,60 @@ msgstr "رعایت %"
 msgid "Needs approval"
 msgstr "منظوری درکار"
 
-#: apps/setup/forms.py:261
+#: apps/setup/forms.py:262
 msgid "This region belongs to another head office."
 msgstr "یہ ریجن کسی دوسرے ہیڈ آفس کا ہے۔"
 
-#: apps/setup/forms.py:285
+#: apps/setup/forms.py:286
 msgid "The session must end after it starts."
 msgstr "سیشن کی آخری تاریخ شروع کی تاریخ کے بعد ہونی چاہیے۔"
 
-#: apps/setup/forms.py:292 templates/setup/user_detail.html:25
+#: apps/setup/forms.py:293 templates/setup/user_detail.html:25
 #: templates/setup/users.html:12
 msgid "Role"
 msgstr "کردار"
 
-#: apps/setup/forms.py:293 templates/setup/user_detail.html:25
+#: apps/setup/forms.py:294 templates/setup/user_detail.html:25
 msgid "Where"
 msgstr "کہاں"
 
-#: apps/setup/forms.py:298 templates/fees/student.html:64
+#: apps/setup/forms.py:299 templates/fees/student.html:64
 #: templates/setup/user_detail.html:25
 msgid "Until"
 msgstr "تک"
 
-#: apps/setup/forms.py:298
+#: apps/setup/forms.py:299
 msgid "Leave empty if open-ended."
 msgstr "اگر اختتام طے نہیں تو خالی چھوڑ دیں۔"
 
-#: apps/setup/forms.py:321
+#: apps/setup/forms.py:322
 msgid "Choose where this role applies."
 msgstr "منتخب کریں کہ یہ کردار کہاں لاگو ہو گا۔"
 
-#: apps/setup/forms.py:341 templates/setup/password.html:8
+#: apps/setup/forms.py:342 templates/setup/password.html:8
 #: templates/setup/users.html:19
 msgid "Username"
 msgstr "یوزر نیم"
 
-#: apps/setup/forms.py:344 templates/admissions/index.html:41
+#: apps/setup/forms.py:345 templates/admissions/index.html:41
 #: templates/hr/employee.html:15 templates/hr/index.html:38
 #: templates/setup/users.html:19
 msgid "Mobile"
 msgstr "موبائل"
 
-#: apps/setup/forms.py:346
+#: apps/setup/forms.py:347
 msgid "Language"
 msgstr "زبان"
 
-#: apps/setup/forms.py:355
+#: apps/setup/forms.py:356
 msgid "Letters, digits and @ . + - _ only."
 msgstr "صرف انگریزی حروف، ہندسے اور @ . + - _"
 
-#: apps/setup/forms.py:363 templates/core/design_system.html:78
+#: apps/setup/forms.py:364 templates/core/design_system.html:78
 msgid "Enter an 11-digit mobile number, e.g. 0300-1234567."
 msgstr "11 ہندسوں کا موبائل نمبر لکھیں، مثلاً 0300-1234567۔"
 
-#: apps/setup/forms.py:366
+#: apps/setup/forms.py:367
 msgid "Another login already uses this mobile number."
 msgstr "یہ موبائل نمبر کسی دوسرے لاگ اِن میں استعمال ہو رہا ہے۔"
 

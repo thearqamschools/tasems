@@ -210,6 +210,9 @@ class Certificate(BranchOwnedModel):
     student = models.ForeignKey(Student, on_delete=models.PROTECT, related_name="certificates")
     kind = models.CharField(max_length=10, choices=Kind.choices)
     number = models.PositiveIntegerField()
+    reference = models.CharField(
+        _("reference no."), max_length=60, blank=True, help_text=_("e.g. HO-FAISALABAD-FSD-0001; never repeated")
+    )
     issued_on = models.DateField()
     conduct = models.CharField(max_length=15, choices=Conduct.choices, default=Conduct.GOOD)
     last_class = models.CharField(max_length=80, blank=True, help_text=_("Class and section at the time of leaving"))
@@ -221,7 +224,12 @@ class Certificate(BranchOwnedModel):
 
     class Meta:
         ordering = ["-issued_on", "-number"]
-        constraints = [models.UniqueConstraint(fields=["branch", "kind", "number"], name="unique_certificate_number")]
+        constraints = [
+            models.UniqueConstraint(fields=["branch", "kind", "number"], name="unique_certificate_number"),
+            models.UniqueConstraint(
+                fields=["reference"], condition=~models.Q(reference=""), name="unique_certificate_reference"
+            ),
+        ]
 
     def __str__(self):
-        return f"{self.get_kind_display()} {self.number} — {self.student}"
+        return f"{self.get_kind_display()} {self.reference or self.number} — {self.student}"

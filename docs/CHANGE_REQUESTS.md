@@ -152,3 +152,11 @@ R2-7. Edit a voucher when receiving payment (from Pay / Vouchers): the person re
 | R2-4 | Fee heads | "Generator charges" and "AC charges" added (after Summer vacation work). **Default:** their amounts are set per branch in Setup → Fee rates and vouchers, and they are added only when ticked. |
 | R2-5 / R2-6 | Voucher print | No Arrears column. Each unpaid month has its own row (fines in that month's row); with more than 3 months the oldest share one row so all three copies fit on the page. An advance shows as "Advance paid". |
 | R2-7 | Receive fee page → "Change other fees on this voucher" | Change, remove (0) or add other fees (Other, AC, Generator, Summer vacation, Annual…) on the student's newest voucher. The monthly fee and the late fine are shown as fixed and refused by the server. The Voucher ID stays the same; the amount on the voucher is recalculated; every change is in the history (who, which fee, from → to). The amount received was already editable when the branch allows part payments. |
+
+## Round 2 follow-ups (22 Oct 2026) — built the same day
+- R2-8. Remove "Generator charges"; keep "AC charges". The generator is already billed as "Gen. Exp." (now named "Generator expenses").
+- R2-9. Current designation → login permissions table, for the lead to mark changes: `docs/DESIGNATION_PERMISSIONS.md`.
+- R2-10. Add the usual school expense heads; no branch-own heads for now.
+- R2-11. Certificates print on the letterhead: remove the logo and school heading, keep only the title.
+- R2-12. Certificate reference number = branch start + unique number, e.g. HO-FAISALABAD-FSD-0001. Each branch's start is different and is set in Setup → Branches. Only the head office campus was given by the lead; other branches use their branch code until head office fills it in.
+- Asked: the cost of a private test server (answered in chat; nothing bought).
