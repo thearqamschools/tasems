@@ -156,7 +156,52 @@ def home(request):
                 "balance": balance(child),
             }
         )
-    return render(request, "parents/home.html", {"cards": cards, "today": today})
+    from apps.notices import services as N
+
+    notices = list(N.parent_notices(S.children(request.parent.phone), today)[:5])
+    return render(
+        request,
+        "parents/home.html",
+        {"cards": cards, "today": today, "notices": notices, "unread": N.unread_ids(notices, request.user)},
+    )
+
+
+def _parent_notice(request, notice_id):
+    from apps.notices import services as N
+
+    notice = N.parent_notices(S.children(request.parent.phone), timezone.localdate()).filter(pk=notice_id).first()
+    if notice is None:
+        raise Http404
+    return notice
+
+
+@parent_required
+def notices(request):
+    from apps.notices import services as N
+
+    items = list(N.parent_notices(S.children(request.parent.phone), timezone.localdate())[:50])
+    return render(request, "parents/notices.html", {"notices": items, "unread": N.unread_ids(items, request.user)})
+
+
+@parent_required
+def notice(request, notice_id):
+    from apps.notices import services as N
+
+    item = _parent_notice(request, notice_id)
+    N.mark_read(item, request.user)
+    return render(request, "parents/notice.html", {"notice": item})
+
+
+@parent_required
+def notice_file(request, notice_id):
+    from pathlib import Path
+
+    from django.http import FileResponse
+
+    item = _parent_notice(request, notice_id)
+    if not item.attachment:
+        raise Http404
+    return FileResponse(item.attachment.open("rb"), filename=f"{item.title}{Path(item.attachment.name).suffix}")
 
 
 @parent_required
@@ -338,3 +383,44 @@ def codes(request):
         )
     accounts = ParentAccount.objects.count()
     return render(request, "parents/codes.html", {"sections": sections, "accounts": accounts})
+
+
+# --- Installable app (M8): the parent portal works like an app on the phone's home screen -----
+
+
+def manifest(request):
+    from django.http import JsonResponse
+    from django.templatetags.static import static
+
+    return JsonResponse(
+        {
+            "name": "The Arqam Schools — Parents",
+            "short_name": "Arqam Parents",
+            "start_url": "/parents/",
+            "scope": "/parents/",
+            "display": "standalone",
+            "background_color": "#f4f5fa",
+            "theme_color": "#3e4095",
+            "icons": [
+                {"src": static("img/arqam-logo-192.png"), "sizes": "192x192", "type": "image/png"},
+                {"src": static("img/arqam-logo-512.png"), "sizes": "512x512", "type": "image/png"},
+            ],
+        },
+        content_type="application/manifest+json",
+    )
+
+
+def service_worker(request):
+    from django.templatetags.static import static
+
+    body = render_to_string(
+        "parents/sw.js",
+        {"assets": [static("css/tasems.css"), static("img/arqam-logo-192.png"), static("js/parents.js")]},
+    )
+    response = HttpResponse(body, content_type="application/javascript")
+    response["Cache-Control"] = "no-cache"
+    return response
+
+
+def offline(request):
+    return render(request, "parents/offline.html")

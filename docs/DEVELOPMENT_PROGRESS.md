@@ -48,7 +48,8 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 | M5 | Module restyle: Excel/Print on every list, print layout, consistent filters and empty states, parent portal on phones | Done 22 Oct 2026 (printed documents keep their approved layouts) |
 | M6 | Reports centre, family vouchers and family fee collection, background printing of large PDFs | Done 22 Oct 2026 |
 | M7 | Subject teachers, timetable, holiday calendar, date sheets, exam slips with photo, award lists | Done 22 Oct 2026 |
-| M8–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M9 Accounting started with expenses) |
+| M8 | Notices and circulars, messages to parents (WhatsApp links / Excel for SMS, no paid service), installable parent portal | Done 22 Oct 2026 (SMS/WhatsApp provider: needs approval and cost) |
+| M9–M13 | See `INTEGRATION_ROADMAP.md` | Not started (M9 Accounting started with expenses) |
 
 ## Known gaps and pending inputs
 

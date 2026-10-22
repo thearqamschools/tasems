@@ -41,6 +41,11 @@ def home(request):
     }
     context["can"] = perms
     context["quick_actions"] = _quick_actions(user, branch, can)
+    from apps.notices import services as notices
+
+    staff_notices = list(notices.staff_notices(branch, today)[:3])
+    context["notices"] = staff_notices
+    context["unread_notices"] = notices.unread_ids(staff_notices, user)
 
     if perms["students"]:
         active = Student.objects.filter(branch=branch, status=Student.Status.ACTIVE)

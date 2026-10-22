@@ -1,0 +1,9 @@
+{% extends "parents/base_parent.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "No internet" %}{% endblock %}
+{% block content %}
+<div class="card empty-state">{% icon "info" %}
+  <p><strong>{% trans "No internet connection" %}</strong></p>
+  <p>{% trans "Your children's diary, attendance and fees are shown only when you are online. Please connect and try again." %}</p>
+  <p class="num">041-2660265 · WhatsApp 0339-2406479</p>
+</div>
+{% endblock %}

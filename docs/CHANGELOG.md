@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.24.0 — 2026-10-22 — M8: notices and parent communication
+
+Added
+- **Notices** (Overview → Notices): circulars for parents, staff or both; for one branch, every branch of a head
+  office, or the whole network (by those who look after it); optionally only for some classes; show-from and
+  show-until dates; PDF/photo attachment kept private. Parents see them at the top of the parent portal with a
+  "New" mark; staff see staff notices on their dashboard. The sender sees how many people opened each notice; a
+  notice can be withdrawn.
+- **Messages to parents** without a paid SMS service: choose a message template and who it is for (fee defaulters,
+  students absent today, one class, all parents). Each message is filled in from TASEMS (student, class, fees owed,
+  months unpaid, branch phone …). Send one by one with a WhatsApp button (the chat opens with the text ready) or
+  download an Excel list for the branch's own SMS tool. Nothing is sent automatically; downloads are recorded.
+- Four starter templates (fee reminder in Urdu and English, absence in Urdu, general message); head office edits
+  them. Numbers and phone numbers stay left-to-right inside Urdu messages.
+- **Parent portal as an app**: parents can add it to the phone's home screen; a "no internet" page is shown when
+  offline. Children's details are never stored on the phone.
+
+Roles: principals post notices and prepare messages for their branch; head office and network administrators also
+post for every branch they look after; network administrators keep the message templates.
+
+Not deployed (the demo updates automatically when pushed).
+
 ## 0.23.0 — 2026-10-22 — M7: academic management
 
 Added

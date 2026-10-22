@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "New notice" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'notices:index' %}">‹ {% trans "Notices" %}</a></p>
+<h1>{% trans "New notice" %}</h1>
+<p class="lede">{% trans "Parents see it in the parent portal; staff see it on their dashboard. Check names, dates and amounts before posting." %}</p>
+<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% if field.name != "body" and field.name != "class_levels" %}{% include "includes_field.html" %}{% endif %}{% endfor %}</div>
+  {% with field=form.body %}{% include "includes_field.html" %}{% endwith %}
+  <fieldset class="fee-heads"><legend>{{ form.class_levels.label }}</legend>{{ form.class_levels }}<p class="help">{{ form.class_levels.help_text }}</p></fieldset>
+  <button class="button" type="submit">{% trans "Post notice" %}</button>
+</form>
+{% endblock %}

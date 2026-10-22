@@ -3,6 +3,12 @@
 {% block content %}
 <h1>{% trans "Assalamualaikum" %}</h1>
 <p class="lede">{{ today|date:"l, d F Y" }}</p>
+{% if notices %}
+<h2>{% trans "Notices from school" %}</h2>
+<ul class="notice-list">{% for n in notices|slice:":3" %}<li><a class="card{% if n.id in unread %} unread{% endif %}" href="{% url 'parents:notice' n.id %}"><strong>{{ n.title }}</strong>{% if n.id in unread %} <span class="badge attention">{% trans "New" %}</span>{% endif %}<div class="muted small">{{ n.publish_on|date:"d M Y" }}</div></a></li>{% endfor %}</ul>
+{% if notices|length > 3 %}<p><a href="{% url 'parents:notices' %}">{% trans "All notices" %}</a></p>{% endif %}
+<h2>{% trans "My children" %}</h2>
+{% endif %}
 {% for c in cards %}
 <a class="card child-card" href="{% url 'parents:child' c.child.id %}">
   <div class="child-name">{% if LANG == "ur" and c.child.full_name_ur %}{{ c.child.full_name_ur }}{% else %}{{ c.child.full_name }}{% endif %}</div>

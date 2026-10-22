@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Messages to parents" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'notices:index' %}">‹ {% trans "Notices" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Messages to parents" %}</h1>
+  <p class="lede">{% trans "Choose a message and who it is for. Each parent's message is filled in from TASEMS. Send them one by one with WhatsApp, or download the list for your SMS tool. Nothing is sent by itself." %}</p></div>
+  {% if can_edit_templates %}<div class="actions"><a class="button quiet" href="{% url 'notices:templates' %}">{% trans "Message templates" %}</a></div>{% endif %}
+</div>
+<form method="get" class="card">
+  <div class="form-grid">
+    <div class="field"><label for="template">{% trans "Message" %}</label><select id="template" name="template"><option value="">—</option>{% for t in templates %}<option value="{{ t.id }}" {% if template.id == t.id %}selected{% endif %}>{{ t.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="audience">{% trans "To" %}</label><select id="audience" name="audience"><option value="">—</option>{% for v, l in audiences %}<option value="{{ v }}" {% if audience == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="months">{% trans "Defaulters: unpaid for at least" %}</label><select id="months" name="months">{% for n in "123456" %}<option value="{{ n }}" {% if n|add:0 == months %}selected{% endif %}>{% blocktrans count m=n|add:0 %}{{ m }} month{% plural %}{{ m }} months{% endblocktrans %}</option>{% endfor %}</select></div>
+    <div class="field"><label for="section">{% trans "One class: which" %}</label><select id="section" name="section"><option value="">—</option>{% for s in sections %}<option value="{{ s.id }}" {% if section_id == s.id %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+  </div>
+  <div class="field"><label for="text">{% trans "Your own words (for {text} in the message)" %}</label><textarea id="text" name="text" rows="2" maxlength="500" dir="auto">{{ text }}</textarea></div>
+  <button class="button" type="submit">{% trans "Prepare messages" %}</button>
+</form>
+{% if template %}<details class="card"><summary>{% trans "The message" %}: {{ template.name }}</summary><pre class="message-preview" dir="auto">{{ template.body }}</pre></details>{% endif %}
+
+{% if template and audience %}
+<h2>{% blocktrans count n=rows|length %}{{ n }} message ready{% plural %}{{ n }} messages ready{% endblocktrans %}</h2>
+{% if without_phone %}<p class="muted">{% blocktrans count n=without_phone %}{{ n }} student has no parent mobile number and is left out.{% plural %}{{ n }} students have no parent mobile number and are left out.{% endblocktrans %}</p>{% endif %}
+{% if rows %}
+<div class="list-tools no-print"><a class="button quiet sm" href="{% list_url format='xlsx' %}">{% icon "file-spreadsheet" %}{% trans "Excel for SMS tool" %}</a></div>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Mobile" %}</th><th>{% trans "Student" %}</th><th>{% trans "Message" %}</th><th></th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td class="num">{{ r.phone }}</td><td>{{ r.student.full_name }}<br><span class="muted small">{{ r.section|default:"" }}</span></td>
+    <td><div class="message-preview small" dir="auto">{{ r.message|linebreaksbr }}</div></td>
+    <td><a class="button sm" href="{{ r.whatsapp }}" target="_blank" rel="noopener">{% trans "WhatsApp" %}</a></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+{% endif %}
+
+<details class="card"><summary>{% trans "Placeholders you can use in a message" %}</summary>
+  <ul>{% for p, label in placeholders %}<li><code dir="ltr">{{ p }}</code> — {{ label }}</li>{% endfor %}</ul></details>
+{% if batches %}<h2>{% trans "Lists downloaded" %}</h2>
+<div class="table-wrap"><table><tbody>{% for b in batches %}<tr><td>{{ b.created_at|date:"d M Y, H:i" }}</td><td>{{ b.template.name|default:"—" }}</td><td class="num">{{ b.count }}</td><td>{{ b.created_by.get_full_name|default:b.created_by.username }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% endblock %}

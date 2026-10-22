@@ -256,8 +256,15 @@ HR_SETUP = HR_MANAGE + ["hr.add_leavetype", "hr.change_leavetype"]
 ADM_VIEW = ["admissions.view_inquiry", "admissions.view_followup"]
 ADM_WORK = ADM_VIEW + ["admissions.add_inquiry", "admissions.change_inquiry", "admissions.add_followup"]
 
+# Notices and messages to parents (M8): principals post for their branch; head office and network admins also
+# post for every branch they look after and keep the message templates.
+NOTICE_POST = ["notices.view_notice", "notices.add_notice", "notices.change_notice", "notices.send_messages"]
+TEMPLATE_EDIT = ["notices.view_messagetemplate", "notices.add_messagetemplate", "notices.change_messagetemplate"]
+
 EXTRA_PERMISSIONS = {
-    "network_admin": ATT_VIEW
+    "network_admin": NOTICE_POST
+    + TEMPLATE_EDIT
+    + ATT_VIEW
     + DIARY_DESIGN
     + EXAM_SETUP
     + FEE_SETUP
@@ -265,7 +272,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "head_office_admin": ATT_VIEW
+    "head_office_admin": NOTICE_POST
+    + ATT_VIEW
     + DIARY_DESIGN
     + EXAM_SETUP
     + FEE_SETUP
@@ -275,7 +283,8 @@ EXTRA_PERMISSIONS = {
     + ADM_VIEW,
     "regional_director": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ROYALTY_VIEW + HR_VIEW + ADM_VIEW,
     "branch_owner": ATT_VIEW + DIARY_VIEW + EXAM_VIEW + FEE_VIEW + FEE_APPROVE + ROYALTY_VIEW + HR_VIEW + ADM_VIEW,
-    "principal": ATT_MANAGE
+    "principal": NOTICE_POST
+    + ATT_MANAGE
     + DIARY_MANAGE
     + EXAM_MANAGE
     + FEE_MANAGE

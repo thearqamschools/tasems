@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Notices" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{% trans "Notices" %}</h1>
+  <p class="lede">{% trans "Circulars for parents (shown in the parent portal) and for staff (shown on the dashboard)." %}</p></div>
+  <div class="actions">
+    {% if can_post %}<a class="button" href="{% url 'notices:new' %}">{% icon "file-text" %}{% trans "New notice" %}</a>{% endif %}
+    {% if can_message %}<a class="button secondary" href="{% url 'notices:compose' %}">{% trans "Messages to parents" %}</a>{% endif %}
+  </div>
+</div>
+{% if notices %}
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Notice" %}</th><th>{% trans "For" %}</th><th>{% trans "Where" %}</th><th>{% trans "Shown" %}</th><th class="num">{% trans "Opened by" %}</th></tr></thead>
+  <tbody>{% for n in notices %}<tr{% if n.is_withdrawn %} class="muted"{% endif %}>
+    <td><a href="{% url 'notices:detail' n.id %}">{% if n.id in unread %}<strong>{{ n.title }}</strong>{% else %}{{ n.title }}{% endif %}</a>{% if n.is_withdrawn %} <span class="badge muted">{% trans "Withdrawn" %}</span>{% endif %}{% if n.attachment %} {% icon "file-text" %}{% endif %}</td>
+    <td>{{ n.get_audience_display }}</td>
+    <td>{% if n.branch %}{% trans "This branch" %}{% elif n.head_office %}{{ n.head_office.name }}{% else %}{% trans "All branches" %}{% endif %}</td>
+    <td>{{ n.publish_on|date:"d M" }}{% if n.expires_on %} – {{ n.expires_on|date:"d M Y" }}{% endif %}{% if n.publish_on > today %} <span class="badge attention">{% trans "Later" %}</span>{% endif %}</td>
+    <td class="num">{{ n.read_count }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "inbox" %}<p>{% trans "No notices yet." %}</p></div>{% endif %}
+{% endblock %}

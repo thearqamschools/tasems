@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Message template" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'notices:templates' %}">‹ {% trans "Message templates" %}</a></p>
+<h1>{% trans "Message template" %}</h1>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  {% for field in form %}{% include "includes_field.html" %}{% endfor %}
+  <button class="button" type="submit">{% trans "Save template" %}</button>
+</form>
+<div class="card"><strong>{% trans "Placeholders" %}</strong><ul>{% for p, label in placeholders %}<li><code dir="ltr">{{ p }}</code> — {{ label }}</li>{% endfor %}</ul></div>
+{% endblock %}

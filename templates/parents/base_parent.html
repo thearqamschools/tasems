@@ -8,6 +8,9 @@
   <title>{% block title %}{% trans "Parents" %}{% endblock %} · {% trans "The Arqam Schools" %}</title>
   <link rel="stylesheet" href="{% static 'css/tasems.css' %}">
   <link rel="icon" href="{% static 'img/arqam-logo-192.png' %}">
+  <link rel="manifest" href="{% url 'parents:manifest' %}">
+  <link rel="apple-touch-icon" href="{% static 'img/arqam-logo-192.png' %}">
+  <script src="{% static 'js/parents.js' %}" defer></script>
 </head>
 <body class="parent">
 {% if DEMO_MODE %}<div class="demo-banner" role="note">{% trans "DEMO — fictional data for testing. Do not enter real student information." %}</div>{% endif %}

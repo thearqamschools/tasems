@@ -15,4 +15,10 @@ urlpatterns = [
     path("child/<int:student_id>/voucher/<int:voucher_id>.pdf", views.voucher, name="voucher"),
     path("child/<int:student_id>/result/<int:exam_id>.pdf", views.result, name="result"),
     path("codes/", views.codes, name="codes"),
+    path("manifest.webmanifest", views.manifest, name="manifest"),
+    path("sw.js", views.service_worker, name="service_worker"),
+    path("offline/", views.offline, name="offline"),
+    path("notices/", views.notices, name="notices"),
+    path("notices/<int:notice_id>/", views.notice, name="notice"),
+    path("notices/<int:notice_id>/file/", views.notice_file, name="notice_file"),
 ]

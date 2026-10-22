@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ notice.title }}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'notices:index' %}">‹ {% trans "Notices" %}</a></p>
+<div class="page-header">
+  <div><h1>{{ notice.title }}</h1>
+  <p class="lede">{{ notice.publish_on|date:"d F Y" }} · {{ notice.get_audience_display }} · {% if notice.branch %}{{ notice.branch.name }}{% elif notice.head_office %}{{ notice.head_office.name }}{% else %}{% trans "All branches" %}{% endif %}</p></div>
+  <div class="actions"><button class="button quiet" type="button" data-print>{% icon "printer" %}{% trans "Print" %}</button></div>
+</div>
+{% if notice.is_withdrawn %}<ul class="messages"><li class="warning">{% icon "triangle-alert" %}<span>{% trans "This notice was withdrawn and is no longer shown." %}</span></li></ul>{% endif %}
+<article class="card notice-body" dir="auto">{{ notice.body|linebreaks }}</article>
+{% if notice.attachment %}<p><a class="button secondary" href="{% url 'notices:attachment' notice.id %}">{% icon "download" %}{% trans "Open the attachment" %}</a></p>{% endif %}
+{% with levels=notice.class_levels.all %}{% if levels %}<p class="muted">{% trans "Only for the parents of:" %} {% for l in levels %}{{ l }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}{% endwith %}
+{% if can_manage %}
+<p class="muted">{% blocktrans count n=read_count %}Opened by {{ n }} person.{% plural %}Opened by {{ n }} people.{% endblocktrans %}</p>
+{% if not notice.is_withdrawn %}<form method="post" action="{% url 'notices:withdraw' notice.id %}" class="no-print" data-confirm="{% trans 'Parents and staff will no longer see this notice.' %}" data-confirm-button="{% trans 'Withdraw' %}">{% csrf_token %}<button class="button danger" type="submit">{% trans "Withdraw notice" %}</button></form>{% endif %}
+{% endif %}
+{% endblock %}

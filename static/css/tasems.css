@@ -654,3 +654,11 @@ section > h2:first-child { margin-block-start: 0; }
 .award-table td.award-mark { min-inline-size: 7rem; }
 .signatures { display: flex; justify-content: space-between; gap: var(--space-5); margin-block-start: var(--space-8, 4rem); }
 .signatures div { flex: 1; max-inline-size: 14rem; border-block-start: 1px solid var(--ink); text-align: center; padding-block-start: var(--space-1); }
+
+/* Notices and messages (M8) */
+.notice-body { white-space: normal; line-height: 1.7; }
+.message-preview { white-space: pre-wrap; font-family: inherit; margin: 0; max-inline-size: 38rem; }
+.notice-list { list-style: none; padding: 0; margin: 0 0 var(--space-4); display: grid; gap: var(--space-2); }
+.notice-list a { display: block; color: inherit; text-decoration: none; }
+.notice-list a:hover { border-color: var(--brand); }
+.notice-list .unread { border-inline-start: 4px solid var(--accent); }

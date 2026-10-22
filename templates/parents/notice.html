@@ -1,0 +1,9 @@
+{% extends "parents/base_parent.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ notice.title }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'parents:notices' %}">‹ {% trans "Notices from school" %}</a></p>
+<h1>{{ notice.title }}</h1>
+<p class="lede">{{ notice.publish_on|date:"d F Y" }}</p>
+<article class="card notice-body" dir="auto">{{ notice.body|linebreaks }}</article>
+{% if notice.attachment %}<p><a class="button" href="{% url 'parents:notice_file' notice.id %}">{% icon "download" %}{% trans "Open the attachment" %}</a></p>{% endif %}
+{% endblock %}

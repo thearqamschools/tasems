@@ -9,6 +9,13 @@
   {% if has_money %}<div class="actions"><button type="button" class="button quiet sm" data-money-toggle aria-pressed="false" data-label-hide="{% trans 'Hide amounts' %}" data-label-show="{% trans 'Show amounts' %}">{% trans "Hide amounts" %}</button></div>{% endif %}
 </div>
 
+{% if notices %}
+<section aria-labelledby="h-notices">
+  <h2 id="h-notices">{% trans "Notices" %}</h2>
+  <ul class="notice-list">{% for n in notices %}<li><a class="card{% if n.id in unread_notices %} unread{% endif %}" href="{% url 'notices:detail' n.id %}"><strong>{{ n.title }}</strong>{% if n.id in unread_notices %} <span class="badge attention">{% trans "New" %}</span>{% endif %}<div class="muted small">{{ n.publish_on|date:"d M Y" }}</div></a></li>{% endfor %}</ul>
+</section>
+{% endif %}
+
 {% if quick_actions %}
 <nav class="quick-actions" aria-label="{% trans 'Quick actions' %}">
   {% for url, label, icon in quick_actions %}<a href="{{ url }}">{% icon icon %}<span>{{ label }}</span></a>{% endfor %}
