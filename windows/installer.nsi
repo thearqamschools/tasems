@@ -41,6 +41,9 @@ FunctionEnd
 
 Section "TASEMS" Main
   SetOutPath "$INSTDIR"
+  ; A running database would lock its files: stop it first (an older TASEMS may be installed).
+  IfFileExists "$INSTDIR\app\windows\launcher.py" 0 +2
+    ExecWait '${PY} ${LAUNCHER} --stop-quiet'
   ; A new version replaces the program; the data (in TASEMS-data) is kept.
   RMDir /r "$INSTDIR\app"
   File /r "${BUILD}\python"

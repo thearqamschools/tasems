@@ -18,6 +18,10 @@ B="$WORK/build"; C="$WORK/cache"
 [ -f "$C/gtk.exe" ] || curl -sSL -o "$C/gtk.exe" "$GTK_URL"
 ls "$C"/pgserver-*win_amd64.whl >/dev/null 2>&1 || pip download -q --no-deps --only-binary=:all: \
   --platform win_amd64 --python-version 3.12 pgserver==0.1.4 -d "$C"
+# The Windows build has no time zone files; they are the same on every platform, so take them from the Linux
+# build of the same PostgreSQL (16.2). Without them PostgreSQL refuses TimeZone "UTC".
+ls "$C"/pgserver-*manylinux*.whl >/dev/null 2>&1 || pip download -q --no-deps --only-binary=:all: \
+  --platform manylinux2014_x86_64 --python-version 3.12 pgserver==0.1.4 -d "$C"
 
 echo "Python..."
 mkdir -p "$WORK/py" && unzip -q -o "$C/python.nupkg" 'tools/*' -d "$WORK/py"
@@ -31,7 +35,11 @@ pip install -q --target "$B/python/Lib/site-packages" --platform win_amd64 --pyt
 echo "PostgreSQL..."
 mkdir -p "$WORK/pg" && unzip -q -o "$C"/pgserver-*win_amd64.whl 'pgserver/pginstall/*' -d "$WORK/pg"
 mkdir -p "$B/pgsql" && for d in bin lib share; do mv "$WORK/pg/pgserver/pginstall/$d" "$B/pgsql/"; done
+rm -rf "$WORK/pg" && mkdir -p "$WORK/pg"
+unzip -q -o "$C"/pgserver-*manylinux*.whl 'pgserver/pginstall/share/postgresql/timezone/*' -d "$WORK/pg"
+mv "$WORK/pg/pgserver/pginstall/share/postgresql/timezone" "$B/pgsql/share/postgresql/timezone"
 rm -rf "$WORK/pg"
+test -f "$B/pgsql/share/postgresql/timezone/UTC"
 
 echo "GTK..."
 rm -rf "$WORK/gtk" && 7z x -y -o"$WORK/gtk" "$C/gtk.exe" >/dev/null

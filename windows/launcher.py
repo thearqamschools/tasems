@@ -255,6 +255,8 @@ def main():
         else:
             start()
     except Exception as error:
+        if not action:
+            database_down()  # do not leave the database running after a failed start
         say("")
         say(f"  TASEMS could not start: {error}")
         if getattr(error, "stderr", None):

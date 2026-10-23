@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.33.1 — 2026-10-23 — Windows installer fix
+
+Fixed
+- First start on Windows stopped with "invalid value for parameter TimeZone: UTC": the Windows PostgreSQL build
+  had no time zone files. They are now added from the same PostgreSQL version (16.2).
+- The installer stops a running TASEMS database before replacing the program, and a failed start no longer
+  leaves the database running.
+
 ## 0.33.0 — 2026-10-23 — Windows installer (TASEMS-Setup.exe)
 
 Added
