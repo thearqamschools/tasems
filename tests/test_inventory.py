@@ -113,7 +113,8 @@ def test_counter_fee_account_needs_a_student(shop, login_as):
 
 def test_lists_reports_and_excel(shop, login_as, make_user):
     S.sell(shop["branch"], [(shop["book"], 3)], TODAY, "cash", shop["accountant"])
-    principal = login_as(make_user("principal", Scope.BRANCH, shop["branch"]))
+    assert login_as(make_user("principal", Scope.BRANCH, shop["branch"])).get("/inventory/").status_code == 403
+    principal = login_as(make_user("branch_owner", Scope.BRANCH, shop["branch"]))  # the Director
     page = principal.get("/inventory/").content.decode()
     assert "English reader" in page and "Add item" in page and 'href="/inventory/"' in page
     assert principal.get("/inventory/?format=xlsx")["Content-Type"].startswith("application/vnd.openxml")
@@ -126,7 +127,7 @@ def test_lists_reports_and_excel(shop, login_as, make_user):
 
 
 def test_item_form_and_barcode_unique(shop, login_as, make_user):
-    principal = login_as(make_user("principal", Scope.BRANCH, shop["branch"]))
+    principal = login_as(shop["accountant"])  # the accountant keeps the item list (23 Oct 2026)
     data = {"name": "Pencil", "category": "stationery", "barcode": "978100", "sale_price": "20", "reorder_level": "5",
             "is_active": "on"}  # fmt: skip
     assert "already has this barcode" in principal.post("/inventory/items/new/", data).content.decode()
@@ -149,8 +150,10 @@ def test_permissions(shop, login_as, make_user, org):
     assert teacher.get("/inventory/").status_code == 403
     assert teacher.get("/inventory/sell/").status_code == 403
     accountant = login_as(shop["accountant"])
-    assert accountant.get("/inventory/items/new/").status_code == 403  # the principal keeps the item list
+    assert accountant.get("/inventory/items/new/").status_code == 200  # the accountant keeps the item list
     sale = S.sell(shop["branch"], [(shop["tie"], 1)], TODAY, "cash", shop["accountant"])
-    assert accountant.post(f"/inventory/sales/{sale.id}/cancel/", {"reason": "x"}).status_code == 403
+    assert accountant.post(f"/inventory/sales/{sale.id}/cancel/", {"reason": "x"}).status_code == 302
+    principal = login_as(make_user("principal", Scope.BRANCH, shop["branch"]))
+    assert principal.get("/inventory/").status_code == 403 and principal.get("/inventory/sell/").status_code == 403
     other = login_as(make_user("principal", Scope.BRANCH, org["lhr_franchise"]))
     assert other.get(f"/inventory/items/{shop['book'].id}/").status_code in (403, 404)

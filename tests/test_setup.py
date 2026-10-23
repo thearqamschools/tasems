@@ -204,8 +204,8 @@ def test_section_rules_are_checked(org, make_user, login_as):
     assert "name" in r.context["form"].errors  # same name again in the same class and session
 
 
-def test_principal_sets_own_fee_rates_only(org, make_user, login_as):
-    principal = make_user("principal", Scope.BRANCH, org["samanabad"])
+def test_director_sets_own_fee_rates_only(org, make_user, login_as):
+    principal = make_user("branch_owner", Scope.BRANCH, org["samanabad"])
     client = login_as(principal)
     head = FeeHead.objects.get(code="tuition")
     r = client.post("/setup/fees/rates/new/", {"head": head.pk, "amount": "4500", "effective_from": "2027-04-15"})

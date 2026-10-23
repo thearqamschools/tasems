@@ -105,7 +105,10 @@ def test_receive_link_only_for_people_who_take_payments(demo, login_as, client):
     assert "/receive/" in accountant
     client.logout()
     admissions = login_as(User.objects.get(username="demo-admissions")).get(url).content.decode()
-    assert "/receive/" not in admissions
+    assert "/receive/" in admissions  # the Admin receives fees too (23 Oct 2026)
+    client.logout()
+    teacher = login_as(User.objects.get(username="demo-teacher")).get(url)
+    assert teacher.status_code == 403
 
 
 def test_register_script_survives_urdu_quotes(demo, login_as, settings):
@@ -139,7 +142,7 @@ def test_risky_actions_ask_for_confirmation(demo, login_as):
     from apps.fees.models import Payment
 
     payment = Payment.objects.filter(is_reversed=False).first()
-    principal = login_as(User.objects.get(username="demo-principal"))
+    principal = login_as(User.objects.get(username="demo-director"))
     receipt = principal.get(f"/fees/receipt/{payment.pk}/").content.decode()
     assert "data-confirm=" in receipt and 'id="confirm-dialog"' in receipt
     account = principal.get(f"/fees/student/{payment.student_id}/").content.decode()

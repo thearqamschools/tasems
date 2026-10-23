@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.30.0 — 2026-10-23 — Logins by designation (project lead's table)
+
+Changed
+- **Director** (branch owner) can now do everything in the branch, not only see it — including receiving fees,
+  approving discounts, fee rates, expenses, payroll and shop.
+- **Principal** no longer receives fees or sees fee figures, expenses, accounting or the shop; sees payroll (read
+  only) and the **fee defaulters list** only. Staff, Hifz, notices and needs attention stay.
+- **Vice Principal / Coordinator** now see the fee defaulters list (nothing else about fees).
+- **Accountant** now has payroll in full (salaries, finalise, payslips), the shop in full (items, cancelling
+  sales) and cancels expenses and other income.
+- **Admin** (admissions officer) can now receive fees.
+- Only the Director, the Accountant and the Admin receive fees. Menus, reports and dashboards follow these rights.
+- docs/DESIGNATION_PERMISSIONS.md updated to the approved table.
+
 ## 0.29.1 — 2026-10-23 — Project lead's answers
 
 Changed

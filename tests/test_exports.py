@@ -38,7 +38,7 @@ def school(org, make_user, section):
         )
         Enrolment.objects.create(branch=branch, student=s, session=org["session"], section=section)
         kids.append(s)
-    principal = make_user("principal", Scope.BRANCH, branch)
+    principal = make_user("branch_owner", Scope.BRANCH, branch)  # the Director sees every list
     return {"branch": branch, "kids": kids, "principal": principal, "section": section}
 
 

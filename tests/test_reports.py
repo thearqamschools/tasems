@@ -53,9 +53,9 @@ def test_centre_shows_only_allowed_modules(school, login_as, make_user):
         "Defaulters by family",
         "Monthly attendance by class",
         "Monthly sheet",
-        "Expenses of the month",
     ):
         assert title in page
+    assert "Expenses of the month" not in page and "Daily collection" not in page  # no finance (23 Oct 2026)
     teacher = login_as(make_user("subject_teacher", Scope.BRANCH, school["branch"]))
     page = teacher.get("/reports/").content.decode()
     assert "Class strength" in page and "Defaulters" not in page and "Monthly sheet" not in page

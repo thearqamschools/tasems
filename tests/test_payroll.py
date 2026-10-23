@@ -26,7 +26,7 @@ def november(monkeypatch):
 @pytest.fixture
 def staff(org, make_user):
     branch = org["samanabad"]
-    principal = make_user("principal", Scope.BRANCH, branch)
+    accountant = make_user("accountant", Scope.BRANCH, branch)
 
     def person(code, joined=dt.date(2025, 1, 1), salary=SALARY):
         e = Employee.objects.create(
@@ -49,7 +49,7 @@ def staff(org, make_user):
         StaffDay.objects.create(branch=branch, employee=a, date=dt.date(2026, 10, day), status=status)
     new = person("E2", joined=dt.date(2026, 10, 17))
     unpaid = person("E3", salary=None)
-    return {"branch": branch, "principal": principal, "a": a, "new": new, "unpaid": unpaid}
+    return {"branch": branch, "accountant": accountant, "a": a, "new": new, "unpaid": unpaid}
 
 
 def test_absence_and_leave_are_cut_per_day(staff):
@@ -63,7 +63,7 @@ def test_absence_and_leave_are_cut_per_day(staff):
 
 
 def test_finalise_locks_the_month_and_makes_payslips(staff, login_as):
-    client = login_as(staff["principal"])
+    client = login_as(staff["accountant"])
     page = client.get("/payroll/?month=2026-10").content.decode()
     assert "26,613" in page and "Salary not set" in page and "Finalise this month" in page
     client.post("/payroll/finalise/?month=2026-10")
@@ -83,19 +83,19 @@ def test_finalise_locks_the_month_and_makes_payslips(staff, login_as):
 
 
 def test_current_month_cannot_be_finalised_and_who_may(staff, login_as, make_user):
-    client = login_as(staff["principal"])
+    client = login_as(staff["accountant"])
     with pytest.raises(PayrollRun.DoesNotExist):
         client.post("/payroll/finalise/?month=2026-12")
         PayrollRun.objects.get(month=dt.date(2026, 12, 1))
-    accountant = login_as(make_user("accountant", Scope.BRANCH, staff["branch"]))
-    assert accountant.get("/payroll/?month=2026-10").status_code == 200
-    assert accountant.post("/payroll/finalise/?month=2026-10").status_code == 403
-    assert accountant.post("/payroll/salaries/", {f"salary_{staff['unpaid'].id}": "20000"}).status_code == 403
+    principal = login_as(make_user("principal", Scope.BRANCH, staff["branch"]))
+    assert principal.get("/payroll/?month=2026-10").status_code == 200  # principals see payroll (23 Oct 2026)
+    assert principal.post("/payroll/finalise/?month=2026-10").status_code == 403
+    assert principal.post("/payroll/salaries/", {f"salary_{staff['unpaid'].id}": "20000"}).status_code == 403
     teacher = login_as(make_user("class_teacher", Scope.BRANCH, staff["branch"]))
     assert teacher.get("/payroll/").status_code == 403
 
 
 def test_salaries_page_saves_and_records(staff, login_as):
-    client = login_as(staff["principal"])
+    client = login_as(staff["accountant"])
     client.post("/payroll/salaries/", {f"salary_{staff['unpaid'].id}": "25,000", f"bank_name_{staff['unpaid'].id}": ""})
     assert EmployeePay.objects.get(employee=staff["unpaid"]).monthly_salary == D(25000)

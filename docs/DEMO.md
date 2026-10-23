@@ -35,10 +35,12 @@ python manage.py runserver                    # open http://127.0.0.1:8000
 
 | Sign in as | Username | What to try |
 | --- | --- | --- |
-| Principal | `demo-principal` | Everything for the branch: students, attendance, diary, exams, fees, admissions, staff |
+| Director | `demo-director` | Everything in the branch, including receiving fees, expenses, payroll and the shop |
+| Principal | `demo-principal` | Students, attendance, diary, exams, admissions, staff, Hifz, notices, needs attention; payroll (view) and the fee defaulters list only |
 | Class teacher (Class 4-A) | `demo-teacher` | Take today's register, write the diary, enter marks, "My attendance" |
-| Accountant | `demo-accountant` | Make vouchers, receive fees, defaulters, daily collection |
-| Admissions officer | `demo-admissions` | Inquiries due today, follow-ups, WhatsApp button, admit a child |
+| Accountant | `demo-accountant` | Make vouchers, receive fees, defaulters, daily collection, expenses, shop & stock, payroll |
+| Admissions officer | `demo-admissions` | Inquiries due today, follow-ups, WhatsApp button, admit a child, receive fees |
+| Qari (Hifz teacher) | `demo-qari` | Today's Hifz sheet for Hifz-e-Quran Boys, para tests |
 | Head office | `demo-headoffice` | Faisalabad head office: its branches (Samanabad + Demo Branch FSD-1 to FSD-3), royalty statement, Setup |
 | Network (both head offices) | `demo-network` | All 7 branches in Faisalabad and Lahore: network dashboard with filters by head office and region, royalty statement, Setup → Branches and regions, Users and roles, Academic sessions |
 | Principal of a demo branch | `demo-principal-fsd-1` … `demo-principal-lhr-3` | One fictional branch each |

@@ -25,7 +25,7 @@ PLACEHOLDERS = [
 def audiences(user, branch):
     """[(value, label)] the person may prepare messages for (each needs the page's own permission)."""
     out = []
-    if user.has_branch_perm("fees.view_voucher", branch.id):
+    if user.has_branch_perm("fees.view_defaulters", branch.id):
         out.append(("defaulters", _("Parents of fee defaulters")))
     if user.has_branch_perm("attendance.view_attendancerecord", branch.id):
         out.append(("absent", _("Parents of students absent today")))

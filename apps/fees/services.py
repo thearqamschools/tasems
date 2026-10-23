@@ -40,6 +40,7 @@ from .models import (
 
 ZERO = Decimal("0")
 VIEW_PERM = "fees.view_voucher"
+DEFAULTERS_PERM = "fees.view_defaulters"
 VOUCHER_PERM = "fees.add_voucher"
 PAY_PERM = "fees.add_payment"
 REVERSE_PERM = "fees.change_payment"

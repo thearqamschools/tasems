@@ -29,7 +29,7 @@ def attention(request):
     sections = list(sections.order_by("class_level__sort_order", "name"))
     chosen = [s for s in sections if str(s.id) == request.GET.get("section")]
     limits = S.read_limits(request.GET)
-    can_fees = user.has_branch_perm("fees.view_voucher", branch.id)
+    can_fees = user.has_branch_perm("fees.view_defaulters", branch.id)
     can_hifz = user.has_branch_perm("hifz.view_hifzlesson", branch.id)
     rows = S.students_needing_attention(
         branch, session, timezone.localdate(), limits, sections=chosen or sections, can_fees=can_fees,

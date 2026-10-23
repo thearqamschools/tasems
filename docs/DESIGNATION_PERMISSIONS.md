@@ -1,6 +1,6 @@
-# Designation → login permissions (current, 23 Oct 2026)
+# Designation → login permissions (approved by the project lead, 23 Oct 2026)
 
-This table shows **what TASEMS does today**, for the project lead to mark changes.
+This table shows **what TASEMS does today**, as set by the project lead on 23 Oct 2026 (D-083).
 
 **How it works today:**
 - A staff member's **designation** (Staff → Add staff) and their **login** are separate.
@@ -12,17 +12,19 @@ This table shows **what TASEMS does today**, for the project lead to mark change
 
 ## 1. Branch staff (designations from Staff → Add staff)
 
-| # | Designation | Login role today (suggested) | What that login can do today |
+**Fees are received only by the Director, the Accountant and the Admin.**
+
+| # | Designation | Login role | What that login can do |
 |---|---|---|---|
-| 1 | Director | Branch Owner / Franchisee | Sees everything in the branch: students, attendance, diary, results, fees, royalty, staff, payroll, shop & stock, Hifz, inquiries. Approves 100% discounts. Cannot enter or change anything else. |
-| 2 | Principal | Principal | Everything in the branch: students (add, change, leave school, certificates, promotion), inquiries, attendance (mark and correct), diary, exam marks (enter and correct), fees (vouchers, receive, change charges, approve discounts, branch fee rates and settings), expenses and other income (record and cancel), staff (add, attendance, approve leave, holidays), **payroll** (salaries, finalise the month, payslips), **shop & stock** (items, stock, sell, cancel a sale), **Hifz** (any day, para tests, cancel a test), **notices and parent messages**, **needs attention** (whole branch), sections and campuses. Sees royalty and the users list. |
-| 3 | Vice Principal | Academic Coordinator (or Principal, if the Vice Principal also handles fees and staff) | Students (view), sections (add and change), attendance (mark and correct), diary (write and approve), exam marks (enter and correct), **Hifz** (any day, para tests), **needs attention** (whole branch). **No fees, staff, payroll, shop or expenses.** |
-| 4 | Coordinator | Academic Coordinator | Same as Vice Principal above. Can also be given a whole region. |
-| 5 | Accountant | Accountant | Students (view), fees: make vouchers, receive fees (Cash/Bank, Barcode page), add charges, ask for discounts (cannot approve), change other fees on a voucher while receiving. Records expenses and other income (cannot cancel them). **Shop: sells and records stock in / out** (cannot add items or cancel a sale). **Sees payroll** (cannot change salaries). Sees staff list, staff attendance and leave. Cannot change fee rates. |
-| 6 | Admin | Admissions Officer | Students (add and change, **including leave school, certificates and promotion**), inquiries and follow-ups, admission vouchers (admission and registration fee). Sees fees. Cannot receive fees. |
-| 7 | Senior Teacher | Class Teacher | Students (view), marks attendance for the class, writes the diary, enters exam marks and remarks, **needs attention for own class**. |
-| 8 | Junior Teacher | Class Teacher (if in charge of a class) or Subject Teacher | Subject Teacher: students (view only), sees attendance, diary and results. Cannot enter anything. |
-| 9 | Qari | Hifz Teacher | Students (view only), marks attendance, writes the diary, **Hifz: own section's daily sheet (today), para tests** for any Hifz student of the branch. |
+| 1 | Director | Branch Owner / Franchisee | **Everything in the branch**, seeing and doing: students, inquiries, attendance, diary, marks, fees (vouchers, receiving, discounts and approvals, fee rates and settings, cancelling), royalty, expenses and other income, cash & bank book, profit & loss, staff, payroll, shop & stock, Hifz, notices, needs attention, sections and campuses. |
+| 2 | Principal | Principal | Students (add, change, leave school, certificates, promotion), inquiries, attendance (mark and correct), diary, marks (enter and correct), staff (add, attendance, approve leave, holidays), Hifz (any day, para tests, cancel a test), notices and parent messages, needs attention (whole branch, with unpaid fees), sections and campuses. **Sees payroll** (cannot change it) and **only the fee defaulters list**. **No** fee receiving, other fee figures, expenses, accounting or shop. |
+| 3 | Vice Principal | Academic Coordinator | Attendance (mark and correct), diary (write and approve), marks (enter and correct), sections (add and change), Hifz (any day, para tests), needs attention, **fee defaulters list only**. **No** staff, payroll, shop or other fees. |
+| 4 | Coordinator | Academic Coordinator | Same as Vice Principal. Can also be given a whole region. |
+| 5 | Accountant | Accountant | Vouchers, **receiving fees** (Cash/Bank, Barcode page), adding charges, asking for discounts, defaulters and fee reports; expenses and other income (record and cancel), opening balances, cash & bank book, profit & loss; **shop & stock** (items, stock in / out, selling, cancelling a sale); **payroll in full** (salaries, finalise the month, payslips, bank sheet); sees staff list, staff attendance and leave. |
+| 6 | Admin | Admissions Officer | Students (add and change, including leave school, certificates and promotion), inquiries and follow-ups, admission vouchers, **receiving fees**. |
+| 7 | Senior Teacher | Class Teacher | For the class assigned: daily attendance, diary, marks and remarks, needs attention. |
+| 8 | Junior Teacher | Class Teacher | Same as Senior Teacher when a class is assigned. |
+| 9 | Qari | Hifz Teacher | Hifz only: attendance, diary, the Hifz sheet of own section (today), para tests. |
 | 10 | Guard | No login | — |
 | 11 | Aapa | No login | — |
 | 12 | Janitorial staff | No login | — |
@@ -45,9 +47,6 @@ This table shows **what TASEMS does today**, for the project lead to mark change
 - One person can hold more than one role, for example Principal in one branch and Coordinator in a region.
 - Every change is recorded in the history: who, what, when.
 
-## 4. For the project lead
-Please mark the changes against each row:
-- a different role, or
-- "can also do …" / "should not do …".
-
-TASEMS will then be changed to match the approved table.
+## 4. Changes
+Any change to a row is made in `apps/accounts/management/commands/seed_tasems.py` (role permissions) and takes
+effect for every login with that role when `seed_tasems` runs on deploy.

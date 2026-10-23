@@ -108,6 +108,7 @@ class Command(BaseCommand):
                 self.style.SUCCESS("Demo data created. Sign in as demo-principal (password: DEMO_PASSWORD).")
             )
         self.demo_banks()
+        self.demo_director(password)
         if options["without_network"]:
             return
         if Branch.objects.filter(code__startswith="demo-").exists():
@@ -157,6 +158,18 @@ class Command(BaseCommand):
             )  # fmt: skip
             if qty:
                 stock.move(item, "received", qty, today, user, note="Demo opening stock")
+
+    def demo_director(self, password):
+        """A Director (branch owner) login for the demo campus, who can do everything in the branch (added once)."""
+        if User.objects.filter(username="demo-director").exists():
+            return
+        branch = Branch.objects.get(code="fsd-samanabad")
+        u = User.objects.create_user(
+            username="demo-director", password=password, first_name="Demo", last_name="Director"
+        )
+        RoleAssignment.objects.create(
+            user=u, role=Role.objects.get(code="branch_owner"), scope=Scope.BRANCH, branch=branch
+        )
 
     def demo_hifz(self, password):
         """A fictional Hifz section with a Qari login (demo-qari), six boys, their lessons for the last three

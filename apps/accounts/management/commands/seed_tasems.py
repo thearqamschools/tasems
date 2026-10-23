@@ -89,7 +89,14 @@ ROLES = [
         True,
     ),
     ("regional_director", "Regional Director", "ریجنل ڈائریکٹر", [R], VIEW_PEOPLE + VIEW_ACADEMICS, True),
-    ("branch_owner", "Branch Owner / Franchisee", "برانچ مالک", [B], VIEW_PEOPLE + VIEW_ACADEMICS, True),
+    (
+        "branch_owner",
+        "Branch Owner / Franchisee",
+        "برانچ مالک",
+        [B],
+        VIEW_PEOPLE + EDIT_PEOPLE + VIEW_ACADEMICS + EDIT_SECTIONS + ["accounts.view_user"],
+        True,
+    ),
     (
         "principal",
         "Principal",
@@ -183,7 +190,9 @@ FEE_VIEW = [
     "fees.view_payment",
     "fees.view_concession",
     "fees.view_branchfeesettings",
+    "fees.view_defaulters",
 ]
+DEFAULTERS = ["fees.view_defaulters"]  # principals and coordinators: who owes, nothing else about fees
 FEE_COLLECT = FEE_VIEW + ["fees.add_payment", "fees.add_voucher", "fees.add_charge", "fees.add_concession"]
 FEE_APPROVE = ["fees.approve_concession"]
 FEE_MANAGE = (
@@ -273,7 +282,7 @@ ADM_WORK = ADM_VIEW + ["admissions.add_inquiry", "admissions.change_inquiry", "a
 NOTICE_POST = ["notices.view_notice", "notices.add_notice", "notices.change_notice", "notices.send_messages"]
 TEMPLATE_EDIT = ["notices.view_messagetemplate", "notices.add_messagetemplate", "notices.change_messagetemplate"]
 
-# Payroll (M10): principals set salaries and finalise the month; accountants and supervisors see it.
+# Payroll (M10): accountants and directors set salaries and finalise the month; principals and supervisors see it.
 PAYROLL_VIEW = ["payroll.view_employeepay", "payroll.view_payrollrun", "payroll.view_payslip"]
 PAYROLL_MANAGE = PAYROLL_VIEW + [
     "payroll.add_employeepay",
@@ -283,17 +292,40 @@ PAYROLL_MANAGE = PAYROLL_VIEW + [
     "payroll.finalise_payroll",
 ]
 
-# Shop & stock (M11): principals keep the item list and cancel sales; accountants sell and record stock received;
+# Shop & stock (M11): accountants and directors keep the item list, sell, record stock and cancel sales;
 # supervisors see stock and sales.
 INVENTORY_VIEW = ["inventory.view_item", "inventory.view_stockmove", "inventory.view_sale", "inventory.view_saleline"]
 INVENTORY_WORK = INVENTORY_VIEW + ["inventory.add_sale", "inventory.add_saleline", "inventory.add_stockmove"]
 INVENTORY_MANAGE = INVENTORY_WORK + ["inventory.add_item", "inventory.change_item", "inventory.change_sale"]
 
 # Hifz (M12): Hifz teachers (Qari, senior Qari) record their own sections' daily lessons and take para tests;
-# principals and coordinators also correct any section and cancel a test; supervisors see progress.
+# directors, principals and coordinators also correct any section and cancel a test; supervisors see progress.
 HIFZ_VIEW = ["hifz.view_hifzlesson", "hifz.view_paratest"]
 HIFZ_WRITE = HIFZ_VIEW + ["hifz.add_hifzlesson", "hifz.add_paratest"]
 HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.change_paratest"]
+
+# Who does what in a branch (project lead, 23 Oct 2026):
+# - Director (branch owner): everything in the branch, including receiving fees.
+# - Principal: students, attendance, diary, marks, staff, Hifz, notices, needs attention; sees payroll and the
+#   fee defaulters list only. No fee receiving, fee figures, expenses or shop.
+# - Vice Principal / Coordinator: attendance, diary, marks, sections, Hifz, defaulters list. No staff, payroll, shop.
+# - Accountant: vouchers, receiving fees, expenses and other income, shop & stock, payroll (full).
+# - Admin (admissions officer): students, inquiries, admission vouchers, and receiving fees.
+# Only the Director, the Accountant and the Admin receive fees.
+BRANCH_EVERYTHING = (
+    PAYROLL_MANAGE
+    + INVENTORY_MANAGE
+    + HIFZ_MANAGE
+    + NOTICE_POST
+    + ATT_MANAGE
+    + DIARY_MANAGE
+    + EXAM_MANAGE
+    + FEE_MANAGE
+    + ROYALTY_VIEW
+    + EXPENSE_MANAGE
+    + HR_MANAGE
+    + ADM_WORK
+)
 
 EXTRA_PERMISSIONS = {
     "network_admin": HIFZ_VIEW
@@ -332,36 +364,23 @@ EXTRA_PERMISSIONS = {
     + ROYALTY_VIEW
     + HR_VIEW
     + ADM_VIEW,
-    "branch_owner": HIFZ_VIEW
-    + INVENTORY_VIEW
-    + PAYROLL_VIEW
-    + ATT_VIEW
-    + DIARY_VIEW
-    + EXAM_VIEW
-    + FEE_VIEW
-    + FEE_APPROVE
-    + ROYALTY_VIEW
-    + HR_VIEW
-    + ADM_VIEW,
-    "principal": HIFZ_MANAGE
-    + INVENTORY_MANAGE
-    + PAYROLL_MANAGE
+    "branch_owner": BRANCH_EVERYTHING,
+    "principal": PAYROLL_VIEW
+    + DEFAULTERS
+    + HIFZ_MANAGE
     + NOTICE_POST
     + ATT_MANAGE
     + DIARY_MANAGE
     + EXAM_MANAGE
-    + FEE_MANAGE
-    + ROYALTY_VIEW
-    + EXPENSE_MANAGE
     + HR_MANAGE
     + ADM_WORK,
-    "academic_coordinator": HIFZ_MANAGE + ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
-    "accountant": INVENTORY_WORK
-    + PAYROLL_VIEW
-    + FEE_COLLECT
-    + EXPENSE_WORK
+    "academic_coordinator": DEFAULTERS + HIFZ_MANAGE + ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
+    "accountant": FEE_COLLECT
+    + EXPENSE_MANAGE
+    + INVENTORY_MANAGE
+    + PAYROLL_MANAGE
     + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
-    "admissions_officer": FEE_VIEW + ["fees.add_voucher", "fees.add_charge"] + ADM_WORK,
+    "admissions_officer": FEE_COLLECT + ADM_WORK,
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": HIFZ_WRITE + ATT_MARK + DIARY_WRITE,
     "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,

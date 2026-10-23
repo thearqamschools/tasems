@@ -19,10 +19,10 @@ OCT1, OCT5, OCT10 = dt.date(2026, 10, 1), dt.date(2026, 10, 5), dt.date(2026, 10
 @pytest.fixture
 def money(org, make_user):
     branch = org["samanabad"]
-    principal = make_user("principal", Scope.BRANCH, branch)
+    director = make_user("branch_owner", Scope.BRANCH, branch)
     bank = BankAccount.objects.create(branch=branch, name="Askari")
     kid = Student.objects.create(branch=branch, admission_no="1", first_name="A", gender="male", admission_date=OCT1)
-    pay = dict(branch=branch, student=kid, received_by=principal)
+    pay = dict(branch=branch, student=kid, received_by=director)
     Payment.objects.create(**pay, amount=D(4300), paid_on=OCT5, method="counter")
     Payment.objects.create(**pay, amount=D(4000), paid_on=OCT5, method="bank", bank=bank)
     Payment.objects.create(**pay, amount=D(999), paid_on=OCT5, method="counter", is_reversed=True)
@@ -32,7 +32,7 @@ def money(org, make_user):
         head=IncomeHead.objects.get(code="uniform"),
         amount=D(1500),
         description="Uniform sale",
-        recorded_by=principal,
+        recorded_by=director,
     )
     Expense.objects.create(
         branch=branch,
@@ -40,7 +40,7 @@ def money(org, make_user):
         head=ExpenseHead.objects.get(code="utilities"),
         amount=D(1200),
         description="Electricity",
-        recorded_by=principal,
+        recorded_by=director,
     )
     Expense.objects.create(
         branch=branch,
@@ -50,16 +50,16 @@ def money(org, make_user):
         description="Fan",
         paid_from="bank",
         bank=bank,
-        recorded_by=principal,
+        recorded_by=director,
     )
-    return {"branch": branch, "principal": principal, "bank": bank}
+    return {"branch": branch, "director": director, "bank": bank}
 
 
 def test_cash_book_counts_forward_from_the_opening_balance(money):
     branch = money["branch"]
     plain = books.book(branch, "cash", OCT1, OCT10)
     assert (plain["opening"], plain["total_in"], plain["total_out"], plain["closing"]) == (0, D(5800), D(1200), D(4600))
-    OpeningBalance.objects.create(branch=branch, as_of=OCT1, amount=D(10000), recorded_by=money["principal"])
+    OpeningBalance.objects.create(branch=branch, as_of=OCT1, amount=D(10000), recorded_by=money["director"])
     counted = books.book(branch, "cash", OCT1, OCT10)
     assert counted["closing"] == D(14600) and counted["opening_record"] is not None
     later = books.book(branch, "cash", dt.date(2026, 10, 6), OCT10)
@@ -76,14 +76,14 @@ def test_profit_and_loss_and_page(money, login_as):
         D(2000),
         D(7800),
     )
-    client = login_as(money["principal"])
+    client = login_as(money["director"])
     page = client.get("/expenses/profit-loss/?from=2026-10-01&to=2026-10-10").content.decode()
     assert "7,800" in page and "Uniform sale" in page and "Fan" not in page  # totals by head, not each entry
     assert client.get("/expenses/profit-loss/?from=2026-10-01&to=2026-10-10&format=xlsx").status_code == 200
 
 
 def test_income_is_recorded_and_cancelled_with_a_reason(money, login_as):
-    client = login_as(money["principal"])
+    client = login_as(money["director"])
     head = IncomeHead.objects.get(code="canteen")
     client.post(
         "/expenses/income/new/",
@@ -99,14 +99,14 @@ def test_income_is_recorded_and_cancelled_with_a_reason(money, login_as):
 
 
 def test_opening_balance_from_the_page_and_who_may(money, login_as, make_user):
-    client = login_as(money["principal"])
+    client = login_as(money["director"])
     client.post("/expenses/book/", {"account": "cash", "as_of": "2026-10-01", "amount": "5000"})
     assert OpeningBalance.objects.get(branch=money["branch"], bank=None).amount == D(5000)
     accountant = login_as(make_user("accountant", Scope.BRANCH, money["branch"]))
-    assert "Enter an opening balance" not in accountant.get("/expenses/book/").content.decode()
-    assert (
-        accountant.post("/expenses/book/", {"account": "cash", "as_of": "2026-10-02", "amount": "1"}).status_code == 403
-    )
+    assert "Enter an opening balance" in accountant.get("/expenses/book/").content.decode()  # accountant: full rights
+    principal = login_as(make_user("principal", Scope.BRANCH, money["branch"]))
+    assert principal.get("/expenses/book/").status_code == 403  # no accounting for principals (23 Oct 2026)
+    assert principal.get("/expenses/profit-loss/").status_code == 403
 
 
 def test_branch_statement_for_head_office(money, login_as, make_user, org):
@@ -115,5 +115,5 @@ def test_branch_statement_for_head_office(money, login_as, make_user, org):
     rows = page.context["rows"]
     samanabad = next(r for r in rows if r["branch"] == money["branch"])
     assert samanabad["net"] == D(7800) and all(r["branch"].head_office == org["fsd"] for r in rows)
-    principal = login_as(money["principal"])
-    assert principal.get("/expenses/branches/").status_code == 403
+    director = login_as(money["director"])
+    assert director.get("/expenses/branches/").status_code == 403

@@ -102,6 +102,20 @@ def build(user, branch, session, today):
             )
         modules.append(Module("attendance", _("Attendance"), "calendar-check", figures, items))
 
+    if perm("fees.view_defaulters") and not perm("fees.view_voucher"):
+        modules.append(
+            Module(
+                "fees",
+                _("Fee defaulters"),
+                "triangle-alert",
+                [],
+                [
+                    Report(_("Defaulters"), _("Students with unpaid months, oldest first."), reverse("fees:defaulters")),
+                    Report(_("Defaulters by family"), _("One row per father with every child and the family total."), reverse("fees:defaulters") + "?by=family"),
+                ],
+            )
+        )  # fmt: skip
+
     if perm("fees.view_voucher"):
         f = metrics.fee_month(branch, today)
         items = [

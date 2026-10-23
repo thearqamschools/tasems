@@ -22,7 +22,7 @@
   <tbody>{% for f in families %}<tr>
     <td>{{ f.father|default:"—" }}</td>
     <td>{% if f.phone %}<a href="tel:{{ f.phone }}" class="num">{{ f.phone }}</a>{% else %}—{% endif %}</td>
-    <td>{% for r in f.children %}<a href="{% url 'fees:student' r.student.id %}">{{ r.student.full_name }}</a> <span class="muted small">{{ r.section.class_level|default:"" }} {{ r.section.name|default:"" }} · {{ r.due|rupees }}</span>{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+    <td>{% for r in f.children %}{% if can_fees %}<a href="{% url 'fees:student' r.student.id %}">{{ r.student.full_name }}</a>{% else %}{{ r.student.full_name }}{% endif %} <span class="muted small">{{ r.section.class_level|default:"" }} {{ r.section.name|default:"" }} · {{ r.due|rupees }}</span>{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
     <td class="num"><strong>{{ f.due|rupees }}</strong></td>
   </tr>{% endfor %}</tbody>
 </table></div>
@@ -30,7 +30,7 @@
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Parent mobile" %}</th><th class="num">{% trans "Months unpaid" %}</th><th>{% trans "Since" %}</th><th class="num">{% trans "Owed (Rs)" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr>
-    <td><a href="{% url 'fees:student' r.student.id %}">{{ r.student.full_name }}</a> <span class="muted num">{{ r.student.admission_no }}</span></td>
+    <td>{% if can_fees %}<a href="{% url 'fees:student' r.student.id %}">{{ r.student.full_name }}</a>{% else %}<a href="{% url 'people:student_detail' r.student.id %}">{{ r.student.full_name }}</a>{% endif %} <span class="muted num">{{ r.student.admission_no }}</span></td>
     <td>{{ r.section|default:"—" }}</td>
     <td>{% if r.phone %}<a href="tel:{{ r.phone }}" class="num">{{ r.phone }}</a>{% else %}—{% endif %}</td>
     <td class="num">{{ r.months }}</td><td>{{ r.oldest|date:"M Y" }}</td><td class="num">{{ r.due|rupees }}</td>

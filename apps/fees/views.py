@@ -728,7 +728,7 @@ def concessions(request):
 
 @login_required
 def defaulters(request):
-    branch = _branch(request)
+    branch = _branch(request, S.DEFAULTERS_PERM)
     session = _session()
     try:
         min_months = max(1, int(request.GET.get("months", "1")))
@@ -807,6 +807,7 @@ def defaulters(request):
             "min_months": min_months,
             "sections": sorted(section_names.values(), key=lambda s: (s.class_level.sort_order, s.name)),
             "section_filter": section_filter,
+            "can_fees": request.user.has_branch_perm(S.VIEW_PERM, branch.id),
         },
     )
 

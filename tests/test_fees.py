@@ -319,7 +319,7 @@ def test_royalty_on_all_fees_received(fees, org, make_user):
         branch=franchise, admission_no="R-1", first_name="R", gender="male", admission_date=dt.date(2026, 4, 1)
     )
     Enrolment.objects.create(branch=franchise, student=kid, session=org["session"], section=sec)
-    owner = make_user("principal", Scope.BRANCH, franchise)
+    owner = make_user("branch_owner", Scope.BRANCH, franchise)
     S.generate_vouchers(franchise, org["session"], OCT, OCT, dt.date(2026, 10, 20), owner)
     S.add_charge(kid, FeeHead.objects.get(code="others"), OCT, D(500), owner, note="Books")
     S.record_payment(kid, D(3500), dt.date(2026, 10, 15), "counter", owner)
@@ -338,7 +338,7 @@ def test_royalty_paid_pending_and_total_due_carry_forward(fees, org, make_user, 
     kid = Student.objects.create(
         branch=franchise, admission_no="R-1", first_name="R", gender="male", admission_date=dt.date(2026, 4, 1)
     )
-    owner = make_user("principal", Scope.BRANCH, franchise)
+    owner = make_user("branch_owner", Scope.BRANCH, franchise)
     S.record_payment(kid, D(1_000_000), dt.date(2026, 9, 10), "counter", owner)  # Sep: royalty 100,000
     S.record_payment(kid, D(200_000), dt.date(2026, 10, 10), "counter", owner)  # Oct: royalty 20,000
     admin = make_user("head_office_admin", Scope.HEAD_OFFICE, org["fsd"])
@@ -480,7 +480,7 @@ def test_discount_needs_someone_else_to_approve(fees, login_as, make_user):
     c = Concession.objects.get()
     assert c.status == "pending"
     assert client.post("/fees/discounts/", {"id": c.id, "decision": "approve"}).status_code == 403
-    principal = make_user("principal", Scope.BRANCH, fees["branch"])
+    principal = make_user("branch_owner", Scope.BRANCH, fees["branch"])  # the Director approves
     login_as(principal).post("/fees/discounts/", {"id": c.id, "decision": "approve"})
     c.refresh_from_db()
     assert c.status == "approved" and c.decided_by == principal
@@ -491,7 +491,10 @@ def test_who_can_see_fees(fees, org, login_as, make_user):
     generate(fees)
     v = voucher_of(child)
     assert login_as(make_user("class_teacher", Scope.BRANCH, fees["branch"])).get("/fees/").status_code == 403
-    other = login_as(make_user("principal", Scope.BRANCH, org["fsd_franchise"]))
+    principal = login_as(make_user("principal", Scope.BRANCH, fees["branch"]))
+    assert principal.get("/fees/").status_code == 403  # principals: defaulters only (23 Oct 2026)
+    assert principal.get("/fees/defaulters/").status_code == 200
+    other = login_as(make_user("accountant", Scope.BRANCH, org["fsd_franchise"]))
     assert other.get(f"/fees/voucher/{v.id}/receive/").status_code == 404
     assert other.get(f"/fees/student/{child.id}/").status_code == 404
     assert login_as(fees["user"]).get("/fees/royalty/").status_code == 403

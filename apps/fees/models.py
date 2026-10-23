@@ -300,6 +300,8 @@ class Voucher(BranchOwnedModel):
             models.Index(fields=["branch", "first_month"]),
             models.Index(fields=["student", "status"]),
         ]
+        # Principals and coordinators see who owes fees, but no other fee figures (project lead, 23 Oct 2026).
+        permissions = [("view_defaulters", "Can see the fee defaulters list")]
 
     def __str__(self):
         return f"Voucher {self.number} — {self.student}"

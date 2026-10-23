@@ -32,12 +32,14 @@ def _dash(login_as, username):
     return response
 
 
-def test_principal_sees_branch_fees_and_admissions(demo, login_as):
+def test_principal_sees_branch_but_not_fee_figures(demo, login_as):
     ctx = _dash(login_as, "demo-principal").context
-    for key in ("attendance", "classes", "fees", "admissions", "staff", "students"):
+    for key in ("attendance", "classes", "admissions", "staff", "students"):
         assert key in ctx, key
+    assert "fees" not in ctx and not ctx["has_money"]  # no fee figures for principals (23 Oct 2026)
     assert "my_classes" not in ctx and "network" not in ctx
-    assert ctx["has_money"]
+    director = _dash(login_as, "demo-director").context
+    assert "fees" in director and director["has_money"]
 
 
 def test_teacher_sees_own_classes_not_money(demo, login_as):
@@ -47,7 +49,9 @@ def test_teacher_sees_own_classes_not_money(demo, login_as):
     assert "data-money-toggle" not in _dash(login_as, "demo-teacher").content.decode()
 
 
-@pytest.mark.parametrize("username", ["demo-principal", "demo-teacher", "demo-accountant", "demo-admissions"])
+@pytest.mark.parametrize(
+    "username", ["demo-director", "demo-principal", "demo-teacher", "demo-accountant", "demo-admissions"]
+)
 def test_quick_actions_all_open(demo, login_as, username):
     client = login_as(User.objects.get(username=username))
     actions = client.get("/").context["quick_actions"]
@@ -57,7 +61,7 @@ def test_quick_actions_all_open(demo, login_as, username):
 
 
 def test_fee_figures_match_the_fees_page(demo, login_as):
-    ctx = _dash(login_as, "demo-principal").context
+    ctx = _dash(login_as, "demo-director").context
     branch = ctx["branch"]
     summary = reports.month_summary(branch, month_start(timezone.localdate()))
     fees = ctx["fees"]
