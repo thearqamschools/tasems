@@ -243,12 +243,20 @@ class BranchForm(Labelled, forms.ModelForm):
             "ownership",
             "royalty_percent",
             "city",
+            "city_code",
+            "is_head_office",
             "address",
             "phone",
             "reference_prefix",
             "is_active",
         ]
-        widgets = {"code": LTR, "phone": LTR, "reference_prefix": LTR, "address": forms.Textarea(attrs={"rows": 2})}
+        widgets = {
+            "code": LTR,
+            "phone": LTR,
+            "reference_prefix": LTR,
+            "city_code": LTR,
+            "address": forms.Textarea(attrs={"rows": 2}),
+        }
 
     def __init__(self, *args, head_offices, **kwargs):
         super().__init__(*args, **kwargs)

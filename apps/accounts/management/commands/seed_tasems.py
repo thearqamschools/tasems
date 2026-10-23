@@ -546,10 +546,10 @@ class Command(BaseCommand):
                 "city": "Faisalabad",
                 "address": "Sanora Colony, Samanabad, Faisalabad, Pakistan",
                 "phone": "041-2660265, 041-2406479",
+                # Head office campus: certificate references read TAS-HO-FSD-0001 (project lead, 23 Oct 2026).
+                "is_head_office": True,
             },
         )
-        # Certificate reference numbers (project lead, 22 Oct 2026); head office can change it in Setup.
-        Branch.objects.filter(code="fsd-samanabad", reference_prefix="").update(reference_prefix="HO-FAISALABAD-FSD")
 
         for code, name, name_ur, scopes, perm_names, mfa in ROLES:
             role, _ = Role.objects.update_or_create(

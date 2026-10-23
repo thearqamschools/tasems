@@ -89,7 +89,7 @@ def test_leaving_with_certificate_and_numbering(org, make_user, login_as):
     s.refresh_from_db()
     cert = Certificate.objects.get(student=s)
     assert s.status == "transferred" and s.status_changed_on == dt.date(2026, 10, 10)
-    assert (cert.kind, cert.reference, cert.reason) == ("leaving", "HO-FAISALABAD-FSD-0001", "Moved city")
+    assert (cert.kind, cert.reference, cert.reason) == ("leaving", "TAS-HO-FSD-0001", "Moved city")
     assert response.url == f"/students/{s.pk}/certificates/{cert.pk}.pdf"
     pdf = client.get(response.url)
     assert pdf.status_code == 200 and pdf.content.startswith(b"%PDF")
@@ -97,14 +97,12 @@ def test_leaving_with_certificate_and_numbering(org, make_user, login_as):
     client.post(f"/students/{other.pk}/certificates/new/", {"conduct": "good"})
     client.post(f"/students/{other.pk}/certificates/new/", {"conduct": "excellent"})
     refs = sorted(Certificate.objects.filter(kind="character").values_list("reference", flat=True))
-    assert refs == ["HO-FAISALABAD-FSD-0002", "HO-FAISALABAD-FSD-0003"]  # one series per branch, never repeated
-    franchise = org["fsd_franchise"]
-    franchise.reference_prefix = "F1-FAISALABAD-FSD"
-    franchise.save()
+    assert refs == ["TAS-HO-FSD-0002", "TAS-HO-FSD-0003"]  # one series per branch, never repeated
+    franchise = org["fsd_franchise"]  # "Test FSD Franchise" in Faisalabad: branch initials, then the city code
     elsewhere = kid(franchise, "303")
     owner = login_as(make_user("principal", Scope.BRANCH, franchise))
     owner.post(f"/students/{elsewhere.pk}/certificates/new/", {"conduct": "good"})
-    assert Certificate.objects.get(student=elsewhere).reference == "F1-FAISALABAD-FSD-0001"  # each branch its own
+    assert Certificate.objects.get(student=elsewhere).reference == "TAS-TFF-FSD-0001"  # each branch its own
     teacher = login_as(make_user("class_teacher", Scope.BRANCH, org["samanabad"]))
     assert teacher.get(f"/students/{other.pk}/leave/").status_code == 403
 
@@ -174,3 +172,20 @@ def test_defaulters_by_family(org, make_user, login_as):
     page = client.get("/fees/defaulters/?by=family").content.decode()
     assert "5,000" in page and "1,500" in page  # one family owes 5,000 for two children
     assert page.index("5,000") < page.index("1,500")  # largest family first
+
+
+def test_reference_starts_are_made_from_the_branch(org):
+    """Project lead, 23 Oct 2026: TAS-<HO or branch initials>-<city code>, unique in the network."""
+    from apps.organisation.models import Branch
+
+    assert org["samanabad"].reference_prefix == "TAS-HO-FSD"
+    assert org["lhr_franchise"].reference_prefix == "TAS-TLF-LHR" and org["lhr_franchise"].city_code == "LHR"
+    gulberg = Branch.objects.create(
+        code="t-gc", name="Gulberg Colony Campus", head_office=org["fsd"], city="Faisalabad"
+    )
+    twin = Branch.objects.create(code="t-gc2", name="Ghulam Colony", head_office=org["fsd"], city="Faisalabad")
+    assert (gulberg.reference_prefix, twin.reference_prefix) == ("TAS-GC-FSD", "TAS-GC2-FSD")
+    sialkot = Branch.objects.create(
+        code="t-skt", name="Model Town", head_office=org["lhr"], city="Sialkot", city_code="skt"
+    )
+    assert sialkot.reference_prefix == "TAS-MT-SKT"  # other cities: the code head office enters

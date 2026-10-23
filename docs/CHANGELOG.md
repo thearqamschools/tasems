@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.31.0 — 2026-10-23 — Certificates on Letter paper; TAS reference numbers
+
+Changed
+- Leaving and character certificates print on **Letter** size (was A4); the letterhead space stays 50 mm at the
+  top and 30 mm at the bottom.
+- **Reference numbers** are made automatically as **TAS-<HO or branch initials>-<city code>-0001**: TAS = The Arqam
+  Schools; HO for a head office campus, otherwise the initials of the branch's name; FSD for Faisalabad, LHR for
+  Lahore. The Samanabad head office campus now gives TAS-HO-FSD-0001 (no city name in it). Two branches with the
+  same initials in one city get TAS-GC-FSD and TAS-GC2-FSD. Certificates already issued keep their number.
+- Setup → Branches: new "City code" (filled in for Faisalabad and Lahore; head office enters it for other cities)
+  and "Head office campus".
+
 ## 0.30.2 — 2026-10-23
 
 Fixed

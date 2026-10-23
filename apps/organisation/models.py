@@ -68,6 +68,12 @@ class Branch(TimeStampedModel):
         help_text=_("Head office royalty on monthly fee collections. Company-owned branches use 0."),
     )
     city = models.CharField(max_length=80)
+    city_code = models.CharField(
+        _("city code"), max_length=6, blank=True, help_text=_("Used in reference numbers, e.g. FSD, LHR.")
+    )
+    is_head_office = models.BooleanField(
+        _("head office campus"), default=False, help_text=_("Reference numbers use HO instead of the branch initials.")
+    )
     address = models.TextField(blank=True)
     phone = models.CharField(max_length=60, blank=True)
     reference_prefix = models.CharField(
@@ -75,8 +81,8 @@ class Branch(TimeStampedModel):
         max_length=40,
         blank=True,
         help_text=_(
-            "Printed before this branch's certificate numbers, e.g. HO-FAISALABAD-FSD gives HO-FAISALABAD-FSD-0001. "
-            "Each branch has its own. Empty: the branch code is used."
+            "Filled in automatically: TAS-HO or the branch initials-city code, e.g. TAS-HO-FSD gives "
+            "TAS-HO-FSD-0001. Each branch has its own. Change it only if needed."
         ),
     )
     is_active = models.BooleanField(default=True)
@@ -96,6 +102,21 @@ class Branch(TimeStampedModel):
     @property
     def certificate_prefix(self):
         return (self.reference_prefix or self.code).upper()
+
+    def save(self, *args, **kwargs):
+        from .references import city_code, make_prefix
+
+        self.city_code = (self.city_code or city_code(self.city)).upper()
+        if not self.reference_prefix:
+            taken = set(
+                Branch.objects.exclude(pk=self.pk)
+                .exclude(reference_prefix="")
+                .values_list("reference_prefix", flat=True)
+            )
+            self.reference_prefix = make_prefix(
+                self.name, self.code, self.is_head_office, self.city, self.city_code, taken
+            )
+        super().save(*args, **kwargs)
 
     def clean(self):
         if self.region_id and self.region.head_office_id != self.head_office_id:
