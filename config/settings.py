@@ -18,6 +18,7 @@ env = environ.Env(
     CSRF_TRUSTED_ORIGINS=(list, []),
     SECURE_SSL_REDIRECT=(bool, False),
     DEMO_MODE=(bool, False),
+    LOCAL_NETWORK=(bool, False),
 )
 environ.Env.read_env(BASE_DIR / ".env")
 
@@ -157,6 +158,12 @@ SESSION_COOKIE_AGE = 60 * 60 * 8  # one school day
 SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT")
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
+# Offline test copy on one office computer (docs/OFFLINE_INSTALL.md): plain http on the office network, opened
+# by the computer's own address (e.g. http://192.168.1.10:8000), so cookies cannot require https there.
+LOCAL_NETWORK = env("LOCAL_NETWORK")
+if LOCAL_NETWORK:
+    SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = False
+    ALLOWED_HOSTS = ["*"]
 SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=0)
 # Behind the HTTPS proxy (Caddy) the original scheme arrives in this header.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # set in production once HTTPS is confirmed

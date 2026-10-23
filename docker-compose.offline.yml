@@ -1,0 +1,42 @@
+# Offline test copy of TASEMS on one office computer (no internet needed once installed).
+# Use the files in offline\ on Windows; see docs/OFFLINE_INSTALL.md. Not for real student data on the internet.
+name: tasems-offline
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: offline-only-postgres
+      TASEMS_DB_PASSWORD: offline-only-tasems
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tasems"]
+      interval: 5s
+      retries: 30
+
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      # The app connects as an ordinary role, so row-level security works as on the real server.
+      DATABASE_URL: postgres://tasems_app:offline-only-tasems@db:5432/tasems
+      MEDIA_ROOT: /app/media
+      LOCAL_NETWORK: "True"
+      DEBUG: "False"
+      # Demo data and no two-step sign-in unless TASEMS_REAL=1 is set by the start file.
+      DEMO_MODE: ${TASEMS_DEMO:-True}
+      DEMO_PASSWORD: ${TASEMS_DEMO_PASSWORD:-ArqamOffline2026}
+    volumes:
+      - media:/app/media
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sh", "deploy/offline-start.sh"]
+
+volumes:
+  pgdata:
+  media:

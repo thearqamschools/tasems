@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.32.0 — 2026-10-23 — Offline test copy on an office computer
+
+Added
+- **Offline test copy** (docs/OFFLINE_INSTALL.md): TASEMS with its own database on one Windows computer, using
+  the free Rancher Desktop; open it on that computer or from other office computers at http://IP:8000. Double-click
+  files in `offline\`: start (with demo data, or empty with two-step sign-in), stop, make a master login, back up,
+  reset. Keys are made on that computer the first time. Internet is needed only once, to install.
+- Setting `LOCAL_NETWORK` for that copy only: plain http on the office network (cookies without https).
+- `.dockerignore` (keeps local files, media and secrets out of the image) and `.gitattributes` (Windows line
+  endings for .bat files, Linux line endings for .sh files).
+
+Checked: the start script on a fresh PostgreSQL 16 container with the production database role (row-level
+security on), demo data loaded, and signing in as demo-network from another address (http://IP:8000).
+The image build itself could not run in the development environment (no access to Debian's package servers);
+it is the same Dockerfile the demo server builds.
+
 ## 0.31.0 — 2026-10-23 — Certificates on Letter paper; TAS reference numbers
 
 Changed
