@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.30.2 — 2026-10-23
+
+Fixed
+- School leaving certificate: when no leaving date is given, the sentence no longer ends with "to .".
+
+Added
+- docs/WHATSAPP_COST_ESTIMATE.md: what one-click WhatsApp sending (vouchers, birthdays, notices) needs and costs.
+  Not built; waiting for approval.
+
 ## 0.30.1 — 2026-10-23 — Two-step sign-in for the Admin
 
 Changed

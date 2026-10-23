@@ -33,7 +33,7 @@
   </table>
   <div class="body">
     {% if c.kind == "leaving" %}
-    <p>Certified that {{ s.full_name }}, {% if female %}daughter{% else %}son{% endif %} of {{ s.father_name|default:"—" }}, was a student of this school from {{ s.admission_date|date:"d F Y" }} to {{ c.left_on|date:"d F Y" }}. According to the school record the above particulars are correct.</p>
+    <p>Certified that {{ s.full_name }}, {% if female %}daughter{% else %}son{% endif %} of {{ s.father_name|default:"—" }}, was a student of this school from {{ s.admission_date|date:"d F Y" }}{% if c.left_on %} to {{ c.left_on|date:"d F Y" }}{% endif %}. According to the school record the above particulars are correct.</p>
     {% else %}
     <p>Certified that {{ s.full_name }}, {% if female %}daughter{% else %}son{% endif %} of {{ s.father_name|default:"—" }}, {% if s.status == "active" %}is a student of this school, studying in {{ c.last_class|default:"—" }}{% else %}was a student of this school{% endif %}. To the best of our knowledge {% if female %}her{% else %}his{% endif %} conduct and character remained {{ c.get_conduct_display|lower }}.</p>
     <p>We wish {% if female %}her{% else %}him{% endif %} success in life.</p>
