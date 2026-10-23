@@ -69,6 +69,8 @@ def build(user, branch, session, today):
                 [
                     Report(_("Students list"), _("Every student with class, section, father and mobile; filter by class."), reverse("people:student_list")),
                     Report(_("Class strength"), _("Boys, girls and Hifz students in every class and section."), reverse("reports:class_strength")),
+                    *([Report(_("Students needing attention"), _("Absences in a row, low attendance, falling marks, unpaid fees, Hifz not ready."), reverse("insights:attention"))]
+                      if perm("attendance.view_attendancerecord") else []),
                     Report(_("New admissions"), _("Students admitted between two dates."), reverse("reports:new_admissions")),
                     Report(_("Students who left"), _("Withdrawn, transferred and graduated students."), reverse("people:student_list") + "?status=withdrawn"),
                 ],

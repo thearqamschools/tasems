@@ -31,6 +31,7 @@ urlpatterns = [
     path("payroll/", include("apps.payroll.urls")),
     path("inventory/", include("apps.inventory.urls")),
     path("hifz/", include("apps.hifz.urls")),
+    path("attention/", include("apps.insights.urls")),
     path("staff/", include("apps.hr.urls")),
     path("parents/", include("apps.parents.urls")),
     path("admissions/", include("apps.admissions.urls")),

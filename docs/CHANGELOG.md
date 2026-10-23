@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.29.0 — 2026-10-23 — M13 (free part): students needing attention
+
+Added
+- **Needs attention** (Overview menu, and in Reports under Students): students to check on, worked out by plain
+  rules from records TASEMS already keeps — no AI, no outside service, no cost:
+  - absent several school days in a row (leave does not count);
+  - low attendance over the last 30 days (after at least 5 register days);
+  - latest exam below the pass mark set in exam setup;
+  - marks fell since the previous exam;
+  - monthly fee unpaid for several months (only for people who can see fees);
+  - Hifz sabaq not ready several times in 14 days (only for people who can see Hifz).
+- The limits are on the page and can be changed; the starting values (3 days, 75 percentage, 10 points,
+  2 months, 3 times) are suggestions until head office confirms them.
+- Each student shows the reasons and the parent's mobile; counts per signal, filter by class and signal,
+  Excel and Print. Principals and coordinators see the whole branch; class teachers see their own classes.
+
+The paid AI part of M13 (Claude API) is not started: it needs the project lead's approval and a spending limit
+(see AI_COST_ESTIMATE.md).
+
 ## 0.28.1 — 2026-10-23 — Hifz: project lead's answers
 
 Changed

@@ -53,7 +53,8 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 | M10 | Payroll: fixed salaries, per-day cut for absence and unpaid leave, finalise and lock, payslips, bank sheet | Done 22 Oct 2026 (per-day rate = salary ÷ days in the month, to confirm) |
 | M11 | Shop & stock: items with barcode, stock ledger, sale counter (cash / bank / fee account), receipts, cancel, stock and sales reports | Done 22 Oct 2026 |
 | M12 | Hifz-e-Quran: daily Sabaq / Sabqi / Manzil with mistakes, para tests, 30-para progress, section report, parent tab | Done 23 Oct 2026 |
-| M13 | See `INTEGRATION_ROADMAP.md` | Not started (AI: cost estimate in AI_COST_ESTIMATE.md, needs approval) |
+| M13a | Students needing attention: rules over attendance, marks, fees and Hifz (free, no AI) | Done 23 Oct 2026 (starting limits to confirm) |
+| M13b | Paid AI (Teacher Assistant, Question Paper Generator, summaries) | Not started: needs approval and a spending limit (AI_COST_ESTIMATE.md) |
 
 ## Known gaps and pending inputs
 

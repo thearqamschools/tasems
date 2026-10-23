@@ -44,6 +44,9 @@ def _menu(user, branch):
         [
             (reverse("home"), _("Dashboard"), "layout-dashboard"),
             reports and (reverse("reports:index"), _("Reports"), "file-text"),
+            branch is not None
+            and perm("attendance.view_attendancerecord")
+            and (reverse("insights:attention"), _("Needs attention"), "triangle-alert"),
             branch is not None and (reverse("notices:index"), _("Notices"), "inbox"),
             _has_print_jobs(user) and (reverse("jobs:index"), _("My print jobs"), "printer"),
         ],

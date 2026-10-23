@@ -1,0 +1,39 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Students needing attention" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{% trans "Students needing attention" %}</h1>
+  <p class="lede">{{ branch.name }}{% if not everyone %} · {% trans "Your classes" %}{% endif %} · {% trans "Worked out from attendance, marks, fees and Hifz records with the simple rules below. A signal is a reason to check on the child, not a judgement." %}</p></div>
+</div>
+<div class="figures">{% for code, label, n in signals %}
+  <a class="figure{% if n %} attention{% endif %}{% if signal == code %} ok{% endif %}" href="{% list_url signal=code %}"><div class="value">{{ n }}</div><div class="label">{{ label }}</div></a>
+{% endfor %}</div>
+<form method="get" class="filter-inline">
+  <select name="section" aria-label="{% trans 'Class' %}"><option value="">{% if everyone %}{% trans "All classes" %}{% else %}{% trans "All my classes" %}{% endif %}</option>{% for s in sections %}<option value="{{ s.id }}"{% if chosen.id == s.id %} selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select name="signal" aria-label="{% trans 'Signal' %}"><option value="">{% trans "All signals" %}</option>{% for code, label, n in signals %}<option value="{{ code }}"{% if signal == code %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+  {% for k, v in limits.items %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endfor %}
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+</form>
+<details class="card no-print"><summary>{% trans "Rules used" %}</summary>
+<form method="get" class="form-grid">
+  {% if chosen %}<input type="hidden" name="section" value="{{ chosen.id }}">{% endif %}
+  <div class="field"><label for="streak">{% trans "Absent days in a row, at least" %}</label><input id="streak" name="streak" type="number" min="2" max="30" value="{{ limits.streak }}" dir="ltr"><p class="help">{% trans "Leave does not count." %}</p></div>
+  <div class="field"><label for="attendance">{% trans "Attendance in the last 30 days below (percentage)" %}</label><input id="attendance" name="attendance" type="number" min="1" max="100" value="{{ limits.attendance }}" dir="ltr"><p class="help">{% trans "Only after 5 register days." %}</p></div>
+  <div class="field"><label for="drop">{% trans "Marks fell since the previous exam by at least (points)" %}</label><input id="drop" name="drop" type="number" min="1" max="100" value="{{ limits.drop }}" dir="ltr"><p class="help">{% trans "Below the pass mark uses the pass mark set in exam setup." %}</p></div>
+  {% if can_fees %}<div class="field"><label for="fee_months">{% trans "Months of monthly fee unpaid, at least" %}</label><input id="fee_months" name="fee_months" type="number" min="1" max="24" value="{{ limits.fee_months }}" dir="ltr"></div>{% endif %}
+  {% if can_hifz %}<div class="field"><label for="not_ready">{% trans "Hifz sabaq not ready in 14 days, at least" %}</label><input id="not_ready" name="not_ready" type="number" min="1" max="14" value="{{ limits.not_ready }}" dir="ltr"></div>{% endif %}
+  <div class="actions"><button class="button" type="submit">{% trans "Apply" %}</button> <a class="button quiet" href="?">{% trans "Starting values" %}</a></div>
+</form>
+<p class="small muted">{% blocktrans with s=defaults.streak a=defaults.attendance d=defaults.drop f=defaults.fee_months h=defaults.not_ready %}Starting values: {{ s }} days in a row, {{ a }} percentage, {{ d }} points, {{ f }} months, {{ h }} times. They are suggestions until head office confirms them.{% endblocktrans %}</p>
+</details>
+{% if rows %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Why" %}</th><th>{% trans "Parent's mobile" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr>
+    <td><a href="{% url 'people:student_detail' r.student.id %}">{{ r.student.full_name }}</a> <span class="muted small num">{{ r.student.admission_no }}</span>{% if r.student.father_name %}<br><span class="small muted">{{ r.student.father_name }}</span>{% endif %}</td>
+    <td>{{ r.section }}</td>
+    <td>{% for code, text in r.flags %}<span class="badge attention">{{ text }}</span>{% if not forloop.last %} {% endif %}{% endfor %}</td>
+    <td class="num">{% if r.phone %}<a href="tel:{{ r.phone }}" dir="ltr">{{ r.phone }}</a>{% else %}—{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "circle-check" %}<p>{% trans "No student matches these rules." %}</p></div>{% endif %}
+{% endblock %}
