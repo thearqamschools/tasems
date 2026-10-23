@@ -68,6 +68,7 @@ class Payslip(BranchOwnedModel):
     days_employed = models.PositiveSmallIntegerField(help_text=_("Days of the month the person was on the staff"))
     absent_days = models.PositiveSmallIntegerField(default=0)
     leave_days = models.PositiveSmallIntegerField(default=0, help_text=_("Days of unpaid leave"))
+    half_days = models.PositiveSmallIntegerField(default=0, help_text=_("Half days: half a day's pay is cut"))
     deduction = models.DecimalField(**MONEY)
     net_pay = models.DecimalField(**MONEY)
     bank_name = models.CharField(max_length=80, blank=True)

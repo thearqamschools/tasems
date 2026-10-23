@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.29.1 — 2026-10-23 — Project lead's answers
+
+Changed
+- **Payroll**: a half day now cuts half a day's pay (salary ÷ days in the month ÷ 2); late arrivals are still not
+  cut. The per-day rate stays salary ÷ days in that month. Payslips, the payroll page and its Excel show half days.
+- **Needs attention**: the starting limits (3 days, 75 percentage, 10 points, 2 months, 3 times) are confirmed.
+
 ## 0.29.0 — 2026-10-23 — M13 (free part): students needing attention
 
 Added

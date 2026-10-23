@@ -50,10 +50,10 @@ demo video for workflows. Plan: `EXISTING_SYSTEM_AUDIT.md`, `REFERENCE_FEATURE_A
 | M7 | Subject teachers, timetable, holiday calendar, date sheets, exam slips with photo, award lists | Done 22 Oct 2026 |
 | M8 | Notices and circulars, messages to parents (WhatsApp links / Excel for SMS, no paid service), installable parent portal | Done 22 Oct 2026 (SMS/WhatsApp provider: needs approval and cost) |
 | M9 | Accounting: other income, cash & bank book with opening balances, profit & loss, branch-wise statement | Done 22 Oct 2026 |
-| M10 | Payroll: fixed salaries, per-day cut for absence and unpaid leave, finalise and lock, payslips, bank sheet | Done 22 Oct 2026 (per-day rate = salary ÷ days in the month, to confirm) |
+| M10 | Payroll: fixed salaries, per-day cut for absence and unpaid leave, finalise and lock, payslips, bank sheet | Done 22 Oct 2026 (rules confirmed 23 Oct: salary ÷ days in the month; half day = half a day) |
 | M11 | Shop & stock: items with barcode, stock ledger, sale counter (cash / bank / fee account), receipts, cancel, stock and sales reports | Done 22 Oct 2026 |
 | M12 | Hifz-e-Quran: daily Sabaq / Sabqi / Manzil with mistakes, para tests, 30-para progress, section report, parent tab | Done 23 Oct 2026 |
-| M13a | Students needing attention: rules over attendance, marks, fees and Hifz (free, no AI) | Done 23 Oct 2026 (starting limits to confirm) |
+| M13a | Students needing attention: rules over attendance, marks, fees and Hifz (free, no AI) | Done 23 Oct 2026 (starting limits confirmed) |
 | M13b | Paid AI (Teacher Assistant, Question Paper Generator, summaries) | Not started: needs approval and a spending limit (AI_COST_ESTIMATE.md) |
 
 ## Known gaps and pending inputs

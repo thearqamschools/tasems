@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-header">
   <div><h1>{% trans "Payroll" %} · {{ month|date:"F Y" }}</h1>
-  <p class="lede">{{ branch.name }} · {% trans "Fixed monthly salary; each day of absence or unpaid leave is cut at salary ÷ days in the month." %}</p></div>
+  <p class="lede">{{ branch.name }} · {% trans "Fixed monthly salary; each day of absence or unpaid leave is cut at salary ÷ days in the month, and half that for a half day." %}</p></div>
   {% if can_salaries %}<div class="actions"><a class="button secondary" href="{% url 'payroll:salaries' %}">{% trans "Salaries and bank details" %}</a></div>{% endif %}
 </div>
 <form method="get" class="filter-inline"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
@@ -28,12 +28,12 @@
 </div>
 {% if rows %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th class="num">{% trans "Monthly salary (Rs)" %}</th><th class="num">{% trans "Days on staff" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Unpaid leave" %}</th><th class="num">{% trans "Deduction (Rs)" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th>{% if run %}<th class="no-print"></th>{% endif %}</tr></thead>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th class="num">{% trans "Monthly salary (Rs)" %}</th><th class="num">{% trans "Days on staff" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Unpaid leave" %}</th><th class="num">{% trans "Half days" %}</th><th class="num">{% trans "Deduction (Rs)" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th>{% if run %}<th class="no-print"></th>{% endif %}</tr></thead>
   <tbody>{% for r in rows %}<tr>
     <td>{{ r.employee.full_name }} <span class="muted small num">{{ r.employee.code }}</span></td><td>{{ r.employee.designation }}</td>
-    {% if r.missing %}<td colspan="6"><span class="badge attention">{% trans "Salary not set" %}</span></td>
+    {% if r.missing %}<td colspan="7"><span class="badge attention">{% trans "Salary not set" %}</span></td>
     {% else %}<td class="num money">{{ r.salary|rupees }}</td><td class="num">{{ r.days_employed }}/{{ r.days_in_month }}</td>
-    <td class="num">{{ r.absent }}</td><td class="num">{{ r.leave }}</td><td class="num money">{{ r.deduction|rupees }}</td><td class="num money"><strong>{{ r.net|rupees }}</strong></td>{% endif %}
+    <td class="num">{{ r.absent }}</td><td class="num">{{ r.leave }}</td><td class="num">{{ r.half }}</td><td class="num money">{{ r.deduction|rupees }}</td><td class="num money"><strong>{{ r.net|rupees }}</strong></td>{% endif %}
     {% if run %}<td class="no-print"><a href="{% url 'payroll:payslips' run.id %}?employee={{ r.employee.id }}" target="_blank" rel="noopener">{% trans "Payslip" %}</a></td>{% endif %}
   </tr>{% endfor %}</tbody>
 </table></div>

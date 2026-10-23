@@ -37,6 +37,7 @@
     <tr><th>Days in the month / days on the staff</th><td class="amt">{{ p.days_in_month }} / {{ p.days_employed }}</td></tr>
     <tr><th>Absent days</th><td class="amt">{{ p.absent_days }}</td></tr>
     <tr><th>Unpaid leave days</th><td class="amt">{{ p.leave_days }}</td></tr>
+    <tr><th>Half days</th><td class="amt">{{ p.half_days }}</td></tr>
     <tr><th>Deduction (salary ÷ {{ p.days_in_month }} × {{ p.unpaid_days }} days)</th><td class="amt">Rs {{ p.deduction|rupees }}</td></tr>
     <tr class="net"><th>Net pay</th><td class="amt">Rs {{ p.net_pay|rupees }}</td></tr>
   </table>

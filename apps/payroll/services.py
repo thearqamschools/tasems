@@ -1,9 +1,9 @@
 """Working out a month's pay from staff attendance (M10).
 
 Pay = monthly salary ÷ days in the month × (days on the staff that month − unpaid days).
-Unpaid days = absent days + days of unpaid leave, exactly as on the monthly attendance sheet. Half days, late
-arrivals, holidays and off days are not cut. Someone who joins or leaves during the month is paid for the days
-they were on the staff. Amounts are rounded to whole rupees."""
+Unpaid days = absent days + days of unpaid leave + half of each half day, from the monthly attendance sheet
+(project lead, 23 Oct 2026). Late arrivals, holidays and off days are not cut. Someone who joins or leaves
+during the month is paid for the days they were on the staff. Amounts are rounded to whole rupees."""
 
 from decimal import ROUND_HALF_UP, Decimal
 
@@ -36,13 +36,14 @@ def compute(branch, month):
         employed = sum(1 for d in dates if e.employed_on(d))
         absent = totals.get("absent", 0)
         leave = max(totals.get("unpaid", 0) - absent, 0)
+        half = totals.get("half_day", 0)
         pay = pays.get(e.id)
         row = {"employee": e, "pay": pay, "days_in_month": days_in_month, "days_employed": employed,
-               "absent": absent, "leave": leave, "missing": pay is None}  # fmt: skip
+               "absent": absent, "leave": leave, "half": half, "missing": pay is None}  # fmt: skip
         if pay:
             rate = pay.monthly_salary / days_in_month
             gross = _rupees(rate * employed)
-            deduction = _rupees(rate * (absent + leave))
+            deduction = _rupees(rate * (absent + leave + Decimal(half) / 2))
             row.update(salary=pay.monthly_salary, gross=gross, deduction=deduction, net=max(gross - deduction, ZERO))
         rows.append(row)
     totals = {
@@ -76,6 +77,7 @@ def finalise(branch, month, user):
             days_employed=r["days_employed"],
             absent_days=r["absent"],
             leave_days=r["leave"],
+            half_days=r["half"],
             deduction=r["deduction"],
             net_pay=r["net"],
             bank_name=r["pay"].bank_name,

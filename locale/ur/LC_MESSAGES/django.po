@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 08:44+0500\n"
+"POT-Creation-Date: 2026-10-23 09:12+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3763,6 +3763,10 @@ msgstr "مہینے کے وہ دن جب یہ فرد ملازمت پر تھا"
 msgid "Days of unpaid leave"
 msgstr "بلا تنخواہ رخصت کے دن"
 
+#: apps/payroll/models.py:71
+msgid "Half days: half a day's pay is cut"
+msgstr "آدھے دن: آدھے دن کی تنخواہ کٹتی ہے"
+
 #: apps/payroll/views.py:63
 msgid "Salary bank sheet"
 msgstr "تنخواہ بینک شیٹ"
@@ -3802,6 +3806,10 @@ msgstr "غیر حاضر دن"
 #: apps/payroll/views.py:72
 msgid "Unpaid leave days"
 msgstr "بلا تنخواہ رخصت کے دن"
+
+#: apps/payroll/views.py:72 templates/payroll/index.html:31
+msgid "Half days"
+msgstr "آدھے دن"
 
 #: apps/payroll/views.py:72 templates/payroll/index.html:31
 msgid "Deduction (Rs)"
@@ -7896,8 +7904,8 @@ msgstr "ابتدائی حدیں"
 
 #: templates/insights/attention.html:27
 #, python-format
-msgid "Starting values: %(s)s days in a row, %(a)s percentage, %(d)s points, %(f)s months, %(h)s times. They are suggestions until head office confirms them."
-msgstr "ابتدائی حدیں: لگاتار %(s)s دن، %(a)s فیصد، %(d)s پوائنٹس، %(f)s ماہ، %(h)s بار۔ ہیڈ آفس کی تصدیق تک یہ صرف تجویز ہیں۔"
+msgid "Starting values: %(s)s days in a row, %(a)s percentage, %(d)s points, %(f)s months, %(h)s times. Confirmed by the project lead; you can change them for this page."
+msgstr "ابتدائی حدیں: لگاتار %(s)s دن، %(a)s فیصد، %(d)s پوائنٹس، %(f)s ماہ، %(h)s بار۔ پراجیکٹ لیڈ نے منظور کیں؛ آپ اس صفحے کے لیے بدل سکتے ہیں۔"
 
 #: templates/insights/attention.html:30
 msgid "Why"
@@ -8477,8 +8485,8 @@ msgid "Back to sign-in"
 msgstr "لاگ اِن پر واپس"
 
 #: templates/payroll/index.html:6
-msgid "Fixed monthly salary; each day of absence or unpaid leave is cut at salary ÷ days in the month."
-msgstr "مقررہ ماہانہ تنخواہ؛ غیر حاضری یا بلا تنخواہ رخصت کا ہر دن تنخواہ ÷ مہینے کے دن کے حساب سے کٹتا ہے۔"
+msgid "Fixed monthly salary; each day of absence or unpaid leave is cut at salary ÷ days in the month, and half that for a half day."
+msgstr "مقررہ ماہانہ تنخواہ؛ غیر حاضری یا بلا تنخواہ رخصت کے ہر دن کی کٹوتی تنخواہ ÷ مہینے کے دن کے حساب سے، اور آدھے دن پر اس کا آدھا۔"
 
 #: templates/payroll/index.html:7 templates/payroll/salaries.html:2
 #: templates/payroll/salaries.html:5

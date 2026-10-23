@@ -56,8 +56,8 @@ def test_absence_and_leave_are_cut_per_day(staff):
     rows, totals = S.compute(staff["branch"], OCT)
     by = {r["employee"].code: r for r in rows}
     a = by["E1"]
-    assert (a["absent"], a["leave"], a["days_in_month"]) == (2, 1, 31)
-    assert (a["deduction"], a["net"]) == (D(2903), D(27097))  # 30000 ÷ 31 × 3, half day and late not cut
+    assert (a["absent"], a["leave"], a["half"], a["days_in_month"]) == (2, 1, 1, 31)
+    assert (a["deduction"], a["net"]) == (D(3387), D(26613))  # 30000 ÷ 31 × 3.5: half day is half, late not cut
     assert by["E2"]["days_employed"] == 15 and by["E2"]["net"] == D(14516)  # joined on the 17th
     assert by["E3"]["missing"] and totals["missing"] == 1
 
@@ -65,12 +65,12 @@ def test_absence_and_leave_are_cut_per_day(staff):
 def test_finalise_locks_the_month_and_makes_payslips(staff, login_as):
     client = login_as(staff["principal"])
     page = client.get("/payroll/?month=2026-10").content.decode()
-    assert "27,097" in page and "Salary not set" in page and "Finalise this month" in page
+    assert "26,613" in page and "Salary not set" in page and "Finalise this month" in page
     client.post("/payroll/finalise/?month=2026-10")
     run = PayrollRun.objects.get(branch=staff["branch"], month=OCT)
     assert run.payslips.count() == 2
     StaffDay.objects.create(branch=staff["branch"], employee=staff["a"], date=dt.date(2026, 10, 20), status="absent")
-    assert run.payslips.get(employee=staff["a"]).net_pay == D(27097)  # locked
+    assert run.payslips.get(employee=staff["a"]).net_pay == D(26613)  # locked
     pdf = client.get(f"/payroll/{run.id}/payslips.pdf")
     assert pdf.status_code == 200 and pdf.content.startswith(b"%PDF")
     bank = client.get("/payroll/?month=2026-10&format=xlsx&sheet=bank")
@@ -79,7 +79,7 @@ def test_finalise_locks_the_month_and_makes_payslips(staff, login_as):
     run.refresh_from_db()
     assert run.status == "cancelled"
     client.post("/payroll/finalise/?month=2026-10")
-    assert PayrollRun.objects.get(status="final").payslips.get(employee=staff["a"]).net_pay == D(26129)
+    assert PayrollRun.objects.get(status="final").payslips.get(employee=staff["a"]).net_pay == D(25645)
 
 
 def test_current_month_cannot_be_finalised_and_who_may(staff, login_as, make_user):

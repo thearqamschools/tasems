@@ -1,7 +1,7 @@
 """Students needing attention (M13, free part): simple, visible rules over records TASEMS already keeps.
 
 No AI and no outside service: each signal is a plain rule with a limit the school can change on the page. The
-limits below are starting values only, to be confirmed by head office."""
+starting limits below were confirmed by the project lead on 23 Oct 2026."""
 
 import datetime as dt
 from collections import defaultdict

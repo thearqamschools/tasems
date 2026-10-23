@@ -48,7 +48,7 @@ def index(request):
         slips = list(run.payslips.select_related("employee"))
         rows = [
             {"employee": p.employee, "salary": p.monthly_salary, "days_in_month": p.days_in_month,
-             "days_employed": p.days_employed, "absent": p.absent_days, "leave": p.leave_days,
+             "days_employed": p.days_employed, "absent": p.absent_days, "leave": p.leave_days, "half": p.half_days,
              "deduction": p.deduction, "net": p.net_pay, "missing": False, "slip": p}
             for p in slips
         ]  # fmt: skip
@@ -69,9 +69,9 @@ def index(request):
         return exports.xlsx_response(
             _("Payroll") + f" {month:%b %Y}",
             [_("Code"), _("Name"), _("Designation"), _("Monthly salary (Rs)"), _("Days in month"), _("Days on staff"),
-             _("Absent days"), _("Unpaid leave days"), _("Deduction (Rs)"), _("Net pay (Rs)")],
+             _("Absent days"), _("Unpaid leave days"), _("Half days"), _("Deduction (Rs)"), _("Net pay (Rs)")],
             ([r["employee"].code, r["employee"].full_name, r["employee"].designation, r.get("salary", ""),
-              r["days_in_month"], r["days_employed"], r["absent"], r["leave"], r.get("deduction", ""),
+              r["days_in_month"], r["days_employed"], r["absent"], r["leave"], r["half"], r.get("deduction", ""),
               r.get("net", _("Salary not set"))] for r in rows),
             branch=branch,
         )  # fmt: skip

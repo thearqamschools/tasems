@@ -24,7 +24,7 @@
   {% if can_hifz %}<div class="field"><label for="not_ready">{% trans "Hifz sabaq not ready in 14 days, at least" %}</label><input id="not_ready" name="not_ready" type="number" min="1" max="14" value="{{ limits.not_ready }}" dir="ltr"></div>{% endif %}
   <div class="actions"><button class="button" type="submit">{% trans "Apply" %}</button> <a class="button quiet" href="?">{% trans "Starting values" %}</a></div>
 </form>
-<p class="small muted">{% blocktrans with s=defaults.streak a=defaults.attendance d=defaults.drop f=defaults.fee_months h=defaults.not_ready %}Starting values: {{ s }} days in a row, {{ a }} percentage, {{ d }} points, {{ f }} months, {{ h }} times. They are suggestions until head office confirms them.{% endblocktrans %}</p>
+<p class="small muted">{% blocktrans with s=defaults.streak a=defaults.attendance d=defaults.drop f=defaults.fee_months h=defaults.not_ready %}Starting values: {{ s }} days in a row, {{ a }} percentage, {{ d }} points, {{ f }} months, {{ h }} times. Confirmed by the project lead; you can change them for this page.{% endblocktrans %}</p>
 </details>
 {% if rows %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
   <thead><tr><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Why" %}</th><th>{% trans "Parent's mobile" %}</th></tr></thead>
