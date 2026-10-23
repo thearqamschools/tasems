@@ -22,11 +22,11 @@ class HifzLesson(BranchOwnedModel):
         NOT_READY = "not_ready", _("Not ready")
         ABSENT = "absent", _("Absent")
 
-    class Grade(models.TextChoices):
-        EXCELLENT = "excellent", _("Excellent")
-        GOOD = "good", _("Good")
-        AVERAGE = "average", _("Average")
-        WEAK = "weak", _("Weak")
+    class Grade(models.TextChoices):  # shown in English in both languages (project lead, 23 Oct 2026)
+        EXCELLENT = "excellent", "Excellent"
+        GOOD = "good", "Good"
+        AVERAGE = "average", "Average"
+        WEAK = "weak", "Weak"
 
     student = models.ForeignKey("people.Student", on_delete=models.PROTECT, related_name="hifz_lessons")
     section = models.ForeignKey("academics.Section", on_delete=models.PROTECT, null=True, related_name="+")

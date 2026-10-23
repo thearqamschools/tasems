@@ -289,11 +289,11 @@ INVENTORY_VIEW = ["inventory.view_item", "inventory.view_stockmove", "inventory.
 INVENTORY_WORK = INVENTORY_VIEW + ["inventory.add_sale", "inventory.add_saleline", "inventory.add_stockmove"]
 INVENTORY_MANAGE = INVENTORY_WORK + ["inventory.add_item", "inventory.change_item", "inventory.change_sale"]
 
-# Hifz (M12): Hifz teachers record their own sections' daily lessons; principals and coordinators record and
-# correct any section and record para tests; supervisors see progress.
+# Hifz (M12): Hifz teachers (Qari, senior Qari) record their own sections' daily lessons and take para tests;
+# principals and coordinators also correct any section and cancel a test; supervisors see progress.
 HIFZ_VIEW = ["hifz.view_hifzlesson", "hifz.view_paratest"]
-HIFZ_WRITE = HIFZ_VIEW + ["hifz.add_hifzlesson"]
-HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.add_paratest", "hifz.change_paratest"]
+HIFZ_WRITE = HIFZ_VIEW + ["hifz.add_hifzlesson", "hifz.add_paratest"]
+HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.change_paratest"]
 
 EXTRA_PERMISSIONS = {
     "network_admin": HIFZ_VIEW

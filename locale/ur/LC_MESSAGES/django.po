@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 00:01+0500\n"
+"POT-Creation-Date: 2026-10-23 08:38+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2473,22 +2473,6 @@ msgstr "سنایا"
 msgid "Not ready"
 msgstr "یاد نہیں"
 
-#: apps/hifz/models.py:26 apps/people/models.py:205
-msgid "Excellent"
-msgstr "بہترین"
-
-#: apps/hifz/models.py:27 apps/people/models.py:207
-msgid "Good"
-msgstr "اچھا"
-
-#: apps/hifz/models.py:28
-msgid "Average"
-msgstr "درمیانہ"
-
-#: apps/hifz/models.py:29
-msgid "Weak"
-msgstr "کمزور"
-
 #: apps/hifz/models.py:35 apps/hifz/models.py:71
 msgid "para"
 msgstr "پارہ"
@@ -4120,9 +4104,17 @@ msgstr "سکول چھوڑنے کا سرٹیفکیٹ"
 msgid "Character certificate"
 msgstr "کریکٹر سرٹیفکیٹ"
 
+#: apps/people/models.py:205
+msgid "Excellent"
+msgstr "بہترین"
+
 #: apps/people/models.py:206
 msgid "Very good"
 msgstr "بہت اچھا"
+
+#: apps/people/models.py:207
+msgid "Good"
+msgstr "اچھا"
 
 #: apps/people/models.py:208
 msgid "Satisfactory"
@@ -9085,6 +9077,12 @@ msgstr "کھلا"
 #: templates/setup/users.html:28
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
+
+#~ msgid "Average"
+#~ msgstr "درمیانہ"
+
+#~ msgid "Weak"
+#~ msgstr "کمزور"
 
 #, python-format
 #~ msgid "Too many vouchers to print at once (%(n)s at most). Choose a class."

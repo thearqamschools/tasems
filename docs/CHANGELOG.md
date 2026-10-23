@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.28.1 — 2026-10-23 — Hifz: project lead's answers
+
+Changed
+- **Para tests** are taken by the Qari or a senior Qari (Hifz teacher login), for any Hifz student of the branch;
+  principals and coordinators can still record them, and only they can cancel one.
+- **Grades** (Excellent, Good, Average, Weak) stay in English in both languages.
+- Hifz completion certificate: not made (skipped by the project lead).
+
 ## 0.28.0 — 2026-10-23 — M12: Hifz-e-Quran
 
 Added

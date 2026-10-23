@@ -132,11 +132,12 @@ def test_who_may_record(hifz, login_as, make_user):
 def test_para_tests_and_progress(hifz, login_as):
     kid = hifz["kids"][0]
     qari = login_as(hifz["qari"])
-    assert qari.post(f"/hifz/student/{kid.id}/", {"para": 1}).status_code == 403  # tests by senior staff
-    principal = login_as(hifz["principal"])
-    for para in (1, 2):
-        principal.post(f"/hifz/student/{kid.id}/", {"para": para, "tested_on": "2026-09-01", "result": "passed",
+    for para in (1, 2):  # the Qari (or a senior Qari) takes the para test
+        qari.post(f"/hifz/student/{kid.id}/", {"para": para, "tested_on": "2026-09-01", "result": "passed",
                                                     "mistakes": 0, "before_joining": "on"})  # fmt: skip
+    assert ParaTest.objects.filter(student=kid, tested_by=hifz["qari"]).count() == 2
+    assert qari.post(f"/hifz/student/{kid.id}/tests/{ParaTest.objects.first().id}/cancel/").status_code == 403
+    principal = login_as(hifz["principal"])
     principal.post(f"/hifz/student/{kid.id}/", {"para": 3, "tested_on": "2026-10-03", "result": "passed",
                                                 "mistakes": 2})  # fmt: skip
     assert ParaTest.objects.filter(student=kid, result="passed").count() == 3
@@ -145,7 +146,7 @@ def test_para_tests_and_progress(hifz, login_as):
     S.save_sheet(hifz["section"], TODAY, {kid.id: {k: v for k, v in _clean(row(sabaq_para=4)).items()}},
                  hifz["principal"])  # fmt: skip
     page = principal.get(f"/hifz/student/{kid.id}/").content.decode()
-    assert "3 / 30" in page and 'class="done"' in page
+    assert "3 / 30" in page and 'class="done"' in page and "Good" in page
     report = principal.get(f"/hifz/report/?section={hifz['section'].id}&month=2026-10")
     r = next(x for x in report.context["rows"] if x["student"] == kid)
     assert r["paras"] == 3 and r["current"] == 4 and r["heard"] == 1 and r["mistakes"] == 3.0
@@ -174,3 +175,12 @@ def test_parents_see_their_childs_hifz(client, login_as, hifz):
     assert client.post("/parents/login/", {"phone": PHONE, "password": PASSWORD}).status_code in (200, 302)
     page = client.get(f"/parents/child/{kid.id}/?tab=hifz").content.decode()
     assert "1 / 30" in page and "Well done" in page and "?tab=hifz" in page
+
+
+def test_grades_stay_in_english(hifz, login_as):
+    kid = hifz["kids"][0]
+    S.save_sheet(hifz["section"], TODAY, {kid.id: _clean(row(grade="excellent"))}, hifz["principal"])
+    client = login_as(hifz["principal"])
+    client.post("/i18n/setlang/", {"language": "ur", "next": "/"})
+    page = client.get(f"/hifz/student/{kid.id}/").content.decode()
+    assert "Excellent" in page and "پارے" in page  # the page is in Urdu, the grade in English
