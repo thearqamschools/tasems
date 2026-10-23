@@ -16,6 +16,7 @@ urlpatterns = [
     path("healthz", core_views.health, name="health"),
     path("branch/switch/", core_views.switch_branch, name="switch_branch"),
     path("design-system/", core_views.design_system, name="design_system"),
+    path("delete/<slug:kind>/<int:pk>/", core_views.delete_record, name="delete_record"),
     path("setup/", include("apps.setup.urls")),
     path("accounts/", include("apps.accounts.urls")),
     path("students/", include("apps.people.urls")),

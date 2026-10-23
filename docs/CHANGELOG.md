@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.34.0 — 2026-10-23 — Delete records made by mistake
+
+Added
+- A **Delete** button on: branches, regions, academic sessions, campuses, sections, fee rates, banks, discount
+  types (Setup), logins, students, staff, admission inquiries, shop items and notices.
+- Who: the **master login** (superuser) everywhere; **head office / network administrators** in the branches they
+  look after; the **Director** in the branch. Branches, regions, sessions, logins and network lists also need the
+  matching Setup right, so a Director cannot delete the branch itself or a session. Nobody deletes their own login.
+- The page first shows what will be deleted with it (e.g. a student's class place, an inquiry's follow-ups) and
+  asks for a reason; the deletion is recorded in the history with that reason.
+- Records with history are kept: if fees, payments, attendance, marks, stock moves and so on depend on it, the
+  page lists them instead of deleting (use Leave school / not in use for those).
+
 ## 0.33.1 — 2026-10-23 — Windows installer fix
 
 Fixed

@@ -13,6 +13,7 @@
   {% if history %}<a href="#history">{% trans "Record history" %}</a>{% endif %}
 </nav>
 <div class="actions">{% if can_edit %}<a class="button" href="{% url 'people:student_edit' student.pk %}">{% trans "Edit student" %}</a>{% endif %}
+{% delete_button "student" student %}
 {% if perms.fees.view_voucher %}<a class="button quiet" href="{% url 'fees:student' student.pk %}">{% trans "Fee account" %}</a>{% endif %}
 {% if hifz %}<a class="button quiet" href="{% url 'hifz:student' student.pk %}">{% trans "Hifz record" %}</a>{% endif %}
 <a class="button quiet" href="{% url 'people:id_cards' %}?student={{ student.pk }}">{% trans "ID card" %}</a>

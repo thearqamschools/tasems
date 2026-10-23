@@ -40,13 +40,21 @@ This table shows **what TASEMS does today**, as set by the project lead on 23 Oc
 | Head Office Administrator | One head office (Faisalabad or Lahore) and its branches | Same as Network Administrator, for its own head office only (message templates stay with the Network Administrator). |
 | Regional Director | One region's branches | Sees everything in those branches (like Branch Owner). Approves 100% discounts. |
 
-## 3. Things that apply to every login
+## 3. Deleting records made by mistake
+- **Master login** (superuser): anything, in every branch.
+- **Network / Head Office Administrator**: anything in the branches they look after, including empty branches,
+  regions and logins; academic sessions and network-wide lists only for network-wide administrators.
+- **Director**: anything in the branch (students, staff, sections, campuses, fee rates, banks, inquiries, items,
+  notices), but not the branch itself.
+- Records with history (fees, payments, attendance, marks, stock…) are never deleted; the page lists them.
+
+## 4. Things that apply to every login
 - Everyone sees only their own branch (or head office or region). The database also enforces this.
 - Nobody can give someone more access than they have themselves. Nobody can change their own roles.
 - Director (Branch Owner), Principal, Accountant, Admin (Admissions Officer), Regional Director and the administrators must use two-step sign-in (a code from an authenticator app) on the real server. It is off only on the demo server.
 - One person can hold more than one role, for example Principal in one branch and Coordinator in a region.
 - Every change is recorded in the history: who, what, when.
 
-## 4. Changes
+## 5. Changes
 Any change to a row is made in `apps/accounts/management/commands/seed_tasems.py` (role permissions) and takes
 effect for every login with that role when `seed_tasems` runs on deploy.

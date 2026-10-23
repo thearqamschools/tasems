@@ -7,6 +7,7 @@
 <form method="post" class="card" novalidate>{% csrf_token %}
   {% if form.non_field_errors %}<ul class="errorlist nonfield">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
   <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
-  <div class="actions"><button class="button" type="submit">{{ submit }}</button><a class="button quiet" href="{{ back }}">{% trans "Cancel" %}</a></div>
+  <div class="actions"><button class="button" type="submit">{{ submit }}</button><a class="button quiet" href="{{ back }}">{% trans "Cancel" %}</a>
+    {% if delete_kind %}{% delete_button delete_kind object %}{% endif %}</div>
 </form>
 {% endblock %}

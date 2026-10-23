@@ -313,8 +313,12 @@ HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.change_paratest"]
 # - Accountant: vouchers, receiving fees, expenses and other income, shop & stock, payroll (full).
 # - Admin (admissions officer): students, inquiries, admission vouchers, and receiving fees.
 # Only the Director, the Accountant and the Admin receive fees.
+# Deleting records made by mistake (23 Oct 2026): the master login (superuser), head office / network
+# administrators everywhere they look after, and the Director in the branch.
+DELETE_RECORDS = ["core.delete_records"]
 BRANCH_EVERYTHING = (
-    PAYROLL_MANAGE
+    DELETE_RECORDS
+    + PAYROLL_MANAGE
     + INVENTORY_MANAGE
     + HIFZ_MANAGE
     + NOTICE_POST
@@ -329,7 +333,8 @@ BRANCH_EVERYTHING = (
 )
 
 EXTRA_PERMISSIONS = {
-    "network_admin": HIFZ_VIEW
+    "network_admin": DELETE_RECORDS
+    + HIFZ_VIEW
     + INVENTORY_VIEW
     + PAYROLL_VIEW
     + NOTICE_POST
@@ -342,7 +347,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "head_office_admin": HIFZ_VIEW
+    "head_office_admin": DELETE_RECORDS
+    + HIFZ_VIEW
     + INVENTORY_VIEW
     + PAYROLL_VIEW
     + NOTICE_POST

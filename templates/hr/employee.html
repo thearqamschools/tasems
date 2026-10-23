@@ -5,6 +5,7 @@
 <p class="lede">{{ employee.designation }} · {{ employee.get_staff_type_display }} · <span class="num">{{ employee.code }}</span>{% if employee.status != "active" %} · {{ employee.get_status_display }}{% endif %}</p>
 <div class="actions">
   {% if can_edit %}<a class="button" href="{% url 'hr:employee_edit' employee.id %}">{% trans "Edit" %}</a>{% endif %}
+  {% delete_button "employee" employee %}
   {% if can_leave %}<a class="button secondary" href="{% url 'hr:leave_new' employee.id %}">{% trans "Record leave" %}</a>{% endif %}
   {% if employee.cv %}<a class="button quiet" href="{% url 'hr:employee_cv' employee.id %}">{% icon "file-text" %}{% trans "Open CV" %}</a>{% endif %}
 </div>

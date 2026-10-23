@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Delete" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{{ back }}">‹ {% trans "Back" %}</a></p>
+<h1>{% blocktrans with what=label %}Delete this {{ what }}?{% endblocktrans %}</h1>
+<p class="lede"><strong>{{ obj }}</strong></p>
+{% if error %}<ul class="messages"><li class="error">{% icon "circle-alert" %}<span>{{ error }}</span></li></ul>{% endif %}
+{% if blockers %}
+<div class="callout attention card"><div>
+  <p><strong>{% trans "This cannot be deleted, because these records depend on it:" %}</strong></p>
+  <ul>{% for name, n in blockers %}<li>{{ n }} × {{ name }}</li>{% endfor %}</ul>
+  <p>{% trans "Records with history (fees, attendance, marks, stock and so on) are kept. Remove or move those first, or mark it as not in use / left instead." %}</p>
+</div></div>
+<p><a class="button quiet" href="{{ back }}">{% trans "Back" %}</a></p>
+{% else %}
+<div class="card">
+  <p>{% trans "These will be deleted for good:" %}</p>
+  <ul>{% for name, n in removed %}<li>{{ n }} × {{ name }}</li>{% endfor %}</ul>
+  <form method="post" data-confirm="{% trans 'This cannot be undone. The deletion is recorded in the history with your reason.' %}" data-confirm-button="{% trans 'Delete' %}">{% csrf_token %}
+    <div class="field"><label for="reason">{% trans "Reason" %}<span class="req" aria-hidden="true">*</span></label>
+      <input id="reason" name="reason" required maxlength="200" placeholder="{% trans 'e.g. made by mistake' %}"></div>
+    <div class="actions"><button class="button danger" type="submit">{% icon "x" %}{% trans "Delete" %}</button><a class="button quiet" href="{{ back }}">{% trans "Cancel" %}</a></div>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

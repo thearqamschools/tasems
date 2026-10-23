@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n %}
+{% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{{ inquiry.child_name }}{% endblock %}
 {% block content %}
 <p><a href="{% url 'admissions:index' %}">‹ {% trans "Admission inquiries" %}</a></p>
@@ -8,6 +8,7 @@
   <a class="button" href="tel:{{ inquiry.phone }}">{% trans "Call" %} {{ inquiry.phone }}</a>
   <a class="button secondary" href="{{ whatsapp }}" target="_blank" rel="noopener">{% trans "WhatsApp" %}</a>
   {% if can_change %}<a class="button quiet" href="{% url 'admissions:edit' inquiry.id %}">{% trans "Edit" %}</a>{% endif %}
+  {% delete_button "inquiry" inquiry %}
   {% if inquiry.student %}<a class="button quiet" href="{% url 'people:student_detail' inquiry.student_id %}">{% trans "Student record" %}</a>
   {% elif can_admit and inquiry.status != "lost" %}<a class="button quiet" href="{% url 'admissions:admit' inquiry.id %}">{% trans "Make student record" %}</a>{% endif %}
 </div>

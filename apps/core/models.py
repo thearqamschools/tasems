@@ -67,6 +67,8 @@ class AuditEvent(models.Model):
     class Meta:
         ordering = ["-occurred_at"]
         indexes = [models.Index(fields=["model_label", "object_id"])]
+        # Deleting records made by mistake (apps/core/deletion.py); every deletion is recorded here.
+        permissions = [("delete_records", "Can delete records made by mistake")]
 
     def __str__(self):
         return f"{self.occurred_at:%Y-%m-%d %H:%M} {self.action} {self.model_label}#{self.object_id}"

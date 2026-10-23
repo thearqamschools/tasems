@@ -199,3 +199,51 @@ def health(request):
     except Exception:  # noqa: BLE001
         return JsonResponse({"status": "error", "database": "unreachable"}, status=503)
     return JsonResponse({"status": "ok"})
+
+
+@login_required
+def delete_record(request, kind, pk):
+    """Delete a record made by mistake: shows what goes with it or what is in the way, then asks for a reason."""
+    from django.core.exceptions import PermissionDenied
+    from django.db.models import ProtectedError, RestrictedError
+    from django.http import Http404
+    from django.shortcuts import get_object_or_404
+
+    from . import deletion
+
+    if kind not in deletion.REGISTRY:
+        raise Http404
+    obj = get_object_or_404(deletion.REGISTRY[kind].get_model(), pk=pk)
+    if not deletion.can_delete(request.user, kind, obj):
+        raise PermissionDenied
+    error = ""
+    if request.method == "POST":
+        reason = request.POST.get("reason", "").strip()
+        if not reason:
+            error = _("Give a reason for deleting.")
+        else:
+            name = str(obj)
+            try:
+                deletion.delete(kind, obj, request.user, reason[:200])
+            except (ProtectedError, RestrictedError):
+                error = _("It could not be deleted: other records now depend on it.")
+            else:
+                messages.success(
+                    request, _("%(name)s deleted. The deletion is recorded in the history.") % {"name": name}
+                )
+                return redirect(deletion.back_url(kind))
+    removed, blockers = deletion.preview(kind, obj)
+    return render(
+        request,
+        "core/delete.html",
+        {
+            "obj": obj,
+            "label": deletion.REGISTRY[kind].label,
+            "removed": removed,
+            "blockers": blockers,
+            "error": error,
+            "back": request.GET.get("back")
+            if url_has_allowed_host_and_scheme(request.GET.get("back", ""), None)
+            else deletion.back_url(kind),
+        },
+    )

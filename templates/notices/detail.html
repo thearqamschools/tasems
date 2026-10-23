@@ -13,6 +13,7 @@
 {% with levels=notice.class_levels.all %}{% if levels %}<p class="muted">{% trans "Only for the parents of:" %} {% for l in levels %}{{ l }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}{% endwith %}
 {% if can_manage %}
 <p class="muted">{% blocktrans count n=read_count %}Opened by {{ n }} person.{% plural %}Opened by {{ n }} people.{% endblocktrans %}</p>
+<p class="no-print">{% delete_button "notice" notice %}</p>
 {% if not notice.is_withdrawn %}<form method="post" action="{% url 'notices:withdraw' notice.id %}" class="no-print" data-confirm="{% trans 'Parents and staff will no longer see this notice.' %}" data-confirm-button="{% trans 'Withdraw' %}">{% csrf_token %}<button class="button danger" type="submit">{% trans "Withdraw notice" %}</button></form>{% endif %}
 {% endif %}
 {% endblock %}

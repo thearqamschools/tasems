@@ -13,6 +13,7 @@
     <form method="post" action="{% url 'setup:set_active' target.id %}"{% if target.is_active %} data-confirm="{% trans 'This person will no longer be able to sign in. Their records and history stay.' %}" data-confirm-button="{% trans 'Switch off login' %}"{% endif %}>{% csrf_token %}
       {% if target.is_active %}<input type="hidden" name="active" value="0"><button class="button danger" type="submit">{% trans "Switch off login" %}</button>{% else %}<input type="hidden" name="active" value="1"><button class="button secondary" type="submit">{% trans "Switch on login" %}</button>{% endif %}
     </form>
+    {% delete_button "user" target %}
   </div>
   {% endif %}
 </div>

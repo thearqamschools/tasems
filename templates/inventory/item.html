@@ -7,6 +7,7 @@
   <div class="actions">
     {% if can_receive %}<a class="button" href="{% url 'inventory:stock' %}?item={{ item.id }}">{% icon "package" %}{% trans "Stock in / out" %}</a>{% endif %}
     {% if can_manage %}<a class="button quiet" href="{% url 'inventory:item_edit' item.id %}">{% trans "Change item" %}</a>{% endif %}
+    {% delete_button "item" item %}
   </div>
 </div>
 <div class="figures">

@@ -71,11 +71,15 @@ def _network_wide(user, perm):
 
 
 def _form_page(request, form, title, back, lede="", submit=None, extra=None):
+    from apps.core.deletion import kind_of
+
+    instance = getattr(form, "instance", None)
     return render(
         request,
         "setup/form.html",
-        {"form": form, "title": title, "lede": lede, "back": back, "submit": submit or _("Save"), **(extra or {})},
-    )
+        {"form": form, "title": title, "lede": lede, "back": back, "submit": submit or _("Save"),
+         "delete_kind": kind_of(instance), "object": instance, **(extra or {})},
+    )  # fmt: skip
 
 
 # ---------- Hub ----------

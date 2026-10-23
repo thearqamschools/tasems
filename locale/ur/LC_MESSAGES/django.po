@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 11:41+0500\n"
+"POT-Creation-Date: 2026-10-23 14:31+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/academics/forms.py:14 templates/academics/periods.html:11
-#: templates/people/student_detail.html:69
+#: templates/people/student_detail.html:70
 msgid "No."
 msgstr "نمبر"
 
@@ -50,7 +50,7 @@ msgstr "وقفہ"
 #: templates/accounting/profit_loss.html:11 templates/admissions/report.html:6
 #: templates/fees/collections.html:8 templates/fees/student.html:64
 #: templates/inventory/sales.html:10 templates/reports/new_admissions.html:9
-#: templates/setup/fees.html:12 templates/setup/user_detail.html:25
+#: templates/setup/fees.html:12 templates/setup/user_detail.html:26
 msgid "From"
 msgstr "سے"
 
@@ -286,8 +286,8 @@ msgstr "فیس وصول (%(n)s ادائیگیاں)"
 #: templates/fees/index.html:28 templates/fees/payments_import.html:29
 #: templates/fees/student.html:52 templates/hifz/index.html:10
 #: templates/hifz/student.html:28 templates/hifz/student.html:40
-#: templates/hr/_days.html:3 templates/inventory/item.html:19
-#: templates/inventory/sales.html:29 templates/people/student_detail.html:69
+#: templates/hr/_days.html:3 templates/inventory/item.html:20
+#: templates/inventory/sales.html:29 templates/people/student_detail.html:70
 msgid "Date"
 msgstr "تاریخ"
 
@@ -430,7 +430,7 @@ msgstr "اخراجات"
 
 #: apps/accounting/views.py:60 apps/accounting/views.py:185
 #: apps/people/forms.py:107 templates/fees/student.html:52
-#: templates/people/student_detail.html:34
+#: templates/people/student_detail.html:35
 msgid "Reference"
 msgstr "حوالہ"
 
@@ -628,7 +628,7 @@ msgstr "میرے پرنٹ کام"
 #: apps/accounts/context_processors.py:59 apps/reports/catalogue.py:103
 #: templates/attendance/branches.html:7 templates/attendance/today.html:2
 #: templates/attendance/today.html:4 templates/attendance/today.html:20
-#: templates/core/design_system.html:100 templates/hr/employee.html:29
+#: templates/core/design_system.html:100 templates/hr/employee.html:30
 #: templates/parents/child.html:9 templates/parents/child.html:18
 msgid "Attendance"
 msgstr "حاضری"
@@ -885,7 +885,7 @@ msgstr ""
 "اپنی تصدیقی ایپ کھولیں۔ فون گم ہو گیا ہے؟ اس کی جگہ بیک اپ کوڈ درج کریں۔"
 
 #: apps/accounts/models.py:21 apps/accounts/models.py:159
-#: templates/setup/user_detail.html:28 templates/setup/users.html:23
+#: templates/setup/user_detail.html:29 templates/setup/users.html:23
 msgid "Whole network"
 msgstr "پورا نیٹ ورک"
 
@@ -969,7 +969,7 @@ msgstr "تفصیل"
 msgid "Where did they hear about us?"
 msgstr "انہیں ہمارے بارے میں کہاں سے پتا چلا؟"
 
-#: apps/admissions/forms.py:53 templates/admissions/detail.html:25
+#: apps/admissions/forms.py:53 templates/admissions/detail.html:26
 msgid "Follow-up by"
 msgstr "فالو اپ کرنے والا"
 
@@ -982,7 +982,7 @@ msgid "Date of birth is in the future"
 msgstr "تاریخ پیدائش آنے والے وقت کی ہے"
 
 #: apps/admissions/forms.py:73 apps/inventory/forms.py:50
-#: apps/inventory/views.py:106 templates/inventory/item.html:19
+#: apps/inventory/views.py:106 templates/inventory/item.html:20
 msgid "What happened"
 msgstr "کیا ہوا"
 
@@ -992,7 +992,7 @@ msgstr "کیا ہوا"
 #: templates/attendance/_people.html:3 templates/attendance/take.html:20
 #: templates/core/design_system.html:80 templates/fees/student.html:71
 #: templates/hr/_days.html:3 templates/hr/day.html:20
-#: templates/inventory/item.html:19
+#: templates/inventory/item.html:20
 msgid "Note"
 msgstr "نوٹ"
 
@@ -1012,7 +1012,7 @@ msgstr "وجہ (اگر داخلہ نہیں لے رہے)"
 msgid "Campus visit on"
 msgstr "کیمپس وزٹ کی تاریخ"
 
-#: apps/admissions/forms.py:88 templates/admissions/detail.html:24
+#: apps/admissions/forms.py:88 templates/admissions/detail.html:25
 #: templates/admissions/index.html:41
 msgid "Next follow-up"
 msgstr "اگلا فالو اپ"
@@ -1178,7 +1178,7 @@ msgstr "کیمپس وزٹ"
 msgid "WhatsApp message"
 msgstr "واٹس ایپ پیغام"
 
-#: apps/admissions/models.py:98 templates/admissions/detail.html:23
+#: apps/admissions/models.py:98 templates/admissions/detail.html:24
 msgid "Campus visit"
 msgstr "کیمپس وزٹ"
 
@@ -1244,7 +1244,7 @@ msgstr ""
 #: templates/hifz/student.html:40 templates/hr/_days.html:3
 #: templates/hr/day.html:20 templates/hr/index.html:30
 #: templates/hr/leaves.html:22 templates/jobs/index.html:8
-#: templates/people/student_detail.html:52
+#: templates/people/student_detail.html:53
 #: templates/people/student_list.html:23 templates/people/student_list.html:41
 #: templates/reports/new_admissions.html:18 templates/setup/branches.html:13
 msgid "Status"
@@ -1258,7 +1258,7 @@ msgstr "حیثیت"
 #: templates/fees/student.html:5 templates/hifz/student.html:6
 #: templates/inventory/receipt.html:14 templates/parents/child.html:6
 #: templates/people/leave.html:6 templates/people/student_detail.html:8
-#: templates/people/student_detail.html:52
+#: templates/people/student_detail.html:53
 #: templates/people/student_list.html:40
 #: templates/reports/new_admissions.html:18
 msgid "Admission no."
@@ -1273,8 +1273,8 @@ msgstr "داخلہ نمبر"
 #: templates/hr/leaves.html:8 templates/hr/leaves.html:22
 #: templates/hr/month.html:9 templates/notices/templates.html:10
 #: templates/payroll/index.html:31 templates/payroll/salaries.html:9
-#: templates/people/student_detail.html:40
-#: templates/people/student_detail.html:52
+#: templates/people/student_detail.html:41
+#: templates/people/student_detail.html:53
 #: templates/people/student_list.html:40
 #: templates/reports/new_admissions.html:18 templates/setup/fees.html:40
 #: templates/setup/password.html:7 templates/setup/users.html:19
@@ -1297,8 +1297,8 @@ msgstr "نام"
 #: templates/insights/attention.html:12 templates/insights/attention.html:30
 #: templates/inventory/index.html:28 templates/parents/codes.html:7
 #: templates/people/_student_fields.html:13 templates/people/promotion.html:17
-#: templates/people/student_detail.html:52
-#: templates/people/student_detail.html:61
+#: templates/people/student_detail.html:53
+#: templates/people/student_detail.html:62
 #: templates/people/student_list.html:15 templates/people/student_list.html:41
 #: templates/reports/attendance_month.html:11
 #: templates/reports/class_strength.html:17
@@ -1312,8 +1312,8 @@ msgstr "جماعت"
 #: templates/attendance/absentees.html:15 templates/attendance/today.html:41
 #: templates/diary/day.html:29 templates/exams/index.html:27
 #: templates/hifz/index.html:21 templates/hifz/report.html:9
-#: templates/people/promotion.html:17 templates/people/student_detail.html:52
-#: templates/people/student_detail.html:61
+#: templates/people/promotion.html:17 templates/people/student_detail.html:53
+#: templates/people/student_detail.html:62
 #: templates/people/student_list.html:19 templates/people/student_list.html:41
 #: templates/reports/attendance_month.html:11
 #: templates/reports/class_strength.html:17 templates/setup/sections.html:13
@@ -1332,9 +1332,61 @@ msgstr "والد کا موبائل"
 msgid "Mother mobile"
 msgstr "والدہ کا موبائل"
 
-#: apps/core/models.py:35
+#: apps/core/deletion.py:37 apps/core/models.py:35
 msgid "branch"
 msgstr "برانچ"
+
+#: apps/core/deletion.py:38
+msgid "region"
+msgstr "ریجن"
+
+#: apps/core/deletion.py:40
+msgid "academic session"
+msgstr "تعلیمی سیشن"
+
+#: apps/core/deletion.py:42
+msgid "campus"
+msgstr "کیمپس"
+
+#: apps/core/deletion.py:43
+msgid "section"
+msgstr "سیکشن"
+
+#: apps/core/deletion.py:44
+msgid "fee rate"
+msgstr "فیس ریٹ"
+
+#: apps/core/deletion.py:45 apps/payroll/models.py:26
+msgid "bank"
+msgstr "بینک"
+
+#: apps/core/deletion.py:46
+msgid "discount type"
+msgstr "رعایت کی قسم"
+
+#: apps/core/deletion.py:47
+msgid "login"
+msgstr "لاگ ان"
+
+#: apps/core/deletion.py:48
+msgid "student"
+msgstr "طالب علم"
+
+#: apps/core/deletion.py:49
+msgid "staff member"
+msgstr "اسٹاف ممبر"
+
+#: apps/core/deletion.py:50
+msgid "admission inquiry"
+msgstr "داخلہ انکوائری"
+
+#: apps/core/deletion.py:51
+msgid "item"
+msgstr "چیز"
+
+#: apps/core/deletion.py:52 apps/notices/models.py:48
+msgid "notice"
+msgstr "نوٹس"
 
 #: apps/core/models.py:48
 msgid "Created"
@@ -1359,6 +1411,11 @@ msgstr "لاگ اِن ناکام"
 #: apps/core/models.py:53
 msgid "Logged out"
 msgstr "لاگ آؤٹ ہوا"
+
+#: apps/core/templatetags/tasems_tags.py:120 templates/core/delete.html:2
+#: templates/core/delete.html:19 templates/core/delete.html:22
+msgid "Delete"
+msgstr "ڈیلیٹ کریں"
 
 #: apps/core/views.py:98
 msgid "Take registers"
@@ -1419,6 +1476,19 @@ msgstr ""
 #: apps/core/views.py:180
 msgid "Page background"
 msgstr ""
+
+#: apps/core/views.py:223
+msgid "Give a reason for deleting."
+msgstr "ڈیلیٹ کرنے کی وجہ لکھیں۔"
+
+#: apps/core/views.py:229
+msgid "It could not be deleted: other records now depend on it."
+msgstr "یہ ڈیلیٹ نہیں ہو سکا: اب دوسرے ریکارڈ اس سے جڑے ہیں۔"
+
+#: apps/core/views.py:232
+#, python-format
+msgid "%(name)s deleted. The deletion is recorded in the history."
+msgstr "%(name)s ڈیلیٹ ہو گیا۔ یہ ریکارڈ میں درج ہے۔"
 
 #: apps/diary/models.py:22
 msgid "title (Urdu)"
@@ -1638,7 +1708,7 @@ msgstr "ایوارڈ لسٹ"
 #: apps/exams/views.py:419 templates/exams/award_list.html:15
 #: templates/exams/enter_marks.html:9 templates/exams/ratings.html:19
 #: templates/exams/section_results.html:14
-#: templates/people/student_detail.html:61
+#: templates/people/student_detail.html:62
 msgid "Roll no."
 msgstr "رول نمبر"
 
@@ -1646,7 +1716,7 @@ msgstr "رول نمبر"
 #: apps/fees/views.py:838 apps/hr/forms.py:49 apps/people/forms.py:47
 #: apps/people/views.py:97 apps/reports/views.py:113
 #: templates/exams/award_list.html:15 templates/fees/collections.html:18
-#: templates/hr/employee.html:12 templates/people/student_list.html:40
+#: templates/hr/employee.html:13 templates/people/student_list.html:40
 #: templates/reports/new_admissions.html:18
 msgid "Father name"
 msgstr "والد کا نام"
@@ -1866,12 +1936,12 @@ msgstr "روکے جانے تک خالی چھوڑ دیں۔"
 
 #: apps/fees/forms.py:257 apps/hr/forms.py:144 apps/hr/forms.py:170
 #: apps/people/forms.py:305 templates/accounting/incomes.html:26
-#: templates/accounting/index.html:44 templates/fees/concessions.html:8
-#: templates/fees/concessions.html:23 templates/fees/receipt.html:28
-#: templates/fees/student.html:44 templates/fees/student.html:64
-#: templates/fees/student.html:77 templates/hr/day.html:30
-#: templates/hr/leaves.html:8 templates/inventory/receipt.html:25
-#: templates/payroll/index.html:46
+#: templates/accounting/index.html:44 templates/core/delete.html:20
+#: templates/fees/concessions.html:8 templates/fees/concessions.html:23
+#: templates/fees/receipt.html:28 templates/fees/student.html:44
+#: templates/fees/student.html:64 templates/fees/student.html:77
+#: templates/hr/day.html:30 templates/hr/leaves.html:8
+#: templates/inventory/receipt.html:25 templates/payroll/index.html:46
 msgid "Reason"
 msgstr "وجہ"
 
@@ -2104,7 +2174,7 @@ msgstr "منظور"
 msgid "Not approved"
 msgstr "نامنظور"
 
-#: apps/fees/models.py:436 templates/setup/user_detail.html:30
+#: apps/fees/models.py:436 templates/setup/user_detail.html:31
 msgid "Ended"
 msgstr "ختم"
 
@@ -2578,7 +2648,7 @@ msgid "Para %(n)s test recorded."
 msgstr "پارہ %(n)s کا ٹیسٹ درج ہو گیا۔"
 
 #: apps/hifz/views.py:151 templates/hifz/student.html:2
-#: templates/people/student_detail.html:17
+#: templates/people/student_detail.html:18
 msgid "Hifz record"
 msgstr "حفظ کا ریکارڈ"
 
@@ -2665,16 +2735,16 @@ msgstr "ملازم کوڈ"
 msgid "Full name"
 msgstr ""
 
-#: apps/hr/forms.py:50 templates/hr/employee.html:13
+#: apps/hr/forms.py:50 templates/hr/employee.html:14
 msgid "Husband name"
 msgstr "شوہر کا نام"
 
-#: apps/hr/forms.py:51 templates/hr/employee.html:16
+#: apps/hr/forms.py:51 templates/hr/employee.html:17
 msgid "Present address"
 msgstr "موجودہ پتہ"
 
-#: apps/hr/forms.py:52 apps/people/forms.py:105 templates/hr/employee.html:17
-#: templates/people/student_detail.html:33
+#: apps/hr/forms.py:52 apps/people/forms.py:105 templates/hr/employee.html:18
+#: templates/people/student_detail.html:34
 msgid "Permanent address"
 msgstr "مستقل پتہ"
 
@@ -2682,7 +2752,7 @@ msgstr "مستقل پتہ"
 msgid "Staff type"
 msgstr "عملے کی قسم"
 
-#: apps/hr/forms.py:54 apps/hr/views.py:87 templates/hr/employee.html:18
+#: apps/hr/forms.py:54 apps/hr/views.py:87 templates/hr/employee.html:19
 msgid "Joining date"
 msgstr "تاریخِ تقرری"
 
@@ -2920,7 +2990,7 @@ msgid "Female"
 msgstr "لڑکی"
 
 #: apps/hr/models.py:87 apps/hr/views.py:86 apps/people/models.py:29
-#: templates/hr/employee.html:14
+#: templates/hr/employee.html:15
 msgid "CNIC"
 msgstr "شناختی کارڈ نمبر"
 
@@ -3074,20 +3144,20 @@ msgid "Type"
 msgstr "قسم"
 
 #: apps/hr/views.py:86 apps/notices/views.py:151 apps/setup/forms.py:353
-#: templates/admissions/index.html:41 templates/hr/employee.html:15
+#: templates/admissions/index.html:41 templates/hr/employee.html:16
 #: templates/hr/index.html:39 templates/notices/compose.html:28
 #: templates/setup/users.html:19
 msgid "Mobile"
 msgstr "موبائل"
 
 #: apps/hr/views.py:87 apps/reports/views.py:77 apps/setup/forms.py:23
-#: templates/hr/employee.html:19 templates/people/student_detail.html:61
+#: templates/hr/employee.html:20 templates/people/student_detail.html:62
 #: templates/reports/class_strength.html:17 templates/setup/sections.html:13
 #: templates/setup/sections.html:30
 msgid "Campus"
 msgstr "کیمپس"
 
-#: apps/hr/views.py:87 templates/hr/employee.html:20
+#: apps/hr/views.py:87 templates/hr/employee.html:21
 msgid "Qualification"
 msgstr "تعلیمی قابلیت"
 
@@ -3219,7 +3289,7 @@ msgid "Signals"
 msgstr "اشارے"
 
 #: apps/insights/views.py:46 templates/people/student_detail.html:11
-#: templates/setup/user_detail.html:47
+#: templates/setup/user_detail.html:48
 msgid "Details"
 msgstr "تفصیلات"
 
@@ -3238,12 +3308,12 @@ msgid "For class"
 msgstr "کلاس کے لیے"
 
 #: apps/inventory/forms.py:21 apps/inventory/views.py:55
-#: templates/inventory/index.html:28 templates/inventory/item.html:14
+#: templates/inventory/index.html:28 templates/inventory/item.html:15
 msgid "Sale price (Rs)"
 msgstr "قیمتِ فروخت (روپے)"
 
 #: apps/inventory/forms.py:22 apps/inventory/views.py:56
-#: templates/inventory/item.html:15
+#: templates/inventory/item.html:16
 msgid "Reorder level"
 msgstr "دوبارہ منگوانے کی حد"
 
@@ -3275,7 +3345,7 @@ msgid "Stock count correction"
 msgstr "گنتی کے بعد درستی"
 
 #: apps/inventory/forms.py:52 apps/inventory/views.py:106
-#: templates/inventory/item.html:19 templates/inventory/receipt.html:16
+#: templates/inventory/item.html:20 templates/inventory/receipt.html:16
 #: templates/inventory/sell.html:13 templates/inventory/sell.html:18
 msgid "Quantity"
 msgstr "تعداد"
@@ -3348,7 +3418,7 @@ msgstr "اسٹاک اتنا رہ جائے تو خبردار کریں"
 msgid "in use"
 msgstr "زیرِ استعمال"
 
-#: apps/inventory/models.py:60 templates/admissions/detail.html:26
+#: apps/inventory/models.py:60 templates/admissions/detail.html:27
 msgid "Received"
 msgstr "موصول"
 
@@ -3381,7 +3451,7 @@ msgid "Stock in hand"
 msgstr "موجود اسٹاک"
 
 #: apps/inventory/views.py:55 templates/inventory/index.html:28
-#: templates/inventory/item.html:13
+#: templates/inventory/item.html:14
 msgid "In stock"
 msgstr "اسٹاک میں"
 
@@ -3389,15 +3459,15 @@ msgstr "اسٹاک میں"
 msgid "Value at sale price (Rs)"
 msgstr "قیمتِ فروخت پر مالیت (روپے)"
 
-#: apps/inventory/views.py:105 templates/inventory/item.html:17
+#: apps/inventory/views.py:105 templates/inventory/item.html:18
 msgid "Stock card"
 msgstr "اسٹاک کارڈ"
 
-#: apps/inventory/views.py:106 templates/inventory/item.html:19
+#: apps/inventory/views.py:106 templates/inventory/item.html:20
 msgid "Purchase price (Rs)"
 msgstr "قیمتِ خرید (روپے)"
 
-#: apps/inventory/views.py:106 templates/inventory/item.html:19
+#: apps/inventory/views.py:106 templates/inventory/item.html:20
 msgid "By"
 msgstr "از"
 
@@ -3495,7 +3565,7 @@ msgstr "نہیں بن سکا"
 
 #: apps/notices/forms.py:16 apps/setup/forms.py:302
 #: templates/academics/holidays.html:21 templates/notices/index.html:14
-#: templates/setup/user_detail.html:25
+#: templates/setup/user_detail.html:26
 msgid "Where"
 msgstr "کہاں"
 
@@ -3511,7 +3581,7 @@ msgstr "PDF، JPG یا PNG فائل لگائیں۔"
 msgid "Student's name"
 msgstr "طالب علم کا نام"
 
-#: apps/notices/messaging.py:14 templates/people/student_detail.html:28
+#: apps/notices/messaging.py:14 templates/people/student_detail.html:29
 msgid "Father's name"
 msgstr "والد کا نام"
 
@@ -3571,10 +3641,6 @@ msgstr "والدین اور عملہ"
 #: apps/notices/models.py:47
 msgid "title"
 msgstr "عنوان"
-
-#: apps/notices/models.py:48
-msgid "notice"
-msgstr "نوٹس"
 
 #: apps/notices/models.py:49
 msgid "for"
@@ -3749,10 +3815,6 @@ msgid "monthly salary (Rs)"
 msgstr "ماہانہ تنخواہ (روپے)"
 
 #: apps/payroll/models.py:26
-msgid "bank"
-msgstr "بینک"
-
-#: apps/payroll/models.py:26
 msgid "Empty: paid in cash"
 msgstr "خالی: نقد ادائیگی"
 
@@ -3880,12 +3942,12 @@ msgid "Father email"
 msgstr "والد کا ای میل"
 
 #: apps/people/forms.py:50 apps/people/forms.py:56 apps/people/forms.py:65
-#: templates/people/student_detail.html:40
+#: templates/people/student_detail.html:41
 msgid "Occupation"
 msgstr "پیشہ"
 
 #: apps/people/forms.py:51 apps/people/forms.py:57
-#: templates/people/student_detail.html:40
+#: templates/people/student_detail.html:41
 msgid "Organisation"
 msgstr "ادارہ"
 
@@ -3905,7 +3967,7 @@ msgstr "سرپرست کا نام"
 msgid "Guardian mobile / WhatsApp"
 msgstr "سرپرست کا موبائل / واٹس ایپ"
 
-#: apps/people/forms.py:63 templates/people/student_detail.html:40
+#: apps/people/forms.py:63 templates/people/student_detail.html:41
 msgid "Relationship"
 msgstr "رشتہ"
 
@@ -3940,17 +4002,17 @@ msgid "Last name"
 msgstr "آخری نام"
 
 #: apps/people/forms.py:99 apps/people/views.py:98 apps/reports/views.py:113
-#: templates/admissions/detail.html:19 templates/people/student_detail.html:24
+#: templates/admissions/detail.html:20 templates/people/student_detail.html:25
 msgid "Gender"
 msgstr "جنس"
 
 #: apps/people/forms.py:100 apps/people/views.py:98
-#: templates/people/student_detail.html:25
+#: templates/people/student_detail.html:26
 msgid "Date of birth"
 msgstr "تاریخ پیدائش"
 
 #: apps/people/forms.py:101 apps/people/views.py:98 apps/reports/views.py:113
-#: templates/core/design_system.html:79 templates/people/student_detail.html:26
+#: templates/core/design_system.html:79 templates/people/student_detail.html:27
 #: templates/reports/new_admissions.html:18
 msgid "Admission date"
 msgstr "تاریخ داخلہ"
@@ -3960,19 +4022,19 @@ msgid "Father CNIC"
 msgstr "والد کا شناختی کارڈ نمبر"
 
 #: apps/people/forms.py:103 apps/setup/forms.py:354
-#: templates/people/student_detail.html:31
+#: templates/people/student_detail.html:32
 msgid "Email"
 msgstr "ای میل"
 
-#: apps/people/forms.py:104 templates/people/student_detail.html:32
+#: apps/people/forms.py:104 templates/people/student_detail.html:33
 msgid "Current address"
 msgstr "موجودہ پتہ"
 
-#: apps/people/forms.py:106 templates/people/student_detail.html:30
+#: apps/people/forms.py:106 templates/people/student_detail.html:31
 msgid "Subject group"
 msgstr "مضامین کا گروپ"
 
-#: apps/people/forms.py:108 templates/people/student_detail.html:35
+#: apps/people/forms.py:108 templates/people/student_detail.html:36
 msgid "Notes"
 msgstr "نوٹس"
 
@@ -4143,7 +4205,7 @@ msgstr "بیالوجی"
 msgid "Computer"
 msgstr "کمپیوٹر"
 
-#: apps/people/models.py:65 templates/people/student_detail.html:27
+#: apps/people/models.py:65 templates/people/student_detail.html:28
 msgid "B-Form number"
 msgstr "ب فارم نمبر"
 
@@ -4205,7 +4267,7 @@ msgstr "سکول چھوڑنے کا سرٹیفکیٹ"
 
 #: apps/people/models.py:202 templates/people/certificate_form.html:2
 #: templates/people/certificate_form.html:5
-#: templates/people/student_detail.html:19
+#: templates/people/student_detail.html:20
 msgid "Character certificate"
 msgstr "کریکٹر سرٹیفکیٹ"
 
@@ -4756,13 +4818,13 @@ msgstr "یہ ریجن کسی دوسرے ہیڈ آفس کا ہے۔"
 msgid "The session must end after it starts."
 msgstr "سیشن کی آخری تاریخ شروع کی تاریخ کے بعد ہونی چاہیے۔"
 
-#: apps/setup/forms.py:301 templates/setup/user_detail.html:25
+#: apps/setup/forms.py:301 templates/setup/user_detail.html:26
 #: templates/setup/users.html:12
 msgid "Role"
 msgstr "کردار"
 
 #: apps/setup/forms.py:307 templates/fees/student.html:64
-#: templates/setup/user_detail.html:25
+#: templates/setup/user_detail.html:26
 msgid "Until"
 msgstr "تک"
 
@@ -4795,242 +4857,242 @@ msgstr "11 ہندسوں کا موبائل نمبر لکھیں، مثلاً 0300-
 msgid "Another login already uses this mobile number."
 msgstr "یہ موبائل نمبر کسی دوسرے لاگ اِن میں استعمال ہو رہا ہے۔"
 
-#: apps/setup/views.py:77 templates/admissions/form.html:9
+#: apps/setup/views.py:80 templates/admissions/form.html:9
 #: templates/exams/ratings.html:23 templates/hr/employee_form.html:8
 #: templates/inventory/stock_form.html:10
 msgid "Save"
 msgstr "محفوظ کریں"
 
-#: apps/setup/views.py:97 templates/setup/sections.html:2
+#: apps/setup/views.py:101 templates/setup/sections.html:2
 #: templates/setup/sections.html:6
 msgid "Classes and sections"
 msgstr "جماعتیں اور سیکشن"
 
-#: apps/setup/views.py:98
+#: apps/setup/views.py:102
 msgid "Sections of this session, class teachers, capacity and campuses."
 msgstr "اس سیشن کے سیکشن، کلاس ٹیچر، گنجائش اور کیمپس۔"
 
-#: apps/setup/views.py:105 templates/setup/fees.html:2
+#: apps/setup/views.py:109 templates/setup/fees.html:2
 #: templates/setup/fees.html:6
 msgid "Fee rates and vouchers"
 msgstr "فیس ریٹ اور واؤچر"
 
-#: apps/setup/views.py:106
+#: apps/setup/views.py:110
 msgid "Fee amounts per class, due day, late fine, bank details printed on vouchers."
 msgstr "ہر جماعت کی فیس، آخری تاریخ، لیٹ فائن، اور واؤچر پر چھپنے والی بینک تفصیلات۔"
 
-#: apps/setup/views.py:113 templates/setup/user_detail.html:4
+#: apps/setup/views.py:117 templates/setup/user_detail.html:4
 #: templates/setup/user_new.html:4 templates/setup/users.html:2
 #: templates/setup/users.html:6
 msgid "Users and roles"
 msgstr "صارفین اور کردار"
 
-#: apps/setup/views.py:114
+#: apps/setup/views.py:118
 msgid "Staff logins, what each person may do and where, password resets."
 msgstr "عملے کے لاگ اِن، کون کہاں کیا کر سکتا ہے، اور پاس ورڈ ری سیٹ۔"
 
-#: apps/setup/views.py:121 templates/setup/branches.html:2
+#: apps/setup/views.py:125 templates/setup/branches.html:2
 #: templates/setup/branches.html:6
 msgid "Branches and regions"
 msgstr "برانچیں اور ریجن"
 
-#: apps/setup/views.py:122
+#: apps/setup/views.py:126
 msgid "Branch details, franchise or company-owned, royalty %, regions of each head office."
 msgstr "برانچ کی تفصیلات، فرنچائز یا کمپنی کی ملکیت، رائلٹی %، اور ہر ہیڈ آفس کے ریجن۔"
 
-#: apps/setup/views.py:130 templates/setup/sessions.html:2
+#: apps/setup/views.py:134 templates/setup/sessions.html:2
 #: templates/setup/sessions.html:6
 msgid "Academic sessions"
 msgstr "تعلیمی سیشن"
 
-#: apps/setup/views.py:131
+#: apps/setup/views.py:135
 msgid "School years and which one is current across the network."
 msgstr "تعلیمی سال، اور پورے نیٹ ورک میں کون سا سیشن جاری ہے۔"
 
-#: apps/setup/views.py:180
+#: apps/setup/views.py:184
 msgid "No current academic session is set. Set it under Setup → Academic sessions."
 msgstr "کوئی جاری تعلیمی سیشن طے نہیں۔ سیٹ اپ ← تعلیمی سیشن میں طے کریں۔"
 
-#: apps/setup/views.py:188
+#: apps/setup/views.py:192
 #, python-format
 msgid "Section %(s)s saved."
 msgstr "سیکشن %(s)s محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:190
+#: apps/setup/views.py:194
 #, python-format
 msgid "Edit %(s)s"
 msgstr "%(s)s میں تبدیلی"
 
-#: apps/setup/views.py:190 templates/setup/sections.html:8
+#: apps/setup/views.py:194 templates/setup/sections.html:8
 #: templates/setup/sections.html:24
 msgid "Add a section"
 msgstr "سیکشن شامل کریں"
 
-#: apps/setup/views.py:196
+#: apps/setup/views.py:200
 #, python-format
 msgid "Session %(s)s · %(b)s. The class teacher must have a role in this branch."
 msgstr "سیشن %(s)s · %(b)s۔ کلاس ٹیچر کی اس برانچ میں کوئی کردار ہونا ضروری ہے۔"
 
-#: apps/setup/views.py:208
+#: apps/setup/views.py:212
 msgid "Campus saved."
 msgstr "کیمپس محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:213
+#: apps/setup/views.py:217
 msgid "Edit campus"
 msgstr "کیمپس میں تبدیلی"
 
-#: apps/setup/views.py:213 templates/setup/sections.html:34
+#: apps/setup/views.py:217 templates/setup/sections.html:34
 msgid "Add a campus"
 msgstr "کیمپس شامل کریں"
 
-#: apps/setup/views.py:216
+#: apps/setup/views.py:220
 #, python-format
 msgid "A building of %(b)s, e.g. a separate boys or girls campus. Fees and administration stay with the branch."
 msgstr "%(b)s کی ایک عمارت، مثلاً لڑکوں یا لڑکیوں کا الگ کیمپس۔ فیس اور انتظام برانچ ہی کے پاس رہتے ہیں۔"
 
-#: apps/setup/views.py:262
+#: apps/setup/views.py:266
 msgid "Fee rate saved. It is used for vouchers made from now on; vouchers already made keep their amounts."
 msgstr "فیس ریٹ محفوظ ہو گیا۔ یہ اب سے بننے والے واؤچرز پر لگے گا؛ پہلے سے بنے واؤچرز کی رقم وہی رہے گی۔"
 
-#: apps/setup/views.py:268
+#: apps/setup/views.py:272
 msgid "Edit fee rate"
 msgstr "فیس ریٹ میں تبدیلی"
 
-#: apps/setup/views.py:268 templates/setup/fees.html:7
+#: apps/setup/views.py:272 templates/setup/fees.html:7
 msgid "Add a fee rate"
 msgstr "فیس ریٹ شامل کریں"
 
-#: apps/setup/views.py:271
+#: apps/setup/views.py:275
 msgid "To change a fee from a new month, add a new rate starting that month — the old one stays for the record."
 msgstr "کسی نئے مہینے سے فیس بدلنی ہو تو اسی مہینے سے نیا ریٹ شامل کریں — پرانا ریٹ ریکارڈ کے لیے رہے گا۔"
 
-#: apps/setup/views.py:282
+#: apps/setup/views.py:286
 msgid "Voucher settings saved."
 msgstr "واؤچر کی ترتیبات محفوظ ہو گئیں۔"
 
-#: apps/setup/views.py:287 templates/setup/fees.html:47
+#: apps/setup/views.py:291 templates/setup/fees.html:47
 msgid "Voucher and payment settings"
 msgstr "واؤچر اور ادائیگی کی ترتیبات"
 
-#: apps/setup/views.py:289
+#: apps/setup/views.py:293
 #, python-format
 msgid "Printed on every fee voucher of %(b)s."
 msgstr "%(b)s کے ہر فیس واؤچر پر چھپتا ہے۔"
 
-#: apps/setup/views.py:301
+#: apps/setup/views.py:305
 msgid "Bank saved."
 msgstr "بینک محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:306
+#: apps/setup/views.py:310
 msgid "Edit bank"
 msgstr "بینک میں تبدیلی"
 
-#: apps/setup/views.py:306 templates/setup/fees.html:25
+#: apps/setup/views.py:310 templates/setup/fees.html:25
 msgid "Add a bank"
 msgstr "بینک شامل کریں"
 
-#: apps/setup/views.py:308
+#: apps/setup/views.py:312
 #, python-format
 msgid "Fees received by bank are recorded against one of %(b)s's banks."
 msgstr "بینک کے ذریعے آنے والی فیس %(b)s کے کسی بینک میں درج ہوتی ہے۔"
 
-#: apps/setup/views.py:321
+#: apps/setup/views.py:325
 msgid "Discount saved."
 msgstr "رعایت محفوظ ہو گئی۔"
 
-#: apps/setup/views.py:326
+#: apps/setup/views.py:330
 msgid "Edit discount"
 msgstr "رعایت میں تبدیلی"
 
-#: apps/setup/views.py:326 templates/setup/fees.html:37
+#: apps/setup/views.py:330 templates/setup/fees.html:37
 msgid "Add a discount"
 msgstr "رعایت شامل کریں"
 
-#: apps/setup/views.py:328
+#: apps/setup/views.py:332
 msgid "Offered on the admission form. Brothers and sisters get the sibling fee by themselves."
 msgstr "داخلہ فارم پر دستیاب۔ بہن بھائیوں کو بہن بھائی والی فیس خود لگ جاتی ہے۔"
 
-#: apps/setup/views.py:390
+#: apps/setup/views.py:394
 #, python-format
 msgid "Branch %(b)s saved."
 msgstr "برانچ %(b)s محفوظ ہو گئی۔"
 
-#: apps/setup/views.py:395
+#: apps/setup/views.py:399
 #, python-format
 msgid "Edit %(b)s"
 msgstr "%(b)s میں تبدیلی"
 
-#: apps/setup/views.py:395 templates/setup/branches.html:7
+#: apps/setup/views.py:399 templates/setup/branches.html:7
 msgid "Add a branch"
 msgstr "برانچ شامل کریں"
 
-#: apps/setup/views.py:398
+#: apps/setup/views.py:402
 msgid "Royalty %: the head office's share of the fees received each month — usually 8 for franchises and 0 for company-owned campuses."
 msgstr "رائلٹی %: ہر مہینے وصول ہونے والی فیس میں ہیڈ آفس کا حصہ — عام طور پر فرنچائز کے لیے 8 اور کمپنی کی ملکیت والے کیمپس کے لیے 0۔"
 
-#: apps/setup/views.py:414
+#: apps/setup/views.py:418
 msgid "Region saved."
 msgstr "ریجن محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:416
+#: apps/setup/views.py:420
 msgid "Edit region"
 msgstr "ریجن میں تبدیلی"
 
-#: apps/setup/views.py:416 templates/setup/branches.html:36
+#: apps/setup/views.py:420 templates/setup/branches.html:36
 msgid "Add a region"
 msgstr "ریجن شامل کریں"
 
-#: apps/setup/views.py:438
+#: apps/setup/views.py:442
 msgid "Session saved."
 msgstr "سیشن محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:440
+#: apps/setup/views.py:444
 msgid "Edit session"
 msgstr "سیشن میں تبدیلی"
 
-#: apps/setup/views.py:440 templates/setup/sessions.html:7
+#: apps/setup/views.py:444 templates/setup/sessions.html:7
 msgid "Add a session"
 msgstr "سیشن شامل کریں"
 
-#: apps/setup/views.py:454
+#: apps/setup/views.py:458
 #, python-format
 msgid "%(s)s is now the current session across the network."
 msgstr "%(s)s اب پورے نیٹ ورک میں جاری سیشن ہے۔"
 
-#: apps/setup/views.py:517
+#: apps/setup/views.py:521
 msgid "This role cannot be given at this level."
 msgstr "یہ کردار اس سطح پر نہیں دی جا سکتی۔"
 
-#: apps/setup/views.py:518
+#: apps/setup/views.py:522
 msgid "You can only give roles inside your own area."
 msgstr "آپ صرف اپنے دائرے میں کردار دے سکتے ہیں۔"
 
-#: apps/setup/views.py:520
+#: apps/setup/views.py:524
 msgid "This role can manage logins or setup there that you cannot manage yourself, so you cannot give it."
 msgstr "اس کردار میں وہاں لاگ اِن یا سیٹ اپ کا ایسا اختیار ہے جو آپ کے پاس خود نہیں، اس لیے آپ یہ نہیں دے سکتے۔"
 
-#: apps/setup/views.py:599
+#: apps/setup/views.py:603
 msgid "You can only add logins for people inside your own area."
 msgstr "آپ صرف اپنے دائرے کے لوگوں کے لاگ اِن بنا سکتے ہیں۔"
 
-#: apps/setup/views.py:630
+#: apps/setup/views.py:634
 msgid "Details saved."
 msgstr "تفصیلات محفوظ ہو گئیں۔"
 
-#: apps/setup/views.py:641
+#: apps/setup/views.py:645
 msgid "Role given."
 msgstr "کردار دے دیا گیا۔"
 
-#: apps/setup/views.py:679
+#: apps/setup/views.py:683
 #, python-format
 msgid "%(role)s ended for %(name)s."
 msgstr "%(name)s کا کردار %(role)s ختم کر دیا گیا۔"
 
-#: apps/setup/views.py:708
+#: apps/setup/views.py:712
 msgid "Login switched on."
 msgstr "لاگ اِن کھول دیا گیا۔"
 
-#: apps/setup/views.py:708
+#: apps/setup/views.py:712
 msgid "Login switched off. They can no longer sign in."
 msgstr "لاگ اِن بند کر دیا گیا۔ اب یہ سائن اِن نہیں کر سکیں گے۔"
 
@@ -5055,7 +5117,7 @@ msgstr "طلبہ کی چھٹی کے دن حاضری یا ڈائری نہیں ہ�
 #: templates/fees/receipt.html:21 templates/fees/student.html:43
 #: templates/fees/vouchers.html:34 templates/includes_list_tools.html:4
 #: templates/notices/detail.html:8 templates/parents/slips.html:18
-#: templates/payroll/index.html:27 templates/people/student_detail.html:71
+#: templates/payroll/index.html:27 templates/people/student_detail.html:72
 msgid "Print"
 msgstr "پرنٹ"
 
@@ -5221,11 +5283,12 @@ msgstr "ٹائم ٹیبل محفوظ کریں"
 
 #: templates/academics/section_timetable.html:31
 #: templates/accounting/incomes.html:24 templates/accounting/index.html:42
-#: templates/accounts/password_change.html:9 templates/exams/date_sheet.html:36
-#: templates/exams/enter_marks.html:19 templates/fees/student.html:44
-#: templates/fees/student.html:77 templates/hifz/student.html:33
-#: templates/people/leave.html:13 templates/people/student_form.html:10
-#: templates/setup/form.html:10 templates/setup/user_new.html:17
+#: templates/accounts/password_change.html:9 templates/core/delete.html:22
+#: templates/exams/date_sheet.html:36 templates/exams/enter_marks.html:19
+#: templates/fees/student.html:44 templates/fees/student.html:77
+#: templates/hifz/student.html:33 templates/people/leave.html:13
+#: templates/people/student_form.html:10 templates/setup/form.html:10
+#: templates/setup/user_new.html:17
 msgid "Cancel"
 msgstr "منسوخ"
 
@@ -5263,7 +5326,7 @@ msgstr "حسابات"
 #: templates/fees/royalty.html:8 templates/fees/royalty_branch.html:12
 #: templates/fees/vouchers.html:16 templates/hifz/index.html:11
 #: templates/hifz/report.html:11 templates/hr/day.html:7
-#: templates/hr/employee.html:30 templates/hr/index.html:32
+#: templates/hr/employee.html:31 templates/hr/index.html:32
 #: templates/hr/mine.html:12 templates/hr/month.html:5
 #: templates/insights/attention.html:15 templates/inventory/index.html:25
 #: templates/inventory/sales.html:13 templates/payroll/index.html:9
@@ -5326,6 +5389,7 @@ msgstr "خرچ محفوظ کریں"
 
 #: templates/accounting/form.html:11 templates/accounting/income_form.html:11
 #: templates/admissions/admit.html:10 templates/admissions/form.html:10
+#: templates/core/delete.html:4 templates/core/delete.html:14
 #: templates/fees/concession_form.html:10 templates/fees/issue.html:27
 #: templates/hr/employee_form.html:9 templates/hr/leave_form.html:9
 #: templates/parents/account.html:10 templates/parents/slips.html:18
@@ -5532,7 +5596,7 @@ msgid "Continue"
 msgstr "جاری رکھیں"
 
 #: templates/admissions/admit.html:2 templates/admissions/admit.html:4
-#: templates/admissions/detail.html:12
+#: templates/admissions/detail.html:13
 msgid "Make student record"
 msgstr "طالب علم کا ریکارڈ بنائیں"
 
@@ -5566,49 +5630,49 @@ msgstr "کال کریں"
 msgid "Edit"
 msgstr "ترمیم"
 
-#: templates/admissions/detail.html:11 templates/fees/student.html:16
+#: templates/admissions/detail.html:12 templates/fees/student.html:16
 #: templates/hifz/student.html:7
 msgid "Student record"
 msgstr "طالب علم کا ریکارڈ"
 
-#: templates/admissions/detail.html:14
+#: templates/admissions/detail.html:15
 msgid "Brothers or sisters already at school with this mobile number:"
 msgstr "اس موبائل نمبر سے سکول میں پہلے سے موجود بہن بھائی:"
 
-#: templates/admissions/detail.html:15
+#: templates/admissions/detail.html:16
 msgid "Other inquiries from this mobile number:"
 msgstr "اس موبائل نمبر سے دوسری انکوائریاں:"
 
-#: templates/admissions/detail.html:18 templates/admissions/index.html:41
+#: templates/admissions/detail.html:19 templates/admissions/index.html:41
 msgid "Parent"
 msgstr "والدین"
 
-#: templates/admissions/detail.html:19
+#: templates/admissions/detail.html:20
 msgid "born"
 msgstr "پیدائش"
 
-#: templates/admissions/detail.html:20
+#: templates/admissions/detail.html:21
 msgid "Area"
 msgstr "علاقہ"
 
-#: templates/admissions/detail.html:21
+#: templates/admissions/detail.html:22
 msgid "Current school"
 msgstr "موجودہ سکول"
 
-#: templates/admissions/detail.html:22 templates/admissions/index.html:32
+#: templates/admissions/detail.html:23 templates/admissions/index.html:32
 #: templates/admissions/index.html:41 templates/admissions/report.html:17
 msgid "Source"
 msgstr "ذریعہ"
 
-#: templates/admissions/detail.html:30
+#: templates/admissions/detail.html:31
 msgid "Record a follow-up"
 msgstr "فالو اپ درج کریں"
 
-#: templates/admissions/detail.html:34
+#: templates/admissions/detail.html:35
 msgid "Save follow-up"
 msgstr "فالو اپ محفوظ کریں"
 
-#: templates/admissions/detail.html:38
+#: templates/admissions/detail.html:39
 msgid "History"
 msgstr "تاریخچہ"
 
@@ -5978,6 +6042,31 @@ msgstr "واپس جائیں"
 #: templates/base.html:98 templates/core/design_system.html:105
 msgid "Yes, continue"
 msgstr "جی ہاں، جاری رکھیں"
+
+#: templates/core/delete.html:5
+#, python-format
+msgid "Delete this %(what)s?"
+msgstr "کیا یہ %(what)s ڈیلیٹ کریں؟"
+
+#: templates/core/delete.html:10
+msgid "This cannot be deleted, because these records depend on it:"
+msgstr "یہ ڈیلیٹ نہیں ہو سکتا، کیونکہ یہ ریکارڈ اس سے جڑے ہیں:"
+
+#: templates/core/delete.html:12
+msgid "Records with history (fees, attendance, marks, stock and so on) are kept. Remove or move those first, or mark it as not in use / left instead."
+msgstr "جن ریکارڈز کی تاریخ ہو (فیس، حاضری، نمبر، اسٹاک وغیرہ) وہ محفوظ رہتے ہیں۔ پہلے انہیں ہٹائیں یا منتقل کریں، یا اسے غیر مستعمل / چھوڑ گیا نشان زد کریں۔"
+
+#: templates/core/delete.html:17
+msgid "These will be deleted for good:"
+msgstr "یہ ہمیشہ کے لیے ڈیلیٹ ہو جائیں گے:"
+
+#: templates/core/delete.html:19
+msgid "This cannot be undone. The deletion is recorded in the history with your reason."
+msgstr "یہ واپس نہیں ہو سکتا۔ ڈیلیٹ کرنا آپ کی وجہ کے ساتھ ریکارڈ میں درج ہو گا۔"
+
+#: templates/core/delete.html:21
+msgid "e.g. made by mistake"
+msgstr "مثلاً غلطی سے بن گیا"
 
 #: templates/core/design_system.html:7
 msgid ""
@@ -7220,7 +7309,7 @@ msgid "Next payment"
 msgstr "اگلی ادائیگی"
 
 #: templates/fees/receipt.html:23 templates/fees/student.html:2
-#: templates/people/student_detail.html:16
+#: templates/people/student_detail.html:17
 msgid "Fee account"
 msgstr "فیس اکاؤنٹ"
 
@@ -7624,23 +7713,23 @@ msgstr "درستی ختم کریں"
 msgid "No staff records yet."
 msgstr "ابھی عملے کا کوئی ریکارڈ نہیں۔"
 
-#: templates/hr/employee.html:8
+#: templates/hr/employee.html:9
 msgid "Record leave"
 msgstr "رخصت درج کریں"
 
-#: templates/hr/employee.html:9
+#: templates/hr/employee.html:10
 msgid "Open CV"
 msgstr "سی وی کھولیں"
 
-#: templates/hr/employee.html:21
+#: templates/hr/employee.html:22
 msgid "Biometric machine ID"
 msgstr "بائیو میٹرک مشین آئی ڈی"
 
-#: templates/hr/employee.html:22
+#: templates/hr/employee.html:23
 msgid "TASEMS login"
 msgstr "TASEMS لاگ اِن"
 
-#: templates/hr/employee.html:25
+#: templates/hr/employee.html:26
 msgid "Leave this session"
 msgstr "اس سیشن کی رخصتیں"
 
@@ -7739,7 +7828,7 @@ msgstr "اس سیشن کی میری رخصتیں"
 msgid "Your leave request will be withdrawn."
 msgstr "آپ کی رخصت کی درخواست واپس لے لی جائے گی۔"
 
-#: templates/hr/mine.html:10 templates/notices/detail.html:16
+#: templates/hr/mine.html:10 templates/notices/detail.html:17
 msgid "Withdraw"
 msgstr "واپس لیں"
 
@@ -7999,7 +8088,7 @@ msgstr "ابھی کوئی چیز نہیں۔ برانچ میں بکنے والی 
 msgid "Change item"
 msgstr "چیز میں تبدیلی"
 
-#: templates/inventory/item.html:28
+#: templates/inventory/item.html:29
 msgid "No stock recorded for this item yet."
 msgstr "اس چیز کا ابھی کوئی اسٹاک درج نہیں۔"
 
@@ -8141,7 +8230,7 @@ msgstr "پچھلے 7 دنوں میں آپ کی منگوائی گئی بڑی PDF 
 msgid "Asked for"
 msgstr "درخواست کا وقت"
 
-#: templates/jobs/index.html:8 templates/people/student_detail.html:78
+#: templates/jobs/index.html:8 templates/people/student_detail.html:79
 msgid "What"
 msgstr "کیا"
 
@@ -8224,11 +8313,11 @@ msgid_plural "Opened by %(n)s people."
 msgstr[0] "%(n)s فرد نے کھولا۔"
 msgstr[1] "%(n)s افراد نے کھولا۔"
 
-#: templates/notices/detail.html:16
+#: templates/notices/detail.html:17
 msgid "Parents and staff will no longer see this notice."
 msgstr "والدین اور عملہ یہ نوٹس مزید نہیں دیکھیں گے۔"
 
-#: templates/notices/detail.html:16
+#: templates/notices/detail.html:17
 msgid "Withdraw notice"
 msgstr "نوٹس واپس لیں"
 
@@ -8597,7 +8686,7 @@ msgstr "طالب علم کی معلومات"
 
 #: templates/people/_student_fields.html:19
 #: templates/people/student_detail.html:11
-#: templates/people/student_detail.html:38
+#: templates/people/student_detail.html:39
 msgid "Family details"
 msgstr "خاندان کی تفصیل"
 
@@ -8619,7 +8708,7 @@ msgstr "سرٹیفکیٹ بنائیں"
 
 #: templates/people/leave.html:2 templates/people/leave.html:5
 #: templates/people/leave.html:9 templates/people/leave.html:12
-#: templates/people/student_detail.html:20
+#: templates/people/student_detail.html:21
 msgid "Leave school"
 msgstr "سکول چھوڑنا"
 
@@ -8722,17 +8811,17 @@ msgid "Sections of this page"
 msgstr "اس صفحے کے حصے"
 
 #: templates/people/student_detail.html:12
-#: templates/people/student_detail.html:49
+#: templates/people/student_detail.html:50
 msgid "Brothers and sisters"
 msgstr "بہن بھائی"
 
 #: templates/people/student_detail.html:12
-#: templates/people/student_detail.html:59
+#: templates/people/student_detail.html:60
 msgid "Classes by session"
 msgstr "سیشن وار جماعتیں"
 
 #: templates/people/student_detail.html:13
-#: templates/people/student_detail.html:76
+#: templates/people/student_detail.html:77
 msgid "Record history"
 msgstr "ریکارڈ کی تاریخ"
 
@@ -8740,59 +8829,59 @@ msgstr "ریکارڈ کی تاریخ"
 msgid "Edit student"
 msgstr "طالب علم میں ترمیم"
 
-#: templates/people/student_detail.html:18
+#: templates/people/student_detail.html:19
 msgid "ID card"
 msgstr "آئی ڈی کارڈ"
 
-#: templates/people/student_detail.html:21
+#: templates/people/student_detail.html:22
 msgid "Parent login code"
 msgstr "والدین کا لاگ اِن کوڈ"
 
-#: templates/people/student_detail.html:29
+#: templates/people/student_detail.html:30
 msgid "Father's CNIC"
 msgstr "والد کا شناختی کارڈ نمبر"
 
-#: templates/people/student_detail.html:40
+#: templates/people/student_detail.html:41
 msgid "Mobile / WhatsApp"
 msgstr "موبائل / واٹس ایپ"
 
-#: templates/people/student_detail.html:42
+#: templates/people/student_detail.html:43
 msgid "Main contact"
 msgstr "بنیادی رابطہ"
 
-#: templates/people/student_detail.html:45
+#: templates/people/student_detail.html:46
 msgid "No parent contact recorded"
 msgstr "والدین کا کوئی رابطہ درج نہیں"
 
-#: templates/people/student_detail.html:50
+#: templates/people/student_detail.html:51
 msgid "Same father's CNIC in this branch (the sibling fee uses the same rule)."
 msgstr "اس برانچ میں والد کا ایک ہی شناختی کارڈ (بہن بھائی والی فیس بھی اسی اصول پر ہے)۔"
 
-#: templates/people/student_detail.html:61 templates/setup/sessions.html:11
+#: templates/people/student_detail.html:62 templates/setup/sessions.html:11
 msgid "Session"
 msgstr "سیشن"
 
-#: templates/people/student_detail.html:63
+#: templates/people/student_detail.html:64
 msgid "Not placed in any class yet."
 msgstr "ابھی کسی جماعت میں نہیں۔"
 
-#: templates/people/student_detail.html:67
+#: templates/people/student_detail.html:68
 msgid "Certificates"
 msgstr "سرٹیفکیٹس"
 
-#: templates/people/student_detail.html:69
+#: templates/people/student_detail.html:70
 msgid "Certificate"
 msgstr "سرٹیفکیٹ"
 
-#: templates/people/student_detail.html:69
+#: templates/people/student_detail.html:70
 msgid "Issued by"
 msgstr "جاری کنندہ"
 
-#: templates/people/student_detail.html:78
+#: templates/people/student_detail.html:79
 msgid "When"
 msgstr "کب"
 
-#: templates/people/student_detail.html:78
+#: templates/people/student_detail.html:79
 msgid "Who"
 msgstr "کس نے"
 
@@ -9179,48 +9268,48 @@ msgstr "لاگ اِن بند کریں"
 msgid "Switch on login"
 msgstr "لاگ اِن کھولیں"
 
-#: templates/setup/user_detail.html:19
+#: templates/setup/user_detail.html:20
 msgid "This is your own login. Someone else in your area changes your roles; you can change your own password from the top bar."
 msgstr "یہ آپ کا اپنا لاگ اِن ہے۔ آپ کے کردار آپ کے دائرے کا کوئی اور شخص بدلتا ہے؛ اپنا پاس ورڈ آپ اوپر والی پٹی سے بدل سکتے ہیں۔"
 
-#: templates/setup/user_detail.html:20
+#: templates/setup/user_detail.html:21
 msgid "System administrator (superuser): can do everything everywhere. Only another superuser can change this login."
 msgstr "سسٹم ایڈمنسٹریٹر (سپر یوزر): ہر جگہ سب کچھ کر سکتا ہے۔ یہ لاگ اِن صرف کوئی دوسرا سپر یوزر بدل سکتا ہے۔"
 
-#: templates/setup/user_detail.html:22 templates/setup/users.html:19
+#: templates/setup/user_detail.html:23 templates/setup/users.html:19
 msgid "Roles"
 msgstr "کردار"
 
-#: templates/setup/user_detail.html:27
+#: templates/setup/user_detail.html:28
 msgid "Needs two-step sign-in"
 msgstr "دو مرحلوں والا سائن اِن ضروری"
 
-#: templates/setup/user_detail.html:30
+#: templates/setup/user_detail.html:31
 msgid "In force"
 msgstr "نافذ"
 
-#: templates/setup/user_detail.html:31
+#: templates/setup/user_detail.html:32
 #, python-format
 msgid "%(r)s will end today. The person keeps any other roles."
 msgstr "%(r)s آج ختم ہو جائے گا۔ اس شخص کے باقی کردار برقرار رہیں گے۔"
 
-#: templates/setup/user_detail.html:31
+#: templates/setup/user_detail.html:32
 msgid "End role"
 msgstr "کردار ختم کریں"
 
-#: templates/setup/user_detail.html:34
+#: templates/setup/user_detail.html:35
 msgid "No roles: this person cannot see any branch."
 msgstr "کوئی کردار نہیں: یہ شخص کوئی برانچ نہیں دیکھ سکتا۔"
 
-#: templates/setup/user_detail.html:38
+#: templates/setup/user_detail.html:39
 msgid "Give another role"
 msgstr "ایک اور کردار دیں"
 
-#: templates/setup/user_detail.html:41
+#: templates/setup/user_detail.html:42
 msgid "Give role"
 msgstr "کردار دیں"
 
-#: templates/setup/user_detail.html:50
+#: templates/setup/user_detail.html:51
 msgid "Save details"
 msgstr "تفصیلات محفوظ کریں"
 

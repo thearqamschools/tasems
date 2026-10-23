@@ -100,3 +100,21 @@ def list_url(context, **extra):
     for key, value in extra.items():
         params[key] = value
     return "?" + params.urlencode()
+
+
+@register.simple_tag(takes_context=True)
+def delete_button(context, kind, obj):
+    """A Delete button for a record made by mistake, shown only to people allowed to delete it."""
+    from django.urls import reverse
+    from django.utils.html import format_html
+    from django.utils.translation import gettext as _
+
+    from apps.core import deletion
+
+    request = context.get("request")
+    if obj is None or getattr(obj, "pk", None) is None or request is None:
+        return ""
+    if not deletion.can_delete(request.user, kind, obj):
+        return ""
+    url = reverse("delete_record", args=[kind, obj.pk]) + "?back=" + request.path
+    return format_html('<a class="button danger quiet" href="{}">{}{}</a>', url, icon("x"), _("Delete"))
