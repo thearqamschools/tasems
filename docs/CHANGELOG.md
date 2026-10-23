@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.34.1 — 2026-10-23 — Windows: master login on first start
+
+Changed
+- With an empty school (choice 2), the TASEMS window now asks for the master login the first time, so no Start
+  menu shortcut is needed. A "TASEMS master login" shortcut is also put on the desktop.
+
 ## 0.34.0 — 2026-10-23 — Delete records made by mistake
 
 Added

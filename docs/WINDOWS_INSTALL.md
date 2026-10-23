@@ -11,12 +11,19 @@ no internet, no hosting. Everything TASEMS needs is inside the installer (about 
    - **1** = with fictional demo data and demo logins (for testing), or
    - **2** = an empty school with two-step sign-in, like the real server.
    Type 1 or 2 and press Enter. The first start takes a few minutes; then the browser opens TASEMS.
+   With **2**, the same window then asks for the **master login** (username, email can stay empty, password
+   twice — it does not show while typing). Sign in with it; the first sign-in sets up two-step sign-in with an
+   authenticator app on the phone (Google or Microsoft Authenticator).
 4. If Windows Firewall asks about Python, click **Allow** (needed only for other office computers to open it).
 
 ## Every day
 - Double-click **TASEMS** on the desktop. Keep the black window open while working; **close it to stop**.
 - On this computer: http://localhost:8000
 - Other computers on the same office network: the address shown in the black window, e.g. http://192.168.1.10:8000
+
+## Desktop and Start menu
+The desktop has **TASEMS** and **TASEMS master login**. If the Start menu does not show the TASEMS folder,
+press the Windows key and type the shortcut's name (e.g. "Make master login").
 
 ## Start menu → TASEMS
 | Shortcut | What it does |

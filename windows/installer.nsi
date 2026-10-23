@@ -52,6 +52,7 @@ Section "TASEMS" Main
   File /r "${BUILD}\app"
 
   CreateShortcut "$DESKTOP\TASEMS.lnk" ${PY} '${LAUNCHER}' "$INSTDIR\app\windows\tasems.ico"
+  CreateShortcut "$DESKTOP\TASEMS master login.lnk" ${PY} '${LAUNCHER} --master' "$INSTDIR\app\windows\tasems.ico"
   CreateDirectory "$SMPROGRAMS\TASEMS"
   CreateShortcut "$SMPROGRAMS\TASEMS\TASEMS.lnk" ${PY} '${LAUNCHER}' "$INSTDIR\app\windows\tasems.ico"
   CreateShortcut "$SMPROGRAMS\TASEMS\Make master login.lnk" ${PY} '${LAUNCHER} --master' "$INSTDIR\app\windows\tasems.ico"
@@ -70,6 +71,7 @@ SectionEnd
 Section "Uninstall"
   ExecWait '${PY} ${LAUNCHER} --stop-quiet'
   Delete "$DESKTOP\TASEMS.lnk"
+  Delete "$DESKTOP\TASEMS master login.lnk"
   RMDir /r "$SMPROGRAMS\TASEMS"
   RMDir /r "$INSTDIR"
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TASEMS"

@@ -185,6 +185,8 @@ def start():
             call_command("seed_demo", verbosity=0)
         except Exception as error:  # the site starts even if demo data cannot be added
             say(f"  Demo data not loaded: {error}")
+    else:
+        make_first_master_login(call_command)
     # Large PDFs are made in the background, as on the server.
     threading.Thread(target=lambda: call_command("run_jobs"), daemon=True).start()
 
@@ -215,6 +217,22 @@ def start():
         serve(application, host="0.0.0.0", port=WEB_PORT, threads=8, _quiet=True)
     finally:
         database_down()
+
+
+def make_first_master_login(call_command):
+    """An empty school has no logins yet: ask for the master login here, the first time."""
+    from apps.accounts.models import User
+
+    if User.objects.filter(is_superuser=True).exists():
+        return
+    say("")
+    say("  No login exists yet. Make the MASTER LOGIN now (it can do everything in every branch).")
+    say("  Type a username, press Enter at Email (it may stay empty), then the password twice")
+    say("  (the password does not show while you type).")
+    try:
+        call_command("createsuperuser")
+    except Exception as error:  # e.g. the window cannot ask; the Start-menu shortcut still works
+        say(f"  The master login was not made here ({error}). Use Start menu → TASEMS → Make master login.")
 
 
 def master():
