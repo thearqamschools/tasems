@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.30.1 — 2026-10-23 — Two-step sign-in for the Admin
+
+Changed
+- The **Admin** (admissions officer) login now needs two-step sign-in (a code from an authenticator app), like the
+  Director and the Accountant, because it receives fees. On the real server each Admin sets it up at the next
+  sign-in; the demo server stays without it.
+
 ## 0.30.0 — 2026-10-23 — Logins by designation (project lead's table)
 
 Changed

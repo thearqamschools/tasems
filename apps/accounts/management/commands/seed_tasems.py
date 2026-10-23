@@ -113,7 +113,8 @@ ROLES = [
         VIEW_PEOPLE + VIEW_ACADEMICS + EDIT_SECTIONS,
         False,
     ),
-    ("admissions_officer", "Admissions Officer", "داخلہ آفیسر", [B], VIEW_PEOPLE + EDIT_PEOPLE + VIEW_ACADEMICS, False),
+    # Two-step sign-in since the Admin also receives fees (project lead, 23 Oct 2026).
+    ("admissions_officer", "Admissions Officer", "داخلہ آفیسر", [B], VIEW_PEOPLE + EDIT_PEOPLE + VIEW_ACADEMICS, True),
     ("accountant", "Accountant", "اکاؤنٹنٹ", [B], VIEW_PEOPLE + VIEW_ACADEMICS, True),
     ("class_teacher", "Class Teacher", "کلاس ٹیچر", [B], VIEW_PEOPLE + VIEW_ACADEMICS, False),
     ("subject_teacher", "Subject Teacher", "سبجیکٹ ٹیچر", [B], VIEW_STUDENTS_ONLY + VIEW_ACADEMICS, False),

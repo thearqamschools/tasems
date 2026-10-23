@@ -43,7 +43,7 @@ This table shows **what TASEMS does today**, as set by the project lead on 23 Oc
 ## 3. Things that apply to every login
 - Everyone sees only their own branch (or head office or region). The database also enforces this.
 - Nobody can give someone more access than they have themselves. Nobody can change their own roles.
-- Principal, Accountant, Branch Owner, Regional Director and the administrators must use two-step sign-in (a code from an authenticator app) on the real server. It is off only on the demo server.
+- Director (Branch Owner), Principal, Accountant, Admin (Admissions Officer), Regional Director and the administrators must use two-step sign-in (a code from an authenticator app) on the real server. It is off only on the demo server.
 - One person can hold more than one role, for example Principal in one branch and Coordinator in a region.
 - Every change is recorded in the history: who, what, when.
 

@@ -44,6 +44,12 @@ def test_lockout_after_five_failures(client, org, make_user):
     assert "Too many failed attempts" in response.content.decode()
 
 
+@pytest.mark.parametrize("role", ["accountant", "admissions_officer", "branch_owner"])
+def test_people_who_receive_fees_must_use_two_step(client, org, make_user, role):
+    person = make_user(role, Scope.BRANCH, org["samanabad"])
+    assert sign_in(client, person.username)["Location"] == "/accounts/two-factor/setup/"
+
+
 def test_principal_must_set_up_two_step(client, org, make_user):
     principal = make_user("principal", Scope.BRANCH, org["samanabad"])
     assert sign_in(client, principal.username)["Location"] == "/accounts/two-factor/setup/"
