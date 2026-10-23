@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.33.0 — 2026-10-23 — Windows installer (TASEMS-Setup.exe)
+
+Added
+- **TASEMS-Setup.exe** (docs/WINDOWS_INSTALL.md): installs TASEMS on one Windows computer like ordinary software —
+  no Rancher Desktop or Docker, no internet. Desktop and Start-menu shortcuts: TASEMS, Make master login, Backup
+  data, Stop database, Uninstall. First start asks: demo data or an empty school. Data is kept when updating or
+  uninstalling.
+- `windows/launcher.py` (starts PostgreSQL on this computer only, prepares the database with the same ordinary app
+  role as the real server, runs TASEMS with waitress and opens the browser) and `windows/build_installer.sh`
+  (builds the installer on Linux from official Python, PyPI, PostgreSQL and GTK packages).
+
 ## 0.32.0 — 2026-10-23 — Offline test copy on an office computer
 
 Added
