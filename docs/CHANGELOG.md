@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.38.0 — 2026-10-28 — Find the receipt printer (Windows installer v8)
+
+Added
+- **Setup → Receipt printer**: "Find printers" searches the office network this computer is on (about 2 seconds)
+  for printers that take print jobs on port 9100 and lists their addresses. **Test print** sends a short
+  "TASEMS Test print" slip to one, so the office can see which printer it is; **Use this printer** saves it for
+  the branch. No driver and no typing of the IP needed.
+- For the Director, Principal and coordinators of the branch (those who manage its sections) and head office.
+- If nothing answers, the page says what to check (printer on, cable in, same network; a printer with a fixed
+  address from another network needs the seller to set it).
+
 ## 0.37.0 — 2026-10-28 — Parent Tree prints straight on the network receipt printer (Windows installer v7)
 
 Changed

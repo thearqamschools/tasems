@@ -133,3 +133,43 @@ def test_branch_contact_numbers(org, make_user, login_as):
     page = office.get(f"/setup/branches/{samanabad.id}/").content.decode()
     assert all(f'name="{n}"' in page for n in ("phone", "phone_2", "mobile_1", "mobile_2"))
     assert "Phone 1" in page and "Mobile 2" in page
+
+
+def test_find_the_printer_test_it_and_use_it(school, make_user, login_as, monkeypatch):
+    """Project lead, 28 Oct 2026: the printer's IP could not be found by hand, so TASEMS finds it."""
+    import ipaddress
+
+    from apps.core import escpos
+
+    server = socket.socket()
+    server.bind(("127.0.0.1", 0))
+    server.listen(5)
+    port = server.getsockname()[1]
+    got = bytearray()
+
+    def serve():
+        for _ in range(2):  # the search, then the test slip
+            conn, _addr = server.accept()
+            with conn:
+                while chunk := conn.recv(65536):
+                    got.extend(chunk)
+        server.close()
+
+    thread = threading.Thread(target=serve, daemon=True)
+    thread.start()
+    monkeypatch.setattr(escpos, "DEFAULT_PORT", port)
+    monkeypatch.setattr(escpos, "local_networks", lambda: [ipaddress.ip_network("127.0.0.1/32")])
+    real_find = escpos.find_printers
+    monkeypatch.setattr(escpos, "find_printers", lambda networks: real_find(networks, port=port))
+    client = login_as(make_user("branch_owner", Scope.BRANCH, school["branch"]))
+    assert "/setup/printer/" in client.get("/setup/").content.decode()
+    page = client.post("/setup/printer/", {"action": "find"}).content.decode()
+    assert "127.0.0.1" in page and "Use this printer" in page
+    client.post("/setup/printer/", {"action": "test", "ip": "127.0.0.1"})
+    thread.join(5)
+    assert b"Test print" in got
+    client.post("/setup/printer/", {"action": "use", "ip": "127.0.0.1"})
+    school["branch"].refresh_from_db()
+    assert school["branch"].receipt_printer == "127.0.0.1"
+    teacher = login_as(make_user("class_teacher", Scope.BRANCH, school["branch"]))
+    assert teacher.get("/setup/printer/").status_code == 403

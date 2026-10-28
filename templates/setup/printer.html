@@ -1,0 +1,51 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Receipt printer" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Receipt printer" %}</h1>
+  <p class="lede">{{ branch.name }} · {% trans "Parent Tree slips print straight on this printer, without a print window." %}</p></div>
+</div>
+
+<div class="card">
+  <h2>{% trans "Printer now" %}</h2>
+  {% if branch.receipt_printer %}
+  <p>{% trans "Address" %}: <strong class="num" dir="ltr">{{ branch.receipt_printer }}</strong></p>
+  <form method="post" class="actions" style="margin:0">{% csrf_token %}<input type="hidden" name="ip" value="{{ branch.receipt_printer }}">
+    <button class="button secondary" name="action" value="test">{% icon "printer" %}{% trans "Test print" %}</button></form>
+  {% else %}
+  <p class="muted">{% trans "No receipt printer is set yet. Find it below." %}</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>{% trans "Find the printer on this network" %}</h2>
+  <p class="muted">{% blocktrans %}The printer must be switched on and connected to the office network with its cable. Searching takes a few seconds.{% endblocktrans %}
+  {% if networks %}<br>{% trans "Network searched" %}: <span class="num" dir="ltr">{{ networks|join:", " }}</span>{% endif %}</p>
+  <form method="post" class="actions" style="margin:0" data-busy>{% csrf_token %}
+    <button class="button" name="action" value="find">{% icon "search" %}{% trans "Find printers" %}</button></form>
+
+  {% if found is not None %}
+    {% if found %}
+    <div class="table-wrap" style="margin-top:1rem"><table>
+      <thead><tr><th>{% trans "Printer address" %}</th><th></th></tr></thead>
+      <tbody>{% for ip in found %}<tr>
+        <td><span class="num" dir="ltr">{{ ip }}</span>{% if ip == branch.receipt_printer %} <span class="badge">{% trans "In use" %}</span>{% endif %}</td>
+        <td><form method="post" class="actions" style="margin:0">{% csrf_token %}<input type="hidden" name="ip" value="{{ ip }}">
+          <button class="button secondary sm" name="action" value="test">{% icon "printer" %}{% trans "Test print" %}</button>
+          {% if ip != branch.receipt_printer %}<button class="button sm" name="action" value="use">{% trans "Use this printer" %}</button>{% endif %}
+        </form></td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+    <p class="muted small">{% trans "More than one? Press Test print on each: the one that prints a slip on the receipt printer is the right one, then press Use this printer." %}</p>
+    {% else %}
+    <div class="callout attention" style="margin-top:1rem">{% icon "triangle-alert" %}<div><p>{% trans "No printer answered on this network." %}</p>
+      <ul>
+        <li>{% trans "Check that the printer is on and its network cable is in (its light should be on)." %}</li>
+        <li>{% trans "This computer and the printer must be on the same network (same router or switch)." %}</li>
+        <li>{% trans "The printer may have a fixed address from another network. The shop that sold it can set it, or tell you the address; you can then type it in Setup → Branches." %}</li>
+      </ul></div></div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -6,6 +6,7 @@ app_name = "setup"
 
 urlpatterns = [
     path("", views.hub, name="hub"),
+    path("printer/", views.printer, name="printer"),
     path("sections/", views.sections, name="sections"),
     path("sections/new/", views.section_form, name="section_new"),
     path("sections/<int:pk>/", views.section_form, name="section_edit"),

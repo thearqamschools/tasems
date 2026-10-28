@@ -224,3 +224,5 @@ with the child and all brothers and sisters, and the children are called with it
   Everywhere a class is shown. Excel import still accepts the old names (Class 1 … Class 10, Pre-9) and numbers.
 - R3-13 (28 Oct 2026). The printer is on **LAN** (not USB). Parent Tree must print **straight away — no new window,
   no print window**. Built: TASEMS sends the slip to the printer's network address (Setup → Branches).
+- R3-14 (28 Oct 2026). The printer's IP could not be found (self-test did not work, no official SPEEDX driver
+  online). Built: Setup → Receipt printer finds it on the network, prints a test slip and saves it (v8).

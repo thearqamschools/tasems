@@ -62,14 +62,16 @@ not reachable from other computers), GTK (for PDFs), waitress (web server). Buil
   programs (Wine cannot run them). The first install on a real computer is the final check.
 
 ## Parent Tree slips on the receipt printer (LAN)
-TASEMS sends the slip straight to the receipt printer over the office network — no print window. Set it up once:
-1. Find the printer's IP address: the old software's printer settings show it, or print the printer's self-test
-   page (on most receipt printers: hold FEED while switching it on) and read the IP on it.
-2. TASEMS → Setup → Branches → the branch → **Receipt printer (network address)**: type the IP, e.g.
-   192.168.1.100 (port 9100 is used; another port is written as 192.168.1.100:9000). Save.
-3. Students → printer icon (or the Parent Tree button on a student's page). A note at the bottom says
+TASEMS sends the slip straight to the receipt printer over the office network — no print window, no driver needed.
+Set it up once:
+1. Switch the printer on; its network cable must be in the office router or switch.
+2. TASEMS → **Setup → Receipt printer** → **Find printers**. After a few seconds the printers on the network are
+   listed with their addresses.
+3. Press **Test print** next to one: a short "TASEMS Test print" slip comes out of that printer. When it is the
+   receipt printer, press **Use this printer**.
+4. Students → printer icon (or the Parent Tree button on a student's page). A note at the bottom says
    "Parent Tree printed" or what is wrong.
 
-The computer running TASEMS and the printer must be on the same network (the printer's IP starts like the
-computer's, e.g. both 192.168.1.x). If the note says the printer did not answer: check the printer is on, its
-network cable is in, and the IP is right.
+If Find printers lists nothing: check the printer is on and its cable is in, and that this computer is on the same
+network. Some printers come with a fixed address from another network (e.g. 192.168.123.x while the office is
+192.168.1.x); the shop that sold it can change it. The address can also be typed by hand in Setup → Branches.

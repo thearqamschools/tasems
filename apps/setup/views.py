@@ -23,6 +23,7 @@ from django.views.decorators.http import require_POST
 
 from apps.academics.models import Section
 from apps.accounts.models import Role, RoleAssignment, Scope
+from apps.core import escpos
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
 from apps.fees.models import BankAccount, BranchFeeSettings, DiscountType, FeeRate
@@ -104,6 +105,14 @@ def hub(request):
             here("academics.change_section") or here("organisation.change_campus"),
         ),
         (
+            "printer",
+            "setup:printer",
+            _("Receipt printer"),
+            _("Find the receipt printer on the office network for Parent Tree slips, and print a test slip."),
+            "printer",
+            any(here(p) for p in PRINTER_PERMS),
+        ),
+        (
             "fees",
             "setup:fees",
             _("Fee rates and vouchers"),
@@ -141,6 +150,49 @@ def hub(request):
     if not cards and not user.is_staff:
         raise PermissionDenied
     return render(request, "setup/hub.html", {"cards": cards, "branch": branch})
+
+
+# ---------- Receipt printer (branch) ----------
+PRINTER_PERMS = ("academics.change_section", "organisation.change_branch")
+
+
+@login_required
+def printer(request):
+    """Find the receipt printer on the office network, print a test slip, and keep its address for this branch
+    (project lead, 28 Oct 2026: the printer is on LAN and its IP could not be found by hand)."""
+    branch = current_branch(request)
+    if branch is None or not any(request.user.has_branch_perm(p, branch.id) for p in PRINTER_PERMS):
+        raise PermissionDenied
+    networks = escpos.local_networks()
+    found = request.session.get("printers_found")  # kept so Test print / Use stay next to the list
+    if request.method == "POST":
+        action, ip = request.POST.get("action"), request.POST.get("ip", "").strip()
+        if action == "find":
+            found = request.session["printers_found"] = escpos.find_printers(networks)
+        elif action == "test" and ip:
+            try:
+                escpos.send(ip, escpos.test_page(ip, timezone.localtime()))
+                messages.success(
+                    request, _("A test slip was sent to %(ip)s. Check which printer printed it.") % {"ip": ip}
+                )
+            except escpos.PrinterError as error:
+                messages.error(request, _("%(ip)s did not answer: %(e)s") % {"ip": ip, "e": error})
+            return redirect("setup:printer")
+        elif action == "use" and ip:
+            try:
+                escpos.address(ip)
+            except (escpos.PrinterError, ValueError):
+                messages.error(request, _("Not a printer address."))
+                return redirect("setup:printer")
+            branch.receipt_printer = ip[:60]
+            branch.save(update_fields=["receipt_printer"])
+            messages.success(request, _("Parent Tree slips will print on %(ip)s.") % {"ip": ip})
+            return redirect("setup:printer")
+    return render(
+        request,
+        "setup/printer.html",
+        {"branch": branch, "found": found, "networks": networks},
+    )
 
 
 # ---------- Sections and campuses (branch) ----------

@@ -4,7 +4,9 @@ Used for the Parent Tree slip on the SPEEDX 400UL (80 mm, 48 characters a line, 
 Works when TASEMS runs on a computer in the same office network as the printer (the offline Windows copy); a
 server on the internet cannot reach an office printer."""
 
+import ipaddress
 import socket
+from concurrent.futures import ThreadPoolExecutor
 from functools import cache
 from pathlib import Path
 
@@ -105,3 +107,51 @@ def send(printer_address, data, timeout=5):
             conn.sendall(data)
     except OSError as error:
         raise PrinterError(str(error)) from error
+
+
+def test_page(printer_address, printed_at):
+    """A short slip to check which printer this is."""
+    out = INIT + CENTER + BOLD_ON + BIG + line("TASEMS") + NORMAL + line("Test print") + BOLD_OFF
+    out += line(f"Printer: {printer_address}") + line(f"{printed_at:%d/%m/%Y %I:%M %p}")
+    out += line("The Arqam Schools") + FEED_AND_CUT
+    return out
+
+
+def local_networks():
+    """The office networks this computer is on (e.g. 192.168.1.0/24), from its own IPv4 addresses."""
+    addresses = set()
+    try:  # the address used to reach other networks; nothing is sent
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+            probe.connect(("10.255.255.255", 1))
+            addresses.add(probe.getsockname()[0])
+    except OSError:
+        pass
+    try:
+        addresses.update(socket.gethostbyname_ex(socket.gethostname())[2])
+    except OSError:
+        pass
+    networks = []
+    for address in sorted(addresses):
+        ip = ipaddress.ip_address(address)
+        if ip.is_private and not ip.is_loopback and not ip.is_link_local:
+            network = ipaddress.ip_network(f"{address}/24", strict=False)
+            if network not in networks:
+                networks.append(network)
+    return networks
+
+
+def _answers(host, port, timeout):
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+def find_printers(networks=None, port=DEFAULT_PORT, timeout=0.4):
+    """Addresses on the office network that accept print jobs on port 9100 (receipt and other network printers)."""
+    networks = local_networks() if networks is None else networks
+    hosts = [str(h) for network in networks for h in network.hosts()]
+    with ThreadPoolExecutor(max_workers=64) as pool:
+        found = [h for h, ok in zip(hosts, pool.map(lambda h: _answers(h, port, timeout), hosts), strict=True) if ok]
+    return found

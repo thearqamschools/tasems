@@ -217,7 +217,7 @@ def parent_tree(request, pk):
         )
     printer = student.branch.receipt_printer
     if not printer:
-        ok, text = False, _("No receipt printer is set for this branch. Add its network address in Setup → Branches.")
+        ok, text = False, _("No receipt printer is set for this branch. Find it in Setup → Receipt printer.")
     else:
         try:
             escpos.send(printer, escpos.parent_tree(student.branch, student.father_name, now, rows))

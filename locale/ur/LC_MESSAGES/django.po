@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-28 14:50+0500\n"
+"POT-Creation-Date: 2026-10-28 16:08+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -848,8 +848,9 @@ msgstr "ترتیبات"
 
 #: apps/accounts/context_processors.py:133 templates/setup/branches.html:4
 #: templates/setup/fees.html:4 templates/setup/hub.html:2
-#: templates/setup/hub.html:4 templates/setup/sections.html:4
-#: templates/setup/sessions.html:4 templates/setup/users.html:4
+#: templates/setup/hub.html:4 templates/setup/printer.html:4
+#: templates/setup/sections.html:4 templates/setup/sessions.html:4
+#: templates/setup/users.html:4
 msgid "Setup"
 msgstr "سیٹ اپ"
 
@@ -3320,6 +3321,7 @@ msgstr "دوبارہ منگوانے کی حد"
 #: apps/setup/forms.py:211 apps/setup/forms.py:236
 #: templates/notices/templates.html:10 templates/setup/fees.html:17
 #: templates/setup/fees.html:30 templates/setup/fees.html:42
+#: templates/setup/printer.html:33
 msgid "In use"
 msgstr "رائج"
 
@@ -4322,8 +4324,8 @@ msgid "Class and section at the time of leaving"
 msgstr "چھوڑتے وقت جماعت اور سیکشن"
 
 #: apps/people/views.py:220
-msgid "No receipt printer is set for this branch. Add its network address in Setup → Branches."
-msgstr "اس برانچ کا کوئی رسید پرنٹر درج نہیں۔ سیٹ اپ ← برانچز میں اس کا نیٹ ورک ایڈریس درج کریں۔"
+msgid "No receipt printer is set for this branch. Find it in Setup → Receipt printer."
+msgstr "اس برانچ کا کوئی رسید پرنٹر درج نہیں۔ سیٹ اپ ← رسید پرنٹر میں تلاش کریں۔"
 
 #: apps/people/views.py:226
 #, python-format
@@ -4759,7 +4761,8 @@ msgstr "کلاس ٹیچر"
 msgid "Capacity"
 msgstr "گنجائش"
 
-#: apps/setup/forms.py:27 templates/setup/sections.html:31
+#: apps/setup/forms.py:27 templates/setup/printer.html:13
+#: templates/setup/sections.html:31
 msgid "Address"
 msgstr "پتہ"
 
@@ -4922,242 +4925,270 @@ msgstr "11 ہندسوں کا موبائل نمبر لکھیں، مثلاً 0300-
 msgid "Another login already uses this mobile number."
 msgstr "یہ موبائل نمبر کسی دوسرے لاگ اِن میں استعمال ہو رہا ہے۔"
 
-#: apps/setup/views.py:80 templates/admissions/form.html:9
+#: apps/setup/views.py:81 templates/admissions/form.html:9
 #: templates/exams/ratings.html:23 templates/hr/employee_form.html:8
 #: templates/inventory/stock_form.html:10
 msgid "Save"
 msgstr "محفوظ کریں"
 
-#: apps/setup/views.py:101 templates/setup/sections.html:2
+#: apps/setup/views.py:102 templates/setup/sections.html:2
 #: templates/setup/sections.html:6
 msgid "Classes and sections"
 msgstr "جماعتیں اور سیکشن"
 
-#: apps/setup/views.py:102
+#: apps/setup/views.py:103
 msgid "Sections of this session, class teachers, capacity and campuses."
 msgstr "اس سیشن کے سیکشن، کلاس ٹیچر، گنجائش اور کیمپس۔"
 
-#: apps/setup/views.py:109 templates/setup/fees.html:2
+#: apps/setup/views.py:110 templates/setup/printer.html:2
+#: templates/setup/printer.html:6
+msgid "Receipt printer"
+msgstr "رسید پرنٹر"
+
+#: apps/setup/views.py:111
+msgid "Find the receipt printer on the office network for Parent Tree slips, and print a test slip."
+msgstr "پیرنٹ ٹری کی پرچی کے لیے دفتر کے نیٹ ورک پر رسید پرنٹر تلاش کریں اور ٹیسٹ پرچی نکالیں۔"
+
+#: apps/setup/views.py:118 templates/setup/fees.html:2
 #: templates/setup/fees.html:6
 msgid "Fee rates and vouchers"
 msgstr "فیس ریٹ اور واؤچر"
 
-#: apps/setup/views.py:110
+#: apps/setup/views.py:119
 msgid "Fee amounts per class, due day, late fine, bank details printed on vouchers."
 msgstr "ہر جماعت کی فیس، آخری تاریخ، لیٹ فائن، اور واؤچر پر چھپنے والی بینک تفصیلات۔"
 
-#: apps/setup/views.py:117 templates/setup/user_detail.html:4
+#: apps/setup/views.py:126 templates/setup/user_detail.html:4
 #: templates/setup/user_new.html:4 templates/setup/users.html:2
 #: templates/setup/users.html:6
 msgid "Users and roles"
 msgstr "صارفین اور کردار"
 
-#: apps/setup/views.py:118
+#: apps/setup/views.py:127
 msgid "Staff logins, what each person may do and where, password resets."
 msgstr "عملے کے لاگ اِن، کون کہاں کیا کر سکتا ہے، اور پاس ورڈ ری سیٹ۔"
 
-#: apps/setup/views.py:125 templates/setup/branches.html:2
+#: apps/setup/views.py:134 templates/setup/branches.html:2
 #: templates/setup/branches.html:6
 msgid "Branches and regions"
 msgstr "برانچیں اور ریجن"
 
-#: apps/setup/views.py:126
+#: apps/setup/views.py:135
 msgid "Branch details, franchise or company-owned, royalty %, regions of each head office."
 msgstr "برانچ کی تفصیلات، فرنچائز یا کمپنی کی ملکیت، رائلٹی %، اور ہر ہیڈ آفس کے ریجن۔"
 
-#: apps/setup/views.py:134 templates/setup/sessions.html:2
+#: apps/setup/views.py:143 templates/setup/sessions.html:2
 #: templates/setup/sessions.html:6
 msgid "Academic sessions"
 msgstr "تعلیمی سیشن"
 
-#: apps/setup/views.py:135
+#: apps/setup/views.py:144
 msgid "School years and which one is current across the network."
 msgstr "تعلیمی سال، اور پورے نیٹ ورک میں کون سا سیشن جاری ہے۔"
 
+#: apps/setup/views.py:175
+#, python-format
+msgid "A test slip was sent to %(ip)s. Check which printer printed it."
+msgstr "ٹیسٹ پرچی %(ip)s پر بھیج دی گئی۔ دیکھیں کس پرنٹر سے نکلی۔"
+
+#: apps/setup/views.py:178
+#, python-format
+msgid "%(ip)s did not answer: %(e)s"
+msgstr "%(ip)s نے جواب نہیں دیا: %(e)s"
+
 #: apps/setup/views.py:184
+msgid "Not a printer address."
+msgstr "یہ پرنٹر کا ایڈریس نہیں۔"
+
+#: apps/setup/views.py:188
+#, python-format
+msgid "Parent Tree slips will print on %(ip)s."
+msgstr "پیرنٹ ٹری کی پرچی اب %(ip)s پر پرنٹ ہوگی۔"
+
+#: apps/setup/views.py:235
 msgid "No current academic session is set. Set it under Setup → Academic sessions."
 msgstr "کوئی جاری تعلیمی سیشن طے نہیں۔ سیٹ اپ ← تعلیمی سیشن میں طے کریں۔"
 
-#: apps/setup/views.py:192
+#: apps/setup/views.py:243
 #, python-format
 msgid "Section %(s)s saved."
 msgstr "سیکشن %(s)s محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:194
+#: apps/setup/views.py:245
 #, python-format
 msgid "Edit %(s)s"
 msgstr "%(s)s میں تبدیلی"
 
-#: apps/setup/views.py:194 templates/setup/sections.html:8
+#: apps/setup/views.py:245 templates/setup/sections.html:8
 #: templates/setup/sections.html:25
 msgid "Add a section"
 msgstr "سیکشن شامل کریں"
 
-#: apps/setup/views.py:200
+#: apps/setup/views.py:251
 #, python-format
 msgid "Session %(s)s · %(b)s. The class teacher must have a role in this branch."
 msgstr "سیشن %(s)s · %(b)s۔ کلاس ٹیچر کی اس برانچ میں کوئی کردار ہونا ضروری ہے۔"
 
-#: apps/setup/views.py:212
+#: apps/setup/views.py:263
 msgid "Campus saved."
 msgstr "کیمپس محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:217
+#: apps/setup/views.py:268
 msgid "Edit campus"
 msgstr "کیمپس میں تبدیلی"
 
-#: apps/setup/views.py:217 templates/setup/sections.html:35
+#: apps/setup/views.py:268 templates/setup/sections.html:35
 msgid "Add a campus"
 msgstr "کیمپس شامل کریں"
 
-#: apps/setup/views.py:220
+#: apps/setup/views.py:271
 #, python-format
 msgid "A building of %(b)s, e.g. a separate boys or girls campus. Fees and administration stay with the branch."
 msgstr "%(b)s کی ایک عمارت، مثلاً لڑکوں یا لڑکیوں کا الگ کیمپس۔ فیس اور انتظام برانچ ہی کے پاس رہتے ہیں۔"
 
-#: apps/setup/views.py:266
+#: apps/setup/views.py:317
 msgid "Fee rate saved. It is used for vouchers made from now on; vouchers already made keep their amounts."
 msgstr "فیس ریٹ محفوظ ہو گیا۔ یہ اب سے بننے والے واؤچرز پر لگے گا؛ پہلے سے بنے واؤچرز کی رقم وہی رہے گی۔"
 
-#: apps/setup/views.py:272
+#: apps/setup/views.py:323
 msgid "Edit fee rate"
 msgstr "فیس ریٹ میں تبدیلی"
 
-#: apps/setup/views.py:272 templates/setup/fees.html:7
+#: apps/setup/views.py:323 templates/setup/fees.html:7
 msgid "Add a fee rate"
 msgstr "فیس ریٹ شامل کریں"
 
-#: apps/setup/views.py:275
+#: apps/setup/views.py:326
 msgid "To change a fee from a new month, add a new rate starting that month — the old one stays for the record."
 msgstr "کسی نئے مہینے سے فیس بدلنی ہو تو اسی مہینے سے نیا ریٹ شامل کریں — پرانا ریٹ ریکارڈ کے لیے رہے گا۔"
 
-#: apps/setup/views.py:286
+#: apps/setup/views.py:337
 msgid "Voucher settings saved."
 msgstr "واؤچر کی ترتیبات محفوظ ہو گئیں۔"
 
-#: apps/setup/views.py:291 templates/setup/fees.html:47
+#: apps/setup/views.py:342 templates/setup/fees.html:47
 msgid "Voucher and payment settings"
 msgstr "واؤچر اور ادائیگی کی ترتیبات"
 
-#: apps/setup/views.py:293
+#: apps/setup/views.py:344
 #, python-format
 msgid "Printed on every fee voucher of %(b)s."
 msgstr "%(b)s کے ہر فیس واؤچر پر چھپتا ہے۔"
 
-#: apps/setup/views.py:305
+#: apps/setup/views.py:356
 msgid "Bank saved."
 msgstr "بینک محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:310
+#: apps/setup/views.py:361
 msgid "Edit bank"
 msgstr "بینک میں تبدیلی"
 
-#: apps/setup/views.py:310 templates/setup/fees.html:25
+#: apps/setup/views.py:361 templates/setup/fees.html:25
 msgid "Add a bank"
 msgstr "بینک شامل کریں"
 
-#: apps/setup/views.py:312
+#: apps/setup/views.py:363
 #, python-format
 msgid "Fees received by bank are recorded against one of %(b)s's banks."
 msgstr "بینک کے ذریعے آنے والی فیس %(b)s کے کسی بینک میں درج ہوتی ہے۔"
 
-#: apps/setup/views.py:325
+#: apps/setup/views.py:376
 msgid "Discount saved."
 msgstr "رعایت محفوظ ہو گئی۔"
 
-#: apps/setup/views.py:330
+#: apps/setup/views.py:381
 msgid "Edit discount"
 msgstr "رعایت میں تبدیلی"
 
-#: apps/setup/views.py:330 templates/setup/fees.html:37
+#: apps/setup/views.py:381 templates/setup/fees.html:37
 msgid "Add a discount"
 msgstr "رعایت شامل کریں"
 
-#: apps/setup/views.py:332
+#: apps/setup/views.py:383
 msgid "Offered on the admission form. Brothers and sisters get the sibling fee by themselves."
 msgstr "داخلہ فارم پر دستیاب۔ بہن بھائیوں کو بہن بھائی والی فیس خود لگ جاتی ہے۔"
 
-#: apps/setup/views.py:394
+#: apps/setup/views.py:445
 #, python-format
 msgid "Branch %(b)s saved."
 msgstr "برانچ %(b)s محفوظ ہو گئی۔"
 
-#: apps/setup/views.py:399
+#: apps/setup/views.py:450
 #, python-format
 msgid "Edit %(b)s"
 msgstr "%(b)s میں تبدیلی"
 
-#: apps/setup/views.py:399 templates/setup/branches.html:7
+#: apps/setup/views.py:450 templates/setup/branches.html:7
 msgid "Add a branch"
 msgstr "برانچ شامل کریں"
 
-#: apps/setup/views.py:402
+#: apps/setup/views.py:453
 msgid "Royalty %: the head office's share of the fees received each month — usually 8 for franchises and 0 for company-owned campuses."
 msgstr "رائلٹی %: ہر مہینے وصول ہونے والی فیس میں ہیڈ آفس کا حصہ — عام طور پر فرنچائز کے لیے 8 اور کمپنی کی ملکیت والے کیمپس کے لیے 0۔"
 
-#: apps/setup/views.py:418
+#: apps/setup/views.py:469
 msgid "Region saved."
 msgstr "ریجن محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:420
+#: apps/setup/views.py:471
 msgid "Edit region"
 msgstr "ریجن میں تبدیلی"
 
-#: apps/setup/views.py:420 templates/setup/branches.html:36
+#: apps/setup/views.py:471 templates/setup/branches.html:36
 msgid "Add a region"
 msgstr "ریجن شامل کریں"
 
-#: apps/setup/views.py:442
+#: apps/setup/views.py:493
 msgid "Session saved."
 msgstr "سیشن محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:444
+#: apps/setup/views.py:495
 msgid "Edit session"
 msgstr "سیشن میں تبدیلی"
 
-#: apps/setup/views.py:444 templates/setup/sessions.html:7
+#: apps/setup/views.py:495 templates/setup/sessions.html:7
 msgid "Add a session"
 msgstr "سیشن شامل کریں"
 
-#: apps/setup/views.py:458
+#: apps/setup/views.py:509
 #, python-format
 msgid "%(s)s is now the current session across the network."
 msgstr "%(s)s اب پورے نیٹ ورک میں جاری سیشن ہے۔"
 
-#: apps/setup/views.py:521
+#: apps/setup/views.py:572
 msgid "This role cannot be given at this level."
 msgstr "یہ کردار اس سطح پر نہیں دی جا سکتی۔"
 
-#: apps/setup/views.py:522
+#: apps/setup/views.py:573
 msgid "You can only give roles inside your own area."
 msgstr "آپ صرف اپنے دائرے میں کردار دے سکتے ہیں۔"
 
-#: apps/setup/views.py:524
+#: apps/setup/views.py:575
 msgid "This role can manage logins or setup there that you cannot manage yourself, so you cannot give it."
 msgstr "اس کردار میں وہاں لاگ اِن یا سیٹ اپ کا ایسا اختیار ہے جو آپ کے پاس خود نہیں، اس لیے آپ یہ نہیں دے سکتے۔"
 
-#: apps/setup/views.py:603
+#: apps/setup/views.py:654
 msgid "You can only add logins for people inside your own area."
 msgstr "آپ صرف اپنے دائرے کے لوگوں کے لاگ اِن بنا سکتے ہیں۔"
 
-#: apps/setup/views.py:634
+#: apps/setup/views.py:685
 msgid "Details saved."
 msgstr "تفصیلات محفوظ ہو گئیں۔"
 
-#: apps/setup/views.py:645
+#: apps/setup/views.py:696
 msgid "Role given."
 msgstr "کردار دے دیا گیا۔"
 
-#: apps/setup/views.py:683
+#: apps/setup/views.py:734
 #, python-format
 msgid "%(role)s ended for %(name)s."
 msgstr "%(name)s کا کردار %(role)s ختم کر دیا گیا۔"
 
-#: apps/setup/views.py:712
+#: apps/setup/views.py:763
 msgid "Login switched on."
 msgstr "لاگ اِن کھول دیا گیا۔"
 
-#: apps/setup/views.py:712
+#: apps/setup/views.py:763
 msgid "Login switched off. They can no longer sign in."
 msgstr "لاگ اِن بند کر دیا گیا۔ اب یہ سائن اِن نہیں کر سکیں گے۔"
 
@@ -9304,6 +9335,66 @@ msgstr "یا موبائل نمبر سے سائن اِن کریں"
 #: templates/setup/password.html:13
 msgid "This password is shown only now and is not kept anywhere you can see it again. Give it to the person privately (not in a group chat). They should change it after signing in: My password, in the top bar."
 msgstr "یہ پاس ورڈ صرف ابھی دکھایا جا رہا ہے، دوبارہ کہیں نظر نہیں آئے گا۔ متعلقہ شخص کو علیحدگی میں دیں (گروپ چیٹ میں نہیں)۔ وہ سائن اِن کے بعد اسے بدل لیں: اوپر والی پٹی میں \"میرا پاس ورڈ\"۔"
+
+#: templates/setup/printer.html:7
+msgid "Parent Tree slips print straight on this printer, without a print window."
+msgstr "پیرنٹ ٹری کی پرچی بغیر پرنٹ ونڈو کے سیدھی اسی پرنٹر پر نکلتی ہے۔"
+
+#: templates/setup/printer.html:11
+msgid "Printer now"
+msgstr "موجودہ پرنٹر"
+
+#: templates/setup/printer.html:15 templates/setup/printer.html:35
+msgid "Test print"
+msgstr "ٹیسٹ پرنٹ"
+
+#: templates/setup/printer.html:17
+msgid "No receipt printer is set yet. Find it below."
+msgstr "ابھی کوئی رسید پرنٹر درج نہیں۔ نیچے تلاش کریں۔"
+
+#: templates/setup/printer.html:22
+msgid "Find the printer on this network"
+msgstr "اس نیٹ ورک پر پرنٹر تلاش کریں"
+
+#: templates/setup/printer.html:23
+msgid "The printer must be switched on and connected to the office network with its cable. Searching takes a few seconds."
+msgstr "پرنٹر آن ہو اور کیبل کے ذریعے دفتر کے نیٹ ورک سے جڑا ہو۔ تلاش میں چند سیکنڈ لگتے ہیں۔"
+
+#: templates/setup/printer.html:24
+msgid "Network searched"
+msgstr "تلاش کیا گیا نیٹ ورک"
+
+#: templates/setup/printer.html:26
+msgid "Find printers"
+msgstr "پرنٹر تلاش کریں"
+
+#: templates/setup/printer.html:31
+msgid "Printer address"
+msgstr "پرنٹر ایڈریس"
+
+#: templates/setup/printer.html:36
+msgid "Use this printer"
+msgstr "یہ پرنٹر استعمال کریں"
+
+#: templates/setup/printer.html:40
+msgid "More than one? Press Test print on each: the one that prints a slip on the receipt printer is the right one, then press Use this printer."
+msgstr "ایک سے زیادہ ہیں؟ ہر ایک پر ٹیسٹ پرنٹ دبائیں: جس سے رسید پرنٹر پر پرچی نکلے وہی درست ہے، پھر \"یہ پرنٹر استعمال کریں\" دبائیں۔"
+
+#: templates/setup/printer.html:42
+msgid "No printer answered on this network."
+msgstr "اس نیٹ ورک پر کسی پرنٹر نے جواب نہیں دیا۔"
+
+#: templates/setup/printer.html:44
+msgid "Check that the printer is on and its network cable is in (its light should be on)."
+msgstr "دیکھیں کہ پرنٹر آن ہے اور اس کی نیٹ ورک کیبل لگی ہے (اس کی لائٹ جل رہی ہو)۔"
+
+#: templates/setup/printer.html:45
+msgid "This computer and the printer must be on the same network (same router or switch)."
+msgstr "یہ کمپیوٹر اور پرنٹر ایک ہی نیٹ ورک پر ہوں (ایک ہی راؤٹر یا سوئچ)۔"
+
+#: templates/setup/printer.html:46
+msgid "The printer may have a fixed address from another network. The shop that sold it can set it, or tell you the address; you can then type it in Setup → Branches."
+msgstr "ہو سکتا ہے پرنٹر کا ایڈریس کسی اور نیٹ ورک کا ہو۔ جس دکان سے پرنٹر لیا وہ اسے سیٹ کر سکتے ہیں یا ایڈریس بتا سکتے ہیں؛ پھر اسے سیٹ اپ ← برانچز میں لکھ دیں۔"
 
 #: templates/setup/sections.html:7
 #, python-format
