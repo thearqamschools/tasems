@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.35.1 — 2026-10-28 — Windows installer version numbers
+
+Changed
+- The Windows installer now carries a version number, starting at **5**: TASEMS-Setup-v5.exe, then v6, v7…
+  for every new exe. The number shows in the file name, the installer, the TASEMS window and Windows
+  "Installed apps". It is kept in `windows/VERSION`.
+
 ## 0.35.0 — 2026-10-28 — Import: numbers taken as written
 
 Changed

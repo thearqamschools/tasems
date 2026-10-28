@@ -1,4 +1,4 @@
-; TASEMS-Setup.exe — installs the offline test copy of TASEMS on one Windows computer (docs/WINDOWS_INSTALL.md).
+; TASEMS-Setup-v<N>.exe — installs the offline test copy of TASEMS on one Windows computer (docs/WINDOWS_INSTALL.md).
 ; Built on Linux by windows/build_installer.sh with makensis. Installs for the current user (no admin rights).
 Unicode true
 !include "MUI2.nsh"
@@ -9,8 +9,8 @@ Unicode true
   !define VERSION "test"
 !endif
 
-Name "${FULLNAME}"
-OutFile "${OUTDIR}\TASEMS-Setup.exe"
+Name "${FULLNAME} v${VERSION}"
+OutFile "${OUTDIR}\TASEMS-Setup-v${VERSION}.exe"
 InstallDir "$LOCALAPPDATA\TASEMS"
 RequestExecutionLevel user
 SetCompressor /SOLID lzma

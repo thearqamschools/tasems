@@ -1,6 +1,7 @@
 #!/bin/sh
-# Builds windows/dist/TASEMS-Setup.exe on Linux (needs: makensis, 7z, unzip, curl, pip, a Python with the
-# project's requirements for collectstatic). Everything is downloaded from official sources:
+# Builds windows/dist/TASEMS-Setup-v<N>.exe on Linux. N is in windows/VERSION: raise it by 1 for every exe that
+# is sent, so the newest is always the highest number (project lead, 28 Oct 2026).
+# Needs: makensis, 7z, unzip, curl, pip, a Python with the project's requirements for collectstatic. Everything is downloaded from official sources:
 #   Python 3.12 for Windows  - NuGet package "python" (published by the Python core team)
 #   Python packages          - PyPI, Windows wheels for requirements.txt (+ waitress, the Windows web server)
 #   PostgreSQL 16 for Windows - the binaries inside PyPI's "pgserver" Windows wheel
@@ -59,7 +60,8 @@ Image.open(sys.argv[1]).convert("RGBA").save(sys.argv[2], sizes=[(16, 16), (32, 
 PY
 find "$B" -name "__pycache__" -type d -prune -exec rm -rf {} +
 
-VERSION=$(cd "$ROOT" && git rev-parse --short HEAD)
+VERSION=$(tr -d " \r\n" < "$ROOT/windows/VERSION")
+rm -f "$OUT"/TASEMS-Setup*.exe
 echo "Installer..."
 makensis -V2 -DBUILD="$B" -DOUTDIR="$OUT" -DVERSION="$VERSION" "$ROOT/windows/installer.nsi"
-ls -la "$OUT/TASEMS-Setup.exe"
+ls -la "$OUT/TASEMS-Setup-v$VERSION.exe"

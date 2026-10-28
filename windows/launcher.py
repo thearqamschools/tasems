@@ -32,6 +32,8 @@ CONFIG = DATA / "config.env"
 DB_PORT = int(os.environ.get("TASEMS_DB_PORT", "55432"))
 WEB_PORT = int(os.environ.get("TASEMS_PORT", "8000"))
 DEMO_PASSWORD = "ArqamOffline2026"
+VERSION_FILE = APP / "windows" / "VERSION"
+VERSION = VERSION_FILE.read_text(encoding="utf-8").strip() if VERSION_FILE.exists() else "?"
 
 
 def say(text):
@@ -69,7 +71,7 @@ def first_run_config():
     if values:
         return values
     say("")
-    say("  The Arqam Schools — TASEMS (offline test copy)")
+    say(f"  The Arqam Schools — TASEMS (offline test copy), version {VERSION}")
     say("  First start. Choose how to start:")
     say("    1 = with fictional DEMO data and demo logins (recommended for testing)")
     say("    2 = EMPTY school, two-step sign-in on, like the real server")
@@ -206,7 +208,7 @@ def start():
     from config.wsgi import application
 
     say("")
-    say(f"  TASEMS is running:  http://localhost:{WEB_PORT}")
+    say(f"  TASEMS version {VERSION} is running:  http://localhost:{WEB_PORT}")
     for address in lan_addresses():
         say(f"  Other computers on this network:  http://{address}:{WEB_PORT}")
     if values["DEMO_MODE"] == "True":
@@ -259,6 +261,8 @@ def backup():
 
 def main():
     action = sys.argv[1] if len(sys.argv) > 1 else ""
+    if WINDOWS:
+        os.system(f"title TASEMS version {VERSION}")
     LOGS.mkdir(parents=True, exist_ok=True)
     try:
         if action == "--master":
