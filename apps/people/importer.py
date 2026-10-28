@@ -2,8 +2,9 @@
 
 Step 1 (check): read the file, report every problem by row, and list the sections
 that will be created. Nothing is saved.
-Step 2 (import): only when the check finds no problems; everything is saved in one
-transaction, so either all rows go in or none do.
+Step 2 (import): when the check finds no problems, or, if the user chooses to, only the
+rows without problems (the rest are skipped and can be downloaded to fix). Everything is
+saved in one transaction, so either all chosen rows go in or none do.
 
 Two kinds of file are accepted: the TASEMS Excel template, and the "Student Data" PDF report
 printed by the school's previous software (one class/section per page, with Comp. Code,
@@ -21,6 +22,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, PatternFill
 
 from apps.academics.models import ClassLevel, Section
+from apps.core.importing import file_errors, problem_row_numbers
 from apps.core.phone import normalize_cnic, normalize_mobile
 
 from .models import Student, StudentGuardian
@@ -145,18 +147,43 @@ class Row:
     number: int
     data: dict
     level: ClassLevel | None = None
+    defaulted_admission: bool = False
 
 
 @dataclass
 class CheckResult:
-    defaulted_admission_dates: int = 0
     rows: list = field(default_factory=list)
     errors: list = field(default_factory=list)  # (row number or None, column header or "", message)
     new_sections: list = field(default_factory=list)  # (level, name, gender_group)
+    header: tuple = ()
+    raw: dict = field(default_factory=dict)  # row number -> values as in the file
 
     @property
     def ok(self):
         return not self.errors and bool(self.rows)
+
+    @property
+    def problem_rows(self):
+        return problem_row_numbers(self.errors)
+
+    @property
+    def good_rows(self):
+        bad = self.problem_rows
+        return [r for r in self.rows if r.number not in bad]
+
+    @property
+    def can_skip_problems(self):
+        """Some rows have problems but the rest can be imported on their own."""
+        return bool(self.problem_rows) and not file_errors(self.errors) and bool(self.good_rows)
+
+    @property
+    def good_new_sections(self):
+        used = {(r.level.id, r.data["section"].lower()) for r in self.good_rows}
+        return [s for s in self.new_sections if (s[0].id, s[1].lower()) in used]
+
+    @property
+    def defaulted_admission_dates(self):
+        return sum(r.defaulted_admission for r in self.good_rows)
 
 
 def template_workbook():
@@ -284,6 +311,7 @@ def check(file_bytes, *, branch, session):
         return result
     try:
         header, rows = _table(file_bytes)
+        result.header = tuple(header)
     except Exception:  # noqa: BLE001 - any unreadable file gets the same message
         result.errors.append(
             (
@@ -324,8 +352,9 @@ def check(file_bytes, *, branch, session):
                 (None, "", _("Too many rows. Import at most %(n)s students at a time.") % {"n": MAX_ROWS})
             )
             break
+        result.raw[number] = tuple(values)
         raw = {k: (values[i] if i < len(values) else None) for k, i in positions.items()}
-        data, errors = {}, []
+        data, errors, defaulted = {}, [], False
 
         def err(column, message, _number=number, _errors=errors):
             _errors.append((_number, headers[column], message))
@@ -361,7 +390,7 @@ def check(file_bytes, *, branch, session):
                 if key == "admission_date" and data[key] is None:
                     # Not in the old software's report: the session's first day, to correct later.
                     data[key] = session.starts_on
-                    result.defaulted_admission_dates += 1
+                    defaulted = True
         if data.get("date_of_birth") and data["date_of_birth"] > dt.date.today():
             err("date_of_birth", _("Date of birth is in the future"))
 
@@ -428,7 +457,7 @@ def check(file_bytes, *, branch, session):
                     )
 
         result.errors.extend(errors)
-        result.rows.append(Row(number=number, data=data, level=level))
+        result.rows.append(Row(number=number, data=data, level=level, defaulted_admission=defaulted))
 
     if not result.rows and not result.errors:
         result.errors.append((None, "", _("The file has no student rows.")))
@@ -437,16 +466,18 @@ def check(file_bytes, *, branch, session):
 
 
 @transaction.atomic
-def run_import(result, *, branch, session, user=None):
-    if not result.ok:
+def run_import(result, *, branch, session, user=None, skip_problems=False):
+    """Saves every row, or with skip_problems only the rows without problems."""
+    if not (result.ok or (skip_problems and result.can_skip_problems)):
         raise ValueError("Import called on a file with problems")
     sections = {(s.class_level_id, s.name.lower()): s for s in Section.objects.filter(branch=branch, session=session)}
-    for level, name, group in result.new_sections:
+    for level, name, group in result.good_new_sections:
         section = Section(branch=branch, session=session, class_level=level, name=name, gender_group=group)
         section.full_clean()
         section.save()
         sections[(level.id, name.lower())] = section
-    for row in result.rows:
+    rows = result.good_rows
+    for row in rows:
         d = row.data
         student = Student(
             branch=branch,
@@ -482,4 +513,4 @@ def run_import(result, *, branch, session, user=None):
             from apps.fees.services import set_agreed_fee
 
             set_agreed_fee(student, d["monthly_fee"], user, session=session)
-    return len(result.rows)
+    return len(rows)

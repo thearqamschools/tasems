@@ -259,3 +259,60 @@ def test_import_old_software_pdf_report(org, make_user, login_as):
         tuition, head_rate, org["session"].starts_on, True, [Concession.objects.get(student=one)]
     )
     assert (gross - discount, reason) == (2900, "Agreed fee")
+
+
+def test_import_can_skip_rows_with_problems(org, make_user, login_as):
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    file = xlsx(
+        [
+            row("N-1", "Ahmed", "Male", "Class 1", "A"),
+            row("N-2", "Bilal", "Male", "Class 1", "A", phone="123"),  # bad parent mobile
+            row("N-3", "Ayesha", "Female", "Class 6", "Rose"),
+            row("N-4", "Usman", "Male", "Class 7", "Lily", phone="12"),  # its new section is not created
+        ]
+    )
+    page = client.post("/students/import/", {"step": "check", "file": file})
+    body = page.content.decode()
+    assert "Not a Pakistani mobile number" in body
+    assert "Skip problem rows and import 2 students" in body
+    assert [s[1] for s in page.context["result"].good_new_sections] == ["A", "Rose"]
+    token = page.context["token"]
+
+    problems = client.get(f"/students/import/?problems={token}")
+    sheet = load_workbook(io.BytesIO(problems.content)).active
+    assert [sheet.cell(r, 1).value for r in (2, 3)] == ["N-2", "N-4"]
+    assert "Parent Mobile" in sheet.cell(2, len(HEADERS) + 1).value
+
+    # Without choosing to skip, nothing is imported.
+    client.post("/students/import/", {"step": "import", "token": token})
+    assert not Student.objects.filter(branch=org["samanabad"]).exists()
+
+    page = client.post(
+        "/students/import/",
+        {
+            "step": "check",
+            "file": xlsx(
+                [row("N-1", "Ahmed", "Male", "Class 1", "A"), row("N-2", "Bilal", "Male", "Class 1", "A", phone="123")]
+            ),
+        },
+    )
+    response = client.post(
+        "/students/import/", {"step": "import", "token": page.context["token"], "skip_problems": "1"}
+    )
+    assert response.status_code == 302
+    assert list(Student.objects.filter(branch=org["samanabad"]).values_list("admission_no", flat=True)) == ["N-1"]
+    assert not Section.objects.filter(class_level__code="class-7", name="Lily").exists()
+
+
+def test_missing_columns_cannot_be_skipped(org, make_user, login_as):
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    wb = Workbook()
+    wb.active.append(["Admission No", "First Name"])
+    wb.active.append(["N-1", "Ahmed"])
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    buffer.name = "students.xlsx"
+    page = client.post("/students/import/", {"step": "check", "file": buffer})
+    assert not page.context["result"].can_skip_problems
+    assert "Skip problem rows" not in page.content.decode()

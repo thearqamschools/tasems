@@ -2,7 +2,7 @@
 {% block title %}{% trans "Import staff from Excel" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Import staff from Excel" %}</h1>
-<p class="lede">{% trans "Fill the template, then check it here. Nothing is saved until every row is correct; then all rows are saved together." %}</p>
+<p class="lede">{% trans "Fill the template, then check it here. Nothing is saved until you press Import. If some rows have problems, you can fix them first or import the correct rows and skip the rest." %}</p>
 {% if result and result.ok %}
 <div class="card">
   <h2 style="margin-top:0">{% blocktrans count n=result.rows|length %}{{ n }} staff member is ready to import{% plural %}{{ n }} staff members are ready to import{% endblocktrans %}</h2>
@@ -13,10 +13,28 @@
   {% if result %}
   <div class="card" style="margin-bottom:1rem">
     <h2 style="margin-top:0">{% blocktrans count n=result.errors|length %}{{ n }} problem to fix{% plural %}{{ n }} problems to fix{% endblocktrans %}</h2>
+    {% if result.can_skip_problems %}
+    <p class="muted">{% trans "Correct these in your Excel file and check it again, or import the correct rows now and skip the rows with problems. Nothing has been saved yet." %}</p>
+    {% else %}
+    <p class="muted">{% trans "Correct these in your Excel file, save it, and check it again. Nothing has been saved." %}</p>
+    {% endif %}
     <div class="table-wrap"><table>
       <thead><tr><th class="num">{% trans "Row" %}</th><th>{% trans "Column" %}</th><th>{% trans "Problem" %}</th></tr></thead>
       <tbody>{% for row, col, msg in shown_errors %}<tr><td class="num">{{ row|default:"—" }}</td><td>{{ col|default:"—" }}</td><td>{{ msg }}</td></tr>{% endfor %}</tbody>
     </table></div>
+    {% if result.errors|length > shown_errors|length %}<p class="muted">{% trans "Only the first 300 problems are shown." %}</p>{% endif %}
+  </div>
+  {% endif %}
+  {% if result.can_skip_problems %}
+  <div class="card" style="margin-bottom:1rem">
+    <h2 style="margin-top:0">{% trans "Ignore the problems and import anyway" %}</h2>
+    <p>{% blocktrans count n=result.good_rows|length %}{{ n }} staff member has no problems and can be imported now.{% plural %}{{ n }} staff members have no problems and can be imported now.{% endblocktrans %}
+    <strong>{% blocktrans count n=result.problem_rows|length %}{{ n }} row with problems will be skipped and nothing from it is saved.{% plural %}{{ n }} rows with problems will be skipped and nothing from them is saved.{% endblocktrans %}</strong>
+    {% trans "Download the skipped rows, correct them, and import that file later." %}</p>
+    <form method="post">{% csrf_token %}<input type="hidden" name="step" value="import"><input type="hidden" name="token" value="{{ token }}"><input type="hidden" name="skip_problems" value="1">
+      <div class="actions"><button class="button" type="submit">{% blocktrans count n=result.good_rows|length %}Skip problem rows and import {{ n }} staff member{% plural %}Skip problem rows and import {{ n }} staff members{% endblocktrans %}</button>
+      <a class="button secondary" href="?problems={{ token }}">{% trans "Download rows with problems" %}</a></div>
+    </form>
   </div>
   {% endif %}
   <form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}<input type="hidden" name="step" value="check">

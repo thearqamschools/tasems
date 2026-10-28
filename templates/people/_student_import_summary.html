@@ -1,0 +1,6 @@
+{% load i18n %}
+  {% if result.good_new_sections %}
+  <p>{% trans "These sections will be created for this session:" %}</p>
+  <ul>{% for level, name, group in result.good_new_sections %}<li>{{ level }}-{{ name }}{% if group != "mixed" %} ({% if group == "boys" %}{% trans "Boys" %}{% else %}{% trans "Girls" %}{% endif %}){% endif %}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if result.defaulted_admission_dates %}<p class="muted">{% blocktrans count n=result.defaulted_admission_dates %}{{ n }} student has no admission date in the file; the first day of the session will be used and can be corrected later.{% plural %}{{ n }} students have no admission date in the file; the first day of the session will be used and can be corrected later.{% endblocktrans %}</p>{% endif %}

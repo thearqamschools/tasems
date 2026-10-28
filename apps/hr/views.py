@@ -13,9 +13,11 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 from django.views.decorators.http import require_POST
 
 from apps.core.branch import current_branch
+from apps.core.importing import problems_response
 from apps.organisation.models import AcademicSession
 
 from . import importer
@@ -151,6 +153,16 @@ def staff_import(request):
         response["Content-Disposition"] = 'attachment; filename="TASEMS-staff-template.xlsx"'
         return response
     context = {}
+    if request.GET.get("problems"):
+        # The rows with problems from the checked file, to correct and import again.
+        pending = request.session.get("staff_import")
+        token = request.GET["problems"]
+        path = _import_dir() / f"{token}.xlsx"
+        if not pending or pending["token"] != token or pending["branch"] != branch.id or not path.exists():
+            messages.error(request, _("This import has expired. Please check the file again."))
+            return redirect("hr:staff_import")
+        result = importer.check(path.read_bytes(), branch=branch)
+        return problems_response(result.header, result.raw, result.errors, "TASEMS-staff-to-fix.xlsx")
     if request.method == "POST" and request.POST.get("step") == "check":
         upload = request.FILES.get("file")
         if upload is None or not upload.name.lower().endswith(".xlsx") or upload.size > 5 * 1024 * 1024:
@@ -159,7 +171,7 @@ def staff_import(request):
             content = upload.read()
             result = importer.check(content, branch=branch)
             token = ""
-            if result.ok:
+            if result.ok or result.can_skip_problems:
                 token = secrets.token_hex(16)
                 (_import_dir() / f"{token}.xlsx").write_bytes(content)
                 request.session["staff_import"] = {"token": token, "branch": branch.id}
@@ -179,11 +191,22 @@ def staff_import(request):
         finally:
             path.unlink(missing_ok=True)
         result = importer.check(content, branch=branch)
-        if not result.ok:
+        skip = request.POST.get("skip_problems") == "1"
+        if not (result.ok or (skip and result.can_skip_problems)):
             messages.error(request, _("The data changed since the check. Please check the file again."))
             return redirect("hr:staff_import")
-        n = importer.run_import(result, branch=branch)
+        n = importer.run_import(result, branch=branch, skip_problems=skip)
         messages.success(request, _("%(n)s staff members added.") % {"n": n})
+        if skip:
+            messages.warning(
+                request,
+                ngettext(
+                    "%(n)s row with problems was skipped and not saved. Correct it and import it again.",
+                    "%(n)s rows with problems were skipped and not saved. Correct them and import them again.",
+                    len(result.problem_rows),
+                )
+                % {"n": len(result.problem_rows)},
+            )
         return redirect("hr:index")
     return render(request, "hr/staff_import.html", context)
 
