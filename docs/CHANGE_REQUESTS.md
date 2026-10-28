@@ -173,3 +173,7 @@ The lead is listing changes one by one. **Build nothing until the lead says "haa
   girls' campus; from then on boys move to the boys' campus and girls stay in the girls' campus.
 - R3-3. In the Boys / Girls column, write **"Boys and Girls"** with a capital G (now "Boys and girls"), as the
   branches already use it.
+
+### Students → Add / Edit student
+- R3-4. Remove the **"Father email"** field from the Contacts part of the Add student and Edit student forms.
+  The **"Email"** field higher up on the form stays and is the one email for the student.
