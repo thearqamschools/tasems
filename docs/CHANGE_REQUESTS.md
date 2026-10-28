@@ -217,3 +217,8 @@ with the child and all brothers and sisters, and the children are called with it
   Setup. These print wherever the school's contact is shown (Parent Tree slip, vouchers, …) instead of fixed text.
 - R3-11. ~~Several banks on the voucher~~ — **withdrawn by the lead (28 Oct 2026):** the voucher keeps showing
   **one bank**, as now (Setup → Fee settings). Nothing to change.
+
+### Class names (added while building, 28 Oct 2026)
+- R3-12. Class names in words, without the word "Class": Play Group, Nursery, Prep (unchanged), then **One, Two,
+  Three, Four, Five, Six, Seven, Eight, Pre-Nine, Nine, Ten** (capital first letter). Hifz-e-Quran unchanged.
+  Everywhere a class is shown. Excel import still accepts the old names (Class 1 … Class 10, Pre-9) and numbers.

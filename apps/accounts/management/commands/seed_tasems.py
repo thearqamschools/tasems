@@ -128,13 +128,15 @@ CLASS_LEVELS = [
     ("prep", "Prep", "پریپ", "early_years"),
 ]
 # Confirmed by the project lead on 16 Oct 2026. Boys and girls are separated from Middle School (Class 6) onwards.
-CLASS_LEVELS += [(f"class-{n}", f"Class {n}", f"جماعت {n}", "primary") for n in range(1, 6)]
-CLASS_LEVELS += [(f"class-{n}", f"Class {n}", f"جماعت {n}", "middle") for n in (6, 7)]
+# Names in words without "Class" (project lead, 28 Oct 2026): One, Two … Pre-Nine, Nine, Ten. Codes stay class-1 …
+WORDS = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}
+CLASS_LEVELS += [(f"class-{n}", WORDS[n], f"جماعت {n}", "primary") for n in range(1, 6)]
+CLASS_LEVELS += [(f"class-{n}", WORDS[n], f"جماعت {n}", "middle") for n in (6, 7)]
 CLASS_LEVELS += [
-    ("class-8", "Class 8", "جماعت 8", "high"),
-    ("pre-9", "Class Pre-9", "پری نہم", "high"),
-    ("class-9", "Class 9", "جماعت 9", "high"),
-    ("class-10", "Class 10", "جماعت 10", "high"),
+    ("class-8", "Eight", "جماعت 8", "high"),
+    ("pre-9", "Pre-Nine", "پری نہم", "high"),
+    ("class-9", "Nine", "جماعت 9", "high"),
+    ("class-10", "Ten", "جماعت 10", "high"),
 ]
 CLASS_LEVELS += [("hifz", "Hifz-e-Quran", "حفظ القرآن", "hifz")]
 

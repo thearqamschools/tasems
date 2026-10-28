@@ -8,6 +8,8 @@ Changed
   has one campus that fits; the others show "Choose a campus". A boys and girls section may be in the girls
   (or boys) campus, as Play Group to Class 5 are; a boys section cannot be in a girls campus and the other way round.
 - "Boys and girls" is written **"Boys and Girls"**.
+- Class names in words without "Class": **One, Two … Eight, Pre-Nine, Nine, Ten** (Play Group, Nursery, Prep and
+  Hifz-e-Quran unchanged). Renamed for every branch on the next start; import still accepts "Class 1", "Pre-9", "1".
 - Campus lists show only the campus name, **Girls Campus first, then Boys Campus**.
 - Add / Edit student: the **Father email** field is removed (the student's Email stays; saved father emails are
   kept).

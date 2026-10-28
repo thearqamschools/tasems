@@ -8,7 +8,7 @@ from apps.academics.models import ClassLevel, Section
 from apps.accounts.models import Role, RoleAssignment, Scope, User
 from apps.core.models import AuditEvent
 from apps.fees.models import FeeHead, FeeRate
-from apps.organisation.models import AcademicSession, Branch
+from apps.organisation.models import AcademicSession, Branch, Campus
 from apps.setup import access
 
 pytestmark = pytest.mark.django_db
@@ -195,6 +195,12 @@ def test_section_rules_are_checked(org, make_user, login_as):
     assert "class_teacher" in r.context["form"].errors
     r = client.post(
         "/setup/sections/new/", {"class_level": six.pk, "name": "Rose", "gender_group": "boys", "is_active": "on"}
+    )
+    assert "campus" in r.context["form"].errors  # campus is required (project lead, 28 Oct 2026)
+    boys = Campus.objects.create(branch=org["samanabad"], name="Boys Campus", gender_group="boys")
+    r = client.post(
+        "/setup/sections/new/",
+        {"class_level": six.pk, "name": "Rose", "gender_group": "boys", "campus": boys.pk, "is_active": "on"},
     )
     assert r.status_code == 302
     assert Section.objects.filter(branch=org["samanabad"], session=org["session"], name="Rose").exists()

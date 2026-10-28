@@ -70,7 +70,7 @@ def test_class_strength_counts_boys_girls_and_hifz(school, login_as, make_user):
         client.get("/reports/class-strength/?format=xlsx")
     )
     body = {r[0]: r[3:] for r in rows[3:]}
-    assert body["Class 4"] == [1, 1, 2, 0] and body["Hifz-e-Quran"] == [1, 0, 1, 1] and body["Total"] == [2, 1, 3, 1]
+    assert body["Four"] == [1, 1, 2, 0] and body["Hifz-e-Quran"] == [1, 0, 1, 1] and body["Total"] == [2, 1, 3, 1]
 
 
 def test_new_admissions_between_dates(school, login_as, make_user):

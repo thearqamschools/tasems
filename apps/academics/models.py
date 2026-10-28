@@ -95,7 +95,7 @@ class Section(BranchOwnedModel):
         blank=True,
         related_name="sections",
         help_text=_(
-            "Building where this section studies. Usually Play Group to Class 5 (boys and girls) study in the girls "
+            "Building where this section studies. Usually Play Group to Five (boys and girls) study in the girls "
             "campus; after that boys study in the boys campus and girls in the girls campus."
         ),
     )

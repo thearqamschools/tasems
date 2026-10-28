@@ -57,7 +57,7 @@ def test_students_excel_follows_the_filters_and_prints_every_row(school, login_a
     everyone = sheet(client.get("/students/?format=xlsx"))
     names = {r[1] for r in everyone[3:]}
     assert {"Pupil0", "Pupil1", "Pupil2"} <= names and other.full_name not in names  # own branch only
-    assert everyone[3][3] == "Class 5" and everyone[3][4] == "A"
+    assert everyone[3][3] == "Five" and everyone[3][4] == "A"
     page = client.get("/students/").content.decode()
     assert "format=xlsx" in page and "data-print" in page
     printed = client.get("/students/?print=1").content.decode()

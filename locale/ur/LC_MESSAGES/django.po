@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-28 13:52+0500\n"
+"POT-Creation-Date: 2026-10-28 14:15+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -165,7 +165,7 @@ msgid "Usually Rose, Jasmine, Daisy, Pansy or Tulip"
 msgstr "عام طور پر Rose، Jasmine، Daisy، Pansy یا Tulip"
 
 #: apps/academics/models.py:98
-msgid "Building where this section studies. Usually Play Group to Class 5 (boys and girls) study in the girls campus; after that boys study in the boys campus and girls in the girls campus."
+msgid "Building where this section studies. Usually Play Group to Five (boys and girls) study in the girls campus; after that boys study in the boys campus and girls in the girls campus."
 msgstr "وہ عمارت جہاں یہ سیکشن پڑھتا ہے۔ عام طور پر پلے گروپ سے کلاس 5 تک (لڑکے اور لڑکیاں) گرلز کیمپس میں پڑھتے ہیں؛ اس کے بعد لڑکے بوائز کیمپس میں اور لڑکیاں گرلز کیمپس میں۔"
 
 #: apps/academics/models.py:121 apps/hr/models.py:133
@@ -2820,15 +2820,15 @@ msgstr "یہ کالم موجود نہیں: %(c)s"
 msgid "Too many rows."
 msgstr "سطریں بہت زیادہ ہیں۔"
 
-#: apps/hr/importer.py:178 apps/hr/importer.py:214 apps/people/importer.py:367
+#: apps/hr/importer.py:178 apps/hr/importer.py:214 apps/people/importer.py:371
 msgid "Required"
 msgstr "لازمی"
 
-#: apps/hr/importer.py:181 apps/people/importer.py:372
+#: apps/hr/importer.py:181 apps/people/importer.py:376
 msgid "Already exists in this branch"
 msgstr "اس برانچ میں پہلے سے موجود ہے"
 
-#: apps/hr/importer.py:183 apps/hr/importer.py:189 apps/people/importer.py:374
+#: apps/hr/importer.py:183 apps/hr/importer.py:189 apps/people/importer.py:378
 #, python-format
 msgid "Repeated in this file (row %(r)s)"
 msgstr "اس فائل میں دوبارہ آیا ہے (قطار %(r)s)"
@@ -2837,7 +2837,7 @@ msgstr "اس فائل میں دوبارہ آیا ہے (قطار %(r)s)"
 msgid "Another person already has this machine ID"
 msgstr "یہ مشین آئی ڈی کسی اور کی ہے"
 
-#: apps/hr/importer.py:194 apps/people/importer.py:380
+#: apps/hr/importer.py:194 apps/people/importer.py:384
 msgid "Use Male or Female"
 msgstr "Male یا Female لکھیں"
 
@@ -2845,12 +2845,12 @@ msgstr "Male یا Female لکھیں"
 msgid "Use Teacher, Hifz, Admin or Support"
 msgstr "Teacher، Hifz، Admin یا Support لکھیں"
 
-#: apps/hr/importer.py:203 apps/people/importer.py:432
+#: apps/hr/importer.py:203 apps/people/importer.py:436
 #, python-format
 msgid "A CNIC has 13 digits: «%(value)s». Left empty"
 msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے: «%(value)s»۔ خالی چھوڑ دیا گیا"
 
-#: apps/hr/importer.py:210 apps/people/importer.py:407
+#: apps/hr/importer.py:210 apps/people/importer.py:411
 #, python-format
 msgid "Not a Pakistani mobile number: «%(value)s». Imported as written"
 msgstr "پاکستانی موبائل نمبر نہیں: «%(value)s»۔ جیسا لکھا تھا ویسا شامل کر دیا"
@@ -4131,11 +4131,11 @@ msgstr "فیس کے واجبات ادا ہو چکے"
 msgid "Remarks (optional)"
 msgstr "ریمارکس (اختیاری)"
 
-#: apps/people/importer.py:309
+#: apps/people/importer.py:313
 msgid "No current academic session is set. Ask head office to set it first."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ پہلے ہیڈ آفس سے طے کروائیں۔"
 
-#: apps/people/importer.py:318
+#: apps/people/importer.py:322
 msgid ""
 "This file could not be opened. Use the Excel template (.xlsx) or the old "
 "software's PDF report."
@@ -4143,51 +4143,51 @@ msgstr ""
 "یہ فائل نہیں کھل سکی۔ ایکسل ٹیمپلیٹ (.xlsx) یا پرانے سافٹ ویئر کی PDF رپورٹ "
 "استعمال کریں۔"
 
-#: apps/people/importer.py:333
+#: apps/people/importer.py:337
 #, python-format
 msgid "These required columns are missing: %(cols)s. Use the template."
 msgstr "یہ لازمی کالم موجود نہیں: %(cols)s۔ ٹیمپلیٹ استعمال کریں۔"
 
-#: apps/people/importer.py:350
+#: apps/people/importer.py:354
 #, python-format
 msgid "Too many rows. Import at most %(n)s students at a time."
 msgstr ""
 "قطاریں بہت زیادہ ہیں۔ ایک وقت میں زیادہ سے زیادہ %(n)s طلبہ درآمد کریں۔"
 
-#: apps/people/importer.py:388
+#: apps/people/importer.py:392
 #, python-format
 msgid "Not a date: «%(value)s». Left empty; correct it on the student's page"
 msgstr "یہ تاریخ نہیں: «%(value)s»۔ خالی چھوڑ دی گئی؛ طالب علم کے صفحے پر درست کریں"
 
-#: apps/people/importer.py:395
+#: apps/people/importer.py:399
 msgid "Date of birth is in the future. Left empty; correct it on the student's page"
 msgstr "تاریخ پیدائش آنے والے دنوں کی ہے۔ خالی چھوڑ دی گئی؛ طالب علم کے صفحے پر درست کریں"
 
-#: apps/people/importer.py:400
+#: apps/people/importer.py:404
 msgid "Unknown class. See the 'How to fill' sheet"
 msgstr "نامعلوم جماعت۔ 'How to fill' شیٹ دیکھیں"
 
-#: apps/people/importer.py:414
+#: apps/people/importer.py:418
 #, python-format
 msgid "«%(value)s» is not Father, Mother, Guardian or Other. Imported as Guardian"
 msgstr "«%(value)s» والد، والدہ، سرپرست یا دیگر نہیں۔ سرپرست کے طور پر شامل کیا"
 
-#: apps/people/importer.py:425
+#: apps/people/importer.py:429
 #, python-format
 msgid "Not an amount: «%(value)s». Left empty"
 msgstr "یہ رقم نہیں: «%(value)s»۔ خالی چھوڑ دی گئی"
 
-#: apps/people/importer.py:450
+#: apps/people/importer.py:454
 #, python-format
 msgid "Section %(s)s of %(c)s is for %(g)s only"
 msgstr "%(c)s کا سیکشن %(s)s صرف %(g)s کے لیے ہے"
 
-#: apps/people/importer.py:462
+#: apps/people/importer.py:466
 #, python-format
 msgid "Boys and girls cannot share section %(s)s of %(c)s"
 msgstr "لڑکے اور لڑکیاں %(c)s کے سیکشن %(s)s میں اکٹھے نہیں ہو سکتے"
 
-#: apps/people/importer.py:470
+#: apps/people/importer.py:474
 msgid "The file has no student rows."
 msgstr "فائل میں طلبہ کی کوئی قطار نہیں۔"
 
@@ -5967,12 +5967,8 @@ msgid "Sunday: school is closed, so there is no attendance."
 msgstr "اتوار: سکول بند ہے، اس لیے حاضری نہیں لگتی۔"
 
 #: templates/attendance/today.html:15
-msgid ""
-"Saturday: only the classes that come on Saturdays (Hifz, Pre-9, Class 9 and "
-"Class 10) take attendance."
-msgstr ""
-"ہفتہ: صرف وہ جماعتیں جو ہفتے کو آتی ہیں (حفظ، پری نہم، جماعت نہم اور دہم) کی "
-"حاضری لگتی ہے۔"
+msgid "Saturday: only the classes that come on Saturdays (Hifz, Pre-Nine, Nine and Ten) take attendance."
+msgstr "ہفتہ: صرف وہ کلاسیں حاضری لگاتی ہیں جو ہفتے کو آتی ہیں (حفظ، پری نہم، نہم اور دہم)۔"
 
 #: templates/attendance/today.html:16 templates/core/home.html:7
 #: templates/exams/index.html:5
@@ -6635,7 +6631,7 @@ msgid "Sunday: school is closed, so there is no diary."
 msgstr "اتوار: سکول بند ہے، اس لیے ڈائری نہیں۔"
 
 #: templates/diary/day.html:12
-msgid "Saturday: only Hifz, Pre-9, Class 9 and Class 10 have a diary."
+msgid "Saturday: only Hifz, Pre-Nine, Nine and Ten have a diary."
 msgstr "ہفتہ: صرف حفظ، پری نہم، نہم اور دہم کی ڈائری ہوتی ہے۔"
 
 #: templates/diary/day.html:20
@@ -9306,7 +9302,7 @@ msgid "Campuses"
 msgstr "کیمپس"
 
 #: templates/setup/sections.html:28
-msgid "Separate buildings of this branch, e.g. a boys campus and a girls campus. Every section is placed in a campus. Usually Play Group to Class 5 (boys and girls) study in the girls campus; after that boys study in the boys campus and girls in the girls campus."
+msgid "Separate buildings of this branch, e.g. a boys campus and a girls campus. Every section is placed in a campus. Usually Play Group to Five (boys and girls) study in the girls campus; after that boys study in the boys campus and girls in the girls campus."
 msgstr "اس برانچ کی الگ عمارتیں، مثلاً بوائز کیمپس اور گرلز کیمپس۔ ہر سیکشن کسی کیمپس میں ہوتا ہے۔ عام طور پر پلے گروپ سے کلاس 5 تک (لڑکے اور لڑکیاں) گرلز کیمپس میں پڑھتے ہیں؛ اس کے بعد لڑکے بوائز کیمپس میں اور لڑکیاں گرلز کیمپس میں۔"
 
 #: templates/setup/sections.html:34

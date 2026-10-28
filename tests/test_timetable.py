@@ -50,7 +50,7 @@ def test_timetable_refuses_a_teacher_in_two_classes(school, login_as):
     client.post(f"/academics/section/{school['four'].id}/timetable/", {f"c_0_{p1.id}": english.id})
     assert TimetableEntry.objects.filter(section=school["four"]).count() == 1
     clash = client.post(f"/academics/section/{school['five'].id}/timetable/", {f"c_0_{p1.id}": english.id})
-    assert "Aisha Khan already teaches Class 4-Rose" in clash.content.decode()
+    assert "Aisha Khan already teaches Four-Rose" in clash.content.decode()
     assert not TimetableEntry.objects.filter(section=school["five"]).exists()
     client.post(f"/academics/section/{school['five'].id}/timetable/", {f"c_0_{p3.id}": english.id})
     week = T.teacher_grid(school["branch"], school["four"].session, school["teacher"])
@@ -67,7 +67,7 @@ def test_timetable_pages_and_menu(school, login_as):
     )
     teacher = login_as(school["teacher"])
     mine = teacher.get("/academics/timetable/mine/").content.decode()
-    assert "My timetable" in mine and "Class 4-Rose" in mine and 'href="/academics/timetable/mine/"' in mine
+    assert "My timetable" in mine and "Four-Rose" in mine and 'href="/academics/timetable/mine/"' in mine
     assert teacher.post(f"/academics/section/{school['four'].id}/timetable/", {}).status_code == 403  # view only
     page = teacher.get(f"/academics/section/{school['four'].id}/timetable/").content.decode()
     assert "English" in page and "Break" in page and "Change timetable" not in page

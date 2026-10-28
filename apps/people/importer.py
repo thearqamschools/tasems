@@ -91,6 +91,7 @@ CLASS_ALIASES = {
     "prep": "prep",
     "pre9": "pre-9",
     "prenine": "pre-9",
+    "classpre9": "pre-9",  # the old name, before 28 Oct 2026
     "hifz": "hifz",
 }
 
@@ -201,12 +202,15 @@ def template_workbook():
         ("Columns marked * are required. Keep the header row exactly as it is.",),
         ("Gender", "Male or Female (also accepted: Boy, Girl, M, F)"),
         ("Dates", "Day first: 15/04/2026 or 15-04-2026, or an Excel date"),
-        ("Class", "Play Group, Nursery, Prep, Class 1 … Class 8, Pre-9, Class 9, Class 10, Hifz (1–10 also work)"),
+        (
+            "Class",
+            "Play Group, Nursery, Prep, One … Eight, Pre-Nine, Nine, Ten, Hifz (1–10 and Class 1 … Class 10 also work)",
+        ),
         ("Section", "The section name, e.g. A, B, Rose. Missing sections are created for the current session"),
         ("Hifz", "Yes for Hifz-e-Quran students, otherwise leave empty"),
         ("Parent Mobile", "Pakistani mobile, e.g. 0300-1234567"),
         ("Relationship", "Father, Mother, Guardian or Other (empty = Guardian)"),
-        ("From Class 6", "Boys and girls must be in separate sections"),
+        ("From Six", "Boys and girls must be in separate sections"),
         ("Admission Date", "If empty, the first day of the session is used (correct it later)"),
         ("Monthly Fee", "The child's agreed monthly fee, if different families pay different amounts"),
         ("Old software", "The previous software's 'Student Data' PDF can also be uploaded as it is"),

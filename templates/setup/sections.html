@@ -25,7 +25,7 @@
 {% elif session %}<div class="card empty-state">{% icon "users" %}<p>{% trans "No sections for this session yet." %}</p>{% if can.add %}<div class="actions"><a class="button" href="{% url 'setup:section_new' %}">{% trans "Add a section" %}</a></div>{% endif %}</div>{% endif %}
 
 <h2>{% trans "Campuses" %}</h2>
-<p class="muted">{% trans "Separate buildings of this branch, e.g. a boys campus and a girls campus. Every section is placed in a campus. Usually Play Group to Class 5 (boys and girls) study in the girls campus; after that boys study in the boys campus and girls in the girls campus." %}</p>
+<p class="muted">{% trans "Separate buildings of this branch, e.g. a boys campus and a girls campus. Every section is placed in a campus. Usually Play Group to Five (boys and girls) study in the girls campus; after that boys study in the boys campus and girls in the girls campus." %}</p>
 {% if campuses %}
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Campus" %}</th><th>{% trans "Boys / Girls" %}</th><th>{% trans "Address" %}</th><th></th></tr></thead>

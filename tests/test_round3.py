@@ -51,7 +51,7 @@ def test_parent_tree_lists_current_brothers_and_sisters(school, make_user, login
     assert "Parent Tree" in page and "Asad Ali" in page and "041-2660265" in page and "0339-2406479" in page
     assert "Ifrah" in page and "3937" in page and "Haniya" in page and "Left" not in page  # left school: not on it
     assert page.index("Ifrah") < page.index("Haniya")  # higher class first, as on the old slip
-    assert "<td>Girls</td>" in page and "Class 5" in page
+    assert "<td>Girls</td>" in page and "<td>Five</td>" in page
     assert client.get(f"/students/{school['left'].id}/parent-tree/").status_code == 404  # only current students
     detail = client.get(f"/students/{school['ifrah'].id}/").content.decode()
     assert detail.count(f"/students/{school['ifrah'].id}/parent-tree/") == 2  # icon by the name and the button
