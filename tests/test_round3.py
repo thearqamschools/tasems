@@ -1,0 +1,95 @@
+"""Round 3 (project lead, 28 Oct 2026): sections table and campuses, parent mobiles, Parent Tree slip, branch
+contact numbers, no father email."""
+
+import datetime as dt
+
+import pytest
+
+from apps.academics.models import ClassLevel, Section
+from apps.accounts.models import Scope
+from apps.organisation.models import Campus
+from apps.people.models import Enrolment, Guardian, Student, StudentGuardian
+
+pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def school(org):
+    branch = org["samanabad"]
+    girls = Campus.objects.create(branch=branch, name="Girls Campus", gender_group="girls")
+    boys = Campus.objects.create(branch=branch, name="Boys Campus", gender_group="boys")
+    five = Section.objects.create(
+        branch=branch, session=org["session"], class_level=ClassLevel.objects.get(code="class-5"), name="Rose",
+        campus=girls,
+    )  # fmt: skip
+    one = Section.objects.create(
+        branch=branch, session=org["session"], class_level=ClassLevel.objects.get(code="class-1"), name="Rose",
+        campus=girls,
+    )  # fmt: skip
+
+    def kid(adm, name, section, status="active", gender="female"):
+        s = Student.objects.create(
+            branch=branch, admission_no=adm, first_name=name, gender=gender, father_name="Asad Ali",
+            father_cnic="3310012345671", admission_date=dt.date(2026, 4, 1), status=status,
+        )  # fmt: skip
+        Enrolment.objects.create(branch=branch, student=s, session=org["session"], section=section)
+        return s
+
+    ifrah = kid("3937", "Ifrah", five)
+    haniya = kid("3935", "Haniya", one)
+    left = kid("3930", "Left", one, status="withdrawn")
+    father = Guardian.objects.create(branch=branch, full_name="Asad Ali", phone="03001234567")
+    mother = Guardian.objects.create(branch=branch, full_name="Mother", phone="03217654321")
+    StudentGuardian.objects.create(student=ifrah, guardian=father, relationship="father", is_primary_contact=True)
+    StudentGuardian.objects.create(student=ifrah, guardian=mother, relationship="mother")
+    return {"branch": branch, "girls": girls, "boys": boys, "ifrah": ifrah, "haniya": haniya, "left": left}
+
+
+def test_parent_tree_lists_current_brothers_and_sisters(school, make_user, login_as):
+    client = login_as(make_user("admissions_officer", Scope.BRANCH, school["branch"]))
+    page = client.get(f"/students/{school['haniya'].id}/parent-tree/").content.decode()
+    assert "Parent Tree" in page and "Asad Ali" in page and "041-2660265" in page and "0339-2406479" in page
+    assert "Ifrah" in page and "3937" in page and "Haniya" in page and "Left" not in page  # left school: not on it
+    assert page.index("Ifrah") < page.index("Haniya")  # higher class first, as on the old slip
+    assert "<td>Girls</td>" in page and "Class 5" in page
+    assert client.get(f"/students/{school['left'].id}/parent-tree/").status_code == 404  # only current students
+    detail = client.get(f"/students/{school['ifrah'].id}/").content.decode()
+    assert detail.count(f"/students/{school['ifrah'].id}/parent-tree/") == 2  # icon by the name and the button
+    assert "/parent-tree/" not in client.get(f"/students/{school['left'].id}/").content.decode()
+
+
+def test_students_list_shows_both_parent_mobiles_and_parent_tree(school, make_user, login_as):
+    client = login_as(make_user("admissions_officer", Scope.BRANCH, school["branch"]))
+    page = client.get("/students/").content.decode()
+    assert "03001234567" in page and "03217654321" in page
+    assert f"/students/{school['ifrah'].id}/parent-tree/" in page and "Parent Tree" in page
+
+
+def test_father_email_is_not_asked(school, make_user, login_as):
+    client = login_as(make_user("admissions_officer", Scope.BRANCH, school["branch"]))
+    page = client.get(f"/students/{school['ifrah'].id}/edit/").content.decode()
+    assert 'name="father_email"' not in page and 'name="email"' in page
+
+
+def test_sections_page_and_campus_rules(school, make_user, login_as):
+    client = login_as(make_user("branch_owner", Scope.BRANCH, school["branch"]))
+    page = client.get("/setup/sections/").content.decode()
+    assert "<th>Class</th><th>Section</th><th>Boys / Girls</th><th>Campus</th>" in page
+    assert "Boys and Girls" in page and "Boys and girls" not in page
+    form = client.get("/setup/sections/new/").content.decode()
+    assert form.index(">Girls Campus<") < form.index(">Boys Campus<") and "Samanabad" not in form.split("campus")[-1]
+    data = {"class_level": ClassLevel.objects.get(code="class-2").id, "name": "Tulip", "gender_group": "mixed"}
+    assert "This field is required" in client.post("/setup/sections/new/", data).content.decode()
+    client.post("/setup/sections/new/", {**data, "campus": school["girls"].id})  # boys and girls in the girls campus
+    assert Section.objects.filter(name="Tulip", campus=school["girls"]).exists()
+    bad = {**data, "name": "Daisy", "gender_group": "girls", "campus": school["boys"].id}
+    assert "This campus is for Boys only" in client.post("/setup/sections/new/", bad).content.decode()
+
+
+def test_branch_contact_numbers(org, make_user, login_as):
+    samanabad = org["samanabad"]
+    assert samanabad.contact_numbers == ["041-2660265", "041-2406479", "0339-2406479"]
+    office = login_as(make_user("head_office_admin", Scope.HEAD_OFFICE, org["fsd"]))
+    page = office.get(f"/setup/branches/{samanabad.id}/").content.decode()
+    assert all(f'name="{n}"' in page for n in ("phone", "phone_2", "mobile_1", "mobile_2"))
+    assert "Phone 1" in page and "Mobile 2" in page

@@ -4,7 +4,7 @@
 <div class="profile-head">
   {% if student.photo %}<img class="profile-photo" src="{% url 'people:student_photo' student.pk %}" alt="{% trans 'Photo' %}" width="96" height="120">
   {% else %}<span class="profile-photo empty" aria-hidden="true">{% icon "users" %}</span>{% endif %}
-  <div><h1>{{ student.full_name }}</h1>
+  <div><h1>{{ student.full_name }}{% if student.status == "active" %} <a class="button quiet sm no-print" data-print-slip href="{% url 'people:parent_tree' student.pk %}" title="{% trans 'Print Parent Tree' %}" aria-label="{% trans 'Print Parent Tree' %}">{% icon "printer" %}</a>{% endif %}</h1>
 <p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p></div>
 </div>
 <nav class="tabs no-print" aria-label="{% trans 'Sections of this page' %}">
@@ -13,6 +13,7 @@
   {% if history %}<a href="#history">{% trans "Record history" %}</a>{% endif %}
 </nav>
 <div class="actions">{% if can_edit %}<a class="button" href="{% url 'people:student_edit' student.pk %}">{% trans "Edit student" %}</a>{% endif %}
+{% if student.status == "active" %}<a class="button secondary" data-print-slip href="{% url 'people:parent_tree' student.pk %}">{% icon "printer" %}{% trans "Parent Tree" %}</a>{% endif %}
 {% delete_button "student" student %}
 {% if perms.fees.view_voucher %}<a class="button quiet" href="{% url 'fees:student' student.pk %}">{% trans "Fee account" %}</a>{% endif %}
 {% if hifz %}<a class="button quiet" href="{% url 'hifz:student' student.pk %}">{% trans "Hifz record" %}</a>{% endif %}

@@ -27,7 +27,7 @@ from . import certificates, idcards, importer
 from . import promotion as promote
 from .forms import CertificateForm, LeaveForm, StudentForm, section_order
 from .models import Certificate, Enrolment, Student, StudentGuardian
-from .services import current_enrolment
+from .services import current_enrolment, parent_mobiles
 
 PAGE_SIZE = 50
 
@@ -87,8 +87,8 @@ def student_list(request):
         Prefetch("enrolments", queryset=enrolments, to_attr="current_enrolments") if session else "enrolments",
         Prefetch(
             "guardian_links",
-            queryset=StudentGuardian.objects.filter(is_primary_contact=True).select_related("guardian"),
-            to_attr="primary_links",
+            queryset=StudentGuardian.objects.select_related("guardian"),
+            to_attr="contact_links",
         ),
     ).order_by(Length("admission_no"), "admission_no")
 
@@ -107,7 +107,7 @@ def student_list(request):
                         if session and st.current_enrolments
                         else ["", ""]
                     ),
-                    ", ".join(link.guardian.phone for link in st.primary_links),
+                    ", ".join(parent_mobiles(st)),
                     st.father_cnic,
                     st.get_gender_display(),
                     st.date_of_birth,
@@ -119,6 +119,9 @@ def student_list(request):
             branch=branch,
         )  # fmt: skip
     page = exports.paginate(request, students, PAGE_SIZE)
+    page.object_list = list(page.object_list)
+    for st in page.object_list:
+        st.parent_mobiles = parent_mobiles(st)
     params = request.GET.copy()
     params.pop("page", None)
     return render(
@@ -170,6 +173,39 @@ def student_detail(request, pk):
             "hifz": request.user.has_branch_perm("hifz.view_hifzlesson", student.branch_id)
             and (student.is_hifz or student.enrolments.filter(section__class_level__code="hifz").exists()),
         },
+    )
+
+
+@login_required
+def parent_tree(request, pk):
+    """Parent Tree slip for the 80 mm receipt printer: the child and every brother and sister still at school
+    (same father CNIC), to call them out of class (project lead, 28 Oct 2026). Only for a current student."""
+    branch = _branch_or_403(request, "people.view_student")
+    student = _get_student(request, pk, branch)
+    if student.status != Student.Status.ACTIVE:
+        raise Http404
+    session = _current_session()
+    family = [student, *student.siblings().filter(status=Student.Status.ACTIVE)]
+    rows = []
+    for child in family:
+        enrolment = current_enrolment(child, session) if session else None
+        section = enrolment.section if enrolment else None
+        campus = section.campus.name if section and section.campus else ""
+        rows.append(
+            {
+                "campus": campus.removesuffix(" Campus").removesuffix(" campus"),
+                "code": child.admission_no,
+                "name": child.full_name,
+                "class": section.class_level.name if section else "",
+                "section": section.name if section else "",
+                "order": -section.class_level.sort_order if section else 0,
+            }
+        )
+    rows.sort(key=lambda r: (r["order"], r["name"]))
+    return render(
+        request,
+        "people/parent_tree.html",
+        {"student": student, "branch": student.branch, "rows": rows, "printed_at": timezone.localtime()},
     )
 
 

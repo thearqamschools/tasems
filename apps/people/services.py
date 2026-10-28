@@ -29,6 +29,23 @@ def family_of(student):
     return rows
 
 
+def parent_mobiles(student):
+    """The father's and the mother's mobile (project lead, 28 Oct 2026); without either, the main contact's.
+    Uses `student.contact_links` when the list prefetched it."""
+    links = getattr(student, "contact_links", None)
+    if links is None:
+        links = list(student.guardian_links.select_related("guardian"))
+    links = sorted(links, key=lambda link: (not link.is_primary_contact, link.pk))
+    found = {}
+    for link in links:
+        if link.relationship in ("father", "mother") and link.guardian.phone:
+            found.setdefault(link.relationship, link.guardian.phone)
+    phones = [found[r] for r in ("father", "mother") if r in found]
+    if not phones:
+        phones = [link.guardian.phone for link in links if link.is_primary_contact and link.guardian.phone][:1]
+    return phones
+
+
 def _guardian_for(branch, role, person):
     """Brothers and sisters share one parent record: same mobile and same role (or same name)."""
     same_phone = Guardian.objects.filter(branch=branch, phone=person["phone"])

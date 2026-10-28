@@ -169,7 +169,7 @@ def sections(request):
             "branch": branch,
             "session": session,
             "rows": rows,
-            "campuses": Campus.objects.filter(branch=branch).order_by("name"),
+            "campuses": Campus.objects.filter(branch=branch),
             "no_teacher": sum(1 for r in rows if r.is_active and not r.class_teacher_id),
             "can": can,
         },

@@ -550,12 +550,21 @@ class Command(BaseCommand):
                 "ownership": Branch.Ownership.COMPANY,
                 "royalty_percent": 0,
                 "city": "Faisalabad",
-                "address": "Sanora Colony, Samanabad, Faisalabad, Pakistan",
-                "phone": "041-2660265, 041-2406479",
                 # Head office campus: certificate references read TAS-HO-FSD-0001 (project lead, 23 Oct 2026).
                 "is_head_office": True,
             },
         )
+        # Official contacts; filled only where empty, so changes made in Setup → Branches are kept.
+        samanabad = Branch.objects.get(code="fsd-samanabad")
+        contacts = {
+            "address": "Sanora Colony, Samanabad, Faisalabad, Pakistan",
+            "phone": "041-2660265",
+            "phone_2": "041-2406479",
+            "mobile_1": "0339-2406479",
+        }
+        empty = {k: v for k, v in contacts.items() if not getattr(samanabad, k)}
+        if empty:
+            Branch.objects.filter(pk=samanabad.pk).update(**empty)
 
         for code, name, name_ur, scopes, perm_names, mfa in ROLES:
             role, _ = Role.objects.update_or_create(

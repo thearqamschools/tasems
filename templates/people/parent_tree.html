@@ -1,0 +1,48 @@
+{% load static %}<!doctype html>
+{# Parent Tree slip for the 80 mm receipt printer (SPEEDX 400UL), like the old software's (project lead, 28 Oct 2026). English, as printed documents are. #}
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parent Tree · {{ student.father_name|default:student.full_name }}</title>
+<style>
+  @page { size: 80mm auto; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: #000; }
+  body { width: 80mm; padding: 3mm 4mm 6mm; font: 12px/1.35 "Noto Sans", Arial, sans-serif; }
+  .center { text-align: center; }
+  .logo { display: block; width: 22mm; height: 22mm; margin: 0 auto 2mm; filter: grayscale(1) contrast(1.4); }
+  .school { font-size: 16px; font-weight: 700; letter-spacing: .06em; }
+  .addr { font-size: 11px; }
+  .rule { border: 0; border-top: 1px dashed #000; margin: 2.5mm 0; }
+  .title { font-size: 13px; font-weight: 700; margin-bottom: 1mm; }
+  .meta { display: flex; justify-content: space-between; gap: 2mm; flex-wrap: wrap; font-size: 11.5px; }
+  .meta b { font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  th { text-align: start; font-weight: 700; padding: 0 1mm 1mm 0; border-bottom: 1px dashed #000; }
+  td { padding: 1.2mm 1mm 0 0; vertical-align: top; }
+  .num { font-variant-numeric: tabular-nums; }
+  .thanks { margin-top: 3mm; font-size: 10.5px; }
+  .no-print { margin: 4mm 0 0; font: 12px Arial, sans-serif; }
+  @media print { .no-print { display: none; } }
+</style>
+</head>
+<body>
+  <img class="logo" src="{% static 'img/arqam-logo-512.png' %}" alt="">
+  <div class="center school">THE ARQAM SCHOOLS</div>
+  {% if branch.address %}<div class="center addr">{{ branch.address }}</div>{% endif %}
+  {% if branch.contact_numbers %}<div class="center addr num">({{ branch.contact_numbers|join:", " }})</div>{% endif %}
+  <hr class="rule">
+  <div class="center title">Parent Tree</div>
+  <div class="meta"><span><b>Parent Name:</b> {{ student.father_name|default:"—" }}</span><span class="num"><b>Date:</b> {{ printed_at|date:"d/m/Y h:i A" }}</span></div>
+  <hr class="rule">
+  <table>
+    <thead><tr><th>Campus</th><th>Comp. Code</th><th>Student Name</th><th>Class</th><th>Section</th></tr></thead>
+    <tbody>{% for r in rows %}<tr><td>{{ r.campus|default:"—" }}</td><td class="num">{{ r.code }}</td><td>{{ r.name }}</td><td>{{ r.class|default:"—" }}</td><td>{{ r.section|default:"—" }}</td></tr>{% endfor %}</tbody>
+  </table>
+  <hr class="rule">
+  <div class="center thanks">— Thank you —</div>
+  <p class="no-print"><button type="button" onclick="window.print()">Print again</button></p>
+  <script src="{% static 'js/print-on-load.js' %}"></script>
+</body>
+</html>

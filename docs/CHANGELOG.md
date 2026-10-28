@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.36.0 — 2026-10-28 — Round 3: sections, campuses, Parent Tree slip (Windows installer v6)
+
+Changed
+- Setup → Classes and sections: separate columns **Class | Section | Boys / Girls | Campus**.
+- **Campus is required** for every section. Sections made before are placed automatically only when their branch
+  has one campus that fits; the others show "Choose a campus". A boys and girls section may be in the girls
+  (or boys) campus, as Play Group to Class 5 are; a boys section cannot be in a girls campus and the other way round.
+- "Boys and girls" is written **"Boys and Girls"**.
+- Campus lists show only the campus name, **Girls Campus first, then Boys Campus**.
+- Add / Edit student: the **Father email** field is removed (the student's Email stays; saved father emails are
+  kept).
+- Students list: **Parent mobile** shows the father's and the mother's mobile (Excel too).
+- Setup → Branches: **Phone 1, Phone 2, Mobile 1, Mobile 2** (with Address). Vouchers, family vouchers,
+  payslips, parent messages and the Parent Tree slip show the ones filled in. Samanabad: 041-2660265,
+  041-2406479, 0339-2406479.
+
+Added
+- **Parent Tree** slip for the 80 mm receipt printer (SPEEDX 400UL), like the old software's: logo, school,
+  address and phones, father's name, date and time, then Campus | Comp. Code | Student Name | Class | Section for the
+  child and every brother and sister still at school (same father CNIC). From the printer icon on each row of the
+  Students list, the icon by the student's name, or the **Parent Tree** button after Edit student. Only for
+  current students. One click opens the print window without leaving the page.
+- Demo: Girls Campus and Boys Campus in the demo branches.
+
 ## 0.35.1 — 2026-10-28 — Windows installer version numbers
 
 Changed

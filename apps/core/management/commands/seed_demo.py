@@ -23,7 +23,7 @@ from django.utils import timezone
 
 from apps.academics.models import ClassLevel, Section, Subject
 from apps.accounts.models import Role, RoleAssignment, Scope, User
-from apps.organisation.models import AcademicSession, Branch, HeadOffice, Region
+from apps.organisation.models import AcademicSession, Branch, Campus, HeadOffice, Region
 from apps.people.models import Enrolment, Guardian, Student, StudentGuardian
 
 PREFIX = "DEMO-"  # admission numbers of demos made before plain-number admission numbers
@@ -109,6 +109,7 @@ class Command(BaseCommand):
             )
         self.demo_banks()
         self.demo_director(password)
+        self.demo_campuses()
         if options["without_network"]:
             return
         if Branch.objects.filter(code__startswith="demo-").exists():
@@ -124,6 +125,25 @@ class Command(BaseCommand):
         self.demo_salaries()
         self.demo_stock()
         self.demo_hifz(password)
+        self.demo_campuses()
+
+    def demo_campuses(self):
+        """A girls campus and a boys campus in each demo branch; sections without a campus are placed as the branches
+        do: boys sections in the boys campus, the rest (Play Group to Class 5 and girls) in the girls campus."""
+        for branch in Branch.objects.filter(code__in=["fsd-samanabad"]) | Branch.objects.filter(
+            code__startswith="demo-"
+        ):
+            sections = Section.objects.filter(branch=branch, campus__isnull=True)
+            if not sections.exists():
+                continue
+            girls, _ = Campus.objects.get_or_create(
+                branch=branch, name="Girls Campus", defaults={"gender_group": Campus.GenderGroup.GIRLS}
+            )
+            boys, _ = Campus.objects.get_or_create(
+                branch=branch, name="Boys Campus", defaults={"gender_group": Campus.GenderGroup.BOYS}
+            )
+            sections.filter(gender_group=Section.GenderGroup.BOYS).update(campus=boys)
+            sections.exclude(gender_group=Section.GenderGroup.BOYS).update(campus=girls)
 
     def demo_salaries(self):
         """Fictional salaries for the demo staff (added once), so the Payroll page has something to show."""

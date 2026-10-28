@@ -110,7 +110,7 @@ def fill(body, row, branch, text="", today=None):
         "{months_due}": str(row["months_due"]),
         "{date}": ltr(f"{today:%d-%m-%Y}"),
         "{branch}": branch.name,
-        "{branch_phone}": ltr(branch.phone),
+        "{branch_phone}": ltr(", ".join(branch.contact_numbers)),
         "{text}": text,
     }
     for key, value in values.items():

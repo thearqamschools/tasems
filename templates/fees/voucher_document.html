@@ -12,7 +12,7 @@
         <div>
           <div class="name">THE ARQAM SCHOOLS</div>
           <div class="addr">{{ branch.address|default:branch.city }}</div>
-          {% if branch.phone %}<div class="addr">Ph: {{ branch.phone }}</div>{% endif %}
+          {% if branch.contact_numbers %}<div class="addr">Ph: {{ branch.contact_numbers|join:", " }}</div>{% endif %}
         </div>
       </div>
       <div class="mid">
@@ -103,7 +103,7 @@
   <div class="closing">
     {% if fs.back_footer_ur %}<div class="ur" lang="ur" dir="rtl">{{ fs.back_footer_ur }}</div>{% endif %}
     <p>The Arqam Schools, {{ branch.address|default:branch.city }}</p>
-    <p>{% if fs.receipt_whatsapp %}{{ fs.receipt_whatsapp }}{% endif %}{% if fs.receipt_whatsapp and branch.phone %} | {% endif %}{{ branch.phone }}</p>
+    <p>{% if fs.receipt_whatsapp %}{{ fs.receipt_whatsapp }}{% endif %}{% if fs.receipt_whatsapp and branch.contact_numbers %} | {% endif %}{{ branch.contact_numbers|join:", " }}</p>
   </div>
 </div>
 {% endif %}

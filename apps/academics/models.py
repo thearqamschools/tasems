@@ -79,7 +79,7 @@ class CurriculumSubject(TimeStampedModel):
 @audited
 class Section(BranchOwnedModel):
     class GenderGroup(models.TextChoices):
-        MIXED = "mixed", _("Boys and girls")
+        MIXED = "mixed", _("Boys and Girls")
         BOYS = "boys", _("Boys")
         GIRLS = "girls", _("Girls")
 
@@ -87,13 +87,17 @@ class Section(BranchOwnedModel):
     class_level = models.ForeignKey(ClassLevel, on_delete=models.PROTECT, related_name="sections")
     name = models.CharField(max_length=20, help_text=_("Usually Rose, Jasmine, Daisy, Pansy or Tulip"))
     gender_group = models.CharField(max_length=10, choices=GenderGroup.choices, default=GenderGroup.MIXED)
+    # Required on the form (project lead, 28 Oct 2026); empty only on sections made before that.
     campus = models.ForeignKey(
         "organisation.Campus",
         on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name="sections",
-        help_text=_("Building where this section studies. Leave empty if the branch has one building."),
+        help_text=_(
+            "Building where this section studies. Usually Play Group to Class 5 (boys and girls) study in the girls "
+            "campus; after that boys study in the boys campus and girls in the girls campus."
+        ),
     )
     class_teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="class_sections"
@@ -115,7 +119,12 @@ class Section(BranchOwnedModel):
         if self.campus_id and self.branch_id:
             if self.campus.branch_id != self.branch_id:
                 raise ValidationError({"campus": _("Campus belongs to a different branch.")})
-            if self.campus.gender_group != "mixed" and self.gender_group != self.campus.gender_group:
+            # Boys and girls sections may study in a girls or boys campus (e.g. Play Group to Class 5 in the girls
+            # campus); a boys-only section cannot be in a girls campus, and the other way round.
+            if (
+                "mixed" not in (self.campus.gender_group, self.gender_group)
+                and self.gender_group != self.campus.gender_group
+            ):
                 raise ValidationError(
                     {"campus": _("This campus is for %(g)s only.") % {"g": self.campus.get_gender_group_display()}}
                 )

@@ -229,6 +229,21 @@
   document.addEventListener("click", function (event) {
     if (event.target.closest("[data-print]")) window.print();
   });
+  // <a data-print-slip href="…">: the slip loads in a hidden frame and prints itself, without leaving the page.
+  document.addEventListener("click", function (event) {
+    var link = event.target.closest("a[data-print-slip]");
+    if (!link || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    event.preventDefault();
+    var old = document.getElementById("print-slip-frame");
+    if (old) old.remove();
+    var frame = document.createElement("iframe");
+    frame.id = "print-slip-frame";
+    frame.title = link.textContent.trim() || "Print";
+    frame.setAttribute("aria-hidden", "true");
+    frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0";
+    frame.src = link.href;
+    document.body.appendChild(frame);
+  });
   if (document.body.hasAttribute("data-autoprint")) {
     window.addEventListener("load", function () { window.print(); });
   }

@@ -51,7 +51,8 @@ python manage.py runserver                    # open http://127.0.0.1:8000
 Four classes (Play Group, Class 4-A, Class 6 Boys, Pre-9 Boys) with 32 made-up students and parents;
 last week's attendance for Class 4-A; today's diary; a published Mid-Term exam with marks; this
 month's fee vouchers with some payments; five staff members with a week of machine punches; four
-admission inquiries due today.
+admission inquiries due today. Each demo branch has a Girls Campus (Play Group to Class 5 and girls' sections)
+and a Boys Campus (boys' sections). Try Parent Tree on a student whose brother or sister is also listed.
 
 For head office there is also a fictional network: six "Demo Branch" campuses (FSD-1 to FSD-3 under
 Faisalabad, LHR-1 to LHR-3 under Lahore) in four demo regions, franchise and company-owned, each with

@@ -161,9 +161,9 @@ R2-7. Edit a voucher when receiving payment (from Pay / Vouchers): the person re
 - R2-12. Certificate reference number = branch start + unique number, e.g. HO-FAISALABAD-FSD-0001. Each branch's start is different and is set in Setup → Branches. Only the head office campus was given by the lead; other branches use their branch code until head office fills it in.
 - Asked: the cost of a private test server (answered in chat; nothing bought).
 
-## Round 3 (28 Oct 2026) — NOTED ONLY, not built yet
-The lead is listing changes one by one. **Build nothing until the lead says "haan ji, ab kar do"**, then all together
-(next Windows installer: v6).
+## Round 3 (28 Oct 2026) — built on 28 Oct 2026 (Windows installer v6)
+The lead listed the changes one by one and said "haan ji, ab kar do" the same day; all built together
+(CHANGELOG 0.36.0, D-090). R3-11 was withdrawn.
 
 ### Setup → Classes and sections
 - R3-1. The sections table shows the class and section together in one "Section" column. Split it into separate

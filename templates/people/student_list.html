@@ -38,7 +38,7 @@
 <div class="table-wrap"><table>
   <thead><tr>
     <th>{% trans "Admission no." %}</th><th>{% trans "Name" %}</th><th>{% trans "Father name" %}</th>
-    <th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Parent mobile" %}</th><th>{% trans "Status" %}</th>
+    <th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Parent mobile" %}</th><th>{% trans "Status" %}</th><th class="no-print">{% trans "Parent Tree" %}</th>
   </tr></thead>
   <tbody>
   {% for s in page.object_list %}
@@ -47,8 +47,9 @@
       <td><a href="{% url 'people:student_detail' s.pk %}">{{ s.full_name }}</a>{% if s.is_hifz %} <span class="badge">{% trans "Hifz" %}</span>{% endif %}</td>
       <td>{{ s.father_name|default:"—" }}</td>
       {% for e in s.current_enrolments %}<td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td>{% empty %}<td colspan="2"><span class="badge attention">{% trans "Not placed" %}</span></td>{% endfor %}
-      <td><span class="num">{% for l in s.primary_links %}{{ l.guardian.phone }}{% empty %}—{% endfor %}</span></td>
+      <td>{% for phone in s.parent_mobiles %}<span class="num" dir="ltr">{{ phone }}</span>{% if not forloop.last %}<br>{% endif %}{% empty %}—{% endfor %}</td>
       <td>{% if s.status == "active" %}<span class="badge">{{ s.get_status_display }}</span>{% else %}<span class="badge muted">{{ s.get_status_display }}</span>{% endif %}</td>
+      <td class="no-print">{% if s.status == "active" %}<a class="button quiet sm" data-print-slip href="{% url 'people:parent_tree' s.pk %}" title="{% trans 'Print Parent Tree' %}" aria-label="{% blocktrans with n=s.full_name %}Print Parent Tree for {{ n }}{% endblocktrans %}">{% icon "printer" %}</a>{% endif %}</td>
     </tr>
   {% endfor %}
   </tbody>

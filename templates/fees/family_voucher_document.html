@@ -19,7 +19,7 @@
         <div>
           <div class="name">THE ARQAM SCHOOLS</div>
           <div class="addr">{{ branch.address|default:branch.city }}</div>
-          {% if branch.phone %}<div class="addr">Ph: {{ branch.phone }}</div>{% endif %}
+          {% if branch.contact_numbers %}<div class="addr">Ph: {{ branch.contact_numbers|join:", " }}</div>{% endif %}
         </div>
       </div>
       <div class="mid">

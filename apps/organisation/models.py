@@ -75,7 +75,11 @@ class Branch(TimeStampedModel):
         _("head office campus"), default=False, help_text=_("Reference numbers use HO instead of the branch initials.")
     )
     address = models.TextField(blank=True)
-    phone = models.CharField(max_length=60, blank=True)
+    # Printed wherever the branch's contact is shown: vouchers, Parent Tree slips… (project lead, 28 Oct 2026)
+    phone = models.CharField(_("phone 1"), max_length=60, blank=True)
+    phone_2 = models.CharField(_("phone 2"), max_length=60, blank=True)
+    mobile_1 = models.CharField(_("mobile 1"), max_length=60, blank=True)
+    mobile_2 = models.CharField(_("mobile 2"), max_length=60, blank=True)
     reference_prefix = models.CharField(
         _("reference number start"),
         max_length=40,
@@ -98,6 +102,11 @@ class Branch(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def contact_numbers(self):
+        """Phone 1, Phone 2, Mobile 1, Mobile 2 — only those filled in."""
+        return [n for n in (self.phone, self.phone_2, self.mobile_1, self.mobile_2) if n.strip()]
 
     @property
     def certificate_prefix(self):
@@ -129,7 +138,7 @@ class Campus(TimeStampedModel):
     administration and fees stay with the branch."""
 
     class GenderGroup(models.TextChoices):
-        MIXED = "mixed", _("Boys and girls")
+        MIXED = "mixed", _("Boys and Girls")
         BOYS = "boys", _("Boys")
         GIRLS = "girls", _("Girls")
 
@@ -143,12 +152,17 @@ class Campus(TimeStampedModel):
     objects = BranchScopedQuerySet.as_manager()
 
     class Meta:
-        ordering = ["branch__name", "name"]
+        # Girls campus first, then boys (project lead, 28 Oct 2026).
+        ordering = [
+            "branch__name",
+            models.Case(models.When(gender_group="girls", then=0), models.When(gender_group="boys", then=1), default=2),
+            "name",
+        ]
         verbose_name_plural = "campuses"
         constraints = [models.UniqueConstraint(fields=["branch", "name"], name="unique_campus_name_per_branch")]
 
     def __str__(self):
-        return f"{self.branch} — {self.name}"
+        return self.name  # lists show only the campus name (project lead, 28 Oct 2026)
 
 
 @audited

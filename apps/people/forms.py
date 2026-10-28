@@ -26,7 +26,7 @@ SUBJECT_GROUP_CLASSES = {"pre-9", "class-9", "class-10"}
 SECTION_NAMES = ["Rose", "Jasmine", "Daisy", "Pansy", "Tulip"]
 TEL = {"inputmode": "tel", "dir": "ltr", "placeholder": "0300-1234567"}
 FAMILY = {
-    "father": ["name", "phone", "email", "occupation", "organisation"],
+    "father": ["name", "phone", "occupation", "organisation"],  # no father email: the student's Email is used
     "mother": ["name", "phone", "occupation", "organisation"],
     "guardian": ["name", "phone", "relation_detail", "occupation"],
 }
@@ -46,7 +46,6 @@ class StudentForm(forms.ModelForm):
 
     father_name = forms.CharField(max_length=150, label=_("Father name"))
     father_phone = forms.CharField(max_length=20, label=_("Father mobile / WhatsApp"), widget=forms.TextInput(TEL))
-    father_email = forms.EmailField(required=False, label=_("Father email"), widget=forms.EmailInput({"dir": "ltr"}))
     father_occupation = forms.CharField(max_length=100, required=False, label=_("Occupation"))
     father_organisation = forms.CharField(max_length=150, required=False, label=_("Organisation"))
     mother_name = forms.CharField(max_length=150, required=False, label=_("Mother name"))
@@ -171,7 +170,6 @@ class StudentForm(forms.ModelForm):
                 values = {
                     "name": g.full_name,
                     "phone": g.phone,
-                    "email": g.email,
                     "occupation": g.occupation,
                     "organisation": g.organisation,
                     # Older records marked the contact "Other": show that as the guardian's relationship.

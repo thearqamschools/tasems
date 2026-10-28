@@ -60,3 +60,9 @@ not reachable from other computers), GTK (for PDFs), waitress (web server). Buil
   address, dashboard, PDF made with the bundled GTK.
 - Not checkable without a Windows computer: the installer screens, shortcuts, and PostgreSQL's Windows
   programs (Wine cannot run them). The first install on a real computer is the final check.
+
+## Parent Tree slips on the receipt printer
+The slip is laid out for 80 mm paper. Install the receipt printer's Windows driver (SPEEDX 400UL: USB or LAN).
+Clicking Parent Tree opens the browser's print window; choose the receipt printer once and the browser remembers it.
+To print without the window (optional), start Chrome/Edge with `--kiosk-printing` and make the receipt printer the
+default printer; ordinary A4 pages then also go to that printer, so use this only on the computer kept for slips.

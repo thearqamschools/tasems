@@ -15,6 +15,7 @@ urlpatterns = [
     path("<int:pk>/", views.student_detail, name="student_detail"),
     path("<int:pk>/edit/", views.student_edit, name="student_edit"),
     path("<int:pk>/photo/", views.student_photo, name="student_photo"),
+    path("<int:pk>/parent-tree/", views.parent_tree, name="parent_tree"),
     path("<int:pk>/leave/", views.student_leave, name="student_leave"),
     path("<int:pk>/certificates/new/", views.certificate_new, name="certificate_new"),
     path("<int:pk>/certificates/<int:cert_id>.pdf", views.certificate_pdf, name="certificate_pdf"),

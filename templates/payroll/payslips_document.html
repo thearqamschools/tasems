@@ -26,7 +26,7 @@
 <body>
 {% for p in slips %}<div class="slip">
   <div class="head"><img src="{% official_logo layout media_base font_base %}" alt="">
-    <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}{% if branch.phone %} · {{ branch.phone }}{% endif %}</div></div>
+    <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}{% if branch.contact_numbers %} · {{ branch.contact_numbers|join:", " }}{% endif %}</div></div>
     <div class="title"><b>PAYSLIP</b>{{ run.month|date:"F Y" }}</div></div>
   <div class="who">
     <div>Name: <b>{{ p.employee.full_name }}</b></div><div>Employee code: <b>{{ p.employee.code }}</b></div>

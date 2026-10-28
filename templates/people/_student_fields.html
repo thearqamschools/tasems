@@ -18,7 +18,7 @@
   </div></fieldset>
   <fieldset><legend>{% trans "Family details" %}</legend>
     <h3 class="family-title">{% trans "Father" %}</h3>
-    <div class="form-grid">{% for name in "father_name father_phone father_email father_occupation father_organisation"|split %}{% with field=form|field:name %}{% include "includes_field.html" %}{% endwith %}{% endfor %}</div>
+    <div class="form-grid">{% for name in "father_name father_phone father_occupation father_organisation"|split %}{% with field=form|field:name %}{% include "includes_field.html" %}{% endwith %}{% endfor %}</div>
     <h3 class="family-title">{% trans "Mother" %}</h3>
     <div class="form-grid">{% for name in "mother_name mother_phone mother_occupation mother_organisation"|split %}{% with field=form|field:name %}{% include "includes_field.html" %}{% endwith %}{% endfor %}</div>
     <h3 class="family-title">{% trans "Guardian" %}</h3>

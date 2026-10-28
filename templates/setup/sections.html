@@ -10,11 +10,12 @@
 {% if no_teacher %}<div class="callout attention">{% icon "triangle-alert" %}<div><p>{% blocktrans count n=no_teacher %}{{ n }} section has no class teacher. Without one, only the principal or academic coordinator can take its register or write its diary.{% plural %}{{ n }} sections have no class teacher. Without one, only the principal or academic coordinator can take their registers or write their diaries.{% endblocktrans %}</p></div></div>{% endif %}
 {% if rows %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Section" %}</th><th>{% trans "Boys / girls" %}</th><th>{% trans "Campus" %}</th><th>{% trans "Class teacher" %}</th><th class="num">{% trans "Students" %}</th><th class="num">{% trans "Capacity" %}</th><th></th></tr></thead>
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Boys / Girls" %}</th><th>{% trans "Campus" %}</th><th>{% trans "Class teacher" %}</th><th class="num">{% trans "Students" %}</th><th class="num">{% trans "Capacity" %}</th><th></th></tr></thead>
   <tbody>{% for s in rows %}<tr{% if not s.is_active %} class="muted"{% endif %}>
-    <td>{{ s }}{% if not s.is_active %} <span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td>
+    <td>{{ s.class_level }}</td>
+    <td>{{ s.name }}{% if not s.is_active %} <span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td>
     <td>{{ s.get_gender_group_display }}</td>
-    <td>{{ s.campus.name|default:"—" }}</td>
+    <td>{% if s.campus %}{{ s.campus.name }}{% else %}<span class="badge attention">{% trans "Choose a campus" %}</span>{% endif %}</td>
     <td>{% if s.class_teacher %}{{ s.class_teacher.get_full_name|default:s.class_teacher.username }}{% else %}<span class="badge attention">{% trans "None" %}</span>{% endif %}</td>
     <td class="num">{{ s.students }}</td>
     <td class="num">{% if s.capacity %}{% if s.students > s.capacity %}<span class="badge danger">{{ s.capacity }}</span>{% else %}{{ s.capacity }}{% endif %}{% else %}—{% endif %}</td>
@@ -24,10 +25,10 @@
 {% elif session %}<div class="card empty-state">{% icon "users" %}<p>{% trans "No sections for this session yet." %}</p>{% if can.add %}<div class="actions"><a class="button" href="{% url 'setup:section_new' %}">{% trans "Add a section" %}</a></div>{% endif %}</div>{% endif %}
 
 <h2>{% trans "Campuses" %}</h2>
-<p class="muted">{% trans "Separate buildings of this branch, e.g. a boys campus and a girls campus. A section placed in a campus must match its boys/girls group." %}</p>
+<p class="muted">{% trans "Separate buildings of this branch, e.g. a boys campus and a girls campus. Every section is placed in a campus. Usually Play Group to Class 5 (boys and girls) study in the girls campus; after that boys study in the boys campus and girls in the girls campus." %}</p>
 {% if campuses %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Campus" %}</th><th>{% trans "Boys / girls" %}</th><th>{% trans "Address" %}</th><th></th></tr></thead>
+  <thead><tr><th>{% trans "Campus" %}</th><th>{% trans "Boys / Girls" %}</th><th>{% trans "Address" %}</th><th></th></tr></thead>
   <tbody>{% for c in campuses %}<tr><td>{{ c.name }}{% if not c.is_active %} <span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td><td>{{ c.get_gender_group_display }}</td><td>{{ c.address|default:"—" }}</td><td>{% if can.campus %}<a class="button quiet sm" href="{% url 'setup:campus_edit' c.id %}">{% trans "Edit" %}</a>{% endif %}</td></tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<p class="muted">{% trans "No separate campuses: all sections are in one building." %}</p>{% endif %}

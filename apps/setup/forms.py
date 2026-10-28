@@ -19,7 +19,7 @@ LTR = forms.TextInput(attrs={"dir": "ltr"})
 LABELS = {
     "class_level": _("Class"),
     "name": _("Name"),
-    "gender_group": _("Boys / girls"),
+    "gender_group": _("Boys / Girls"),
     "campus": _("Campus"),
     "class_teacher": _("Class teacher"),
     "capacity": _("Capacity"),
@@ -105,6 +105,11 @@ class SectionForm(Labelled, forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.branch, self.instance.session = branch, session
         self.fields["campus"].queryset = Campus.objects.filter(branch=branch, is_active=True)
+        self.fields["campus"].required = True  # project lead, 28 Oct 2026
+        if not self.fields["campus"].queryset.exists():
+            self.fields["campus"].help_text = _(
+                "This branch has no campus yet. Add one first (Setup → Classes and sections → Add a campus)."
+            )
         self.fields["class_teacher"].queryset = staff_of(branch)
         self.fields["class_teacher"].label_from_instance = lambda u: u.get_full_name() or u.username
 
@@ -247,12 +252,18 @@ class BranchForm(Labelled, forms.ModelForm):
             "is_head_office",
             "address",
             "phone",
+            "phone_2",
+            "mobile_1",
+            "mobile_2",
             "reference_prefix",
             "is_active",
         ]
         widgets = {
             "code": LTR,
             "phone": LTR,
+            "phone_2": LTR,
+            "mobile_1": LTR,
+            "mobile_2": LTR,
             "reference_prefix": LTR,
             "city_code": LTR,
             "address": forms.Textarea(attrs={"rows": 2}),
@@ -262,6 +273,10 @@ class BranchForm(Labelled, forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["head_office"].queryset = HeadOffice.objects.filter(id__in=[h.id for h in head_offices])
         self.fields["region"].queryset = Region.objects.filter(head_office__in=head_offices, is_active=True)
+        # Printed on vouchers and Parent Tree slips; only the ones filled in are shown.
+        for name, label in (("phone", _("Phone 1")), ("phone_2", _("Phone 2")), ("mobile_1", _("Mobile 1")),
+                            ("mobile_2", _("Mobile 2"))):  # fmt: skip
+            self.fields[name].label = label
 
     def clean(self):
         data = super().clean()
