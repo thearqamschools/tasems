@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.38.1 — 2026-10-28 — Parent Tree header (Windows installer v9)
+
+Changed
+- Parent Tree slip: a smaller logo with **THE ARQAM SCHOOLS** beside it on one line (project lead, after the first
+  real prints on the SPEEDX printer). The rest of the slip is unchanged.
+
 ## 0.38.0 — 2026-10-28 — Find the receipt printer (Windows installer v8)
 
 Added

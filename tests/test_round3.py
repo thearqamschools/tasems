@@ -92,7 +92,7 @@ def test_parent_tree_prints_straight_to_the_network_printer(school, make_user, l
     answer = client.post(url, **json)
     thread.join(5)
     assert answer.json() == {"ok": True, "message": "Parent Tree printed: 2 students."}
-    assert b"THE ARQAM SCHOOLS" in got and b"Ifrah" in got and b"Haniya" in got and b"Left" not in got
+    assert b"\x1dv0" in got and b"Parent Tree" in got and b"Ifrah" in got and b"Haniya" in got and b"Left" not in got
     assert b"041-2660265" in got and got.endswith(b"\x1dVB\x00")  # paper cut at the end
     back = client.post(url, {"next": "/students/"})  # without JavaScript: back to the list with a note
     assert back.status_code == 302 and back.url == "/students/"

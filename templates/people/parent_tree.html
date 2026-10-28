@@ -11,7 +11,8 @@
   html, body { margin: 0; background: #fff; color: #000; }
   body { width: 80mm; padding: 3mm 4mm 6mm; font: 12px/1.35 "Noto Sans", Arial, sans-serif; }
   .center { text-align: center; }
-  .logo { display: block; width: 22mm; height: 22mm; margin: 0 auto 2mm; filter: grayscale(1) contrast(1.4); }
+  .head { display: flex; align-items: center; justify-content: center; gap: 2.5mm; margin-bottom: 1.5mm; }
+  .logo { width: 13mm; height: 13mm; filter: grayscale(1) contrast(1.4); }
   .school { font-size: 16px; font-weight: 700; letter-spacing: .06em; }
   .addr { font-size: 11px; }
   .rule { border: 0; border-top: 1px dashed #000; margin: 2.5mm 0; }
@@ -28,8 +29,7 @@
 </style>
 </head>
 <body>
-  <img class="logo" src="{% static 'img/arqam-logo-512.png' %}" alt="">
-  <div class="center school">THE ARQAM SCHOOLS</div>
+  <div class="head"><img class="logo" src="{% static 'img/arqam-logo-512.png' %}" alt=""><span class="school">THE ARQAM SCHOOLS</span></div>
   {% if branch.address %}<div class="center addr">{{ branch.address }}</div>{% endif %}
   {% if branch.contact_numbers %}<div class="center addr num">({{ branch.contact_numbers|join:", " }})</div>{% endif %}
   <hr class="rule">

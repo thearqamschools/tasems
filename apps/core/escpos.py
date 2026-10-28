@@ -58,18 +58,17 @@ def columns(values, widths):
     return out
 
 
-@cache
-def logo_raster(width=192):
-    """The official logo as a black-and-white raster image (GS v 0), cached."""
-    path = Path(settings.BASE_DIR) / "static" / "img" / "arqam-logo-512.png"
-    image = Image.open(path).convert("RGBA")
-    background = Image.new("RGBA", image.size, "white")
-    image = Image.alpha_composite(background, image).convert("L").resize((width, width))
-    image = image.point(lambda p: 0 if p < 140 else 255, "1")
+DOTS = 576  # printable width of 80 mm paper at 203 dpi
+
+
+def raster(image):
+    """A black-and-white PIL image as an ESC/POS raster image (GS v 0)."""
+    image = image.convert("1")
+    width, height = image.size
     row_bytes = (width + 7) // 8
     data = bytearray()
     pixels = image.load()
-    for y in range(width):
+    for y in range(height):
         for xb in range(row_bytes):
             byte = 0
             for bit in range(8):
@@ -77,14 +76,38 @@ def logo_raster(width=192):
                 if x < width and pixels[x, y] == 0:
                     byte |= 0x80 >> bit
             data.append(byte)
-    return GS + b"v0\x00" + bytes([row_bytes % 256, row_bytes // 256, width % 256, width // 256]) + bytes(data)
+    size = bytes([row_bytes % 256, row_bytes // 256, height % 256, height // 256])
+    return GS + b"v0\x00" + size + bytes(data)
+
+
+@cache
+def header_raster(logo_size=104):
+    """Small logo with THE ARQAM SCHOOLS beside it, on one line (project lead, 28 Oct 2026), cached."""
+    from PIL import ImageDraw, ImageFont
+
+    static = Path(settings.BASE_DIR) / "static"
+    logo = Image.open(static / "img" / "arqam-logo-512.png").convert("RGBA")
+    logo = Image.alpha_composite(Image.new("RGBA", logo.size, "white"), logo).convert("L")
+    logo = logo.resize((logo_size, logo_size)).point(lambda p: 0 if p < 140 else 255)
+    title, gap = "THE ARQAM SCHOOLS", 14
+    size = 40
+    font = ImageFont.truetype(str(static / "fonts" / "NotoSans-Bold.ttf"), size)
+    while font.getlength(title) > DOTS - logo_size - gap - 8 and size > 20:
+        size -= 1
+        font = ImageFont.truetype(str(static / "fonts" / "NotoSans-Bold.ttf"), size)
+    text_width = int(font.getlength(title))
+    canvas = Image.new("L", (DOTS, logo_size), 255)
+    left = (DOTS - (logo_size + gap + text_width)) // 2
+    canvas.paste(logo, (left, 0))
+    top = (logo_size - (font.getbbox(title)[3] + font.getbbox(title)[1])) // 2
+    ImageDraw.Draw(canvas).text((left + logo_size + gap, top), title, font=font, fill=0)
+    return raster(canvas.point(lambda p: 0 if p < 128 else 255))
 
 
 def parent_tree(branch, father_name, printed_at, rows):
     """The Parent Tree slip as ESC/POS bytes (same content as the on-screen slip)."""
     dash = line("-" * WIDTH)
-    out = INIT + CENTER + logo_raster() + b"\n"
-    out += BOLD_ON + BIG + line("THE ARQAM SCHOOLS") + NORMAL + BOLD_OFF
+    out = INIT + CENTER + header_raster() + b"\n"
     if branch.address:
         out += line(branch.address)
     if branch.contact_numbers:
