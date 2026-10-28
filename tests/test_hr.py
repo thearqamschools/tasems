@@ -279,3 +279,23 @@ def test_staff_form_designations_cv_and_privacy(hr, login_as, make_user, org, tm
     assert client.get(f"/staff/{e.id}/cv/").status_code == 200
     outsider = login_as(make_user("principal", Scope.BRANCH, org["fsd_franchise"]))
     assert outsider.get(f"/staff/{e.id}/cv/").status_code in (403, 404)
+
+
+def test_staff_import_keeps_numbers_and_can_leave_out_impossible_rows(hr, login_as):
+    wb = Workbook()
+    wb.active.append(
+        ["Employee Code *", "Full Name *", "Gender *", "Designation *", "Staff Type *", "Joining Date *", "Mobile"]
+    )
+    wb.active.append(["S-1", "Qari Sahib", "Male", "Hifz Teacher", "Qari", "01/04/2020", "041-2660265"])
+    wb.active.append(["S-2", "Guard", "M", "Guard", "Support", "not a date", ""])
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    buf.name = "staff.xlsx"
+    client = login_as(hr["principal"])
+    page = client.post("/staff/import/", {"step": "check", "file": buf})
+    body = page.content.decode()
+    assert "Imported as written" in body and "Skip the problems and import 1 staff member" in body
+    client.post("/staff/import/", {"step": "import", "token": page.context["token"], "skip": "1"})
+    qari = Employee.objects.get(code="S-1")
+    assert qari.alt_phone == "041-2660265" and not Employee.objects.filter(code="S-2").exists()

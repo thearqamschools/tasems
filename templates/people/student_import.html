@@ -2,10 +2,11 @@
 {% block title %}{% trans "Import students from Excel" %}{% endblock %}
 {% block content %}
 <h1>{% trans "Import students from Excel" %}</h1>
-<p class="lede">{% blocktrans %}Fill the template, then check it here. Nothing is saved until every row is correct; then all rows are saved together. Up to {{ max_rows }} students per file.{% endblocktrans %}</p>
+<p class="lede">{% blocktrans %}Fill the template, then check it here. Nothing is saved until you choose to import: all rows together, or only the rows without problems. Up to {{ max_rows }} students per file.{% endblocktrans %}</p>
 
 {% if not session %}<ul class="messages"><li class="warning">{% trans "No current academic session is set. Ask head office to set it before importing." %}</li></ul>{% endif %}
 
+{% if result %}{% include "includes_import_notes.html" %}{% endif %}
 {% if result and result.ok %}
 <div class="card">
   <h2 style="margin-top:0">{% blocktrans count n=result.rows|length %}{{ n }} student is ready to import{% plural %}{{ n }} students are ready to import{% endblocktrans %}</h2>
@@ -31,6 +32,16 @@
       <tbody>{% for row, col, msg in shown_errors %}<tr><td class="num">{{ row|default:"—" }}</td><td>{{ col|default:"—" }}</td><td>{{ msg }}</td></tr>{% endfor %}</tbody>
     </table></div>
     {% if result.errors|length > shown_errors|length %}<p class="muted">{% trans "Only the first 300 problems are shown." %}</p>{% endif %}
+  </div>
+  {% endif %}
+  {% if token and skip_count %}
+  <div class="card" style="margin-bottom:1rem">
+    <h2 style="margin-top:0">{% trans "Or import the rows without problems" %}</h2>
+    <p>{% blocktrans count n=skip_count %}{{ n }} row with a problem will be left out; fix it in the file and import it later.{% plural %}{{ n }} rows with problems will be left out; fix them in the file and import them later.{% endblocktrans %}</p>
+    <form method="post" data-confirm="{% trans 'The rows with problems are left out and not imported. You can correct them later and import them again.' %}" data-confirm-button="{% trans 'Import the rest' %}">{% csrf_token %}
+      <input type="hidden" name="step" value="import"><input type="hidden" name="token" value="{{ token }}"><input type="hidden" name="skip" value="1">
+      <button class="button" type="submit">{% blocktrans count n=keep_count %}Skip the problems and import {{ n }} student{% plural %}Skip the problems and import {{ n }} students{% endblocktrans %}</button>
+    </form>
   </div>
   {% endif %}
   <form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}

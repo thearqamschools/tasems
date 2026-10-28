@@ -10,7 +10,7 @@ from django.utils.translation import gettext as _
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, PatternFill
 
-from apps.core.phone import normalize_cnic, normalize_mobile
+from apps.core.phone import first_mobile, normalize_cnic
 
 from .models import Employee
 
@@ -104,10 +104,34 @@ def template_workbook():
 class Result:
     rows: list = field(default_factory=list)
     errors: list = field(default_factory=list)  # (row, column, message)
+    numbers: list = field(default_factory=list)  # the Excel row number of each entry in rows
+    warnings: list = field(default_factory=list)  # imported anyway, as written or left empty
 
     @property
     def ok(self):
         return not self.errors and bool(self.rows)
+
+    @property
+    def problem_rows(self):
+        return sorted({n for n, _c, _m in self.errors if n is not None})
+
+    @property
+    def can_skip(self):
+        bad = set(self.problem_rows)
+        return (
+            bool(self.errors)
+            and all(n is not None for n, _c, _m in self.errors)
+            and any(n not in bad for n in self.numbers)
+        )
+
+    def without_problem_rows(self):
+        bad = set(self.problem_rows)
+        keep = [(d, n) for d, n in zip(self.rows, self.numbers, strict=True) if n not in bad]
+        return Result(
+            rows=[d for d, _n in keep],
+            numbers=[n for _d, n in keep],
+            warnings=[w for w in self.warnings if w[0] not in bad],
+        )
 
 
 def check(content, *, branch):
@@ -146,6 +170,9 @@ def check(content, *, branch):
         def err(col, msg, _n=number):
             result.errors.append((_n, headers[col], msg))
 
+        def warn(col, msg, _n=number):
+            result.warnings.append((_n, headers[col], msg))
+
         for k, _h, required in COLUMNS:
             if required and k != "joined_on" and not d[k]:
                 err(k, _("Required"))
@@ -170,13 +197,17 @@ def check(content, *, branch):
             if d["staff_type"] is None:
                 err("staff_type", _("Use Teacher, Hifz, Admin or Support"))
         if d["cnic"]:
+            given = str(d["cnic"])[:30]
             d["cnic"] = normalize_cnic(d["cnic"]) or ""
             if not d["cnic"]:
-                err("cnic", _("A CNIC has 13 digits"))
+                warn("cnic", _("A CNIC has 13 digits: «%(value)s». Left empty") % {"value": given})
         if d["phone"]:
-            d["phone"] = normalize_mobile(d["phone"]) or ""
+            given = re.sub(r"\s+", " ", str(d["phone"])).strip()[:20]
+            d["phone"] = first_mobile(d["phone"]) or ""
             if not d["phone"]:
-                err("phone", _("Not a Pakistani mobile number"))
+                # Imported as written, in "other phone" (the mobile field holds 11 digits only).
+                d["alt_phone"] = given
+                warn("phone", _("Not a Pakistani mobile number: «%(value)s». Imported as written") % {"value": given})
         try:
             d["joined_on"] = _date(raw.get("joined_on"))
             if d["joined_on"] is None:
@@ -185,6 +216,7 @@ def check(content, *, branch):
             d["joined_on"] = None
             err("joined_on", _("Not a date. Use day/month/year, e.g. 01/04/2020"))
         result.rows.append(d)
+        result.numbers.append(number)
     if not result.rows and not result.errors:
         result.errors.append((None, "", _("The file has no staff rows.")))
     return result

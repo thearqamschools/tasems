@@ -21,7 +21,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, PatternFill
 
 from apps.academics.models import ClassLevel, Section
-from apps.core.phone import normalize_cnic, normalize_mobile
+from apps.core.phone import first_mobile, normalize_cnic, normalize_mobile
 
 from .models import Student, StudentGuardian
 from .services import save_student
@@ -150,11 +150,39 @@ class CheckResult:
     defaulted_admission_dates: int = 0
     rows: list = field(default_factory=list)
     errors: list = field(default_factory=list)  # (row number or None, column header or "", message)
+    # Imported anyway, as written or left empty (project lead, 28 Oct 2026): same shape as errors.
+    warnings: list = field(default_factory=list)
     new_sections: list = field(default_factory=list)  # (level, name, gender_group)
 
     @property
     def ok(self):
         return not self.errors and bool(self.rows)
+
+    @property
+    def problem_rows(self):
+        return sorted({n for n, _c, _m in self.errors if n is not None})
+
+    @property
+    def can_skip(self):
+        """Problems only in some rows (none about the whole file), and other rows are fine to import."""
+        bad = set(self.problem_rows)
+        return (
+            bool(self.errors)
+            and all(n is not None for n, _c, _m in self.errors)
+            and any(r.number not in bad for r in self.rows)
+        )
+
+    def without_problem_rows(self):
+        """The same check with the rows that have problems left out (they are not imported)."""
+        bad = set(self.problem_rows)
+        rows = [r for r in self.rows if r.number not in bad]
+        used = {(r.level.id, r.data["section"].lower()) for r in rows if r.level}
+        return CheckResult(
+            defaulted_admission_dates=self.defaulted_admission_dates,
+            rows=rows,
+            warnings=[w for w in self.warnings if w[0] not in bad],
+            new_sections=[s for s in self.new_sections if (s[0].id, s[1].lower()) in used],
+        )
 
 
 def template_workbook():
@@ -328,6 +356,9 @@ def check(file_bytes, *, branch, session):
         def err(column, message, _number=number, _errors=errors):
             _errors.append((_number, headers[column], message))
 
+        def warn(column, message, _number=number):
+            result.warnings.append((_number, headers[column], message))
+
         for key, _h, required in COLUMNS:
             if key in ("date_of_birth", "admission_date"):
                 continue
@@ -354,29 +385,35 @@ def check(file_bytes, *, branch, session):
                 data[key] = parse_date(raw.get(key))
             except ValueError:
                 data[key] = None
-                err(key, _("Not a date. Use day/month/year, e.g. 15/04/2026"))
-            else:
-                if key == "admission_date" and data[key] is None:
-                    # Not in the old software's report: the session's first day, to correct later.
-                    data[key] = session.starts_on
-                    result.defaulted_admission_dates += 1
+                warn(key, _("Not a date: «%(value)s». Left empty; correct it on the student's page") % {
+                    "value": str(raw.get(key))[:40]})  # fmt: skip
+            if key == "admission_date" and data[key] is None:
+                # Not in the old software's report: the session's first day, to correct later.
+                data[key] = session.starts_on
+                result.defaulted_admission_dates += 1
         if data.get("date_of_birth") and data["date_of_birth"] > dt.date.today():
-            err("date_of_birth", _("Date of birth is in the future"))
+            warn("date_of_birth", _("Date of birth is in the future. Left empty; correct it on the student's page"))
+            data["date_of_birth"] = None
 
         level = classes.get(_key(data["class"])) if data["class"] else None
         if data["class"] and level is None:
             err("class", _("Unknown class. See the 'How to fill' sheet"))
 
         if data["guardian_phone"]:
-            phone = normalize_mobile(data["guardian_phone"])
+            phone = first_mobile(data["guardian_phone"])
             if phone is None:
-                err("guardian_phone", _("Not a Pakistani mobile number"))
+                # Imported as written (project lead, 28 Oct 2026): any number is kept.
+                phone = re.sub(r"\s+", " ", str(data["guardian_phone"])).strip()[:20]
+                warn("guardian_phone", _("Not a Pakistani mobile number: «%(value)s». Imported as written") % {
+                    "value": phone})  # fmt: skip
             data["guardian_phone"] = phone
 
         relationship = data.get("relationship", "").lower()
         data["relationship"] = RELATIONSHIPS.get(relationship, "guardian" if not relationship else None)
         if data["relationship"] is None:
-            err("relationship", _("Use Father, Mother, Guardian or Other"))
+            warn("relationship", _("«%(value)s» is not Father, Mother, Guardian or Other. Imported as Guardian") % {
+                "value": relationship})  # fmt: skip
+            data["relationship"] = "guardian"
         data["is_hifz"] = data.get("is_hifz", "").lower() in YES
         fee = data.get("monthly_fee", "").replace(",", "")
         if fee:
@@ -385,14 +422,15 @@ def check(file_bytes, *, branch, session):
                 if data["monthly_fee"] < 0:
                     raise ValueError
             except ValueError:
-                err("monthly_fee", _("Not an amount"))
+                warn("monthly_fee", _("Not an amount: «%(value)s». Left empty") % {"value": fee[:20]})
                 data["monthly_fee"] = None
         else:
             data["monthly_fee"] = None
         if data.get("father_cnic"):
             cnic = normalize_cnic(data["father_cnic"])
             if cnic is None:
-                err("father_cnic", _("A CNIC has 13 digits, e.g. 33100-1234567-1"))
+                warn("father_cnic", _("A CNIC has 13 digits: «%(value)s». Left empty") % {
+                    "value": str(data["father_cnic"])[:30]})  # fmt: skip
             data["father_cnic"] = cnic or ""
         if not data.get("father_name") and data["relationship"] == "father":
             data["father_name"] = data["guardian_name"]

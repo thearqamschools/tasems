@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 14:31+0500\n"
+"POT-Creation-Date: 2026-10-28 12:05+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,7 +146,7 @@ msgstr "لڑکے اور لڑکیاں"
 
 #: apps/academics/models.py:83 apps/organisation/models.py:133
 #: apps/reports/catalogue.py:47 apps/reports/views.py:77
-#: templates/people/student_import.html:15
+#: templates/people/student_import.html:16
 #: templates/reports/class_strength.html:11
 #: templates/reports/class_strength.html:17
 msgid "Boys"
@@ -154,7 +154,7 @@ msgstr "لڑکے"
 
 #: apps/academics/models.py:84 apps/organisation/models.py:134
 #: apps/reports/catalogue.py:48 apps/reports/views.py:77
-#: templates/people/student_import.html:15
+#: templates/people/student_import.html:16
 #: templates/reports/class_strength.html:12
 #: templates/reports/class_strength.html:17
 msgid "Girls"
@@ -646,7 +646,7 @@ msgid "All my branches"
 msgstr "میری تمام برانچیں"
 
 #: apps/accounts/context_processors.py:65
-#: apps/accounts/context_processors.py:67 apps/people/views.py:96
+#: apps/accounts/context_processors.py:67 apps/people/views.py:97
 #: apps/reports/catalogue.py:66 templates/academics/holidays.html:24
 #: templates/hifz/index.html:21 templates/people/promotion.html:17
 #: templates/people/student_list.html:2 templates/people/student_list.html:5
@@ -977,7 +977,7 @@ msgstr "فالو اپ کرنے والا"
 msgid "Enter a Pakistani mobile number, e.g. 0300-1234567."
 msgstr "پاکستانی موبائل نمبر درج کریں، مثلاً 0300-1234567۔"
 
-#: apps/admissions/forms.py:67 apps/people/importer.py:364
+#: apps/admissions/forms.py:67
 msgid "Date of birth is in the future"
 msgstr "تاریخ پیدائش آنے والے وقت کی ہے"
 
@@ -992,7 +992,7 @@ msgstr "کیا ہوا"
 #: templates/attendance/_people.html:3 templates/attendance/take.html:20
 #: templates/core/design_system.html:80 templates/fees/student.html:71
 #: templates/hr/_days.html:3 templates/hr/day.html:20
-#: templates/inventory/item.html:20
+#: templates/includes_import_notes.html:7 templates/inventory/item.html:20
 msgid "Note"
 msgstr "نوٹ"
 
@@ -1235,7 +1235,7 @@ msgstr ""
 
 #: apps/attendance/views.py:186 apps/fees/views.py:263 apps/hifz/views.py:152
 #: apps/hr/views.py:87 apps/inventory/views.py:319 apps/people/forms.py:109
-#: apps/people/views.py:98 apps/reports/views.py:114
+#: apps/people/views.py:99 apps/reports/views.py:114
 #: templates/admissions/index.html:33 templates/admissions/index.html:41
 #: templates/core/design_system.html:56 templates/fees/concessions.html:23
 #: templates/fees/family_vouchers.html:21 templates/fees/student.html:36
@@ -1253,7 +1253,7 @@ msgstr "حیثیت"
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/fees/views.py:838 apps/hifz/views.py:214
 #: apps/insights/views.py:46 apps/inventory/views.py:318
-#: apps/people/views.py:97 apps/reports/views.py:113
+#: apps/people/views.py:98 apps/reports/views.py:113
 #: templates/exams/award_list.html:15 templates/fees/find.html:6
 #: templates/fees/student.html:5 templates/hifz/student.html:6
 #: templates/inventory/receipt.html:14 templates/parents/child.html:6
@@ -1266,7 +1266,7 @@ msgstr "داخلہ نمبر"
 
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/hifz/views.py:214
 #: apps/hr/views.py:86 apps/insights/views.py:46 apps/payroll/views.py:64
-#: apps/payroll/views.py:71 apps/people/views.py:97 apps/reports/views.py:113
+#: apps/payroll/views.py:71 apps/people/views.py:98 apps/reports/views.py:113
 #: apps/setup/forms.py:21 apps/setup/forms.py:227
 #: templates/exams/award_list.html:15 templates/hifz/report.html:14
 #: templates/hr/day.html:20 templates/hr/index.html:39
@@ -1283,7 +1283,7 @@ msgstr "نام"
 
 #: apps/attendance/views.py:186 apps/fees/forms.py:40 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/insights/views.py:46 apps/inventory/views.py:55
-#: apps/notices/views.py:151 apps/people/forms.py:44 apps/people/views.py:97
+#: apps/notices/views.py:151 apps/people/forms.py:44 apps/people/views.py:98
 #: apps/reports/views.py:77 apps/reports/views.py:113 apps/reports/views.py:136
 #: apps/setup/forms.py:20 templates/academics/index.html:17
 #: templates/admissions/index.html:31 templates/admissions/index.html:41
@@ -1307,7 +1307,7 @@ msgid "Class"
 msgstr "جماعت"
 
 #: apps/attendance/views.py:186 apps/fees/forms.py:41 apps/people/forms.py:45
-#: apps/people/views.py:97 apps/reports/views.py:77 apps/reports/views.py:114
+#: apps/people/views.py:98 apps/reports/views.py:77 apps/reports/views.py:114
 #: apps/reports/views.py:136 templates/attendance/_people.html:3
 #: templates/attendance/absentees.html:15 templates/attendance/today.html:41
 #: templates/diary/day.html:29 templates/exams/index.html:27
@@ -1714,7 +1714,7 @@ msgstr "رول نمبر"
 
 #: apps/exams/views.py:419 apps/fees/views.py:262 apps/fees/views.py:790
 #: apps/fees/views.py:838 apps/hr/forms.py:49 apps/people/forms.py:47
-#: apps/people/views.py:97 apps/reports/views.py:113
+#: apps/people/views.py:98 apps/reports/views.py:113
 #: templates/exams/award_list.html:15 templates/fees/collections.html:18
 #: templates/hr/employee.html:13 templates/people/student_list.html:40
 #: templates/reports/new_admissions.html:18
@@ -1735,7 +1735,7 @@ msgstr "کل نمبر"
 msgid "Family of %(f)s"
 msgstr "%(f)s کا خاندان"
 
-#: apps/fees/exchange.py:171 apps/hr/importer.py:119 apps/hr/services.py:409
+#: apps/fees/exchange.py:171 apps/hr/importer.py:143 apps/hr/services.py:409
 msgid ""
 "This file could not be opened. Save it as an Excel .xlsx file and try again."
 msgstr ""
@@ -2348,7 +2348,7 @@ msgstr ""
 msgid "Someone else must approve a discount you asked for."
 msgstr "آپ کی مانگی ہوئی رعایت کوئی دوسرا منظور کرے گا۔"
 
-#: apps/fees/views.py:712 apps/hr/views.py:385
+#: apps/fees/views.py:712 apps/hr/views.py:395
 msgid "Decision saved."
 msgstr "فیصلہ محفوظ ہو گیا۔"
 
@@ -2364,7 +2364,7 @@ msgstr "خاندان وار نادہندگان"
 msgid "Father"
 msgstr "والد"
 
-#: apps/fees/views.py:780 apps/fees/views.py:790 apps/people/views.py:97
+#: apps/fees/views.py:780 apps/fees/views.py:790 apps/people/views.py:98
 #: templates/core/design_system.html:78 templates/fees/defaulters.html:21
 #: templates/fees/defaulters.html:31 templates/people/student_list.html:41
 msgid "Parent mobile"
@@ -2471,13 +2471,13 @@ msgstr "پچھلے مہینوں سے باقی"
 msgid "Choose an Excel file (.xlsx)."
 msgstr "ایکسل فائل (.xlsx) منتخب کریں۔"
 
-#: apps/fees/views.py:1086 apps/people/views.py:494
+#: apps/fees/views.py:1086 apps/people/views.py:505
 msgid "The file is larger than 5 MB. Split it into smaller files."
 msgstr "فائل 5 MB سے بڑی ہے۔ اسے چھوٹی فائلوں میں تقسیم کریں۔"
 
-#: apps/fees/views.py:1101 apps/fees/views.py:1107 apps/hr/views.py:196
-#: apps/hr/views.py:202 apps/hr/views.py:247 apps/hr/views.py:253
-#: apps/people/views.py:509 apps/people/views.py:515
+#: apps/fees/views.py:1101 apps/fees/views.py:1107 apps/hr/views.py:198
+#: apps/hr/views.py:204 apps/hr/views.py:257 apps/hr/views.py:263
+#: apps/people/views.py:522 apps/people/views.py:528
 msgid "This import has expired. Please check the file again."
 msgstr "اس درآمد کی مدت ختم ہو گئی۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
@@ -2814,53 +2814,55 @@ msgstr "روانگی کا وقت"
 msgid "e.g. machine was not working"
 msgstr "مثلاً مشین کام نہیں کر رہی تھی"
 
-#: apps/hr/importer.py:131
+#: apps/hr/importer.py:155
 #, python-format
 msgid "Missing columns: %(c)s"
 msgstr "یہ کالم موجود نہیں: %(c)s"
 
-#: apps/hr/importer.py:141
+#: apps/hr/importer.py:165
 msgid "Too many rows."
 msgstr "سطریں بہت زیادہ ہیں۔"
 
-#: apps/hr/importer.py:151 apps/hr/importer.py:183 apps/people/importer.py:336
+#: apps/hr/importer.py:178 apps/hr/importer.py:214 apps/people/importer.py:367
 msgid "Required"
 msgstr "لازمی"
 
-#: apps/hr/importer.py:154 apps/people/importer.py:341
+#: apps/hr/importer.py:181 apps/people/importer.py:372
 msgid "Already exists in this branch"
 msgstr "اس برانچ میں پہلے سے موجود ہے"
 
-#: apps/hr/importer.py:156 apps/hr/importer.py:162 apps/people/importer.py:343
+#: apps/hr/importer.py:183 apps/hr/importer.py:189 apps/people/importer.py:374
 #, python-format
 msgid "Repeated in this file (row %(r)s)"
 msgstr "اس فائل میں دوبارہ آیا ہے (قطار %(r)s)"
 
-#: apps/hr/importer.py:160
+#: apps/hr/importer.py:187
 msgid "Another person already has this machine ID"
 msgstr "یہ مشین آئی ڈی کسی اور کی ہے"
 
-#: apps/hr/importer.py:167 apps/people/importer.py:349
+#: apps/hr/importer.py:194 apps/people/importer.py:380
 msgid "Use Male or Female"
 msgstr "Male یا Female لکھیں"
 
-#: apps/hr/importer.py:171
+#: apps/hr/importer.py:198
 msgid "Use Teacher, Hifz, Admin or Support"
 msgstr "Teacher، Hifz، Admin یا Support لکھیں"
 
-#: apps/hr/importer.py:175
-msgid "A CNIC has 13 digits"
-msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے"
+#: apps/hr/importer.py:203 apps/people/importer.py:432
+#, python-format
+msgid "A CNIC has 13 digits: «%(value)s». Left empty"
+msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے: «%(value)s»۔ خالی چھوڑ دیا گیا"
 
-#: apps/hr/importer.py:179 apps/people/importer.py:373
-msgid "Not a Pakistani mobile number"
-msgstr "پاکستانی موبائل نمبر نہیں"
+#: apps/hr/importer.py:210 apps/people/importer.py:407
+#, python-format
+msgid "Not a Pakistani mobile number: «%(value)s». Imported as written"
+msgstr "پاکستانی موبائل نمبر نہیں: «%(value)s»۔ جیسا لکھا تھا ویسا شامل کر دیا"
 
-#: apps/hr/importer.py:186
+#: apps/hr/importer.py:217
 msgid "Not a date. Use day/month/year, e.g. 01/04/2020"
 msgstr "یہ تاریخ نہیں۔ دن/مہینہ/سال لکھیں، مثلاً 01/04/2020"
 
-#: apps/hr/importer.py:189
+#: apps/hr/importer.py:221
 msgid "The file has no staff rows."
 msgstr "فائل میں عملے کی کوئی سطر نہیں۔"
 
@@ -3169,24 +3171,24 @@ msgstr "مشین آئی ڈی"
 msgid "Choose an Excel file (.xlsx) smaller than 5 MB."
 msgstr "5 MB سے چھوٹی ایکسل فائل (.xlsx) چنیں۔"
 
-#: apps/hr/views.py:208 apps/people/views.py:521
+#: apps/hr/views.py:214 apps/people/views.py:538
 msgid "The data changed since the check. Please check the file again."
 msgstr "چیک کے بعد ڈیٹا بدل گیا ہے۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
-#: apps/hr/views.py:211
+#: apps/hr/views.py:217
 #, python-format
 msgid "%(n)s staff members added."
 msgstr "عملے کے %(n)s افراد شامل ہو گئے۔"
 
-#: apps/hr/views.py:229
+#: apps/hr/views.py:239
 msgid "Choose the machine's export file (.xlsx, .csv, .dat or .txt)."
 msgstr "مشین کی نکالی ہوئی فائل چنیں (.xlsx، .csv، .dat یا .txt)۔"
 
-#: apps/hr/views.py:231
+#: apps/hr/views.py:241
 msgid "The file is larger than 10 MB. Export one month at a time."
 msgstr "فائل 10 MB سے بڑی ہے۔ ایک وقت میں ایک مہینے کی فائل نکالیں۔"
 
-#: apps/hr/views.py:261
+#: apps/hr/views.py:271
 #, python-format
 msgid ""
 "%(n)s new punches saved for %(e)s staff; attendance worked out from %(a)s to "
@@ -3195,25 +3197,25 @@ msgstr ""
 "%(e)s افراد کے %(n)s نئے اندراجات محفوظ ہو گئے؛ %(a)s سے %(b)s تک حاضری کا "
 "حساب ہو گیا۔"
 
-#: apps/hr/views.py:283
+#: apps/hr/views.py:293
 #, python-format
 msgid "Correction removed for %(n)s."
 msgstr "%(n)s کی درستی ختم کر دی گئی۔"
 
-#: apps/hr/views.py:289
+#: apps/hr/views.py:299
 #, python-format
 msgid "Attendance corrected for %(n)s."
 msgstr "%(n)s کی حاضری درست کر دی گئی۔"
 
-#: apps/hr/views.py:291
+#: apps/hr/views.py:301
 msgid "Choose a status and write the reason."
 msgstr "حیثیت چنیں اور وجہ لکھیں۔"
 
-#: apps/hr/views.py:409
+#: apps/hr/views.py:419
 msgid "Leave request saved. It counts once the principal approves it."
 msgstr "رخصت کی درخواست محفوظ ہو گئی۔ پرنسپل کی منظوری کے بعد شمار ہو گی۔"
 
-#: apps/hr/views.py:464
+#: apps/hr/views.py:474
 msgid "Leave request withdrawn."
 msgstr "رخصت کی درخواست واپس لے لی گئی۔"
 
@@ -4001,23 +4003,23 @@ msgstr "پہلا نام"
 msgid "Last name"
 msgstr "آخری نام"
 
-#: apps/people/forms.py:99 apps/people/views.py:98 apps/reports/views.py:113
+#: apps/people/forms.py:99 apps/people/views.py:99 apps/reports/views.py:113
 #: templates/admissions/detail.html:20 templates/people/student_detail.html:25
 msgid "Gender"
 msgstr "جنس"
 
-#: apps/people/forms.py:100 apps/people/views.py:98
+#: apps/people/forms.py:100 apps/people/views.py:99
 #: templates/people/student_detail.html:26
 msgid "Date of birth"
 msgstr "تاریخ پیدائش"
 
-#: apps/people/forms.py:101 apps/people/views.py:98 apps/reports/views.py:113
+#: apps/people/forms.py:101 apps/people/views.py:99 apps/reports/views.py:113
 #: templates/core/design_system.html:79 templates/people/student_detail.html:27
 #: templates/reports/new_admissions.html:18
 msgid "Admission date"
 msgstr "تاریخ داخلہ"
 
-#: apps/people/forms.py:102 apps/people/views.py:98
+#: apps/people/forms.py:102 apps/people/views.py:99
 msgid "Father CNIC"
 msgstr "والد کا شناختی کارڈ نمبر"
 
@@ -4120,11 +4122,11 @@ msgstr "فیس کے واجبات ادا ہو چکے"
 msgid "Remarks (optional)"
 msgstr "ریمارکس (اختیاری)"
 
-#: apps/people/importer.py:281
+#: apps/people/importer.py:309
 msgid "No current academic session is set. Ask head office to set it first."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ پہلے ہیڈ آفس سے طے کروائیں۔"
 
-#: apps/people/importer.py:290
+#: apps/people/importer.py:318
 msgid ""
 "This file could not be opened. Use the Excel template (.xlsx) or the old "
 "software's PDF report."
@@ -4132,48 +4134,51 @@ msgstr ""
 "یہ فائل نہیں کھل سکی۔ ایکسل ٹیمپلیٹ (.xlsx) یا پرانے سافٹ ویئر کی PDF رپورٹ "
 "استعمال کریں۔"
 
-#: apps/people/importer.py:305
+#: apps/people/importer.py:333
 #, python-format
 msgid "These required columns are missing: %(cols)s. Use the template."
 msgstr "یہ لازمی کالم موجود نہیں: %(cols)s۔ ٹیمپلیٹ استعمال کریں۔"
 
-#: apps/people/importer.py:322
+#: apps/people/importer.py:350
 #, python-format
 msgid "Too many rows. Import at most %(n)s students at a time."
 msgstr ""
 "قطاریں بہت زیادہ ہیں۔ ایک وقت میں زیادہ سے زیادہ %(n)s طلبہ درآمد کریں۔"
 
-#: apps/people/importer.py:357
-msgid "Not a date. Use day/month/year, e.g. 15/04/2026"
-msgstr "یہ تاریخ نہیں۔ دن/مہینہ/سال لکھیں، مثلاً 15/04/2026"
+#: apps/people/importer.py:388
+#, python-format
+msgid "Not a date: «%(value)s». Left empty; correct it on the student's page"
+msgstr "یہ تاریخ نہیں: «%(value)s»۔ خالی چھوڑ دی گئی؛ طالب علم کے صفحے پر درست کریں"
 
-#: apps/people/importer.py:368
+#: apps/people/importer.py:395
+msgid "Date of birth is in the future. Left empty; correct it on the student's page"
+msgstr "تاریخ پیدائش آنے والے دنوں کی ہے۔ خالی چھوڑ دی گئی؛ طالب علم کے صفحے پر درست کریں"
+
+#: apps/people/importer.py:400
 msgid "Unknown class. See the 'How to fill' sheet"
 msgstr "نامعلوم جماعت۔ 'How to fill' شیٹ دیکھیں"
 
-#: apps/people/importer.py:379
-msgid "Use Father, Mother, Guardian or Other"
-msgstr "Father، Mother، Guardian یا Other لکھیں"
+#: apps/people/importer.py:414
+#, python-format
+msgid "«%(value)s» is not Father, Mother, Guardian or Other. Imported as Guardian"
+msgstr "«%(value)s» والد، والدہ، سرپرست یا دیگر نہیں۔ سرپرست کے طور پر شامل کیا"
 
-#: apps/people/importer.py:388
-msgid "Not an amount"
-msgstr "یہ رقم نہیں"
+#: apps/people/importer.py:425
+#, python-format
+msgid "Not an amount: «%(value)s». Left empty"
+msgstr "یہ رقم نہیں: «%(value)s»۔ خالی چھوڑ دی گئی"
 
-#: apps/people/importer.py:395
-msgid "A CNIC has 13 digits, e.g. 33100-1234567-1"
-msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مثلاً 33100-1234567-1"
-
-#: apps/people/importer.py:412
+#: apps/people/importer.py:450
 #, python-format
 msgid "Section %(s)s of %(c)s is for %(g)s only"
 msgstr "%(c)s کا سیکشن %(s)s صرف %(g)s کے لیے ہے"
 
-#: apps/people/importer.py:424
+#: apps/people/importer.py:462
 #, python-format
 msgid "Boys and girls cannot share section %(s)s of %(c)s"
 msgstr "لڑکے اور لڑکیاں %(c)s کے سیکشن %(s)s میں اکٹھے نہیں ہو سکتے"
 
-#: apps/people/importer.py:432
+#: apps/people/importer.py:470
 msgid "The file has no student rows."
 msgstr "فائل میں طلبہ کی کوئی قطار نہیں۔"
 
@@ -4299,51 +4304,58 @@ msgstr "مثلاً HO-FAISALABAD-FSD-0001؛ کبھی دہرایا نہیں جا�
 msgid "Class and section at the time of leaving"
 msgstr "چھوڑتے وقت جماعت اور سیکشن"
 
-#: apps/people/views.py:197
+#: apps/people/views.py:198
 #, python-format
 msgid "Saved %(name)s."
 msgstr "%(name)s محفوظ ہو گیا۔"
 
-#: apps/people/views.py:225
+#: apps/people/views.py:226
 #, python-format
 msgid "%(n)s is now marked as %(s)s."
 msgstr "%(n)s اب %(s)s درج ہے۔"
 
-#: apps/people/views.py:282
+#: apps/people/views.py:283
 #, python-format
 msgid "%(n)s sections made for %(s)s."
 msgstr "%(s)s کے لیے %(n)s سیکشن بن گئے۔"
 
-#: apps/people/views.py:383
+#: apps/people/views.py:384
 #, python-format
 msgid "%(p)s promoted, %(k)s kept in the same class, %(g)s graduated, %(s)s left out."
 msgstr "%(p)s اگلی جماعت میں، %(k)s اسی جماعت میں، %(g)s فارغ التحصیل، %(s)s ابھی شامل نہیں۔"
 
-#: apps/people/views.py:409
+#: apps/people/views.py:410
 msgid "Promote"
 msgstr "اگلی جماعت میں"
 
-#: apps/people/views.py:410
+#: apps/people/views.py:411
 msgid "Keep in the same class"
 msgstr "اسی جماعت میں رکھیں"
 
-#: apps/people/views.py:411
+#: apps/people/views.py:412
 msgid "Graduate (passed out)"
 msgstr "فارغ التحصیل"
 
-#: apps/people/views.py:412
+#: apps/people/views.py:413
 msgid "Leave out for now"
 msgstr "ابھی شامل نہ کریں"
 
-#: apps/people/views.py:439
+#: apps/people/views.py:440
 msgid "No students to print ID cards for. Choose a class and section first."
 msgstr "آئی ڈی کارڈ کے لیے کوئی طالب علم نہیں۔ پہلے جماعت اور سیکشن منتخب کریں۔"
 
-#: apps/people/views.py:492
+#: apps/people/views.py:466
+#, python-format
+msgid "Row %(rows)s was not imported because of its problem. Correct it and import it again."
+msgid_plural "%(n)s rows were not imported because of their problems (rows %(rows)s). Correct them and import them again."
+msgstr[0] "قطار %(rows)s مسئلے کی وجہ سے شامل نہیں ہوئی۔ اسے درست کر کے دوبارہ شامل کریں۔"
+msgstr[1] "%(n)s قطاریں مسائل کی وجہ سے شامل نہیں ہوئیں (قطاریں %(rows)s)۔ انہیں درست کر کے دوبارہ شامل کریں۔"
+
+#: apps/people/views.py:503
 msgid "Choose the Excel template (.xlsx) or the old software's PDF report."
 msgstr "ایکسل ٹیمپلیٹ (.xlsx) یا پرانے سافٹ ویئر کی PDF رپورٹ چنیں۔"
 
-#: apps/people/views.py:524
+#: apps/people/views.py:541
 #, python-format
 msgid "%(n)s students imported."
 msgstr "%(n)s طلبہ درآمد ہو گئے۔"
@@ -7210,7 +7222,7 @@ msgstr "ادائیگیاں کس ذریعے سے آئیں"
 msgid "Date paid (when the file has no date column)"
 msgstr "ادائیگی کی تاریخ (اگر فائل میں تاریخ کا کالم نہ ہو)"
 
-#: templates/fees/payments_import.html:15 templates/hr/staff_import.html:23
+#: templates/fees/payments_import.html:15 templates/hr/staff_import.html:34
 msgid "Excel file (.xlsx)"
 msgstr "ایکسل فائل (.xlsx)"
 
@@ -7241,8 +7253,9 @@ msgstr "کل (روپے) — جاز کیش/بینک کے ٹوٹل سے ملائی
 msgid "Rows in the file"
 msgstr "فائل کی سطریں"
 
-#: templates/fees/payments_import.html:29 templates/hr/staff_import.html:17
-#: templates/people/student_import.html:30
+#: templates/fees/payments_import.html:29 templates/hr/staff_import.html:18
+#: templates/includes_import_notes.html:7
+#: templates/people/student_import.html:31
 msgid "Row"
 msgstr "قطار"
 
@@ -7261,8 +7274,8 @@ msgid_plural "Record %(n)s payments"
 msgstr[0] "%(n)s ادائیگی درج کریں"
 msgstr[1] "%(n)s ادائیگیاں درج کریں"
 
-#: templates/fees/payments_import.html:46 templates/hr/staff_import.html:10
-#: templates/people/student_import.html:21
+#: templates/fees/payments_import.html:46 templates/hr/staff_import.html:11
+#: templates/people/student_import.html:22
 msgid "Choose another file"
 msgstr "دوسری فائل منتخب کریں"
 
@@ -7905,48 +7918,82 @@ msgstr "اندراجات محفوظ کریں اور حاضری کا حساب ک�
 msgid "Machine export file"
 msgstr "مشین کی فائل"
 
-#: templates/hr/punches_import.html:23 templates/hr/staff_import.html:24
-#: templates/people/student_import.html:40
+#: templates/hr/punches_import.html:23 templates/hr/staff_import.html:35
+#: templates/people/student_import.html:51
 msgid "Check file"
 msgstr "فائل چیک کریں"
 
 #: templates/hr/staff_import.html:5
-msgid ""
-"Fill the template, then check it here. Nothing is saved until every row is "
-"correct; then all rows are saved together."
-msgstr ""
-"ٹیمپلیٹ بھریں، پھر یہاں چیک کریں۔ ہر سطر درست ہونے تک کچھ محفوظ نہیں ہوتا؛ "
-"پھر تمام سطریں ایک ساتھ محفوظ ہوتی ہیں۔"
+msgid "Fill the template, then check it here. Nothing is saved until you choose to import: all rows together, or only the rows without problems."
+msgstr "ٹیمپلیٹ بھریں، پھر یہاں چیک کریں۔ جب تک آپ شامل کرنے کا انتخاب نہ کریں کچھ محفوظ نہیں ہوتا: تمام قطاریں ایک ساتھ، یا صرف بغیر مسئلے والی قطاریں۔"
 
-#: templates/hr/staff_import.html:8
+#: templates/hr/staff_import.html:9
 #, python-format
 msgid "%(n)s staff member is ready to import"
 msgid_plural "%(n)s staff members are ready to import"
 msgstr[0] "%(n)s ملازم درج ہونے کے لیے تیار ہے"
 msgstr[1] "%(n)s ملازمین درج ہونے کے لیے تیار ہیں"
 
-#: templates/hr/staff_import.html:10
+#: templates/hr/staff_import.html:11
 msgid "Import"
 msgstr "درج کریں"
 
-#: templates/hr/staff_import.html:15 templates/people/student_import.html:27
+#: templates/hr/staff_import.html:16 templates/people/student_import.html:28
 #, python-format
 msgid "%(n)s problem to fix"
 msgid_plural "%(n)s problems to fix"
 msgstr[0] "%(n)s مسئلہ درست کرنا ہے"
 msgstr[1] "%(n)s مسائل درست کرنے ہیں"
 
-#: templates/hr/staff_import.html:17 templates/people/student_import.html:30
+#: templates/hr/staff_import.html:18 templates/includes_import_notes.html:7
+#: templates/people/student_import.html:31
 msgid "Column"
 msgstr "کالم"
 
-#: templates/hr/staff_import.html:17 templates/people/student_import.html:30
+#: templates/hr/staff_import.html:18 templates/people/student_import.html:31
 msgid "Problem"
 msgstr "مسئلہ"
 
-#: templates/hr/staff_import.html:25 templates/people/student_import.html:41
+#: templates/hr/staff_import.html:25 templates/people/student_import.html:39
+msgid "Or import the rows without problems"
+msgstr "یا صرف بغیر مسئلے والی قطاریں شامل کریں"
+
+#: templates/hr/staff_import.html:26 templates/people/student_import.html:40
+#, python-format
+msgid "%(n)s row with a problem will be left out; fix it in the file and import it later."
+msgid_plural "%(n)s rows with problems will be left out; fix them in the file and import them later."
+msgstr[0] "مسئلے والی %(n)s قطار چھوڑ دی جائے گی؛ فائل میں درست کر کے بعد میں شامل کریں۔"
+msgstr[1] "مسئلے والی %(n)s قطاریں چھوڑ دی جائیں گی؛ فائل میں درست کر کے بعد میں شامل کریں۔"
+
+#: templates/hr/staff_import.html:27 templates/people/student_import.html:41
+msgid "The rows with problems are left out and not imported. You can correct them later and import them again."
+msgstr "مسئلے والی قطاریں چھوڑ دی جائیں گی اور شامل نہیں ہوں گی۔ آپ انہیں بعد میں درست کر کے دوبارہ شامل کر سکتے ہیں۔"
+
+#: templates/hr/staff_import.html:27 templates/people/student_import.html:41
+msgid "Import the rest"
+msgstr "باقی شامل کریں"
+
+#: templates/hr/staff_import.html:29
+#, python-format
+msgid "Skip the problems and import %(n)s staff member"
+msgid_plural "Skip the problems and import %(n)s staff members"
+msgstr[0] "مسائل چھوڑ کر %(n)s ملازم شامل کریں"
+msgstr[1] "مسائل چھوڑ کر %(n)s ملازمین شامل کریں"
+
+#: templates/hr/staff_import.html:36 templates/people/student_import.html:52
 msgid "Download template"
 msgstr "ٹیمپلیٹ ڈاؤن لوڈ کریں"
+
+#: templates/includes_import_notes.html:4
+#, python-format
+msgid "%(n)s note: imported as written or left empty"
+msgid_plural "%(n)s notes: imported as written or left empty"
+msgstr[0] "%(n)s نوٹ: جیسا لکھا تھا ویسا شامل کیا یا خالی چھوڑا"
+msgstr[1] "%(n)s نوٹ: جیسا لکھا تھا ویسا شامل کیا یا خالی چھوڑا"
+
+#: templates/includes_import_notes.html:5
+msgid "These do not stop the import. Correct them later on each record's page if needed."
+msgstr "ان کی وجہ سے شامل کرنا نہیں رکتا۔ ضرورت ہو تو بعد میں ہر ریکارڈ کے صفحے پر درست کر لیں۔"
 
 #: templates/insights/attention.html:6
 msgid "Your classes"
@@ -8901,14 +8948,8 @@ msgstr "ایکسل سے طلبہ درآمد کریں"
 
 #: templates/people/student_import.html:5
 #, python-format
-msgid ""
-"Fill the template, then check it here. Nothing is saved until every row is "
-"correct; then all rows are saved together. Up to %(max_rows)s students per "
-"file."
-msgstr ""
-"ٹیمپلیٹ بھریں، پھر یہاں چیک کریں۔ جب تک ہر قطار درست نہ ہو کچھ محفوظ نہیں "
-"ہوتا؛ پھر تمام قطاریں ایک ساتھ محفوظ ہوتی ہیں۔ ایک فائل میں زیادہ سے زیادہ "
-"%(max_rows)s طلبہ۔"
+msgid "Fill the template, then check it here. Nothing is saved until you choose to import: all rows together, or only the rows without problems. Up to %(max_rows)s students per file."
+msgstr "ٹیمپلیٹ بھریں، پھر یہاں چیک کریں۔ جب تک آپ شامل کرنے کا انتخاب نہ کریں کچھ محفوظ نہیں ہوتا: تمام قطاریں ایک ساتھ، یا صرف بغیر مسئلے والی قطاریں۔ ایک فائل میں زیادہ سے زیادہ %(max_rows)s طلبہ۔"
 
 #: templates/people/student_import.html:7
 msgid ""
@@ -8916,18 +8957,18 @@ msgid ""
 "importing."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ درآمد سے پہلے ہیڈ آفس سے طے کروائیں۔"
 
-#: templates/people/student_import.html:11
+#: templates/people/student_import.html:12
 #, python-format
 msgid "%(n)s student is ready to import"
 msgid_plural "%(n)s students are ready to import"
 msgstr[0] "%(n)s طالب علم درآمد کے لیے تیار ہے"
 msgstr[1] "%(n)s طلبہ درآمد کے لیے تیار ہیں"
 
-#: templates/people/student_import.html:14
+#: templates/people/student_import.html:15
 msgid "These sections will be created for this session:"
 msgstr "اس سیشن کے لیے یہ سیکشن بنائے جائیں گے:"
 
-#: templates/people/student_import.html:17
+#: templates/people/student_import.html:18
 #, python-format
 msgid ""
 "%(n)s student has no admission date in the file; the first day of the "
@@ -8942,14 +8983,14 @@ msgstr[1] ""
 "%(n)s طلبہ کی تاریخِ داخلہ فائل میں نہیں؛ سیشن کا پہلا دن لگایا جائے گا جو "
 "بعد میں درست کیا جا سکتا ہے۔"
 
-#: templates/people/student_import.html:20
+#: templates/people/student_import.html:21
 #, python-format
 msgid "Import %(n)s student"
 msgid_plural "Import %(n)s students"
 msgstr[0] "%(n)s طالب علم درآمد کریں"
 msgstr[1] "%(n)s طلبہ درآمد کریں"
 
-#: templates/people/student_import.html:28
+#: templates/people/student_import.html:29
 msgid ""
 "Correct these in your Excel file, save it, and check it again. Nothing has "
 "been saved."
@@ -8957,11 +8998,18 @@ msgstr ""
 "انہیں اپنی ایکسل فائل میں درست کریں، محفوظ کریں اور دوبارہ چیک کریں۔ کچھ بھی "
 "محفوظ نہیں ہوا۔"
 
-#: templates/people/student_import.html:33
+#: templates/people/student_import.html:34
 msgid "Only the first 300 problems are shown."
 msgstr "صرف پہلے 300 مسائل دکھائے گئے ہیں۔"
 
-#: templates/people/student_import.html:38
+#: templates/people/student_import.html:43
+#, python-format
+msgid "Skip the problems and import %(n)s student"
+msgid_plural "Skip the problems and import %(n)s students"
+msgstr[0] "مسائل چھوڑ کر %(n)s طالب علم شامل کریں"
+msgstr[1] "مسائل چھوڑ کر %(n)s طلبہ شامل کریں"
+
+#: templates/people/student_import.html:49
 msgid "Excel template (.xlsx) or the old software's “Student Data” PDF"
 msgstr "ایکسل ٹیمپلیٹ (.xlsx) یا پرانے سافٹ ویئر کی “Student Data” PDF"
 
@@ -9353,6 +9401,25 @@ msgstr "کھلا"
 #: templates/setup/users.html:28
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
+
+#~ msgid "A CNIC has 13 digits"
+#~ msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے"
+
+#~ msgid "Not a date. Use day/month/year, e.g. 15/04/2026"
+#~ msgstr "یہ تاریخ نہیں۔ دن/مہینہ/سال لکھیں، مثلاً 15/04/2026"
+
+#~ msgid "Not an amount"
+#~ msgstr "یہ رقم نہیں"
+
+#~ msgid "A CNIC has 13 digits, e.g. 33100-1234567-1"
+#~ msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مثلاً 33100-1234567-1"
+
+#~ msgid ""
+#~ "Fill the template, then check it here. Nothing is saved until every row "
+#~ "is correct; then all rows are saved together."
+#~ msgstr ""
+#~ "ٹیمپلیٹ بھریں، پھر یہاں چیک کریں۔ ہر سطر درست ہونے تک کچھ محفوظ نہیں "
+#~ "ہوتا؛ پھر تمام سطریں ایک ساتھ محفوظ ہوتی ہیں۔"
 
 #~ msgid ""
 #~ "Printed before this branch's certificate numbers, e.g. HO-FAISALABAD-FSD "

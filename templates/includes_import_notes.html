@@ -1,0 +1,11 @@
+{% load i18n %}{# Import notes: things imported as written or left empty (with: result). #}
+{% if result.warnings %}
+<details class="card" style="margin-bottom:1rem">
+  <summary><strong>{% blocktrans count n=result.warnings|length %}{{ n }} note: imported as written or left empty{% plural %}{{ n }} notes: imported as written or left empty{% endblocktrans %}</strong></summary>
+  <p class="muted">{% trans "These do not stop the import. Correct them later on each record's page if needed." %}</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th class="num">{% trans "Row" %}</th><th>{% trans "Column" %}</th><th>{% trans "Note" %}</th></tr></thead>
+    <tbody>{% for row, col, msg in result.warnings|slice:":300" %}<tr><td class="num">{{ row }}</td><td>{{ col }}</td><td>{{ msg }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</details>
+{% endif %}

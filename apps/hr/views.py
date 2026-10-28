@@ -184,11 +184,13 @@ def staff_import(request):
             content = upload.read()
             result = importer.check(content, branch=branch)
             token = ""
-            if result.ok:
+            if result.ok or result.can_skip:
                 token = secrets.token_hex(16)
                 (_import_dir() / f"{token}.xlsx").write_bytes(content)
                 request.session["staff_import"] = {"token": token, "branch": branch.id}
             context.update(result=result, token=token, shown_errors=result.errors[:300])
+            if result.can_skip:
+                context.update(skip_count=len(result.problem_rows), keep_count=len(result.without_problem_rows().rows))
     elif request.method == "POST" and request.POST.get("step") == "import":
         pending = request.session.pop("staff_import", None)
         token = request.POST.get("token", "")
@@ -204,11 +206,19 @@ def staff_import(request):
         finally:
             path.unlink(missing_ok=True)
         result = importer.check(content, branch=branch)
+        skipped = []
+        if request.POST.get("skip") == "1" and result.can_skip:
+            skipped = result.problem_rows
+            result = result.without_problem_rows()
         if not result.ok:
             messages.error(request, _("The data changed since the check. Please check the file again."))
             return redirect("hr:staff_import")
         n = importer.run_import(result, branch=branch)
         messages.success(request, _("%(n)s staff members added.") % {"n": n})
+        if skipped:
+            from apps.people.views import skipped_message
+
+            messages.warning(request, skipped_message(skipped))
         return redirect("hr:index")
     return render(request, "hr/staff_import.html", context)
 

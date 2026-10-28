@@ -145,7 +145,7 @@ def test_import_reports_every_problem_and_saves_nothing(org, students, make_user
         "Already exists in this branch",
         "Use Male or Female",
         "Unknown class",
-        "Not a Pakistani mobile number",
+        "Not a Pakistani mobile number",  # a note: imported as written
         "Repeated in this file",
         "cannot share section",
     ]:
@@ -299,3 +299,49 @@ def test_import_old_software_pdf_report(org, make_user, login_as):
         tuition, head_rate, org["session"].starts_on, True, [Concession.objects.get(student=one)]
     )
     assert (gross - discount, reason) == (2900, "Agreed fee")
+
+
+def test_import_takes_numbers_as_written_and_can_leave_out_impossible_rows(org, make_user, login_as):
+    """Project lead, 28 Oct 2026: a number that is not a Pakistani mobile is imported as written."""
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    file = xlsx(
+        [
+            row("N-1", "Ahmed", "Male", "Class 1", "A"),
+            row("N-2", "Bilal", "Male", "Class 1", "A", phone="041-2660265"),  # a landline: taken as written
+            row("N-3", "Ayesha", "Female", "Class 2", "A", phone=3001234567.0),  # Excel kept the number
+            row("N-4", "Sara", "Female", "Class 2", "A", phone="0300-1234567 / 041-2660265"),  # two numbers
+        ]
+    )
+    page = client.post("/students/import/", {"step": "check", "file": file})
+    body = page.content.decode()
+    assert page.context["result"].ok and "4 students are ready to import" in body
+    assert "«041-2660265». Imported as written" in body
+    client.post("/students/import/", {"step": "import", "token": page.context["token"]})
+    phones = dict(
+        Student.objects.filter(branch=org["samanabad"]).values_list("admission_no", "guardian_links__guardian__phone")
+    )
+    assert phones == {"N-1": "03001234567", "N-2": "041-2660265", "N-3": "03001234567", "N-4": "03001234567"}
+    # A row that cannot be saved at all (the class does not exist) can be left out, the rest imported.
+    more = xlsx([row("N-5", "Hamza", "Male", "Class 1", "A"), row("N-6", "Zain", "Male", "Class 99", "A")])
+    page = client.post("/students/import/", {"step": "check", "file": more})
+    assert "Skip the problems and import 1 student" in page.content.decode()
+    done = client.post(
+        "/students/import/", {"step": "import", "token": page.context["token"], "skip": "1"}, follow=True
+    )
+    assert (
+        Student.objects.filter(admission_no="N-5").exists() and not Student.objects.filter(admission_no="N-6").exists()
+    )
+    assert "Row 3 was not imported" in done.content.decode()
+
+
+def test_whole_file_problems_cannot_be_skipped(org, make_user, login_as):
+    client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
+    wb = Workbook()
+    wb.active.append(["Admission No *", "First Name *"])  # required columns missing
+    wb.active.append(["N-1", "Ahmed"])
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    buf.name = "students.xlsx"
+    page = client.post("/students/import/", {"step": "check", "file": buf})
+    assert not page.context["token"] and "Skip the problems" not in page.content.decode()

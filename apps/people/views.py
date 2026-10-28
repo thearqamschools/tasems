@@ -14,6 +14,7 @@ from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from apps.academics.models import ClassLevel, Section
 from apps.core import exports
@@ -458,6 +459,16 @@ def student_edit(request, pk):
 # ---------------------------------------------------------------- Excel import
 
 
+def skipped_message(rows):
+    """Told after an import that left out the rows with problems, so they can be fixed and imported later."""
+    shown = ", ".join(str(r) for r in rows[:30]) + (" …" if len(rows) > 30 else "")
+    return ngettext(
+        "Row %(rows)s was not imported because of its problem. Correct it and import it again.",
+        "%(n)s rows were not imported because of their problems (rows %(rows)s). Correct them and import them again.",
+        len(rows),
+    ) % {"n": len(rows), "rows": shown}
+
+
 def _import_dir():
     """Checked files wait here until imported. Files older than a day are removed."""
     path = Path(settings.MEDIA_ROOT) / "imports"
@@ -496,11 +507,13 @@ def student_import(request):
             content = upload.read()
             result = importer.check(content, branch=branch, session=session)
             token = ""
-            if result.ok:
+            if result.ok or result.can_skip:
                 token = secrets.token_hex(16)
                 (_import_dir() / f"{token}.xlsx").write_bytes(content)
                 request.session["import_token"] = {"token": token, "branch": branch.id, "name": upload.name}
             context.update(result=result, token=token, filename=upload.name, shown_errors=result.errors[:300])
+            if result.can_skip:
+                context.update(skip_count=len(result.problem_rows), keep_count=len(result.without_problem_rows().rows))
 
     elif request.method == "POST" and request.POST.get("step") == "import":
         pending = request.session.pop("import_token", None)
@@ -517,11 +530,17 @@ def student_import(request):
         finally:
             path.unlink(missing_ok=True)
         result = importer.check(content, branch=branch, session=session)
+        skipped = []
+        if request.POST.get("skip") == "1" and result.can_skip:
+            skipped = result.problem_rows
+            result = result.without_problem_rows()
         if not result.ok:
             messages.error(request, _("The data changed since the check. Please check the file again."))
             return redirect("people:student_import")
         count = importer.run_import(result, branch=branch, session=session, user=request.user)
         messages.success(request, _("%(n)s students imported.") % {"n": count})
+        if skipped:
+            messages.warning(request, skipped_message(skipped))
         return redirect("people:student_list")
 
     return render(request, "people/student_import.html", context)

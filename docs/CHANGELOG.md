@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.35.0 — 2026-10-28 — Import: numbers taken as written
+
+Changed
+- Student and staff import no longer stops on a phone number that is not a Pakistani mobile: the number is
+  saved exactly as written (students: parent's phone; staff: other phone) and listed as a note.
+- Other small problems are also notes, not errors: a wrong or future date of birth and a wrong CNIC are left
+  empty, a wrong admission date becomes the session start, an unknown relationship becomes Guardian, a wrong
+  monthly fee is left empty. They can be corrected later on each record's page.
+- Only rows that cannot be saved still stop the import (missing name or admission no, duplicate admission no,
+  unknown class or section, gender). For those, a second button imports all the other rows and lists the rows
+  left out.
+- Several numbers in one cell ("0300-1234567 / 0321-7654321") use the first mobile number.
+
 ## 0.34.1 — 2026-10-23 — Windows: master login on first start
 
 Changed
