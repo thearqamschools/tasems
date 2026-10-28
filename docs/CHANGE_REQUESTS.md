@@ -215,7 +215,5 @@ with the child and all brothers and sisters, and the children are called with it
 ### Setup → branch contact details and banks (used on slips, vouchers and wherever needed)
 - R3-10. Each branch has its own **Address**, **Phone 1**, **Phone 2**, **Mobile 1**, **Mobile 2**, entered in
   Setup. These print wherever the school's contact is shown (Parent Tree slip, vouchers, …) instead of fixed text.
-- R3-11. **Bank accounts on the voucher** are entered in Setup: "Add bank account" → **bank name** and
-  **account number**. Add a second bank the same way. The voucher shows every bank entered: one bank → one on the
-  voucher, two banks → both. (Today the voucher shows one bank from Fee settings; a separate bank list is used
-  when receiving fees — to bring together when building.)
+- R3-11. ~~Several banks on the voucher~~ — **withdrawn by the lead (28 Oct 2026):** the voucher keeps showing
+  **one bank**, as now (Setup → Fee settings). Nothing to change.
