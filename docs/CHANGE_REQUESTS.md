@@ -204,6 +204,18 @@ with the child and all brothers and sisters, and the children are called with it
   - Footer "Thank you" (the old slip says "Thanks you").
 - R3-9. **Printer:** SPEEDX SPEED-X 400UL thermal receipt printer, **80 mm** paper, USB + LAN, ESC/POS.
   The slip is laid out for 80 mm roll paper.
-- To decide when building: brothers and sisters = students with the same father CNIC (the rule already used for
-  sibling fee and family vouchers) — only current (active) students. Which address and phones print on the slip
-  for branches other than Samanabad (the branch's own, if it has them).
+- Decided by the lead (28 Oct 2026):
+  - Brothers and sisters are **always** found by the **father's CNIC**; every current brother and sister is on
+    the slip.
+  - Only **current (present) students** are on the slip; those who left school are not.
+  - A Parent Tree can be printed **only for a current student**; for a student who has left, the option is not
+    shown.
+  - The address and phones on the slip come from the branch's own details (R3-10).
+
+### Setup → branch contact details and banks (used on slips, vouchers and wherever needed)
+- R3-10. Each branch has its own **Address**, **Phone 1**, **Phone 2**, **Mobile 1**, **Mobile 2**, entered in
+  Setup. These print wherever the school's contact is shown (Parent Tree slip, vouchers, …) instead of fixed text.
+- R3-11. **Bank accounts on the voucher** are entered in Setup: "Add bank account" → **bank name** and
+  **account number**. Add a second bank the same way. The voucher shows every bank entered: one bank → one on the
+  voucher, two banks → both. (Today the voucher shows one bank from Fee settings; a separate bank list is used
+  when receiving fees — to bring together when building.)
