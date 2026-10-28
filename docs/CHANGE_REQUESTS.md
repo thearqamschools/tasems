@@ -177,3 +177,9 @@ The lead is listing changes one by one. **Build nothing until the lead says "haa
 ### Students → Add / Edit student
 - R3-4. Remove the **"Father email"** field from the Contacts part of the Add student and Edit student forms.
   The **"Email"** field higher up on the form stays and is the one email for the student.
+
+### Campus lists everywhere
+- R3-5. Wherever a campus is chosen from a list (Setup → Classes and sections → Edit, and every other place that
+  asks for a campus), the list shows **only the campus name**, not the school and branch in front of it
+  (now e.g. "The Arqam Schools — Samanabad Campus (Head Office) — Boys Campus").
+  Order: **Girls Campus first, then Boys Campus**.
