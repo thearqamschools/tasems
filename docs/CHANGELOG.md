@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.36.1 — 2026-10-28 — Parent Tree prints from its own window (Windows installer v7)
+
+Fixed
+- Parent Tree did not print on the office computer: the slip loaded in a hidden frame, which some browsers do not
+  print. It now opens in a small window that shows the print window at once and closes after printing. If the
+  browser blocks the small window, the slip opens in the same tab and prints from there.
+
 ## 0.36.0 — 2026-10-28 — Round 3: sections, campuses, Parent Tree slip (Windows installer v6)
 
 Changed

@@ -1,2 +1,7 @@
-// Slips (e.g. Parent Tree) print as soon as they open; inside the hidden frame of the page that asked for them too.
-window.addEventListener("load", function () { window.print(); });
+// Slips (e.g. Parent Tree) print as soon as they open; a slip opened in its own small window closes after printing.
+window.addEventListener("load", function () {
+  if (window.opener) {
+    window.addEventListener("afterprint", function () { window.close(); });
+  }
+  setTimeout(function () { window.print(); }, 300);
+});
