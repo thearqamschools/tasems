@@ -10,14 +10,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Prefetch, Q
 from django.db.models.functions import Length
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from apps.academics.models import ClassLevel, Section
-from apps.core import exports
+from apps.core import escpos, exports
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
 from apps.fees.services import balance as fee_balance
@@ -176,18 +177,11 @@ def student_detail(request, pk):
     )
 
 
-@login_required
-def parent_tree(request, pk):
-    """Parent Tree slip for the 80 mm receipt printer: the child and every brother and sister still at school
-    (same father CNIC), to call them out of class (project lead, 28 Oct 2026). Only for a current student."""
-    branch = _branch_or_403(request, "people.view_student")
-    student = _get_student(request, pk, branch)
-    if student.status != Student.Status.ACTIVE:
-        raise Http404
+def _parent_tree_rows(student):
+    """The child and every brother and sister still at school (same father CNIC), higher class first."""
     session = _current_session()
-    family = [student, *student.siblings().filter(status=Student.Status.ACTIVE)]
     rows = []
-    for child in family:
+    for child in [student, *student.siblings().filter(status=Student.Status.ACTIVE)]:
         enrolment = current_enrolment(child, session) if session else None
         section = enrolment.section if enrolment else None
         campus = section.campus.name if section and section.campus else ""
@@ -202,11 +196,49 @@ def parent_tree(request, pk):
             }
         )
     rows.sort(key=lambda r: (r["order"], r["name"]))
-    return render(
-        request,
-        "people/parent_tree.html",
-        {"student": student, "branch": student.branch, "rows": rows, "printed_at": timezone.localtime()},
-    )
+    return rows
+
+
+@login_required
+def parent_tree(request, pk):
+    """Parent Tree slip, used to call children out of class (project lead, 28 Oct 2026). Only for a current student.
+    POST: printed straight on the branch's network receipt printer, with no print window. GET: the slip on screen
+    (80 mm), for a printer that is not on the network."""
+    branch = _branch_or_403(request, "people.view_student")
+    student = _get_student(request, pk, branch)
+    if student.status != Student.Status.ACTIVE:
+        raise Http404
+    rows, now = _parent_tree_rows(student), timezone.localtime()
+    if request.method != "POST":
+        return render(
+            request,
+            "people/parent_tree.html",
+            {"student": student, "branch": student.branch, "rows": rows, "printed_at": now},
+        )
+    printer = student.branch.receipt_printer
+    if not printer:
+        ok, text = False, _("No receipt printer is set for this branch. Add its network address in Setup → Branches.")
+    else:
+        try:
+            escpos.send(printer, escpos.parent_tree(student.branch, student.father_name, now, rows))
+            ok = True
+            text = ngettext(
+                "Parent Tree printed: %(n)s student.", "Parent Tree printed: %(n)s students.", len(rows)
+            ) % {"n": len(rows)}
+        except escpos.PrinterError as error:
+            ok, text = (
+                False,
+                _("The receipt printer (%(p)s) did not answer: %(e)s. Check that it is on and connected.")
+                % {
+                    "p": printer,
+                    "e": error,
+                },
+            )
+    if request.headers.get("Accept", "").startswith("application/json"):
+        return JsonResponse({"ok": ok, "message": text}, status=200 if ok else 503)
+    (messages.success if ok else messages.error)(request, text)
+    back = request.POST.get("next", "")
+    return redirect(back if url_has_allowed_host_and_scheme(back, {request.get_host()}) else "people:student_list")
 
 
 def _student_form(request, branch, student=None):

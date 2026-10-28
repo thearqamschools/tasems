@@ -229,14 +229,34 @@
   document.addEventListener("click", function (event) {
     if (event.target.closest("[data-print]")) window.print();
   });
-  // <a data-print-slip href="…">: the slip opens in a small window that prints itself and closes after printing.
-  // (A hidden frame was not printed by some browsers.) Without the window (blocked), the slip opens in this tab.
-  document.addEventListener("click", function (event) {
-    var link = event.target.closest("a[data-print-slip]");
-    if (!link || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  // <form data-print-slip>: the slip goes straight to the receipt printer; a short note says whether it printed.
+  function slipNote(text, ok) {
+    var note = document.getElementById("slip-note");
+    if (!note) {
+      note = document.createElement("div");
+      note.id = "slip-note";
+      note.setAttribute("role", "status");
+      note.style.cssText = "position:fixed;inset-inline-end:16px;bottom:16px;z-index:50;max-width:420px;padding:12px 16px;" +
+        "border-radius:10px;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.2);font-weight:600";
+      document.body.appendChild(note);
+    }
+    note.style.background = ok ? "#1e7a46" : "#b42318";
+    note.textContent = text;
+    clearTimeout(note.hideTimer);
+    note.hidden = false;
+    note.hideTimer = setTimeout(function () { note.hidden = true; }, ok ? 3000 : 8000);
+  }
+  document.addEventListener("submit", function (event) {
+    var form = event.target.closest("form[data-print-slip]");
+    if (!form || !window.fetch) return;
     event.preventDefault();
-    var win = window.open(link.href, "tasems-slip", "width=420,height=700");
-    if (!win) window.location.href = link.href;
+    var button = form.querySelector("button");
+    if (button) button.disabled = true;
+    fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" }, credentials: "same-origin" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { slipNote(d.message, d.ok); })
+      .catch(function () { slipNote(form.dataset.failed, false); })
+      .then(function () { if (button) button.disabled = false; });
   });
   if (document.body.hasAttribute("data-autoprint")) {
     window.addEventListener("load", function () { window.print(); });

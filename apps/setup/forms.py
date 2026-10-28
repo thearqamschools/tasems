@@ -255,6 +255,7 @@ class BranchForm(Labelled, forms.ModelForm):
             "phone_2",
             "mobile_1",
             "mobile_2",
+            "receipt_printer",
             "reference_prefix",
             "is_active",
         ]
@@ -264,6 +265,7 @@ class BranchForm(Labelled, forms.ModelForm):
             "phone_2": LTR,
             "mobile_1": LTR,
             "mobile_2": LTR,
+            "receipt_printer": forms.TextInput(attrs={"dir": "ltr", "placeholder": "192.168.1.100"}),
             "reference_prefix": LTR,
             "city_code": LTR,
             "address": forms.Textarea(attrs={"rows": 2}),

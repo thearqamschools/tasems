@@ -61,8 +61,15 @@ not reachable from other computers), GTK (for PDFs), waitress (web server). Buil
 - Not checkable without a Windows computer: the installer screens, shortcuts, and PostgreSQL's Windows
   programs (Wine cannot run them). The first install on a real computer is the final check.
 
-## Parent Tree slips on the receipt printer
-The slip is laid out for 80 mm paper. Install the receipt printer's Windows driver (SPEEDX 400UL: USB or LAN).
-Clicking Parent Tree opens the browser's print window; choose the receipt printer once and the browser remembers it.
-To print without the window (optional), start Chrome/Edge with `--kiosk-printing` and make the receipt printer the
-default printer; ordinary A4 pages then also go to that printer, so use this only on the computer kept for slips.
+## Parent Tree slips on the receipt printer (LAN)
+TASEMS sends the slip straight to the receipt printer over the office network — no print window. Set it up once:
+1. Find the printer's IP address: the old software's printer settings show it, or print the printer's self-test
+   page (on most receipt printers: hold FEED while switching it on) and read the IP on it.
+2. TASEMS → Setup → Branches → the branch → **Receipt printer (network address)**: type the IP, e.g.
+   192.168.1.100 (port 9100 is used; another port is written as 192.168.1.100:9000). Save.
+3. Students → printer icon (or the Parent Tree button on a student's page). A note at the bottom says
+   "Parent Tree printed" or what is wrong.
+
+The computer running TASEMS and the printer must be on the same network (the printer's IP starts like the
+computer's, e.g. both 192.168.1.x). If the note says the printer did not answer: check the printer is on, its
+network cable is in, and the IP is right.

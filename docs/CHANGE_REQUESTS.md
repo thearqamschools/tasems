@@ -222,3 +222,5 @@ with the child and all brothers and sisters, and the children are called with it
 - R3-12. Class names in words, without the word "Class": Play Group, Nursery, Prep (unchanged), then **One, Two,
   Three, Four, Five, Six, Seven, Eight, Pre-Nine, Nine, Ten** (capital first letter). Hifz-e-Quran unchanged.
   Everywhere a class is shown. Excel import still accepts the old names (Class 1 … Class 10, Pre-9) and numbers.
+- R3-13 (28 Oct 2026). The printer is on **LAN** (not USB). Parent Tree must print **straight away — no new window,
+  no print window**. Built: TASEMS sends the slip to the printer's network address (Setup → Branches).

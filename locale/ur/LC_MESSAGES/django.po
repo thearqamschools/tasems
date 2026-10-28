@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-28 14:15+0500\n"
+"POT-Creation-Date: 2026-10-28 14:50+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgstr "اختتام"
 msgid "Break"
 msgstr "وقفہ"
 
-#: apps/academics/forms.py:31 apps/hr/forms.py:142 apps/setup/forms.py:321
+#: apps/academics/forms.py:31 apps/hr/forms.py:142 apps/setup/forms.py:323
 #: templates/accounting/book.html:11 templates/accounting/branches.html:9
 #: templates/accounting/profit_loss.html:11 templates/admissions/report.html:6
 #: templates/fees/collections.html:8 templates/fees/student.html:64
@@ -122,7 +122,7 @@ msgstr "حفظ القرآن"
 #: apps/accounts/models.py:106 apps/exams/models.py:113
 #: apps/exams/models.py:147 apps/fees/models.py:69 apps/hr/models.py:193
 #: apps/organisation/models.py:21 apps/organisation/models.py:41
-#: apps/organisation/models.py:59 apps/organisation/models.py:147
+#: apps/organisation/models.py:59 apps/organisation/models.py:156
 msgid "name (Urdu)"
 msgstr "نام (اردو)"
 
@@ -140,11 +140,11 @@ msgstr "یہ جماعت ہفتے کو سکول آتی ہے، اس لیے اس د
 msgid "Content is written right-to-left (Urdu, Islamiat, Arabic, Nazra)."
 msgstr "مواد دائیں سے بائیں لکھا جاتا ہے (اردو، اسلامیات، عربی، ناظرہ)۔"
 
-#: apps/academics/models.py:82 apps/organisation/models.py:141
+#: apps/academics/models.py:82 apps/organisation/models.py:150
 msgid "Boys and Girls"
 msgstr "لڑکے اور لڑکیاں"
 
-#: apps/academics/models.py:83 apps/organisation/models.py:142
+#: apps/academics/models.py:83 apps/organisation/models.py:151
 #: apps/reports/catalogue.py:47 apps/reports/views.py:77
 #: templates/people/student_import.html:16
 #: templates/reports/class_strength.html:11
@@ -152,7 +152,7 @@ msgstr "لڑکے اور لڑکیاں"
 msgid "Boys"
 msgstr "لڑکے"
 
-#: apps/academics/models.py:84 apps/organisation/models.py:143
+#: apps/academics/models.py:84 apps/organisation/models.py:152
 #: apps/reports/catalogue.py:48 apps/reports/views.py:77
 #: templates/people/student_import.html:16
 #: templates/reports/class_strength.html:12
@@ -548,7 +548,7 @@ msgid "Income and expenses by branch"
 msgstr "برانچ وار آمدنی اور اخراجات"
 
 #: apps/accounting/views.py:342 apps/accounts/models.py:24
-#: apps/fees/views.py:943 apps/setup/forms.py:320
+#: apps/fees/views.py:943 apps/setup/forms.py:322
 #: templates/accounting/branches.html:21 templates/attendance/branches.html:7
 #: templates/core/home.html:80 templates/fees/royalty.html:18
 #: templates/jobs/index.html:8 templates/setup/branches.html:19
@@ -642,7 +642,7 @@ msgid "All my branches"
 msgstr "میری تمام برانچیں"
 
 #: apps/accounts/context_processors.py:65
-#: apps/accounts/context_processors.py:67 apps/people/views.py:97
+#: apps/accounts/context_processors.py:67 apps/people/views.py:98
 #: apps/reports/catalogue.py:66 templates/academics/holidays.html:24
 #: templates/hifz/index.html:21 templates/people/promotion.html:17
 #: templates/people/student_list.html:2 templates/people/student_list.html:5
@@ -885,14 +885,14 @@ msgstr ""
 msgid "Whole network"
 msgstr "پورا نیٹ ورک"
 
-#: apps/accounts/models.py:22 apps/setup/forms.py:44 apps/setup/forms.py:318
+#: apps/accounts/models.py:22 apps/setup/forms.py:44 apps/setup/forms.py:320
 #: templates/attendance/branches.html:7 templates/core/home.html:54
 #: templates/core/home.html:80 templates/setup/branches.html:12
 #: templates/setup/branches.html:19 templates/setup/branches.html:33
 msgid "Head office"
 msgstr "ہیڈ آفس"
 
-#: apps/accounts/models.py:23 apps/setup/forms.py:45 apps/setup/forms.py:319
+#: apps/accounts/models.py:23 apps/setup/forms.py:45 apps/setup/forms.py:321
 #: templates/core/home.html:55 templates/core/home.html:80
 #: templates/setup/branches.html:19 templates/setup/branches.html:33
 msgid "Region"
@@ -920,7 +920,7 @@ msgstr "TASEMS نے بنایا ہے؛ احتیاط سے تبدیل کریں۔"
 msgid "This role cannot be assigned at this scope."
 msgstr "یہ کردار اس سطح پر نہیں دیا جا سکتا۔"
 
-#: apps/accounts/models.py:166 apps/setup/forms.py:350
+#: apps/accounts/models.py:166 apps/setup/forms.py:352
 msgid "End date is before start date."
 msgstr "آخری تاریخ شروع کی تاریخ سے پہلے ہے۔"
 
@@ -1231,7 +1231,7 @@ msgstr ""
 
 #: apps/attendance/views.py:186 apps/fees/views.py:263 apps/hifz/views.py:152
 #: apps/hr/views.py:87 apps/inventory/views.py:319 apps/people/forms.py:108
-#: apps/people/views.py:99 apps/reports/views.py:114
+#: apps/people/views.py:100 apps/reports/views.py:114
 #: templates/admissions/index.html:33 templates/admissions/index.html:41
 #: templates/core/design_system.html:56 templates/fees/concessions.html:23
 #: templates/fees/family_vouchers.html:21 templates/fees/student.html:36
@@ -1249,7 +1249,7 @@ msgstr "حیثیت"
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/fees/views.py:838 apps/hifz/views.py:214
 #: apps/insights/views.py:46 apps/inventory/views.py:318
-#: apps/people/views.py:98 apps/reports/views.py:113
+#: apps/people/views.py:99 apps/reports/views.py:113
 #: templates/exams/award_list.html:15 templates/fees/find.html:6
 #: templates/fees/student.html:5 templates/hifz/student.html:6
 #: templates/inventory/receipt.html:14 templates/parents/child.html:6
@@ -1262,7 +1262,7 @@ msgstr "داخلہ نمبر"
 
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/hifz/views.py:214
 #: apps/hr/views.py:86 apps/insights/views.py:46 apps/payroll/views.py:64
-#: apps/payroll/views.py:71 apps/people/views.py:98 apps/reports/views.py:113
+#: apps/payroll/views.py:71 apps/people/views.py:99 apps/reports/views.py:113
 #: apps/setup/forms.py:21 apps/setup/forms.py:232
 #: templates/exams/award_list.html:15 templates/hifz/report.html:14
 #: templates/hr/day.html:20 templates/hr/index.html:39
@@ -1279,7 +1279,7 @@ msgstr "نام"
 
 #: apps/attendance/views.py:186 apps/fees/forms.py:40 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/insights/views.py:46 apps/inventory/views.py:55
-#: apps/notices/views.py:151 apps/people/forms.py:44 apps/people/views.py:98
+#: apps/notices/views.py:151 apps/people/forms.py:44 apps/people/views.py:99
 #: apps/reports/views.py:77 apps/reports/views.py:113 apps/reports/views.py:136
 #: apps/setup/forms.py:20 templates/academics/index.html:17
 #: templates/admissions/index.html:31 templates/admissions/index.html:41
@@ -1304,7 +1304,7 @@ msgid "Class"
 msgstr "جماعت"
 
 #: apps/attendance/views.py:186 apps/fees/forms.py:41 apps/people/forms.py:45
-#: apps/people/views.py:98 apps/reports/views.py:77 apps/reports/views.py:114
+#: apps/people/views.py:99 apps/reports/views.py:77 apps/reports/views.py:114
 #: apps/reports/views.py:136 templates/attendance/_people.html:3
 #: templates/attendance/absentees.html:15 templates/attendance/today.html:41
 #: templates/diary/day.html:29 templates/exams/index.html:27
@@ -1711,7 +1711,7 @@ msgstr "رول نمبر"
 
 #: apps/exams/views.py:419 apps/fees/views.py:262 apps/fees/views.py:790
 #: apps/fees/views.py:838 apps/hr/forms.py:49 apps/people/forms.py:47
-#: apps/people/views.py:98 apps/reports/views.py:113
+#: apps/people/views.py:99 apps/reports/views.py:113
 #: templates/exams/award_list.html:15 templates/fees/collections.html:18
 #: templates/hr/employee.html:13 templates/people/student_list.html:40
 #: templates/reports/new_admissions.html:18
@@ -2361,7 +2361,7 @@ msgstr "خاندان وار نادہندگان"
 msgid "Father"
 msgstr "والد"
 
-#: apps/fees/views.py:780 apps/fees/views.py:790 apps/people/views.py:98
+#: apps/fees/views.py:780 apps/fees/views.py:790 apps/people/views.py:99
 #: templates/core/design_system.html:78 templates/fees/defaulters.html:21
 #: templates/fees/defaulters.html:31 templates/people/student_list.html:41
 msgid "Parent mobile"
@@ -2468,13 +2468,13 @@ msgstr "پچھلے مہینوں سے باقی"
 msgid "Choose an Excel file (.xlsx)."
 msgstr "ایکسل فائل (.xlsx) منتخب کریں۔"
 
-#: apps/fees/views.py:1086 apps/people/views.py:541
+#: apps/fees/views.py:1086 apps/people/views.py:573
 msgid "The file is larger than 5 MB. Split it into smaller files."
 msgstr "فائل 5 MB سے بڑی ہے۔ اسے چھوٹی فائلوں میں تقسیم کریں۔"
 
 #: apps/fees/views.py:1101 apps/fees/views.py:1107 apps/hr/views.py:198
 #: apps/hr/views.py:204 apps/hr/views.py:257 apps/hr/views.py:263
-#: apps/people/views.py:558 apps/people/views.py:564
+#: apps/people/views.py:590 apps/people/views.py:596
 msgid "This import has expired. Please check the file again."
 msgstr "اس درآمد کی مدت ختم ہو گئی۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
@@ -3142,7 +3142,7 @@ msgstr "والد / شوہر کا نام"
 msgid "Type"
 msgstr "قسم"
 
-#: apps/hr/views.py:86 apps/notices/views.py:151 apps/setup/forms.py:368
+#: apps/hr/views.py:86 apps/notices/views.py:151 apps/setup/forms.py:370
 #: templates/admissions/index.html:41 templates/hr/employee.html:16
 #: templates/hr/index.html:39 templates/notices/compose.html:28
 #: templates/setup/users.html:19
@@ -3168,7 +3168,7 @@ msgstr "مشین آئی ڈی"
 msgid "Choose an Excel file (.xlsx) smaller than 5 MB."
 msgstr "5 MB سے چھوٹی ایکسل فائل (.xlsx) چنیں۔"
 
-#: apps/hr/views.py:214 apps/people/views.py:574
+#: apps/hr/views.py:214 apps/people/views.py:606
 msgid "The data changed since the check. Please check the file again."
 msgstr "چیک کے بعد ڈیٹا بدل گیا ہے۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
@@ -3562,7 +3562,7 @@ msgstr "تیار"
 msgid "Could not be made"
 msgstr "نہیں بن سکا"
 
-#: apps/notices/forms.py:16 apps/setup/forms.py:317
+#: apps/notices/forms.py:16 apps/setup/forms.py:319
 #: templates/academics/holidays.html:21 templates/notices/index.html:14
 #: templates/setup/user_detail.html:26
 msgid "Where"
@@ -3748,18 +3748,26 @@ msgid "mobile 2"
 msgstr "موبائل 2"
 
 #: apps/organisation/models.py:84
+msgid "receipt printer (network address)"
+msgstr "رسید پرنٹر (نیٹ ورک ایڈریس)"
+
+#: apps/organisation/models.py:88
+msgid "The receipt printer's IP address on the office network, e.g. 192.168.1.100 (port 9100 is used). Parent Tree slips print on it at once, without a print window."
+msgstr "دفتر کے نیٹ ورک پر رسید پرنٹر کا IP ایڈریس، مثلاً 192.168.1.100 (پورٹ 9100)۔ پیرنٹ ٹری کی پرچی بغیر پرنٹ ونڈو کے فوراً اسی پر پرنٹ ہوتی ہے۔"
+
+#: apps/organisation/models.py:93
 msgid "reference number start"
 msgstr "ریفرنس نمبر کا آغاز"
 
-#: apps/organisation/models.py:88
+#: apps/organisation/models.py:97
 msgid "Filled in automatically: TAS-HO or the branch initials-city code, e.g. TAS-HO-FSD gives TAS-HO-FSD-0001. Each branch has its own. Change it only if needed."
 msgstr "خود بخود بنتا ہے: TAS-HO یا برانچ کے ابتدائی حروف-شہر کا کوڈ، مثلاً TAS-HO-FSD سے TAS-HO-FSD-0001۔ ہر برانچ کا اپنا۔ ضرورت ہو تو ہی بدلیں۔"
 
-#: apps/organisation/models.py:132
+#: apps/organisation/models.py:141
 msgid "Region belongs to a different head office."
 msgstr "یہ ریجن کسی اور ہیڈ آفس کا ہے۔"
 
-#: apps/organisation/models.py:146
+#: apps/organisation/models.py:155
 msgid "e.g. Boys Campus, Girls Campus, Main Building"
 msgstr "مثلاً بوائز کیمپس، گرلز کیمپس، مین بلڈنگ"
 
@@ -4004,35 +4012,35 @@ msgstr "بہن بھائی (والد کا ایک ہی شناختی کارڈ) کو
 msgid "Admission number"
 msgstr "داخلہ نمبر"
 
-#: apps/people/forms.py:96 apps/setup/forms.py:366
+#: apps/people/forms.py:96 apps/setup/forms.py:368
 msgid "First name"
 msgstr "پہلا نام"
 
-#: apps/people/forms.py:97 apps/setup/forms.py:367
+#: apps/people/forms.py:97 apps/setup/forms.py:369
 msgid "Last name"
 msgstr "آخری نام"
 
-#: apps/people/forms.py:98 apps/people/views.py:99 apps/reports/views.py:113
+#: apps/people/forms.py:98 apps/people/views.py:100 apps/reports/views.py:113
 #: templates/admissions/detail.html:20 templates/people/student_detail.html:26
 msgid "Gender"
 msgstr "جنس"
 
-#: apps/people/forms.py:99 apps/people/views.py:99
+#: apps/people/forms.py:99 apps/people/views.py:100
 #: templates/people/student_detail.html:27
 msgid "Date of birth"
 msgstr "تاریخ پیدائش"
 
-#: apps/people/forms.py:100 apps/people/views.py:99 apps/reports/views.py:113
+#: apps/people/forms.py:100 apps/people/views.py:100 apps/reports/views.py:113
 #: templates/core/design_system.html:79 templates/people/student_detail.html:28
 #: templates/reports/new_admissions.html:18
 msgid "Admission date"
 msgstr "تاریخ داخلہ"
 
-#: apps/people/forms.py:101 apps/people/views.py:99
+#: apps/people/forms.py:101 apps/people/views.py:100
 msgid "Father CNIC"
 msgstr "والد کا شناختی کارڈ نمبر"
 
-#: apps/people/forms.py:102 apps/setup/forms.py:369
+#: apps/people/forms.py:102 apps/setup/forms.py:371
 #: templates/people/student_detail.html:33
 msgid "Email"
 msgstr "ای میل"
@@ -4313,58 +4321,74 @@ msgstr "مثلاً HO-FAISALABAD-FSD-0001؛ کبھی دہرایا نہیں جا�
 msgid "Class and section at the time of leaving"
 msgstr "چھوڑتے وقت جماعت اور سیکشن"
 
-#: apps/people/views.py:234
+#: apps/people/views.py:220
+msgid "No receipt printer is set for this branch. Add its network address in Setup → Branches."
+msgstr "اس برانچ کا کوئی رسید پرنٹر درج نہیں۔ سیٹ اپ ← برانچز میں اس کا نیٹ ورک ایڈریس درج کریں۔"
+
+#: apps/people/views.py:226
+#, python-format
+msgid "Parent Tree printed: %(n)s student."
+msgid_plural "Parent Tree printed: %(n)s students."
+msgstr[0] "پیرنٹ ٹری پرنٹ ہو گیا: %(n)s طالب علم۔"
+msgstr[1] "پیرنٹ ٹری پرنٹ ہو گیا: %(n)s طلبہ۔"
+
+#: apps/people/views.py:231
+#, python-format
+msgid "The receipt printer (%(p)s) did not answer: %(e)s. Check that it is on and connected."
+msgstr "رسید پرنٹر (%(p)s) نے جواب نہیں دیا: %(e)s۔ دیکھیں کہ پرنٹر آن ہے اور نیٹ ورک سے جڑا ہے۔"
+
+#: apps/people/views.py:266
 #, python-format
 msgid "Saved %(name)s."
 msgstr "%(name)s محفوظ ہو گیا۔"
 
-#: apps/people/views.py:262
+#: apps/people/views.py:294
 #, python-format
 msgid "%(n)s is now marked as %(s)s."
 msgstr "%(n)s اب %(s)s درج ہے۔"
 
-#: apps/people/views.py:319
+#: apps/people/views.py:351
 #, python-format
 msgid "%(n)s sections made for %(s)s."
 msgstr "%(s)s کے لیے %(n)s سیکشن بن گئے۔"
 
-#: apps/people/views.py:420
+#: apps/people/views.py:452
 #, python-format
 msgid "%(p)s promoted, %(k)s kept in the same class, %(g)s graduated, %(s)s left out."
 msgstr "%(p)s اگلی جماعت میں، %(k)s اسی جماعت میں، %(g)s فارغ التحصیل، %(s)s ابھی شامل نہیں۔"
 
-#: apps/people/views.py:446
+#: apps/people/views.py:478
 msgid "Promote"
 msgstr "اگلی جماعت میں"
 
-#: apps/people/views.py:447
+#: apps/people/views.py:479
 msgid "Keep in the same class"
 msgstr "اسی جماعت میں رکھیں"
 
-#: apps/people/views.py:448
+#: apps/people/views.py:480
 msgid "Graduate (passed out)"
 msgstr "فارغ التحصیل"
 
-#: apps/people/views.py:449
+#: apps/people/views.py:481
 msgid "Leave out for now"
 msgstr "ابھی شامل نہ کریں"
 
-#: apps/people/views.py:476
+#: apps/people/views.py:508
 msgid "No students to print ID cards for. Choose a class and section first."
 msgstr "آئی ڈی کارڈ کے لیے کوئی طالب علم نہیں۔ پہلے جماعت اور سیکشن منتخب کریں۔"
 
-#: apps/people/views.py:502
+#: apps/people/views.py:534
 #, python-format
 msgid "Row %(rows)s was not imported because of its problem. Correct it and import it again."
 msgid_plural "%(n)s rows were not imported because of their problems (rows %(rows)s). Correct them and import them again."
 msgstr[0] "قطار %(rows)s مسئلے کی وجہ سے شامل نہیں ہوئی۔ اسے درست کر کے دوبارہ شامل کریں۔"
 msgstr[1] "%(n)s قطاریں مسائل کی وجہ سے شامل نہیں ہوئیں (قطاریں %(rows)s)۔ انہیں درست کر کے دوبارہ شامل کریں۔"
 
-#: apps/people/views.py:539
+#: apps/people/views.py:571
 msgid "Choose the Excel template (.xlsx) or the old software's PDF report."
 msgstr "ایکسل ٹیمپلیٹ (.xlsx) یا پرانے سافٹ ویئر کی PDF رپورٹ چنیں۔"
 
-#: apps/people/views.py:577
+#: apps/people/views.py:609
 #, python-format
 msgid "%(n)s students imported."
 msgstr "%(n)s طلبہ درآمد ہو گئے۔"
@@ -4835,66 +4859,66 @@ msgstr "رعایت %"
 msgid "Needs approval"
 msgstr "منظوری درکار"
 
-#: apps/setup/forms.py:277
+#: apps/setup/forms.py:279
 msgid "Phone 1"
 msgstr "فون 1"
 
-#: apps/setup/forms.py:277
+#: apps/setup/forms.py:279
 msgid "Phone 2"
 msgstr "فون 2"
 
-#: apps/setup/forms.py:277
+#: apps/setup/forms.py:279
 msgid "Mobile 1"
 msgstr "موبائل 1"
 
-#: apps/setup/forms.py:278
+#: apps/setup/forms.py:280
 msgid "Mobile 2"
 msgstr "موبائل 2"
 
-#: apps/setup/forms.py:285
+#: apps/setup/forms.py:287
 msgid "This region belongs to another head office."
 msgstr "یہ ریجن کسی دوسرے ہیڈ آفس کا ہے۔"
 
-#: apps/setup/forms.py:309
+#: apps/setup/forms.py:311
 msgid "The session must end after it starts."
 msgstr "سیشن کی آخری تاریخ شروع کی تاریخ کے بعد ہونی چاہیے۔"
 
-#: apps/setup/forms.py:316 templates/setup/user_detail.html:26
+#: apps/setup/forms.py:318 templates/setup/user_detail.html:26
 #: templates/setup/users.html:12
 msgid "Role"
 msgstr "کردار"
 
-#: apps/setup/forms.py:322 templates/fees/student.html:64
+#: apps/setup/forms.py:324 templates/fees/student.html:64
 #: templates/setup/user_detail.html:26
 msgid "Until"
 msgstr "تک"
 
-#: apps/setup/forms.py:322
+#: apps/setup/forms.py:324
 msgid "Leave empty if open-ended."
 msgstr "اگر اختتام طے نہیں تو خالی چھوڑ دیں۔"
 
-#: apps/setup/forms.py:345
+#: apps/setup/forms.py:347
 msgid "Choose where this role applies."
 msgstr "منتخب کریں کہ یہ کردار کہاں لاگو ہو گا۔"
 
-#: apps/setup/forms.py:365 templates/setup/password.html:8
+#: apps/setup/forms.py:367 templates/setup/password.html:8
 #: templates/setup/users.html:19
 msgid "Username"
 msgstr "یوزر نیم"
 
-#: apps/setup/forms.py:370
+#: apps/setup/forms.py:372
 msgid "Language"
 msgstr "زبان"
 
-#: apps/setup/forms.py:379
+#: apps/setup/forms.py:381
 msgid "Letters, digits and @ . + - _ only."
 msgstr "صرف انگریزی حروف، ہندسے اور @ . + - _"
 
-#: apps/setup/forms.py:387 templates/core/design_system.html:78
+#: apps/setup/forms.py:389 templates/core/design_system.html:78
 msgid "Enter an 11-digit mobile number, e.g. 0300-1234567."
 msgstr "11 ہندسوں کا موبائل نمبر لکھیں، مثلاً 0300-1234567۔"
 
-#: apps/setup/forms.py:390
+#: apps/setup/forms.py:392
 msgid "Another login already uses this mobile number."
 msgstr "یہ موبائل نمبر کسی دوسرے لاگ اِن میں استعمال ہو رہا ہے۔"
 
@@ -8752,6 +8776,24 @@ msgstr "ہر ملازم کی مقررہ ماہانہ تنخواہ۔ نقد اد�
 msgid "Save salaries"
 msgstr "تنخواہیں محفوظ کریں"
 
+#: templates/people/_parent_tree_button.html:2
+msgid "Could not reach TASEMS. Try again."
+msgstr "TASEMS سے رابطہ نہیں ہو سکا۔ دوبارہ کوشش کریں۔"
+
+#: templates/people/_parent_tree_button.html:3
+msgid "Print Parent Tree"
+msgstr "پیرنٹ ٹری پرنٹ کریں"
+
+#: templates/people/_parent_tree_button.html:3
+#, python-format
+msgid "Print Parent Tree for %(n)s"
+msgstr "%(n)s کا پیرنٹ ٹری پرنٹ کریں"
+
+#: templates/people/_parent_tree_button.html:4
+#: templates/people/student_list.html:41
+msgid "Parent Tree"
+msgstr "پیرنٹ ٹری"
+
 #: templates/people/_student_fields.html:3
 msgid "Student information"
 msgstr "طالب علم کی معلومات"
@@ -8878,10 +8920,6 @@ msgstr "جگہ مل گئی"
 msgid "Save decisions"
 msgstr "فیصلے محفوظ کریں"
 
-#: templates/people/student_detail.html:7 templates/people/student_list.html:52
-msgid "Print Parent Tree"
-msgstr "پیرنٹ ٹری پرنٹ کریں"
-
 #: templates/people/student_detail.html:10
 msgid "Sections of this page"
 msgstr "اس صفحے کے حصے"
@@ -8904,11 +8942,6 @@ msgstr "ریکارڈ کی تاریخ"
 #: templates/people/student_detail.html:15 templates/people/student_form.html:2
 msgid "Edit student"
 msgstr "طالب علم میں ترمیم"
-
-#: templates/people/student_detail.html:16
-#: templates/people/student_list.html:41
-msgid "Parent Tree"
-msgstr "پیرنٹ ٹری"
 
 #: templates/people/student_detail.html:20
 msgid "ID card"
@@ -9073,11 +9106,6 @@ msgstr "آئی ڈی کارڈ پرنٹ کریں"
 #: templates/people/student_list.html:49
 msgid "Not placed"
 msgstr "جماعت میں نہیں"
-
-#: templates/people/student_list.html:52
-#, python-format
-msgid "Print Parent Tree for %(n)s"
-msgstr "%(n)s کا پیرنٹ ٹری پرنٹ کریں"
 
 #: templates/people/student_list.html:60 templates/setup/branches.html:26
 #: templates/setup/users.html:27

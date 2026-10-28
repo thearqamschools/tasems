@@ -1,0 +1,4 @@
+{% load i18n tasems_tags %}{# Prints the Parent Tree slip on the branch's network receipt printer: no window, no page change (with JavaScript). #}
+<form method="post" action="{% url 'people:parent_tree' s.pk %}" data-print-slip data-failed="{% trans 'Could not reach TASEMS. Try again.' %}" class="no-print" style="display:inline">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+{% if small %}<button class="button quiet sm" type="submit" title="{% trans 'Print Parent Tree' %}" aria-label="{% blocktrans with n=s.full_name %}Print Parent Tree for {{ n }}{% endblocktrans %}">{% icon "printer" %}</button>
+{% else %}<button class="button secondary" type="submit">{% icon "printer" %}{% trans "Parent Tree" %}</button>{% endif %}</form>

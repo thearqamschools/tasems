@@ -1,11 +1,16 @@
 # Changelog
 
-## 0.36.1 — 2026-10-28 — Parent Tree prints from its own window (Windows installer v7)
+## 0.37.0 — 2026-10-28 — Parent Tree prints straight on the network receipt printer (Windows installer v7)
 
-Fixed
-- Parent Tree did not print on the office computer: the slip loaded in a hidden frame, which some browsers do not
-  print. It now opens in a small window that shows the print window at once and closes after printing. If the
-  browser blocks the small window, the slip opens in the same tab and prints from there.
+Changed
+- Parent Tree no longer opens a print window or a new window (it did not print on the office computer). A click
+  sends the slip straight to the branch's **receipt printer on the office network** (LAN, port 9100, ESC/POS) and a
+  short note says "Parent Tree printed: 2 students." — or what is wrong (no printer set, printer off).
+- Setup → Branches: new box **Receipt printer (network address)**, e.g. 192.168.1.100.
+- The slip on paper: logo, THE ARQAM SCHOOLS, address and phones, Parent Name, date and time, then Campus | Code |
+  Student Name | Class | Section (long names continue on the next line), "Thank you", paper cut.
+- Works when TASEMS runs on a computer in the same office network as the printer (the offline Windows copy). A
+  server on the internet cannot reach an office printer; that is for later, when TASEMS goes online.
 
 ## 0.36.0 — 2026-10-28 — Round 3: sections, campuses, Parent Tree slip (Windows installer v6)
 

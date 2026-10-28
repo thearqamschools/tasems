@@ -49,7 +49,7 @@
       {% for e in s.current_enrolments %}<td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td>{% empty %}<td colspan="2"><span class="badge attention">{% trans "Not placed" %}</span></td>{% endfor %}
       <td>{% for phone in s.parent_mobiles %}<span class="num" dir="ltr">{{ phone }}</span>{% if not forloop.last %}<br>{% endif %}{% empty %}—{% endfor %}</td>
       <td>{% if s.status == "active" %}<span class="badge">{{ s.get_status_display }}</span>{% else %}<span class="badge muted">{{ s.get_status_display }}</span>{% endif %}</td>
-      <td class="no-print">{% if s.status == "active" %}<a class="button quiet sm" data-print-slip href="{% url 'people:parent_tree' s.pk %}" title="{% trans 'Print Parent Tree' %}" aria-label="{% blocktrans with n=s.full_name %}Print Parent Tree for {{ n }}{% endblocktrans %}">{% icon "printer" %}</a>{% endif %}</td>
+      <td class="no-print">{% if s.status == "active" %}{% include "people/_parent_tree_button.html" with s=s small=True %}{% endif %}</td>
     </tr>
   {% endfor %}
   </tbody>

@@ -2,6 +2,8 @@
 contact numbers, no father email."""
 
 import datetime as dt
+import socket
+import threading
 
 import pytest
 
@@ -54,8 +56,46 @@ def test_parent_tree_lists_current_brothers_and_sisters(school, make_user, login
     assert "<td>Girls</td>" in page and "<td>Five</td>" in page
     assert client.get(f"/students/{school['left'].id}/parent-tree/").status_code == 404  # only current students
     detail = client.get(f"/students/{school['ifrah'].id}/").content.decode()
-    assert detail.count(f"/students/{school['ifrah'].id}/parent-tree/") == 2  # icon by the name and the button
+    assert detail.count(f'action="/students/{school["ifrah"].id}/parent-tree/"') == 2  # icon by the name and the button
     assert "/parent-tree/" not in client.get(f"/students/{school['left'].id}/").content.decode()
+
+
+def fake_printer():
+    """A network receipt printer on this computer: keeps what it receives."""
+    server = socket.socket()
+    server.bind(("127.0.0.1", 0))
+    server.listen(1)
+    got = bytearray()
+
+    def serve():
+        conn, _ = server.accept()
+        with conn:
+            while chunk := conn.recv(65536):
+                got.extend(chunk)
+        server.close()
+
+    thread = threading.Thread(target=serve, daemon=True)
+    thread.start()
+    return f"127.0.0.1:{server.getsockname()[1]}", got, thread
+
+
+def test_parent_tree_prints_straight_to_the_network_printer(school, make_user, login_as):
+    """Project lead, 28 Oct 2026: no print window — the slip comes out of the LAN receipt printer at once."""
+    client = login_as(make_user("admissions_officer", Scope.BRANCH, school["branch"]))
+    url = f"/students/{school['haniya'].id}/parent-tree/"
+    json = {"HTTP_ACCEPT": "application/json"}
+    answer = client.post(url, **json)
+    assert answer.status_code == 503 and "No receipt printer is set" in answer.json()["message"]
+    address, got, thread = fake_printer()
+    school["branch"].receipt_printer = address
+    school["branch"].save()
+    answer = client.post(url, **json)
+    thread.join(5)
+    assert answer.json() == {"ok": True, "message": "Parent Tree printed: 2 students."}
+    assert b"THE ARQAM SCHOOLS" in got and b"Ifrah" in got and b"Haniya" in got and b"Left" not in got
+    assert b"041-2660265" in got and got.endswith(b"\x1dVB\x00")  # paper cut at the end
+    back = client.post(url, {"next": "/students/"})  # without JavaScript: back to the list with a note
+    assert back.status_code == 302 and back.url == "/students/"
 
 
 def test_students_list_shows_both_parent_mobiles_and_parent_tree(school, make_user, login_as):

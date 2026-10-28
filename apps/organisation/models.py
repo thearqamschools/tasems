@@ -80,6 +80,15 @@ class Branch(TimeStampedModel):
     phone_2 = models.CharField(_("phone 2"), max_length=60, blank=True)
     mobile_1 = models.CharField(_("mobile 1"), max_length=60, blank=True)
     mobile_2 = models.CharField(_("mobile 2"), max_length=60, blank=True)
+    receipt_printer = models.CharField(
+        _("receipt printer (network address)"),
+        max_length=60,
+        blank=True,
+        help_text=_(
+            "The receipt printer's IP address on the office network, e.g. 192.168.1.100 (port 9100 is used). "
+            "Parent Tree slips print on it at once, without a print window."
+        ),
+    )
     reference_prefix = models.CharField(
         _("reference number start"),
         max_length=40,
