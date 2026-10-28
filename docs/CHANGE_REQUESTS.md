@@ -183,3 +183,27 @@ The lead is listing changes one by one. **Build nothing until the lead says "haa
   asks for a campus), the list shows **only the campus name**, not the school and branch in front of it
   (now e.g. "The Arqam Schools — Samanabad Campus (Head Office) — Boys Campus").
   Order: **Girls Campus first, then Boys Campus**.
+
+### Students list — parent mobiles
+- R3-6. The **Parent mobile** column shows **both** the father's and the mother's mobile.
+
+### Parent Tree slip (from the old software) — photos in `docs/reference/parent-tree/`
+Used to call children out of class: when a father comes to take his children early, the office prints a slip
+with the child and all brothers and sisters, and the children are called with it.
+- R3-7. **Where:**
+  - Students list: a new **Parent Tree** column after Status, with a small printer icon on every row.
+  - Student page: a small Parent Tree icon next to the student's name, and a **Parent Tree** button after
+    "Edit student" (with Delete, Fees, ID card…).
+  - One click prints straight away (the old software asked "Are you really want to print Parent Child Tree?"
+    with Confirm / Cancel; the lead asked for a simple click).
+- R3-8. **The slip** (copy of the old one):
+  - Logo, **THE ARQAM SCHOOLS**, Sanora Colony Samanabad Faisalabad, (041-2660265, 041-2406479).
+  - Title **Parent Tree**; **Parent Name** (father) and the **date and time** of printing.
+  - Table: **Campus** (Girls / Boys) | **Comp. Code** (admission no) | **Student Name** | **Class** | **Section**,
+    one row for the child and each brother / sister.
+  - Footer "Thank you" (the old slip says "Thanks you").
+- R3-9. **Printer:** SPEEDX SPEED-X 400UL thermal receipt printer, **80 mm** paper, USB + LAN, ESC/POS.
+  The slip is laid out for 80 mm roll paper.
+- To decide when building: brothers and sisters = students with the same father CNIC (the rule already used for
+  sibling fee and family vouchers) — only current (active) students. Which address and phones print on the slip
+  for branches other than Samanabad (the branch's own, if it has them).
