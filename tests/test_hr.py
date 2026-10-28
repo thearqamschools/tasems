@@ -5,7 +5,7 @@ import io
 
 import pytest
 from django.utils import timezone
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 
 from apps.accounts.models import Scope
 from apps.hr import services as S
@@ -248,3 +248,23 @@ def test_other_branch_cannot_see_staff(hr, org, login_as, make_user):
     e = hr["employee"]()
     other = login_as(make_user("principal", Scope.BRANCH, org["fsd_franchise"]))
     assert other.get(f"/staff/{e.id}/").status_code == 404
+
+
+def test_staff_import_can_skip_rows_with_problems(hr, login_as):
+    wb = Workbook()
+    wb.active.append(["Employee Code *", "Full Name *", "Gender *", "Designation *", "Staff Type *", "Joining Date *"])
+    wb.active.append(["S-1", "Qari Sahib", "Male", "Hifz Teacher", "Qari", "01/04/2020"])
+    wb.active.append(["S-2", "Guard", "Robot", "Guard", "Support", "01/05/2021"])
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    buf.name = "staff.xlsx"
+    client = login_as(hr["principal"])
+    page = client.post("/staff/import/", {"step": "check", "file": buf})
+    assert page.context["result"].can_skip_problems
+    assert "Skip problem rows and import 1 staff member" in page.content.decode()
+    token = page.context["token"]
+    problems = load_workbook(io.BytesIO(client.get(f"/staff/import/?problems={token}").content)).active
+    assert problems.cell(2, 1).value == "S-2"
+    client.post("/staff/import/", {"step": "import", "token": token, "skip_problems": "1"})
+    assert Employee.objects.filter(code="S-1").exists() and not Employee.objects.filter(code="S-2").exists()

@@ -1,4 +1,5 @@
-"""Staff list from Excel: checked row by row, saved all together or not at all."""
+"""Staff list from Excel: checked row by row, then saved together in one transaction: every row,
+or, if the user chooses, only the rows without problems."""
 
 import datetime as dt
 import io
@@ -10,6 +11,7 @@ from django.utils.translation import gettext as _
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, PatternFill
 
+from apps.core.importing import file_errors, problem_row_numbers
 from apps.core.phone import normalize_cnic, normalize_mobile
 
 from .models import Employee
@@ -103,12 +105,28 @@ def template_workbook():
 
 @dataclass
 class Result:
-    rows: list = field(default_factory=list)
+    rows: list = field(default_factory=list)  # (row number, data)
     errors: list = field(default_factory=list)  # (row, column, message)
+    header: tuple = ()
+    raw: dict = field(default_factory=dict)  # row number -> values as in the file
 
     @property
     def ok(self):
         return not self.errors and bool(self.rows)
+
+    @property
+    def problem_rows(self):
+        return problem_row_numbers(self.errors)
+
+    @property
+    def good_rows(self):
+        bad = self.problem_rows
+        return [(n, d) for n, d in self.rows if n not in bad]
+
+    @property
+    def can_skip_problems(self):
+        """Some rows have problems but the rest can be imported on their own."""
+        return bool(self.problem_rows) and not file_errors(self.errors) and bool(self.good_rows)
 
 
 def check(content, *, branch):
@@ -122,6 +140,7 @@ def check(content, *, branch):
         return result
     rows = ws.iter_rows(values_only=True)
     header = next(rows, None) or ()
+    result.header = tuple(header)
     positions = {}
     for i, title in enumerate(header):
         key = HEADER_TO_KEY.get(_key(title))
@@ -141,6 +160,7 @@ def check(content, *, branch):
         if len(result.rows) >= MAX_ROWS:
             result.errors.append((None, "", _("Too many rows.")))
             break
+        result.raw[number] = tuple(values)
         raw = {k: (values[i] if i < len(values) else None) for k, i in positions.items()}
         d = {k: _text(raw.get(k)) for k, _h, _r in COLUMNS if k != "joined_on"}
 
@@ -185,18 +205,20 @@ def check(content, *, branch):
         except ValueError:
             d["joined_on"] = None
             err("joined_on", _("Not a date. Use day/month/year, e.g. 01/04/2020"))
-        result.rows.append(d)
+        result.rows.append((number, d))
     if not result.rows and not result.errors:
         result.errors.append((None, "", _("The file has no staff rows.")))
     return result
 
 
 @transaction.atomic
-def run_import(result, *, branch):
-    if not result.ok:
+def run_import(result, *, branch, skip_problems=False):
+    """Saves every row, or with skip_problems only the rows without problems."""
+    if not (result.ok or (skip_problems and result.can_skip_problems)):
         raise ValueError("Import called on a file with problems")
-    for d in result.rows:
+    rows = result.good_rows
+    for _n, d in rows:
         e = Employee(branch=branch, **d)
         e.full_clean()
         e.save()
-    return len(result.rows)
+    return len(rows)

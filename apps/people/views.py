@@ -13,9 +13,11 @@ from django.db.models import Prefetch, Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from apps.academics.models import ClassLevel, Section
 from apps.core.branch import current_branch
+from apps.core.importing import problems_response
 from apps.core.models import AuditEvent
 from apps.organisation.models import AcademicSession
 
@@ -206,6 +208,17 @@ def student_import(request):
     session = _current_session()
     context = {"session": session, "max_rows": importer.MAX_ROWS}
 
+    if request.GET.get("problems"):
+        # The rows with problems from the checked file, to correct and import again.
+        pending = request.session.get("import_token")
+        token = request.GET["problems"]
+        path = _import_dir() / f"{token}.xlsx"
+        if not pending or pending["token"] != token or pending["branch"] != branch.id or not path.exists():
+            messages.error(request, _("This import has expired. Please check the file again."))
+            return redirect("people:student_import")
+        result = importer.check(path.read_bytes(), branch=branch, session=session)
+        return problems_response(result.header, result.raw, result.errors, "TASEMS-students-to-fix.xlsx")
+
     if request.method == "POST" and request.POST.get("step") == "check":
         upload = request.FILES.get("file")
         if upload is None or not upload.name.lower().endswith((".xlsx", ".pdf")):
@@ -216,7 +229,7 @@ def student_import(request):
             content = upload.read()
             result = importer.check(content, branch=branch, session=session)
             token = ""
-            if result.ok:
+            if result.ok or result.can_skip_problems:
                 token = secrets.token_hex(16)
                 (_import_dir() / f"{token}.xlsx").write_bytes(content)
                 request.session["import_token"] = {"token": token, "branch": branch.id, "name": upload.name}
@@ -237,11 +250,22 @@ def student_import(request):
         finally:
             path.unlink(missing_ok=True)
         result = importer.check(content, branch=branch, session=session)
-        if not result.ok:
+        skip = request.POST.get("skip_problems") == "1"
+        if not (result.ok or (skip and result.can_skip_problems)):
             messages.error(request, _("The data changed since the check. Please check the file again."))
             return redirect("people:student_import")
-        count = importer.run_import(result, branch=branch, session=session, user=request.user)
+        count = importer.run_import(result, branch=branch, session=session, user=request.user, skip_problems=skip)
         messages.success(request, _("%(n)s students imported.") % {"n": count})
+        if skip:
+            messages.warning(
+                request,
+                ngettext(
+                    "%(n)s row with problems was skipped and not saved. Correct it and import it again.",
+                    "%(n)s rows with problems were skipped and not saved. Correct them and import them again.",
+                    len(result.problem_rows),
+                )
+                % {"n": len(result.problem_rows)},
+            )
         return redirect("people:student_list")
 
     return render(request, "people/student_import.html", context)
