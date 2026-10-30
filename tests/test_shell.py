@@ -49,7 +49,7 @@ def test_menu_is_grouped_and_marks_the_current_page(demo, login_as):
     client = login_as(User.objects.get(username="demo-principal"))
     groups = client.get("/fees/defaulters/").context["nav_groups"]
     labels = [g["label"] for g in groups]
-    assert labels[:5] == ["Overview", "Students", "Academics", "Finance", "Staff"]
+    assert labels[:6] == ["Overview", "Students", "Academics", "Finance", "Events", "Staff"]
     active = [i for g in groups for i in g["items"] if i["active"]]
     assert [i["url"] for i in active] == ["/fees/defaulters/"]  # the closest match, not "/fees/" as well
 
