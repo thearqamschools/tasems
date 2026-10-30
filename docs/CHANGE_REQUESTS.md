@@ -227,7 +227,7 @@ with the child and all brothers and sisters, and the children are called with it
 - R3-14 (28 Oct 2026). The printer's IP could not be found (self-test did not work, no official SPEEDX driver
   online). Built: Setup → Receipt printer finds it on the network, prints a test slip and saves it (v8).
 
-## Round 4 (30 Oct 2026) — proposed, not built yet
+## Round 4 (30 Oct 2026) — built 30 Oct 2026 (Windows installer v10)
 - R4-1. **Events & Tickets** (name to confirm): school events such as Eid Milan party, Summer Gala, trips, farewell.
   - Set up an event: name, type, date, which classes (from–to), ticket price per class.
   - Sell tickets at the office **without a voucher**; cash at first (other payment ways kept possible).
@@ -236,3 +236,5 @@ with the child and all brothers and sisters, and the children are called with it
   - Event expenses; tickets sold and money collected per class; profit or loss of the event.
   - Its **own account**, not linked to school fees or the school's accounts.
 - R4-2. Parent Tree slip shows the **name of the person (login) who printed it**.
+- Decided by the lead: name **Events & Tickets**; student ticket **plus extra tickets** for parents/guests; Director
+  and Principal make events, Director/Accountant/Admin take the money; **refunds allowed** with a reason.

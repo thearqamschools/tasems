@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ level }} · {{ event.name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'events:detail' event.id %}">‹ {{ event.name }}</a></p>
+<h1>{{ level }}</h1>
+<p class="lede">{{ event.name }} · {% blocktrans with p=paid n=rows|length %}{{ p }} of {{ n }} students have a ticket{% endblocktrans %}</p>
+{% if rows %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Admission no." %}</th><th>{% trans "Student" %}</th><th>{% trans "Father name" %}</th><th>{% trans "Section" %}</th><th>{% trans "Ticket" %}</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td class="num" style="text-align:start">{{ r.student.admission_no }}</td><td>{{ r.student.full_name }}</td><td>{{ r.student.father_name|default:"—" }}</td><td>{{ r.section }}</td>
+  <td>{% if r.paid %}<span class="badge">{% trans "Paid" %}</span>{% else %}<span class="badge attention">{% trans "Not yet" %}</span>{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>{% else %}<p class="muted">{% trans "No students in this class." %}</p>{% endif %}
+{% endblock %}

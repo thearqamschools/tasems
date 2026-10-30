@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% if event %}{{ event.name }}{% else %}{% trans "New event" %}{% endif %}{% endblock %}
+{% block content %}
+<p><a href="{% if event %}{% url 'events:detail' event.id %}{% else %}{% url 'events:index' %}{% endif %}">‹ {% if event %}{{ event.name }}{% else %}{% trans "Events & Tickets" %}{% endif %}</a></p>
+<h1>{% if event %}{% trans "Change event" %}{% else %}{% trans "New event" %}{% endif %}</h1>
+<form method="post" class="card" data-busy>{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="form-grid">{% for field in form %}{% if not field.name|slice:":6" == "price_" %}{% include "includes_field.html" %}{% endif %}{% endfor %}</div>
+  <h2>{% trans "Classes and ticket price" %}</h2>
+  <p class="muted">{% trans "Write the ticket price (Rs) for each class that goes. Leave a class empty if it does not take part." %}</p>
+  <div class="form-grid">{% for field in form.price_fields %}{% include "includes_field.html" %}{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>
+</form>
+{% endblock %}

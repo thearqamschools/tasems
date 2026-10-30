@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "apps.notices",
     "apps.payroll",
     "apps.inventory",
+    "apps.events",
     "apps.hifz",
     "apps.insights",
 ]

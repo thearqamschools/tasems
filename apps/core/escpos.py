@@ -104,22 +104,61 @@ def header_raster(logo_size=104):
     return raster(canvas.point(lambda p: 0 if p < 128 else 255))
 
 
-def parent_tree(branch, father_name, printed_at, rows):
-    """The Parent Tree slip as ESC/POS bytes (same content as the on-screen slip)."""
-    dash = line("-" * WIDTH)
+def _school_head(branch):
     out = INIT + CENTER + header_raster() + b"\n"
     if branch.address:
         out += line(branch.address)
     if branch.contact_numbers:
         out += line(f"({', '.join(branch.contact_numbers)})")
+    return out
+
+
+def parent_tree(branch, father_name, printed_at, rows, printed_by=""):
+    """The Parent Tree slip as ESC/POS bytes (same content as the on-screen slip)."""
+    dash = line("-" * WIDTH)
+    out = _school_head(branch)
     out += dash + BOLD_ON + line("Parent Tree") + BOLD_OFF + LEFT
     out += line(f"Parent Name: {father_name or '-'}")
     out += line(f"Date: {printed_at:%d/%m/%Y %I:%M %p}")
+    if printed_by:
+        out += line(f"Printed by: {printed_by}")
     widths = (6, 5, 16, 10, 7)  # 44 + 4 spaces = 48 characters
     out += dash + BOLD_ON + columns(("Campus", "Code", "Student Name", "Class", "Section"), widths) + BOLD_OFF + dash
     for r in rows:
         out += columns((r["campus"], r["code"], r["name"], r["class"], r["section"]), widths)
     out += dash + CENTER + line("Thank you") + FEED_AND_CUT
+    return out
+
+
+def ticket_receipt(sale, printed_at):
+    """Receipt for event tickets, given to the parent (project lead, 30 Oct 2026)."""
+    dash = line("-" * WIDTH)
+    event, student = sale.event, sale.student
+
+    def pair(label, value):
+        return line(f"{label}:".ljust(14) + str(value))
+
+    out = _school_head(event.branch) + dash + BOLD_ON + line("EVENT TICKET RECEIPT") + BOLD_OFF
+    if sale.is_refunded:
+        out += BOLD_ON + line("*** REFUNDED ***") + BOLD_OFF
+    out += LEFT + pair("Receipt No", sale.receipt_no) + pair("Event", event.name)
+    out += pair("Event date", f"{event.date:%d/%m/%Y}") + dash
+    out += pair("Student", student.full_name) + pair("Admission No", student.admission_no)
+    out += pair("Class", f"{sale.class_level.name} {sale.section_name}".strip())
+    out += pair("Father", student.father_name or "-") + dash
+    out += line(f"Student ticket  {sale.student_tickets} x Rs {sale.student_price:,.0f}".ljust(38)
+                + f"{sale.student_price * sale.student_tickets:,.0f}".rjust(10))  # fmt: skip
+    if sale.guest_tickets:
+        out += line(f"Extra tickets   {sale.guest_tickets} x Rs {sale.guest_price:,.0f}".ljust(38)
+                    + f"{sale.guest_price * sale.guest_tickets:,.0f}".rjust(10))  # fmt: skip
+    out += BOLD_ON + line("TOTAL Rs".ljust(38) + f"{sale.amount:,.0f}".rjust(10)) + BOLD_OFF + dash
+    paid = sale.get_paid_by_display() + (f" ({sale.reference})" if sale.reference else "")
+    out += pair("Paid by", paid)
+    out += pair("Received by", sale.received_by.get_full_name() or sale.received_by.username)
+    out += pair("Date", f"{sale.received_at.astimezone(printed_at.tzinfo):%d/%m/%Y %I:%M %p}")
+    if sale.is_refunded:
+        out += pair("Refunded by", sale.refunded_by.get_full_name() or sale.refunded_by.username)
+    out += dash + CENTER + line("Please keep this receipt.") + line("Thank you") + FEED_AND_CUT
     return out
 
 

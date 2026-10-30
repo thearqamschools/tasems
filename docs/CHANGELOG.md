@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.39.0 — 2026-10-30 — Events & Tickets (Windows installer v10)
+
+Added
+- **Events & Tickets** (menu: Events): trips, Eid Milan party, Summer Gala, farewell, sports day, annual function.
+  - An event has a name, type, date, place, the classes that take part with a ticket price for each, and an
+    optional price for extra tickets (parents or guests coming with the student).
+  - **Sell tickets** at the office without a voucher: find the student (admission no. or name), add extra tickets,
+    cash (bank or JazzCash/Easypaisa also possible). The receipt prints at once on the branch's receipt printer and
+    shows who received the money. Numbers run per event (EV1-0001…).
+  - **Refund** with a reason (Director, Accountant); the receipt stays, marked refunded.
+  - **Expenses** of the event (transport, food, entry tickets…); a mistake is cancelled with a reason.
+  - The event's own account: students with tickets, extra tickets, collected, expenses, **profit or loss**; per
+    class: students, paid, not yet (with the list of names); cash received by each person. Excel of receipts.
+  - **Not linked** to school fees, the cash & bank book or profit & loss.
+  - Who: Director and Principal make events and record expenses; Director, Accountant and Admin take ticket money;
+    Director and Accountant refund; head office and regional directors see.
+- **Parent Tree** slip now shows **Printed by** (the name of the login that printed it).
+
 ## 0.38.1 — 2026-10-28 — Parent Tree header (Windows installer v9)
 
 Changed

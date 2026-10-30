@@ -108,6 +108,12 @@ def _menu(user, branch):
             and (reverse("fees:royalty"), _("Royalty"), "landmark"),
         ],
     )
+    group(
+        _("Events"),
+        [
+            perm("events.view_event") and (reverse("events:index"), _("Events & Tickets"), "calendar-check"),
+        ],
+    )
     staff = perm("hr.view_employee")
     group(
         _("Staff"),

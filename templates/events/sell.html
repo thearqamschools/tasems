@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Sell tickets" %} · {{ event.name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'events:detail' event.id %}">‹ {{ event.name }}</a></p>
+<h1>{% trans "Sell tickets" %}</h1>
+<p class="lede">{{ event.name }} · {{ event.date|date:"d M Y" }} · {% trans "The receipt prints on the receipt printer; the money is recorded as received by you." %}</p>
+<form method="get" class="filter-inline" role="search">
+  <label for="q">{% trans "Student" %}</label>
+  <input id="q" name="q" value="{{ q }}" autofocus placeholder="{% trans 'Admission no., name or father name' %}">
+  <button class="button" type="submit">{% icon "search" %}{% trans "Find" %}</button>
+</form>
+{% if q and not found %}<p class="muted">{% trans "No current student found." %}</p>{% endif %}
+{% for f in found %}<div class="card">
+  <p><strong>{{ f.student.full_name }}</strong> <span class="num muted">{{ f.student.admission_no }}</span> · {% trans "Father" %}: {{ f.student.father_name|default:"—" }} · {% if f.place %}{{ f.place.section.class_level }} {{ f.place.section.name }}{% else %}<span class="badge attention">{% trans "Not placed" %}</span>{% endif %}
+  {% if f.has_ticket %} <span class="badge">{% trans "Already has a ticket" %}</span>{% endif %}</p>
+  {% if f.price is None %}<p class="muted">{% trans "This student's class is not in this event." %}</p>
+  {% else %}
+  <form method="post" class="form-grid" data-busy>{% csrf_token %}<input type="hidden" name="student" value="{{ f.student.id }}">
+    <div class="field"><label>{% trans "Student ticket" %}</label><p class="money"><strong>Rs {{ f.price|rupees }}</strong></p></div>
+    {% if event.guest_price %}<div class="field"><label for="g{{ f.student.id }}">{% blocktrans with p=event.guest_price|rupees %}Extra tickets (Rs {{ p }} each){% endblocktrans %}</label><input id="g{{ f.student.id }}" type="number" name="guests" min="0" max="20" value="0" inputmode="numeric"></div>{% endif %}
+    <div class="field"><label for="p{{ f.student.id }}">{% trans "Paid by" %}</label><select id="p{{ f.student.id }}" name="paid_by">{% for v, l in paid_by %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="r{{ f.student.id }}">{% trans "Reference (bank / JazzCash)" %}</label><input id="r{{ f.student.id }}" name="reference" maxlength="60"></div>
+    <div class="actions"><button class="button" type="submit">{% icon "printer" %}{% trans "Receive and print receipt" %}</button></div>
+  </form>{% endif %}
+</div>{% endfor %}
+{% if recent %}<h2>{% trans "Your last receipts" %}</h2>
+<div class="table-wrap"><table><thead><tr><th>{% trans "Receipt no." %}</th><th>{% trans "Student" %}</th><th class="num">{% trans "Tickets" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+<tbody>{% for s in recent %}<tr{% if s.is_refunded %} class="muted"{% endif %}><td><a class="num" href="{% url 'events:receipt' event.id s.id %}">{{ s.receipt_no }}</a></td><td>{{ s.student.full_name }}</td><td class="num">{{ s.tickets }}</td><td class="num money">{{ s.amount|rupees }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% endblock %}

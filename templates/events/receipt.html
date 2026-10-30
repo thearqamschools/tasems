@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ sale.receipt_no }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'events:detail' event.id %}">‹ {{ event.name }}</a></p>
+<div class="page-header">
+  <div><h1>{% trans "Receipt" %} <span class="num">{{ sale.receipt_no }}</span></h1>
+  <p class="lede">{{ event.name }} · {{ sale.received_at|date:"d M Y, h:i A" }}{% if sale.is_refunded %} · <span class="badge danger">{% trans "Refunded" %}</span>{% endif %}</p></div>
+  {% if perms.events.add_ticketsale %}<form method="post" class="actions">{% csrf_token %}<button class="button secondary" type="submit">{% icon "printer" %}{% trans "Print again" %}</button></form>{% endif %}
+</div>
+<div class="table-wrap"><table><tbody>
+  <tr><th>{% trans "Student" %}</th><td>{{ sale.student.full_name }} <span class="num muted">{{ sale.student.admission_no }}</span></td></tr>
+  <tr><th>{% trans "Father name" %}</th><td>{{ sale.student.father_name|default:"—" }}</td></tr>
+  <tr><th>{% trans "Class" %}</th><td>{{ sale.class_level }} {{ sale.section_name }}</td></tr>
+  <tr><th>{% trans "Student ticket" %}</th><td class="money">Rs {{ sale.student_price|rupees }}</td></tr>
+  {% if sale.guest_tickets %}<tr><th>{% trans "Extra tickets" %}</th><td>{{ sale.guest_tickets }} × Rs {{ sale.guest_price|rupees }}</td></tr>{% endif %}
+  <tr><th>{% trans "Total" %}</th><td class="money"><strong>Rs {{ sale.amount|rupees }}</strong></td></tr>
+  <tr><th>{% trans "Paid by" %}</th><td>{{ sale.get_paid_by_display }}{% if sale.reference %} · {{ sale.reference }}{% endif %}</td></tr>
+  <tr><th>{% trans "Received by" %}</th><td>{{ sale.received_by.get_full_name|default:sale.received_by.username }}</td></tr>
+  {% if sale.is_refunded %}<tr><th>{% trans "Refunded" %}</th><td>{{ sale.refunded_at|date:"d M Y, h:i A" }} · {{ sale.refunded_by.get_full_name|default:sale.refunded_by.username }} · {{ sale.refund_reason }}</td></tr>{% endif %}
+</tbody></table></div>
+{% if not sale.is_refunded and perms.events.refund_ticketsale %}
+<form method="post" action="{% url 'events:refund' event.id sale.id %}" class="card" data-confirm="{% trans 'Refund this receipt? The money is given back to the parent.' %}">{% csrf_token %}
+  <h2>{% trans "Refund" %}</h2>
+  <div class="field"><label for="reason">{% trans "Reason" %}</label><input id="reason" name="reason" required maxlength="200" placeholder="{% trans 'e.g. student is ill, trip cancelled' %}"></div>
+  <div class="actions"><button class="button danger" type="submit">{% trans "Refund" %} Rs {{ sale.amount|rupees }}</button></div>
+</form>{% endif %}
+{% endblock %}

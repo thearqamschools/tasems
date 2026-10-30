@@ -301,6 +301,16 @@ INVENTORY_VIEW = ["inventory.view_item", "inventory.view_stockmove", "inventory.
 INVENTORY_WORK = INVENTORY_VIEW + ["inventory.add_sale", "inventory.add_saleline", "inventory.add_stockmove"]
 INVENTORY_MANAGE = INVENTORY_WORK + ["inventory.add_item", "inventory.change_item", "inventory.change_sale"]
 
+# Events & Tickets (project lead, 30 Oct 2026): Director and Principal make events and record their expenses;
+# those who receive fees (Director, Accountant, Admin) take ticket money; Director and Accountant refund.
+EVENTS_VIEW = ["events.view_event", "events.view_eventclass", "events.view_ticketsale", "events.view_eventexpense"]
+EVENTS_MANAGE = EVENTS_VIEW + [
+    "events.add_event", "events.change_event", "events.add_eventclass", "events.change_eventclass",
+    "events.add_eventexpense", "events.change_eventexpense",
+]  # fmt: skip
+EVENTS_SELL = EVENTS_VIEW + ["events.add_ticketsale"]
+EVENTS_REFUND = ["events.refund_ticketsale"]
+
 # Hifz (M12): Hifz teachers (Qari, senior Qari) record their own sections' daily lessons and take para tests;
 # directors, principals and coordinators also correct any section and cancel a test; supervisors see progress.
 HIFZ_VIEW = ["hifz.view_hifzlesson", "hifz.view_paratest"]
@@ -320,6 +330,9 @@ HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.change_paratest"]
 DELETE_RECORDS = ["core.delete_records"]
 BRANCH_EVERYTHING = (
     DELETE_RECORDS
+    + EVENTS_MANAGE
+    + EVENTS_SELL
+    + EVENTS_REFUND
     + PAYROLL_MANAGE
     + INVENTORY_MANAGE
     + HIFZ_MANAGE
@@ -336,6 +349,7 @@ BRANCH_EVERYTHING = (
 
 EXTRA_PERMISSIONS = {
     "network_admin": DELETE_RECORDS
+    + EVENTS_VIEW
     + HIFZ_VIEW
     + INVENTORY_VIEW
     + PAYROLL_VIEW
@@ -350,6 +364,7 @@ EXTRA_PERMISSIONS = {
     + HR_SETUP
     + ADM_VIEW,
     "head_office_admin": DELETE_RECORDS
+    + EVENTS_VIEW
     + HIFZ_VIEW
     + INVENTORY_VIEW
     + PAYROLL_VIEW
@@ -362,7 +377,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "regional_director": HIFZ_VIEW
+    "regional_director": EVENTS_VIEW
+    + HIFZ_VIEW
     + INVENTORY_VIEW
     + PAYROLL_VIEW
     + ATT_VIEW
@@ -374,7 +390,8 @@ EXTRA_PERMISSIONS = {
     + HR_VIEW
     + ADM_VIEW,
     "branch_owner": BRANCH_EVERYTHING,
-    "principal": PAYROLL_VIEW
+    "principal": EVENTS_MANAGE
+    + PAYROLL_VIEW
     + DEFAULTERS
     + HIFZ_MANAGE
     + NOTICE_POST
@@ -384,12 +401,14 @@ EXTRA_PERMISSIONS = {
     + HR_MANAGE
     + ADM_WORK,
     "academic_coordinator": DEFAULTERS + HIFZ_MANAGE + ATT_MANAGE + DIARY_MANAGE + EXAM_MANAGE,
-    "accountant": FEE_COLLECT
+    "accountant": EVENTS_SELL
+    + EVENTS_REFUND
+    + FEE_COLLECT
     + EXPENSE_MANAGE
     + INVENTORY_MANAGE
     + PAYROLL_MANAGE
     + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
-    "admissions_officer": FEE_COLLECT + ADM_WORK,
+    "admissions_officer": EVENTS_SELL + FEE_COLLECT + ADM_WORK,
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": HIFZ_WRITE + ATT_MARK + DIARY_WRITE,
     "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,

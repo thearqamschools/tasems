@@ -126,6 +126,35 @@ class Command(BaseCommand):
         self.demo_stock()
         self.demo_hifz(password)
         self.demo_campuses()
+        self.demo_event()
+
+    def demo_event(self):
+        """A fictional trip with a few tickets sold and one expense, so Events & Tickets has something (added once)."""
+        from apps.events import services as events
+        from apps.events.models import Event, EventClass, EventExpense
+
+        branch = Branch.objects.get(code="fsd-samanabad")
+        seller = User.objects.filter(username="demo-accountant").first()
+        if seller is None or Event.objects.filter(branch=branch).exists():
+            return
+        event = Event.objects.create(
+            branch=branch, name="Demo trip to Jallo Park", kind=Event.Kind.TRIP,
+            date=timezone.localdate() + dt.timedelta(days=14), venue="Jallo Park, Lahore", guest_price=1000,
+            created_by=seller,
+        )  # fmt: skip
+        for code, price in (("class-4", 2000), ("class-6", 2500)):
+            EventClass.objects.create(
+                branch=branch, event=event, class_level=ClassLevel.objects.get(code=code), price=price
+            )
+        for student in Student.objects.filter(branch=branch, reference=DEMO_MARK, status="active")[:6]:
+            try:
+                events.sell(event, student, 0, "cash", "", seller)
+            except events.SaleError:
+                continue
+        EventExpense.objects.create(
+            branch=branch, event=event, head=EventExpense.Head.TRANSPORT, description="Coaster, two trips",
+            amount=8000, paid_to="Demo transport", date=timezone.localdate(), recorded_by=seller,
+        )  # fmt: skip
 
     def demo_campuses(self):
         """A girls campus and a boys campus in each demo branch; sections without a campus are placed as the branches

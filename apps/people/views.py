@@ -220,7 +220,16 @@ def parent_tree(request, pk):
         ok, text = False, _("No receipt printer is set for this branch. Find it in Setup → Receipt printer.")
     else:
         try:
-            escpos.send(printer, escpos.parent_tree(student.branch, student.father_name, now, rows))
+            escpos.send(
+                printer,
+                escpos.parent_tree(
+                    student.branch,
+                    student.father_name,
+                    now,
+                    rows,
+                    request.user.get_full_name() or request.user.username,
+                ),
+            )
             ok = True
             text = ngettext(
                 "Parent Tree printed: %(n)s student.", "Parent Tree printed: %(n)s students.", len(rows)

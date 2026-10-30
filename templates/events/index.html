@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Events & Tickets" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>{% trans "Events & Tickets" %}</h1><p class="lede">{{ branch.name }} · {% trans "Trips, Eid Milan, Summer Gala, farewell and other events: tickets sold at the office with a printed receipt, expenses, and each event's own profit or loss. Separate from school fees and accounts." %}</p></div>
+  {% if can.add %}<div class="actions"><a class="button" href="{% url 'events:new' %}">{% icon "calendar-check" %}{% trans "New event" %}</a></div>{% endif %}
+</div>
+{% if events %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Event" %}</th><th>{% trans "Date" %}</th><th class="num">{% trans "Students with tickets" %}</th><th class="num">{% trans "Collected (Rs)" %}</th><th class="num">{% trans "Expenses (Rs)" %}</th><th class="num">{% trans "Profit / loss (Rs)" %}</th><th>{% trans "Tickets" %}</th></tr></thead>
+  <tbody>{% for e in events %}<tr>
+    <td><a href="{% url 'events:detail' e.id %}">{{ e.name }}</a><br><span class="muted small">{{ e.get_kind_display }}</span></td>
+    <td>{{ e.date|date:"d M Y" }}</td>
+    <td class="num">{{ e.account.students }}{% if e.account.guests %} <span class="muted">+ {{ e.account.guests }}</span>{% endif %}</td>
+    <td class="num money">{{ e.account.collected|rupees }}</td>
+    <td class="num money">{{ e.account.expenses|rupees }}</td>
+    <td class="num money">{% if e.account.result < 0 %}<span class="badge danger">{{ e.account.result|rupees }}</span>{% else %}{{ e.account.result|rupees }}{% endif %}</td>
+    <td>{% if e.is_open %}<span class="badge">{% trans "On sale" %}</span>{% else %}<span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="card empty-state">{% icon "calendar-check" %}<p>{% trans "No events yet." %}</p>{% if can.add %}<div class="actions"><a class="button" href="{% url 'events:new' %}">{% trans "New event" %}</a></div>{% endif %}</div>{% endif %}
+{% endblock %}

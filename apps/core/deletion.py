@@ -50,6 +50,7 @@ REGISTRY = {
     "inquiry": Entry("admissions.Inquiry", _("admission inquiry"), "admissions:index"),
     "item": Entry("inventory.Item", _("item"), "inventory:index"),
     "notice": Entry("notices.Notice", _("notice"), "notices:index"),
+    "event": Entry("events.Event", _("event"), "events:index", first=("classes",)),
 }
 
 
