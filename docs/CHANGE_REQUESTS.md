@@ -226,3 +226,13 @@ with the child and all brothers and sisters, and the children are called with it
   no print window**. Built: TASEMS sends the slip to the printer's network address (Setup → Branches).
 - R3-14 (28 Oct 2026). The printer's IP could not be found (self-test did not work, no official SPEEDX driver
   online). Built: Setup → Receipt printer finds it on the network, prints a test slip and saves it (v8).
+
+## Round 4 (30 Oct 2026) — proposed, not built yet
+- R4-1. **Events & Tickets** (name to confirm): school events such as Eid Milan party, Summer Gala, trips, farewell.
+  - Set up an event: name, type, date, which classes (from–to), ticket price per class.
+  - Sell tickets at the office **without a voucher**; cash at first (other payment ways kept possible).
+    "Received by" = the login that took the money, by name.
+  - Receipt printed on the same receipt printer as Parent Tree, given to the parent.
+  - Event expenses; tickets sold and money collected per class; profit or loss of the event.
+  - Its **own account**, not linked to school fees or the school's accounts.
+- R4-2. Parent Tree slip shows the **name of the person (login) who printed it**.
