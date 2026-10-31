@@ -277,3 +277,17 @@ Build nothing until the lead says to make the changes; then all together (next W
 - R5-9. The event report (R5-8) also shows **who received how much**: cash received by each person (name, receipts,
   amount), and money that came **in each bank** (and JazzCash / Easypaisa) — so the cash and bank amounts can be
   checked. (Ticket sales by bank then choose the bank, like fee receiving.)
+
+### Staff
+- R5-10. Staff list: the **whole row** of a staff member opens them (not only the name).
+- R5-11. Staff member's page: a **Back** link to the staff list (today there is no way back).
+- R5-12. Add / Edit staff member:
+  - The present "Qualification" box becomes **Last qualification**.
+  - Below, in this order, three parts where any number of rows can be added:
+    1. **Qualifications** — level (Matric, Intermediate, Bachelor's, Master's, PhD; usual extras to confirm:
+       O/A-Level, Diploma, MPhil), degree / title, subjects or major, board / university, year passed, marks %
+       or CGPA, grade / division.
+    2. **Certificates** (courses, trainings) — name, institute, year, duration.
+    3. **Experience** — organisation, designation / post, from, to (or "still working"), reason for leaving,
+       (classes / subjects taught — to confirm).
+  - Then Save.
