@@ -260,3 +260,9 @@ Build nothing until the lead says to make the changes; then all together (next W
 - R5-6. Event page → Receipts → **Print**: today it prints the whole page. It must print **only the receipts list**
   (the tickets sold), as a report: first the paid receipts, then the **refunded ones in a separate part at the
   end**, so it is clear which tickets are sold. (The on-screen list follows the same order.)
+
+### Side menu
+- R5-7. Left side menu: each heading (Overview, Students, Academics, Finance, Events, Staff, Settings) becomes a
+  **drop-down** — click the heading to open or close its items, so one can go straight to e.g. Events without
+  scrolling past all of Finance. (To decide when building: the group of the page you are on stays open; the
+  open/closed choice is remembered on that computer.)
