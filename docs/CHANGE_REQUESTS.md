@@ -291,3 +291,7 @@ Build nothing until the lead says to make the changes; then all together (next W
     3. **Experience** — organisation, designation / post, from, to (or "still working"), reason for leaving,
        (classes / subjects taught — to confirm).
   - Then Save.
+- R5-13. Add / Edit staff member: a **Monthly salary (Rs)** box after Date of joining and Biometric (machine) ID.
+  Shown and saved only for logins with payroll rights (Director, Accountant; Principal sees, cannot change); others
+  do not see the box. It is the same salary as Staff → Payroll → Salaries (one record, with history).
+  Asked: where is the salary module today → **Staff → Payroll** (side menu), button **Salaries**.
