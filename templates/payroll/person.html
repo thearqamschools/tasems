@@ -1,0 +1,63 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ employee.full_name }} · {% trans "Payroll" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'payroll:index' %}?month={{ month|date:'Y-m' }}">‹ {% trans "Payroll" %} · {{ month|date:"F Y" }}</a></p>
+<div class="page-header">
+  <div><h1>{{ employee.full_name }}</h1>
+  <p class="lede"><span class="num">{{ employee.code }}</span> · {{ employee.designation }}{% if pay %} · {% trans "Salary now" %}: <strong class="money">Rs {{ pay.monthly_salary|rupees }}</strong> · {{ pay.get_method_display }}{% if pay.bank_name %} ({{ pay.bank_name }} {{ pay.account_number }}){% endif %}{% else %} · <span class="badge attention">{% trans "Salary not set" %}</span>{% endif %}</p></div>
+  <form method="get" class="filter-inline"><label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
+</div>
+
+<h2>{{ month|date:"F Y" }}</h2>
+{% if row and not row.missing %}
+<div class="table-wrap"><table><tbody>
+  <tr><th>{% trans "Monthly salary (Rs)" %}</th><td class="money">{{ row.salary|rupees }}</td></tr>
+  <tr><th>{% trans "Days on staff" %}</th><td>{{ row.days_employed }} / {{ row.days_in_month }}{% if row.working_days %} · {% trans "Working days" %}: {{ row.working_days }}{% endif %}{% if row.manual %} <span class="badge muted">{% trans "Entered manually" %}</span>{% endif %}</td></tr>
+  <tr><th>{% trans "Absent" %}</th><td>{{ row.absent }}</td></tr>
+  <tr><th>{% trans "Unpaid leave" %}</th><td>{{ row.leave }}</td></tr>
+  <tr><th>{% trans "Half days" %}</th><td>{{ row.half }}</td></tr>
+  <tr><th>{% trans "Deduction (Rs)" %}</th><td class="money">{{ row.deduction|rupees }}</td></tr>
+  <tr><th>{% trans "Net pay (Rs)" %}</th><td class="money"><strong>{{ row.net|rupees }}</strong></td></tr>
+  <tr><th>{% trans "Paid" %}</th><td>{% if row.payment %}<span class="badge">{% trans "Paid" %}</span> {{ row.payment.paid_on|date:"d M Y" }} · {{ row.payment.get_method_display }}{% if row.payment.reference %} · {{ row.payment.reference }}{% endif %} · {% trans "recorded by" %} {{ row.payment.recorded_by.get_full_name|default:row.payment.recorded_by.username }}{% elif run %}<span class="badge attention">{% trans "Not paid" %}</span>{% else %}{% trans "The month is not finalised yet." %}{% endif %}</td></tr>
+</tbody></table></div>
+{% if run and not row.payment and can_pay %}
+<form method="post" class="card" data-confirm="{% blocktrans with a=row.net|rupees n=employee.full_name %}Rs {{ a }} paid to {{ n }}? It cannot be changed afterwards.{% endblocktrans %}" data-confirm-button="{% trans 'Pay salary' %}">{% csrf_token %}<input type="hidden" name="action" value="pay">
+  <h2>{% trans "Pay salary" %}</h2>
+  <div class="form-grid">
+    <div class="field"><label for="paid_on">{% trans "Paid on" %}</label><input type="date" id="paid_on" name="paid_on" value="{{ today|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}" required></div>
+    <div class="field"><label for="method">{% trans "Paid by" %}</label><select id="method" name="method">{% for v, l in methods %}<option value="{{ v }}"{% if pay and pay.method == v %} selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="reference">{% trans "Reference (bank / cheque no.)" %}</label><input id="reference" name="reference" maxlength="60"></div>
+  </div>
+  <div class="actions"><button class="button" type="submit">{% trans "Pay salary" %} · Rs {{ row.net|rupees }}</button></div>
+</form>{% endif %}
+{% else %}<p class="muted">{% trans "No pay for this month (salary not set, or not on the staff)." %}</p>{% endif %}
+
+<h2>{% trans "Salary history" %}</h2>
+{% if history %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Month" %}</th><th class="num">{% trans "Monthly salary (Rs)" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Unpaid leave" %}</th><th class="num">{% trans "Half days" %}</th><th class="num">{% trans "Deduction (Rs)" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th><th>{% trans "Paid" %}</th></tr></thead>
+  <tbody>{% for p in history %}<tr>
+    <td><a href="?month={{ p.run.month|date:'Y-m' }}">{{ p.run.month|date:"F Y" }}</a></td><td class="num money">{{ p.monthly_salary|rupees }}</td>
+    <td class="num">{{ p.absent_days }}</td><td class="num">{{ p.leave_days }}</td><td class="num">{{ p.half_days }}</td>
+    <td class="num money">{{ p.deduction|rupees }}</td><td class="num money">{{ p.net_pay|rupees }}</td>
+    <td>{% if p.payment %}{{ p.payment.paid_on|date:"d M Y" }} · {{ p.payment.get_method_display }}{% else %}<span class="badge attention">{% trans "Not paid" %}</span>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>{% else %}<p class="muted">{% trans "No finalised months yet." %}</p>{% endif %}
+
+<h2>{% trans "Increments and salary changes" %}</h2>
+{% if changes %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "From month" %}</th><th class="num">{% trans "Before (Rs)" %}</th><th class="num">{% trans "New salary (Rs)" %}</th><th class="num">{% trans "Change (Rs)" %}</th><th>{% trans "Reason" %}</th><th>{% trans "Approved by" %}</th><th>{% trans "Recorded by" %}</th></tr></thead>
+  <tbody>{% for c in changes %}<tr><td>{{ c.from_month|date:"F Y" }}</td><td class="num money">{{ c.old_salary|rupees }}</td><td class="num money">{{ c.new_salary|rupees }}</td>
+  <td class="num money">{% if c.increase >= 0 %}+{% endif %}{{ c.increase|rupees }}</td><td>{{ c.reason|default:"—" }}</td><td>{{ c.approved_by|default:"—" }}</td><td>{{ c.recorded_by.get_full_name|default:c.recorded_by.username }}</td></tr>{% endfor %}</tbody>
+</table></div>{% else %}<p class="muted">{% trans "No increments recorded." %}</p>{% endif %}
+{% if can_increment %}
+<details class="card"><summary>{% trans "Add an increment" %}</summary>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="increment">
+  <div class="form-grid">
+    <div class="field"><label for="from_month">{% trans "From month" %}</label><input type="month" id="from_month" name="from_month" value="{{ today|date:'Y-m' }}" required></div>
+    <div class="field"><label for="new_salary">{% trans "New monthly salary (Rs)" %}</label><input id="new_salary" name="new_salary" inputmode="decimal" dir="ltr" required></div>
+    <div class="field"><label for="reason">{% trans "Reason" %}</label><input id="reason" name="reason" maxlength="200" placeholder="{% trans 'e.g. annual increment' %}"></div>
+    <div class="field"><label for="approved_by">{% trans "Approved by" %}</label><input id="approved_by" name="approved_by" maxlength="120"></div>
+  </div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save increment" %}</button></div>
+</form></details>{% endif %}
+{% endblock %}

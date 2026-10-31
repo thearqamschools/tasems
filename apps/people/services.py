@@ -1,6 +1,7 @@
 """Saving a student with their class and family, shared by the form, admissions and the Excel import."""
 
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.functions import Length
 
 from .models import Enrolment, Guardian, Student, StudentGuardian
@@ -162,3 +163,43 @@ def current_enrolment(student, session):
     if not session:
         return None
     return Enrolment.objects.filter(student=student, session=session).select_related("section").first()
+
+
+def search(students, q):
+    """Admission no., name, father name, any mobile of the father, mother or guardian, father CNIC or B-Form
+    (project lead, 31 Oct 2026). Numbers may be typed with or without dashes."""
+    q = q.strip()
+    if not q:
+        return students
+    digits = "".join(ch for ch in q if ch.isdigit())
+    match = (
+        Q(admission_no__icontains=q)
+        | Q(first_name__icontains=q)
+        | Q(last_name__icontains=q)
+        | Q(father_name__icontains=q)
+        | Q(full_name_ur__icontains=q)
+    )
+    words = q.split()
+    if len(words) > 1:  # "Ali Ahmad": first and last name together
+        match |= Q(first_name__icontains=words[0], last_name__icontains=" ".join(words[1:]))
+    if len(digits) >= 4:
+        match |= Q(guardian_links__guardian__phone__contains=digits)
+        match |= Q(father_cnic__contains=digits) | Q(b_form_no__contains=digits)
+        if digits.startswith("0") and len(digits) == 11:  # 0300… also stored as +92 300…
+            match |= Q(guardian_links__guardian__phone__contains=digits[1:])
+    return students.filter(match).distinct()
+
+
+def place_filter(students, session, level_id="", section_name="", campus_id=""):
+    """Class, section and campus filters on the current session's class places."""
+    if not session:
+        return students
+    places = Enrolment.objects.filter(session=session)
+    used = False
+    if str(level_id).isdigit():
+        places, used = places.filter(section__class_level_id=level_id), True
+    if section_name:
+        places, used = places.filter(section__name=section_name), True
+    if str(campus_id).isdigit():
+        places, used = places.filter(section__campus_id=campus_id), True
+    return students.filter(pk__in=places.values("student_id")) if used else students

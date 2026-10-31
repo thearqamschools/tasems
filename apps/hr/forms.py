@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.core.phone import format_cnic, normalize_cnic, normalize_mobile
 from apps.organisation.models import Campus
 
-from .models import DESIGNATIONS, Employee, LeaveType, StaffDay
+from .models import DESIGNATIONS, Certificate, Employee, Experience, LeaveType, Qualification, StaffDay
 
 CV_TYPES = {".jpg", ".jpeg", ".png", ".pdf"}
 CV_MAX_BYTES = 5 * 1024 * 1024
@@ -20,6 +20,7 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         fields = [
+            "cv",  # first (project lead, 31 Oct 2026)
             "code",
             "full_name",
             "father_name",
@@ -41,7 +42,6 @@ class EmployeeForm(forms.ModelForm):
             "status",
             "left_on",
             "notes",
-            "cv",
         ]
         labels = {
             "code": _("Employee code"),
@@ -53,6 +53,7 @@ class EmployeeForm(forms.ModelForm):
             "staff_type": _("Staff type"),
             "joined_on": _("Joining date"),
             "cv": _("CV (JPG or PDF)"),
+            "qualification": _("Last qualification"),
         }
         widgets = {
             "date_of_birth": DATE,
@@ -168,3 +169,54 @@ class CorrectionForm(forms.Form):
     first_in = forms.TimeField(required=False, label=_("Time in"), widget=TIME)
     last_out = forms.TimeField(required=False, label=_("Time out"), widget=TIME)
     note = forms.CharField(max_length=200, label=_("Reason"), help_text=_("e.g. machine was not working"))
+
+
+YEAR = forms.NumberInput(attrs={"inputmode": "numeric", "min": 1950, "max": 2100, "style": "max-inline-size:6rem"})
+
+
+class QualificationForm(forms.ModelForm):
+    class Meta:
+        model = Qualification
+        fields = ["level", "degree", "subjects", "institute", "year", "marks", "grade"]
+        widgets = {"year": YEAR}
+
+
+class CertificateForm(forms.ModelForm):
+    class Meta:
+        model = Certificate
+        fields = ["name", "institute", "year", "duration"]
+        widgets = {"year": YEAR}
+
+
+class ExperienceForm(forms.ModelForm):
+    class Meta:
+        model = Experience
+        fields = ["organisation", "designation", "started_on", "ended_on", "reason_left", "taught"]
+        widgets = {"started_on": DATE, "ended_on": DATE}
+
+    def clean(self):
+        data = super().clean()
+        start, end = data.get("started_on"), data.get("ended_on")
+        if start and end and end < start:
+            self.add_error("ended_on", _("This is before the start date."))
+        return data
+
+
+def staff_formsets(data=None, instance=None):
+    """Qualifications, certificates and experience of one staff member; any number of rows (empty rows are left
+    out)."""
+    make = forms.inlineformset_factory
+    kinds = (
+        ("qualifications", Qualification, QualificationForm),
+        ("certificates", Certificate, CertificateForm),
+        ("experiences", Experience, ExperienceForm),
+    )
+    # A form sent without a part (e.g. from an older page) keeps that part as it is.
+    return {
+        prefix: make(Employee, model, form=form, extra=1, can_delete=True)(
+            data if data is not None and f"{prefix}-TOTAL_FORMS" in data else None,
+            instance=instance or Employee(),
+            prefix=prefix,
+        )
+        for prefix, model, form in kinds
+    }

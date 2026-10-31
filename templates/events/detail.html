@@ -6,6 +6,7 @@
   <div><h1>{{ event.name }}</h1><p class="lede">{{ event.get_kind_display }} · {{ event.date|date:"l, d M Y" }}{% if event.venue %} · {{ event.venue }}{% endif %} · {% if event.is_open %}<span class="badge">{% trans "On sale" %}</span>{% else %}<span class="badge muted">{% trans "Closed" %}</span>{% endif %}</p></div>
   <div class="actions">
     {% if can.sell and event.is_open %}<a class="button" href="{% url 'events:sell' event.id %}">{% icon "receipt" %}{% trans "Sell tickets" %}</a>{% endif %}
+    <a class="button secondary" href="{% url 'events:report' event.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Report" %}</a>
     {% if can.expense %}<a class="button quiet" href="{% url 'events:expense_new' event.id %}">{% trans "Add expense" %}</a>{% endif %}
     {% if can.manage %}<a class="button quiet" href="{% url 'events:edit' event.id %}">{% trans "Change event" %}</a>{% endif %}
     {% delete_button "event" event %}
@@ -47,14 +48,14 @@
 </table></div>{% else %}<p class="muted">{% trans "No expenses yet." %}</p>{% endif %}
 
 <h2>{% trans "Receipts" %}</h2>
-{% if sales %}{% include "includes_list_tools.html" %}<div class="table-wrap"><table>
+{% if sales %}<div class="list-tools no-print"><a class="button quiet sm" href="?format=xlsx">{% icon "file-spreadsheet" %}{% trans "Excel" %}</a> <a class="button quiet sm" href="{% url 'events:report' event.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Print report" %}</a></div><div class="table-wrap"><table>
   <thead><tr><th>{% trans "Receipt no." %}</th><th>{% trans "Date" %}</th><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th class="num">{% trans "Tickets" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th>{% trans "Paid by" %}</th><th>{% trans "Received by" %}</th></tr></thead>
-  <tbody>{% for s in sales %}<tr{% if s.is_refunded %} class="muted"{% endif %}>
+  <tbody>{% for s in sales %}<tr{% if s.is_refunded %} class="muted"{% endif %} data-href="{% url 'events:receipt' event.id s.id %}">
     <td><a href="{% url 'events:receipt' event.id s.id %}" class="num">{{ s.receipt_no }}</a>{% if s.is_refunded %} <span class="badge muted">{% trans "Refunded" %}</span>{% endif %}</td>
     <td>{{ s.received_at|date:"d M Y, h:i A" }}</td>
     <td>{{ s.student.full_name }} <span class="muted num">{{ s.student.admission_no }}</span></td>
     <td>{{ s.class_level }} {{ s.section_name }}</td><td class="num">{{ s.tickets }}</td>
-    <td class="num money">{{ s.amount|rupees }}</td><td>{{ s.get_paid_by_display }}</td>
+    <td class="num money">{{ s.amount|rupees }}</td><td>{{ s.get_paid_by_display }}{% if s.bank %} · {{ s.bank.name }}{% endif %}</td>
     <td>{{ s.received_by.get_full_name|default:s.received_by.username }}</td>
   </tr>{% endfor %}</tbody>
 </table></div>{% else %}<p class="muted">{% trans "No tickets sold yet." %}</p>{% endif %}

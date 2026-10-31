@@ -1,10 +1,16 @@
 {% extends "base.html" %}{% load i18n %}
 {% block title %}{% if employee %}{% trans "Edit staff member" %}{% else %}{% trans "Add staff member" %}{% endif %}{% endblock %}
 {% block content %}
+<p><a href="{% if employee %}{% url 'hr:employee' employee.id %}{% else %}{% url 'hr:index' %}{% endif %}">‹ {% if employee %}{{ employee.full_name }}{% else %}{% trans "Staff" %}{% endif %}</a></p>
 <h1>{% if employee %}{{ employee.full_name }}{% else %}{% trans "Add staff member" %}{% endif %}</h1>
-<form method="post" class="card" enctype="multipart/form-data">{% csrf_token %}
+<form method="post" enctype="multipart/form-data" data-busy>{% csrf_token %}
+  <div class="card">
   {{ form.non_field_errors }}
   <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  </div>
+  {% trans "Qualifications" as t %}{% trans "Add qualification" as a %}{% include "hr/_formset.html" with formset=sets.qualifications title=t add=a %}
+  {% trans "Certificates and courses" as t %}{% trans "Add certificate" as a %}{% include "hr/_formset.html" with formset=sets.certificates title=t add=a %}
+  {% trans "Experience" as t %}{% trans "Add experience" as a %}{% include "hr/_formset.html" with formset=sets.experiences title=t add=a %}
   <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button>
   <a class="button quiet" href="{% if employee %}{% url 'hr:employee' employee.id %}{% else %}{% url 'hr:index' %}{% endif %}">{% trans "Back" %}</a></div>
 </form>

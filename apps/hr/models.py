@@ -96,7 +96,7 @@ class Employee(BranchOwnedModel):
     )
     staff_type = models.CharField(max_length=10, choices=StaffType.choices)
     campus = models.ForeignKey("organisation.Campus", on_delete=models.PROTECT, null=True, blank=True, related_name="+")
-    qualification = models.CharField(max_length=150, blank=True)
+    qualification = models.CharField(_("last qualification"), max_length=150, blank=True)
     joined_on = models.DateField(_("joining date"))
     left_on = models.DateField(_("leaving date"), null=True, blank=True)
     status = models.CharField(max_length=12, choices=Status.choices, default=Status.ACTIVE, db_index=True)
@@ -309,3 +309,54 @@ class StaffDay(BranchOwnedModel):
             delta = dt.datetime.combine(self.date, self.last_out) - dt.datetime.combine(self.date, self.first_in)
             return round(delta.total_seconds() / 3600, 1)
         return None
+
+
+# Qualifications, certificates and experience of a staff member (project lead, 31 Oct 2026).
+class Qualification(BranchOwnedModel):
+    class Level(models.TextChoices):
+        MATRIC = "matric", _("Matric")
+        O_LEVEL = "o_level", _("O Level")
+        INTER = "inter", _("Intermediate")
+        A_LEVEL = "a_level", _("A Level")
+        DIPLOMA = "diploma", _("Diploma")
+        BACHELOR = "bachelor", _("Bachelor's")
+        MASTER = "master", _("Master's")
+        MPHIL = "mphil", _("MPhil")
+        PHD = "phd", _("PhD")
+        OTHER = "other", _("Other")
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="qualifications")
+    level = models.CharField(_("level"), max_length=10, choices=Level.choices)
+    degree = models.CharField(_("degree / title"), max_length=120, blank=True, help_text=_("e.g. BS English, F.Sc"))
+    subjects = models.CharField(_("subjects / major"), max_length=150, blank=True)
+    institute = models.CharField(_("board / university"), max_length=150, blank=True)
+    year = models.PositiveSmallIntegerField(_("year passed"), null=True, blank=True)
+    marks = models.CharField(_("marks % / CGPA"), max_length=20, blank=True)
+    grade = models.CharField(_("grade / division"), max_length=20, blank=True)
+
+    class Meta:
+        ordering = ["employee", "year", "id"]
+
+
+class Certificate(BranchOwnedModel):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="certificates")
+    name = models.CharField(_("certificate / course"), max_length=150)
+    institute = models.CharField(_("institute"), max_length=150, blank=True)
+    year = models.PositiveSmallIntegerField(_("year"), null=True, blank=True)
+    duration = models.CharField(_("duration"), max_length=40, blank=True, help_text=_("e.g. 3 months"))
+
+    class Meta:
+        ordering = ["employee", "year", "id"]
+
+
+class Experience(BranchOwnedModel):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="experiences")
+    organisation = models.CharField(_("organisation / school"), max_length=150)
+    designation = models.CharField(_("designation / post"), max_length=100, blank=True)
+    started_on = models.DateField(_("from"), null=True, blank=True)
+    ended_on = models.DateField(_("to"), null=True, blank=True, help_text=_("Empty: still working there"))
+    reason_left = models.CharField(_("reason for leaving"), max_length=200, blank=True)
+    taught = models.CharField(_("classes / subjects taught"), max_length=150, blank=True)
+
+    class Meta:
+        ordering = ["employee", "-started_on", "id"]

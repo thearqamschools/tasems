@@ -286,13 +286,21 @@ NOTICE_POST = ["notices.view_notice", "notices.add_notice", "notices.change_noti
 TEMPLATE_EDIT = ["notices.view_messagetemplate", "notices.add_messagetemplate", "notices.change_messagetemplate"]
 
 # Payroll (M10): accountants and directors set salaries and finalise the month; principals and supervisors see it.
-PAYROLL_VIEW = ["payroll.view_employeepay", "payroll.view_payrollrun", "payroll.view_payslip"]
+PAYROLL_VIEW = [
+    "payroll.view_employeepay", "payroll.view_payrollrun", "payroll.view_payslip", "payroll.view_salarychange",
+    "payroll.view_manualdays", "payroll.view_salarypayment",
+]  # fmt: skip
 PAYROLL_MANAGE = PAYROLL_VIEW + [
     "payroll.add_employeepay",
     "payroll.change_employeepay",
     "payroll.add_payrollrun",
     "payroll.change_payrollrun",
     "payroll.finalise_payroll",
+    # Round 5 (31 Oct 2026): increments, figures typed in by hand, paying each person's salary.
+    "payroll.add_salarychange",
+    "payroll.add_manualdays",
+    "payroll.change_manualdays",
+    "payroll.add_salarypayment",
 ]
 
 # Shop & stock (M11): accountants and directors keep the item list, sell, record stock and cancel sales;

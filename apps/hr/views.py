@@ -8,6 +8,7 @@ from pathlib import Path
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.db.models import Q
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
@@ -22,7 +23,7 @@ from apps.organisation.models import AcademicSession
 
 from . import importer
 from . import services as S
-from .forms import CorrectionForm, EmployeeForm, LeaveForm
+from .forms import CorrectionForm, EmployeeForm, LeaveForm, staff_formsets
 from .models import Employee, HRSettings, LeaveRequest, StaffDay
 
 
@@ -119,13 +120,22 @@ def employee_form(request, employee_id=None):
     branch = _branch(request, S.EDIT_PERM if employee_id else S.ADD_PERM)
     instance = _employee(branch, employee_id) if employee_id else None
     form = EmployeeForm(request.POST or None, request.FILES or None, instance=instance, branch=branch)
-    if request.method == "POST" and form.is_valid():
-        e = form.save()
+    sets = staff_formsets(request.POST or None, instance)
+    if request.method == "POST" and form.is_valid() and all(f.is_valid() for f in sets.values() if f.is_bound):
+        with transaction.atomic():
+            e = form.save()
+            for formset in (f for f in sets.values() if f.is_bound):
+                formset.instance = e
+                for row in formset.save(commit=False):
+                    row.branch = branch
+                    row.save()
+                for row in formset.deleted_objects:
+                    row.delete()
         if instance and instance.status != Employee.Status.ACTIVE and e.left_on:
             S.rebuild_days(branch, e.left_on, timezone.localdate(), [e.id])
         messages.success(request, _("Saved."))
         return redirect("hr:employee", employee_id=e.id)
-    return render(request, "hr/employee_form.html", {"form": form, "employee": instance})
+    return render(request, "hr/employee_form.html", {"form": form, "employee": instance, "sets": sets})
 
 
 @login_required

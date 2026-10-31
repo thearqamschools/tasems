@@ -8,6 +8,9 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("finalise/", views.finalise, name="finalise"),
     path("salaries/", views.salaries, name="salaries"),
+    path("manual/", views.manual, name="manual"),
+    path("staff/<int:employee_id>/", views.person, name="person"),
+    path("acknowledgement.pdf", views.acknowledgement, name="acknowledgement"),
     path("<int:run_id>/cancel/", views.cancel, name="cancel"),
     path("<int:run_id>/payslips.pdf", views.payslips_pdf, name="payslips"),
 ]

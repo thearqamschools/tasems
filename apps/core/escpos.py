@@ -152,7 +152,8 @@ def ticket_receipt(sale, printed_at):
         out += line(f"Extra tickets   {sale.guest_tickets} x Rs {sale.guest_price:,.0f}".ljust(38)
                     + f"{sale.guest_price * sale.guest_tickets:,.0f}".rjust(10))  # fmt: skip
     out += BOLD_ON + line("TOTAL Rs".ljust(38) + f"{sale.amount:,.0f}".rjust(10)) + BOLD_OFF + dash
-    paid = sale.get_paid_by_display() + (f" ({sale.reference})" if sale.reference else "")
+    paid = sale.bank.name if sale.bank_id else sale.get_paid_by_display()
+    paid += f" ({sale.reference})" if sale.reference else ""
     out += pair("Paid by", paid)
     out += pair("Received by", sale.received_by.get_full_name() or sale.received_by.username)
     out += pair("Date", f"{sale.received_at.astimezone(printed_at.tzinfo):%d/%m/%Y %I:%M %p}")

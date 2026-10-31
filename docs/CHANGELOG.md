@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.40.0 — 2026-10-31 — Round 5: search, Events report, side menu, staff qualifications, Payroll (installer v11)
+
+Students
+- Search also by **any mobile** (father, mother, guardian; with or without dashes) and by **father CNIC or B-Form**;
+  every student with that number is shown. New **Campus** filter (after Class and Section).
+
+Events & Tickets
+- The whole row of an event (and of a receipt) opens it.
+- Sell tickets: the Students search plus **Class, Section, Campus** filters list a whole class; sell row by row —
+  the list stays, students with a ticket are marked. **Bank** sales choose the bank. Your last receipts show
+  admission no., class and section.
+- **Report** (print, A4): tickets sold, refunded (apart, at the end), expenses, money received by each person and
+  by cash / each bank; then a summary page with tickets by class and **profit or loss**. The receipts list shows paid
+  receipts first, refunded ones at the end.
+
+Side menu
+- Each heading opens and closes its items; the group of the page you are on is open; the choice is remembered on
+  that computer.
+
+Staff
+- The whole row opens a staff member; the staff page has a link back to Staff.
+- Add / Edit staff: **CV first**; "Qualification" is now **Last qualification**; new parts **Qualifications**
+  (Matric, O/A Level, Intermediate, Diploma, Bachelor's, Master's, MPhil, PhD…), **Certificates and courses** and
+  **Experience** (organisation, post, from, to, reason for leaving, classes / subjects taught), any number of rows;
+  shown on the staff page.
+
+Payroll
+- **Enter manually**: days in month, working days, days on staff, absent, unpaid leave, half days for everyone
+  (machine out of order); these replace the machine figures and are marked "Manual". The day rate stays salary ÷ days
+  in the month (working days are shown only).
+- **Search** by name and **filter by designation** (Payroll and Salaries).
+- Totals: salaries, deductions, net pay to pay, **paid** and **still to pay**.
+- Each person's page: the month's figures, **Pay salary** (date, cash / bank transfer / online, reference) once
+  the month is finalised — then locked; Payroll shows Paid / Not paid, how and when. A month with paid salaries
+  cannot be reopened.
+- **Salary history** of every finalised month, and **increments** (new salary from a month, reason, approved by);
+  earlier months keep their salary.
+- **Acknowledgement sheet** (PDF, A4 landscape): a page per group — Administration, Teachers, Helping staff — with
+  net pay, Cash / Bank / Online boxes, payment received and **signature** columns, and signature lines.
+- Salaries page: how each person takes the salary (cash, bank transfer, online); bank details only for bank.
+
 ## 0.39.0 — 2026-10-30 — Events & Tickets (Windows installer v10)
 
 Added

@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Prefetch
 from django.db.models.functions import Length
 from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
@@ -22,13 +22,14 @@ from apps.core import escpos, exports
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
 from apps.fees.services import balance as fee_balance
-from apps.organisation.models import AcademicSession
+from apps.organisation.models import AcademicSession, Campus
 
 from . import certificates, idcards, importer
 from . import promotion as promote
 from .forms import CertificateForm, LeaveForm, StudentForm, section_order
 from .models import Certificate, Enrolment, Student, StudentGuardian
-from .services import current_enrolment, parent_mobiles
+from .services import current_enrolment, parent_mobiles, place_filter
+from .services import search as search_students
 
 PAGE_SIZE = 50
 
@@ -61,27 +62,14 @@ def student_list(request):
     if status in Student.Status.values:
         students = students.filter(status=status)
     q = request.GET.get("q", "").strip()
-    if q:
-        digits = "".join(ch for ch in q if ch.isdigit())
-        match = (
-            Q(admission_no__icontains=q)
-            | Q(first_name__icontains=q)
-            | Q(last_name__icontains=q)
-            | Q(father_name__icontains=q)
-            | Q(full_name_ur__icontains=q)
-        )
-        if len(digits) >= 4:
-            match |= Q(guardian_links__guardian__phone__contains=digits)
-        students = students.filter(match).distinct()
+    students = search_students(students, q)
 
     sections = Section.objects.filter(branch=branch, session=session) if session else Section.objects.none()
     section_names = sorted(set(sections.values_list("name", flat=True)), key=section_order)
     section_name = request.GET.get("section", "")
     level_id = request.GET.get("class", "")
-    if session and level_id.isdigit():
-        students = students.filter(enrolments__session=session, enrolments__section__class_level_id=level_id)
-    if session and section_name:
-        students = students.filter(enrolments__session=session, enrolments__section__name=section_name)
+    campus_id = request.GET.get("campus", "")
+    students = place_filter(students, session, level_id, section_name, campus_id)
 
     enrolments = Enrolment.objects.filter(session=session).select_related("section__class_level") if session else []
     students = students.prefetch_related(
@@ -135,6 +123,8 @@ def student_list(request):
             "statuses": Student.Status.choices,
             "section_names": section_names,
             "levels": ClassLevel.objects.filter(is_active=True),
+            "campuses": Campus.objects.filter(branch=branch, is_active=True),
+            "campus_id": campus_id,
             "section_name": section_name,
             "level_id": level_id,
             "session": session,

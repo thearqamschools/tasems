@@ -1,0 +1,79 @@
+{% load i18n static tasems_tags %}<!doctype html>
+{# Event report to print on A4 (project lead, 31 Oct 2026). English, as printed documents are. #}
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ event.name }} — report</title>
+<style>
+  @page { size: A4; margin: 12mm 12mm 14mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 190mm; padding: 6mm; font: 10pt/1.4 "Noto Sans", Arial, sans-serif; color: #14182b; background: #fff; }
+  .head { display: flex; align-items: center; gap: 3mm; border-bottom: 1mm solid #ed3237; padding-bottom: 2mm; }
+  .head img { width: 14mm; height: 14mm; }
+  .school { font-weight: 700; font-size: 14pt; color: #3e4095; }
+  .sub { font-size: 8.5pt; color: #3b4157; }
+  .title { margin-inline-start: auto; text-align: right; }
+  .title b { display: block; font-size: 12pt; white-space: nowrap; }
+  td.nw { white-space: nowrap; }
+  h2 { font-size: 11pt; margin: 6mm 0 2mm; color: #3e4095; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border-bottom: .4pt solid #c9cde0; padding: 1.4mm 1.6mm; text-align: left; vertical-align: top; }
+  th { background: #eef0f8; font-size: 8.5pt; }
+  .n { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.total td { font-weight: 700; border-top: .8pt solid #14182b; }
+  .muted { color: #5a6077; }
+  .summary { page-break-before: always; }
+  .big td { font-size: 12pt; padding: 3mm 2mm; }
+  .result td { font-size: 14pt; font-weight: 700; border-top: 1pt solid #14182b; }
+  .loss { color: #b42318; }
+  .sign { display: flex; justify-content: space-between; margin-top: 18mm; font-size: 9pt; }
+  .sign div { width: 50mm; border-top: .5pt solid #14182b; text-align: center; padding-top: 1mm; }
+  .bar { margin: 0 0 4mm; } .bar button { font: inherit; padding: 2mm 5mm; }
+  @media print { .bar { display: none; } body { padding: 0; } }
+</style></head>
+<body>
+<div class="bar"><button type="button" onclick="window.print()">Print</button></div>
+<div class="head"><img src="{% static 'img/arqam-logo-512.png' %}" alt="">
+  <div><div class="school">The Arqam Schools</div><div class="sub">{{ branch.name }}{% if branch.contact_numbers %} · {{ branch.contact_numbers|join:", " }}{% endif %}</div></div>
+  <div class="title"><b>EVENT REPORT — DETAIL</b>{{ event.name }} · {{ event.date|date:"d M Y" }}</div></div>
+<p class="sub">{{ event.get_kind_display }}{% if event.venue %} · {{ event.venue }}{% endif %} · Printed {{ printed|date:"d M Y, h:i A" }} by {{ request.user.get_full_name|default:request.user.username }}</p>
+
+<h2>Tickets sold ({{ sold|length }} receipts)</h2>
+{% if sold %}<table>
+  <thead><tr><th>Receipt</th><th>Date</th><th>Adm. no.</th><th>Student</th><th>Class</th><th class="n">Tickets</th><th>Paid by</th><th>Received by</th><th class="n">Amount (Rs)</th></tr></thead>
+  <tbody>{% for s in sold %}<tr><td class="nw">{{ s.receipt_no }}</td><td class="nw">{{ s.received_at|date:"d/m/Y" }}</td><td>{{ s.student.admission_no }}</td><td>{{ s.student.full_name }}</td><td>{{ s.class_level }} {{ s.section_name }}</td><td class="n">{{ s.tickets }}</td><td>{% if s.bank %}{{ s.bank.name }}{% else %}{{ s.get_paid_by_display }}{% endif %}</td><td>{{ s.received_by.get_full_name|default:s.received_by.username }}</td><td class="n">{{ s.amount|rupees }}</td></tr>{% endfor %}
+  <tr class="total"><td colspan="8">Total sold</td><td class="n">{{ sold_amount|rupees }}</td></tr></tbody>
+</table>{% else %}<p class="muted">No tickets sold.</p>{% endif %}
+
+{% if refunded %}<h2>Refunded ({{ refunded|length }} receipts — not counted)</h2>
+<table><thead><tr><th>Receipt</th><th>Student</th><th>Class</th><th>Refunded on</th><th>By</th><th>Reason</th><th class="n">Amount (Rs)</th></tr></thead>
+<tbody>{% for s in refunded %}<tr><td>{{ s.receipt_no }}</td><td>{{ s.student.full_name }} ({{ s.student.admission_no }})</td><td>{{ s.class_level }} {{ s.section_name }}</td><td>{{ s.refunded_at|date:"d/m/Y" }}</td><td>{{ s.refunded_by.get_full_name|default:s.refunded_by.username }}</td><td>{{ s.refund_reason }}</td><td class="n">{{ s.amount|rupees }}</td></tr>{% endfor %}
+<tr class="total"><td colspan="6">Total refunded</td><td class="n">{{ account.refunded|rupees }}</td></tr></tbody></table>{% endif %}
+
+<h2>Expenses</h2>
+{% if expenses %}<table><thead><tr><th>Date</th><th>For</th><th>Details</th><th>Paid to</th><th>Recorded by</th><th class="n">Amount (Rs)</th></tr></thead>
+<tbody>{% for x in expenses %}<tr><td>{{ x.date|date:"d/m/Y" }}</td><td>{{ x.get_head_display }}</td><td>{{ x.description }}</td><td>{{ x.paid_to }}</td><td>{{ x.recorded_by.get_full_name|default:x.recorded_by.username }}</td><td class="n">{{ x.amount|rupees }}</td></tr>{% endfor %}
+<tr class="total"><td colspan="5">Total expenses</td><td class="n">{{ account.expenses|rupees }}</td></tr></tbody></table>{% else %}<p class="muted">No expenses.</p>{% endif %}
+
+<h2>Money received by</h2>
+<table><thead><tr><th>Person</th><th class="n">Receipts</th><th class="n">Amount (Rs)</th></tr></thead>
+<tbody>{% for name, r in receivers %}<tr><td>{{ name }}</td><td class="n">{{ r.n }}</td><td class="n">{{ r.amount|rupees }}</td></tr>{% empty %}<tr><td colspan="3" class="muted">—</td></tr>{% endfor %}</tbody></table>
+
+<h2>Money in by way of payment</h2>
+<table><thead><tr><th>Cash / bank</th><th class="n">Receipts</th><th class="n">Amount (Rs)</th></tr></thead>
+<tbody>{% for name, r in channels %}<tr><td>{{ name }}</td><td class="n">{{ r.n }}</td><td class="n">{{ r.amount|rupees }}</td></tr>{% empty %}<tr><td colspan="3" class="muted">—</td></tr>{% endfor %}</tbody></table>
+
+<div class="summary">
+<div class="head"><img src="{% static 'img/arqam-logo-512.png' %}" alt="">
+  <div><div class="school">The Arqam Schools</div><div class="sub">{{ branch.name }}</div></div>
+  <div class="title"><b>EVENT REPORT — SUMMARY</b>{{ event.name }} · {{ event.date|date:"d M Y" }}</div></div>
+<h2>Tickets by class</h2>
+<table><thead><tr><th>Class</th><th class="n">Ticket (Rs)</th><th class="n">Students with tickets</th><th class="n">Extra tickets</th><th class="n">Amount (Rs)</th></tr></thead>
+<tbody>{% for c in classes %}<tr><td>{{ c.level }}</td><td class="n">{{ c.price|rupees }}</td><td class="n">{{ c.paid }}</td><td class="n">{{ c.guests }}</td><td class="n">{{ c.amount|rupees }}</td></tr>{% endfor %}</tbody></table>
+<h2>Account</h2>
+<table class="big"><tbody>
+  <tr><td>Tickets sold — {{ account.students }} students{% if account.guests %} + {{ account.guests }} extra{% endif %}</td><td class="n">Rs {{ account.collected|rupees }}</td></tr>
+  <tr><td>Expenses</td><td class="n">Rs {{ account.expenses|rupees }}</td></tr>
+  <tr class="result"><td>{% if account.result < 0 %}Loss{% else %}Profit{% endif %}</td><td class="n{% if account.result < 0 %} loss{% endif %}">Rs {{ account.result|rupees }}</td></tr>
+</tbody></table>
+<div class="sign"><div>Prepared by</div><div>Accountant</div><div>Principal</div><div>Director</div></div>
+</div>
+</body></html>

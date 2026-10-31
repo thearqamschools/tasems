@@ -3,21 +3,27 @@
 {% block content %}
 <p><a href="{% url 'payroll:index' %}">‹ {% trans "Payroll" %}</a></p>
 <h1>{% trans "Salaries and bank details" %}</h1>
-<p class="lede">{{ branch.name }} · {% trans "Fixed monthly salary of each staff member. Leave the bank empty for salary paid in cash. Every change is recorded in the history." %}</p>
+<p class="lede">{{ branch.name }} · {% trans "Fixed monthly salary of each staff member. Choose how each person takes the salary; bank details are needed only for bank transfer. Every change is recorded in the history; increments are added on each person's page." %}</p>
+<form method="get" class="filter-inline">
+  <label for="q">{% trans "Search" %}</label><input id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name or code' %}">
+  <select name="designation" aria-label="{% trans 'Designation' %}"><option value="">{% trans "All designations" %}</option>{% for d in designations %}<option value="{{ d }}"{% if d == designation %} selected{% endif %}>{{ d }}</option>{% endfor %}</select>
+  <button class="button quiet" type="submit">{% trans "Show" %}</button>
+</form>
 <form method="post">{% csrf_token %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Monthly salary (Rs)" %}</th><th>{% trans "Bank" %}</th><th>{% trans "Account title" %}</th><th>{% trans "Account number / IBAN" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Monthly salary (Rs)" %}</th><th>{% trans "Paid by" %}</th><th>{% trans "Bank" %}</th><th>{% trans "Account title" %}</th><th>{% trans "Account number / IBAN" %}</th></tr></thead>
   <tbody>{% for e, pay in rows %}<tr>
-    <td>{{ e.full_name }} <span class="muted small num">{{ e.code }}</span></td><td>{{ e.designation }}</td>
+    <td><a href="{% url 'payroll:person' e.id %}">{{ e.full_name }}</a> <span class="muted small num">{{ e.code }}</span></td><td>{{ e.designation }}</td>
     {% if can_edit %}
     <td><input name="salary_{{ e.id }}" value="{{ pay.monthly_salary|default_if_none:''|floatformat:'-2' }}" inputmode="decimal" dir="ltr" aria-label="{% trans 'Monthly salary (Rs)' %}" style="max-inline-size:9rem"></td>
+    <td><select name="method_{{ e.id }}" aria-label="{% trans 'Paid by' %}">{% for v, l in methods %}<option value="{{ v }}"{% if pay.method == v %} selected{% endif %}>{{ l }}</option>{% endfor %}</select></td>
     <td><input name="bank_name_{{ e.id }}" value="{{ pay.bank_name|default:'' }}" maxlength="80" aria-label="{% trans 'Bank' %}"></td>
     <td><input name="account_title_{{ e.id }}" value="{{ pay.account_title|default:'' }}" maxlength="120" aria-label="{% trans 'Account title' %}"></td>
     <td><input name="account_number_{{ e.id }}" value="{{ pay.account_number|default:'' }}" maxlength="40" dir="ltr" aria-label="{% trans 'Account number / IBAN' %}"></td>
     {% else %}
-    <td class="num money">{% if pay %}{{ pay.monthly_salary|rupees }}{% else %}—{% endif %}</td><td>{{ pay.bank_name|default:"—" }}</td><td>{{ pay.account_title|default:"" }}</td><td class="num">{{ pay.account_number|default:"" }}</td>
+    <td class="num money">{% if pay %}{{ pay.monthly_salary|rupees }}{% else %}—{% endif %}</td><td>{{ pay.get_method_display|default:"—" }}</td><td>{{ pay.bank_name|default:"—" }}</td><td>{{ pay.account_title|default:"" }}</td><td class="num">{{ pay.account_number|default:"" }}</td>
     {% endif %}
-  </tr>{% empty %}<tr><td colspan="6" class="muted">{% trans "No staff records yet." %}</td></tr>{% endfor %}</tbody>
+  </tr>{% empty %}<tr><td colspan="7" class="muted">{% trans "No staff records yet." %}</td></tr>{% endfor %}</tbody>
 </table></div>
 {% if can_edit and rows %}<div class="actions"><button class="button" type="submit">{% trans "Save salaries" %}</button></div>{% endif %}
 </form>

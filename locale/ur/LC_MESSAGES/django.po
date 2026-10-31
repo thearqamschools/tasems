@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 22:49+0500\n"
+"POT-Creation-Date: 2026-10-31 11:07+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,12 +45,13 @@ msgstr "اختتام"
 msgid "Break"
 msgstr "وقفہ"
 
-#: apps/academics/forms.py:31 apps/hr/forms.py:142 apps/setup/forms.py:323
+#: apps/academics/forms.py:31 apps/hr/forms.py:143 apps/setup/forms.py:323
 #: templates/accounting/book.html:11 templates/accounting/branches.html:9
 #: templates/accounting/profit_loss.html:11 templates/admissions/report.html:6
 #: templates/fees/collections.html:8 templates/fees/student.html:64
-#: templates/inventory/sales.html:10 templates/reports/new_admissions.html:9
-#: templates/setup/fees.html:12 templates/setup/user_detail.html:26
+#: templates/hr/employee.html:35 templates/inventory/sales.html:10
+#: templates/reports/new_admissions.html:9 templates/setup/fees.html:12
+#: templates/setup/user_detail.html:26
 msgid "From"
 msgstr "سے"
 
@@ -83,7 +84,7 @@ msgstr "عملے کی چھٹی (غیر حاضر شمار نہیں)"
 msgid "For every branch of the network"
 msgstr "نیٹ ورک کی تمام برانچوں کے لیے"
 
-#: apps/academics/forms.py:51 apps/hr/forms.py:151 apps/hr/models.py:238
+#: apps/academics/forms.py:51 apps/hr/forms.py:152 apps/hr/models.py:238
 #: apps/notices/forms.py:49
 msgid "The last day is before the first day."
 msgstr "آخری دن پہلے دن سے پہلے ہے۔"
@@ -271,13 +272,13 @@ msgstr "فیس وصول (%(n)s ادائیگیاں)"
 
 #: apps/accounting/forms.py:20 apps/accounting/forms.py:69
 #: apps/accounting/views.py:60 apps/accounting/views.py:185
-#: apps/accounting/views.py:283 apps/events/views.py:96 apps/fees/views.py:838
+#: apps/accounting/views.py:283 apps/events/views.py:102 apps/fees/views.py:838
 #: apps/hifz/forms.py:25 apps/hifz/views.py:152 apps/inventory/forms.py:59
 #: apps/inventory/views.py:106 apps/inventory/views.py:318
 #: templates/academics/holidays.html:21 templates/accounting/book.html:26
 #: templates/accounting/incomes.html:17 templates/accounting/index.html:34
-#: templates/attendance/today.html:9 templates/events/detail.html:40
-#: templates/events/detail.html:51 templates/events/index.html:9
+#: templates/attendance/today.html:9 templates/events/detail.html:41
+#: templates/events/detail.html:52 templates/events/index.html:9
 #: templates/exams/award_list.html:11 templates/exams/date_sheet.html:22
 #: templates/exams/section_exam.html:8 templates/fees/collections.html:18
 #: templates/fees/family_receive.html:36 templates/fees/index.html:28
@@ -297,13 +298,13 @@ msgstr "خرچ کی مد"
 #: apps/accounting/forms.py:22 apps/accounting/forms.py:71
 #: apps/accounting/forms.py:105 apps/accounting/views.py:61
 #: apps/accounting/views.py:186 apps/accounting/views.py:318
-#: apps/events/views.py:97 apps/fees/forms.py:267 apps/fees/views.py:839
+#: apps/events/views.py:103 apps/fees/forms.py:267 apps/fees/views.py:839
 #: apps/inventory/views.py:312 apps/inventory/views.py:319
 #: apps/setup/forms.py:29 templates/accounting/incomes.html:12
 #: templates/accounting/incomes.html:17 templates/accounting/index.html:28
 #: templates/accounting/index.html:34 templates/core/home.html:148
-#: templates/events/detail.html:35 templates/events/detail.html:40
-#: templates/events/detail.html:51 templates/events/sell.html:27
+#: templates/events/detail.html:36 templates/events/detail.html:41
+#: templates/events/detail.html:52 templates/events/sell.html:39
 #: templates/fees/_day_breakdown.html:9 templates/fees/collections.html:18
 #: templates/fees/family_receive.html:36 templates/fees/index.html:49
 #: templates/fees/payments_import.html:29 templates/fees/quick.html:14
@@ -322,7 +323,7 @@ msgid "What for"
 msgstr "کس لیے"
 
 #: apps/accounting/forms.py:24 apps/accounting/views.py:60
-#: templates/accounting/index.html:34 templates/events/detail.html:40
+#: templates/accounting/index.html:34 templates/events/detail.html:41
 msgid "Paid to"
 msgstr "کس کو ادا کیا"
 
@@ -351,12 +352,12 @@ msgid "The date is in the future."
 msgstr "یہ تاریخ آنے والی ہے۔"
 
 #: apps/accounting/forms.py:49 apps/fees/forms.py:170 apps/fees/forms.py:290
-#: apps/hr/forms.py:116
+#: apps/hr/forms.py:117
 msgid "Attach a JPG, PNG or PDF file."
 msgstr "JPG، PNG یا PDF فائل لگائیں۔"
 
 #: apps/accounting/forms.py:51 apps/fees/forms.py:172 apps/fees/forms.py:292
-#: apps/hr/forms.py:118 apps/notices/forms.py:43
+#: apps/hr/forms.py:119 apps/notices/forms.py:43
 msgid "The file is larger than 5 MB."
 msgstr "فائل 5 MB سے بڑی ہے۔"
 
@@ -384,8 +385,8 @@ msgstr "رقم کہاں آئی"
 msgid "Receipt / cheque / transaction no."
 msgstr "رسید / چیک / ٹرانزیکشن نمبر"
 
-#: apps/accounting/forms.py:95 apps/fees/forms.py:178
-#: apps/inventory/views.py:231
+#: apps/accounting/forms.py:95 apps/events/services.py:48
+#: apps/fees/forms.py:178 apps/inventory/views.py:231
 msgid "Choose the bank the money came in."
 msgstr "وہ بینک منتخب کریں جس میں رقم آئی۔"
 
@@ -399,10 +400,11 @@ msgid "Balance at the start of"
 msgstr "اس دن کے آغاز پر بیلنس"
 
 #: apps/accounting/models.py:45 apps/accounting/models.py:102
-#: apps/events/models.py:69 apps/fees/forms.py:136 apps/fees/models.py:178
-#: apps/fees/views.py:839 apps/inventory/models.py:87 apps/payroll/views.py:64
-#: apps/setup/forms.py:35 templates/fees/_day_breakdown.html:12
-#: templates/payroll/salaries.html:9 templates/payroll/salaries.html:14
+#: apps/events/models.py:69 apps/events/services.py:176 apps/fees/forms.py:136
+#: apps/fees/models.py:178 apps/fees/views.py:839 apps/inventory/models.py:87
+#: apps/payroll/views.py:65 apps/setup/forms.py:35
+#: templates/events/sell.html:29 templates/fees/_day_breakdown.html:12
+#: templates/payroll/salaries.html:14 templates/payroll/salaries.html:20
 #: templates/setup/fees.html:53
 msgid "Bank"
 msgstr "بینک"
@@ -427,33 +429,34 @@ msgstr "اس دن کے آغاز پر بیلنس"
 #: apps/reports/catalogue.py:270 templates/accounting/_tabs.html:2
 #: templates/accounting/form.html:4 templates/accounting/index.html:2
 #: templates/accounting/index.html:5 templates/accounting/profit_loss.html:31
-#: templates/events/detail.html:38
+#: templates/events/detail.html:39
 msgid "Expenses"
 msgstr "اخراجات"
 
 #: apps/accounting/views.py:60 apps/accounting/views.py:185
-#: apps/people/forms.py:106 templates/fees/student.html:52
-#: templates/people/student_detail.html:36
+#: apps/people/forms.py:106 templates/events/sell.html:30
+#: templates/fees/student.html:52 templates/people/student_detail.html:36
 msgid "Reference"
 msgstr "حوالہ"
 
 #: apps/accounting/views.py:61 apps/accounting/views.py:186
 #: templates/accounting/incomes.html:17 templates/accounting/index.html:34
-#: templates/events/detail.html:40 templates/fees/royalty_branch.html:37
+#: templates/events/detail.html:41 templates/fees/royalty_branch.html:37
+#: templates/payroll/person.html:48
 msgid "Recorded by"
 msgstr "کس نے درج کیا"
 
 #: apps/accounting/views.py:61 apps/accounting/views.py:186
 #: apps/fees/models.py:280 apps/hr/models.py:213 apps/inventory/views.py:321
-#: apps/payroll/models.py:43 templates/accounting/incomes.html:20
-#: templates/accounting/index.html:38 templates/events/detail.html:45
+#: apps/payroll/models.py:50 templates/accounting/incomes.html:20
+#: templates/accounting/index.html:38 templates/events/detail.html:46
 #: templates/fees/student.html:76 templates/hifz/student.html:31
 #: templates/inventory/receipt.html:13 templates/inventory/sales.html:32
 msgid "Cancelled"
 msgstr "منسوخ"
 
 #: apps/accounting/views.py:65 apps/accounting/views.py:190
-#: apps/events/views.py:100 apps/fees/views.py:845 apps/reports/views.py:119
+#: apps/events/views.py:106 apps/fees/views.py:845 apps/reports/views.py:119
 #: templates/notices/templates.html:11 templates/setup/fees.html:41
 msgid "Yes"
 msgstr "ہاں"
@@ -482,7 +485,7 @@ msgstr "دیگر آمدنی"
 msgid "Income of Rs %(a)s recorded."
 msgstr "%(a)s روپے آمدنی درج ہو گئی۔"
 
-#: apps/accounting/views.py:241 apps/events/views.py:263
+#: apps/accounting/views.py:241 apps/events/views.py:325
 #: apps/inventory/views.py:273
 msgid "Give a reason for cancelling."
 msgstr "منسوخی کی وجہ لکھیں۔"
@@ -578,7 +581,7 @@ msgstr "کل آمدنی (روپے)"
 
 #: apps/accounting/views.py:342 templates/accounting/branches.html:16
 #: templates/accounting/branches.html:21
-#: templates/accounting/profit_loss.html:18 templates/events/detail.html:18
+#: templates/accounting/profit_loss.html:18 templates/events/detail.html:19
 #: templates/events/index.html:9
 msgid "Expenses (Rs)"
 msgstr "اخراجات (روپے)"
@@ -633,7 +636,7 @@ msgstr "میرے پرنٹ کام"
 #: apps/accounts/context_processors.py:59 apps/reports/catalogue.py:103
 #: templates/attendance/branches.html:7 templates/attendance/today.html:2
 #: templates/attendance/today.html:4 templates/attendance/today.html:20
-#: templates/core/design_system.html:100 templates/hr/employee.html:30
+#: templates/core/design_system.html:100 templates/hr/employee.html:43
 #: templates/parents/child.html:9 templates/parents/child.html:18
 msgid "Attendance"
 msgstr "حاضری"
@@ -651,9 +654,9 @@ msgid "All my branches"
 msgstr "میری تمام برانچیں"
 
 #: apps/accounts/context_processors.py:65
-#: apps/accounts/context_processors.py:67 apps/people/views.py:98
+#: apps/accounts/context_processors.py:67 apps/people/views.py:86
 #: apps/reports/catalogue.py:66 templates/academics/holidays.html:24
-#: templates/events/detail.html:25 templates/hifz/index.html:21
+#: templates/events/detail.html:26 templates/hifz/index.html:21
 #: templates/people/promotion.html:17 templates/people/student_list.html:2
 #: templates/people/student_list.html:5 templates/reports/class_strength.html:7
 #: templates/setup/sections.html:13
@@ -672,7 +675,7 @@ msgid "Admissions report"
 msgstr "داخلہ رپورٹ"
 
 #: apps/accounts/context_processors.py:72 templates/people/student_list.html:8
-#: templates/people/student_list.html:68
+#: templates/people/student_list.html:72
 msgid "Import from Excel"
 msgstr "ایکسل سے درآمد"
 
@@ -717,7 +720,7 @@ msgstr "چھٹیوں کا کیلنڈر"
 #: apps/accounts/context_processors.py:83 apps/reports/views.py:77
 #: apps/reports/views.py:114 templates/admissions/detail.html:6
 #: templates/admissions/index.html:43 templates/hifz/index.html:2
-#: templates/parents/child.html:12 templates/people/student_list.html:47
+#: templates/parents/child.html:12 templates/people/student_list.html:51
 #: templates/reports/class_strength.html:17
 #: templates/reports/new_admissions.html:20
 msgid "Hifz"
@@ -802,9 +805,9 @@ msgstr "نفع و نقصان"
 msgid "Shop & stock"
 msgstr "دکان اور اسٹاک"
 
-#: apps/accounts/context_processors.py:106 templates/inventory/index.html:7
-#: templates/inventory/sales.html:7 templates/inventory/sell.html:2
-#: templates/inventory/sell.html:6
+#: apps/accounts/context_processors.py:106 templates/events/sell.html:19
+#: templates/inventory/index.html:7 templates/inventory/sales.html:7
+#: templates/inventory/sell.html:2 templates/inventory/sell.html:6
 msgid "Sell"
 msgstr "فروخت"
 
@@ -825,10 +828,11 @@ msgid "Events & Tickets"
 msgstr "تقریبات اور ٹکٹ"
 
 #: apps/accounts/context_processors.py:119
-#: apps/accounts/context_processors.py:121 apps/hr/views.py:85
+#: apps/accounts/context_processors.py:121 apps/hr/views.py:86
 #: apps/notices/models.py:40 apps/reports/catalogue.py:238
-#: templates/academics/holidays.html:24 templates/hr/index.html:2
-#: templates/hr/index.html:5
+#: templates/academics/holidays.html:24 templates/hr/employee.html:4
+#: templates/hr/employee_form.html:4 templates/hr/index.html:2
+#: templates/hr/index.html:5 templates/payroll/index.html:26
 msgid "Staff"
 msgstr "عملہ"
 
@@ -851,9 +855,11 @@ msgstr "ماہانہ شیٹ"
 msgid "Leave"
 msgstr "چھٹی"
 
-#: apps/accounts/context_processors.py:125 apps/payroll/views.py:70
+#: apps/accounts/context_processors.py:125 apps/payroll/views.py:71
 #: apps/reports/catalogue.py:251 templates/payroll/index.html:2
-#: templates/payroll/index.html:5 templates/payroll/salaries.html:4
+#: templates/payroll/index.html:5 templates/payroll/manual.html:4
+#: templates/payroll/person.html:2 templates/payroll/person.html:4
+#: templates/payroll/salaries.html:4
 msgid "Payroll"
 msgstr "تنخواہیں"
 
@@ -990,7 +996,7 @@ msgstr "انہیں ہمارے بارے میں کہاں سے پتا چلا؟"
 msgid "Follow-up by"
 msgstr "فالو اپ کرنے والا"
 
-#: apps/admissions/forms.py:61 apps/hr/forms.py:136 apps/people/forms.py:224
+#: apps/admissions/forms.py:61 apps/hr/forms.py:137 apps/people/forms.py:224
 msgid "Enter a Pakistani mobile number, e.g. 0300-1234567."
 msgstr "پاکستانی موبائل نمبر درج کریں، مثلاً 0300-1234567۔"
 
@@ -1088,8 +1094,8 @@ msgid "School event"
 msgstr "سکول کی تقریب"
 
 #: apps/admissions/models.py:27 apps/admissions/models.py:49
-#: apps/events/models.py:30 apps/events/models.py:117 apps/fees/models.py:183
-#: apps/inventory/models.py:25 apps/people/models.py:125
+#: apps/events/models.py:30 apps/events/models.py:120 apps/fees/models.py:183
+#: apps/hr/models.py:326 apps/inventory/models.py:25 apps/people/models.py:125
 #: templates/people/_student_fields.html:31
 msgid "Other"
 msgstr "دیگر"
@@ -1209,7 +1215,7 @@ msgstr "حیثیت میں تبدیلی"
 msgid "Inquiry saved for %(n)s."
 msgstr "%(n)s کی انکوائری محفوظ ہو گئی۔"
 
-#: apps/admissions/views.py:129 apps/hr/views.py:126
+#: apps/admissions/views.py:129 apps/hr/views.py:136
 msgid "Saved."
 msgstr "محفوظ ہو گیا۔"
 
@@ -1234,7 +1240,9 @@ msgstr "حاضر"
 #: templates/attendance/today.html:21 templates/attendance/today.html:41
 #: templates/core/design_system.html:86 templates/core/home.html:113
 #: templates/hifz/report.html:14 templates/hr/day.html:14
-#: templates/parents/child.html:19 templates/payroll/index.html:31
+#: templates/parents/child.html:19 templates/payroll/index.html:42
+#: templates/payroll/manual.html:9 templates/payroll/person.html:16
+#: templates/payroll/person.html:37
 msgid "Absent"
 msgstr "غیر حاضر"
 
@@ -1252,8 +1260,8 @@ msgstr ""
 "%(section)s کی حاضری محفوظ ہو گئی: %(present)s حاضر، %(absent)s غیر حاضر۔"
 
 #: apps/attendance/views.py:186 apps/fees/views.py:263 apps/hifz/views.py:152
-#: apps/hr/views.py:87 apps/inventory/views.py:319 apps/people/forms.py:108
-#: apps/people/views.py:100 apps/reports/views.py:114
+#: apps/hr/views.py:88 apps/inventory/views.py:319 apps/people/forms.py:108
+#: apps/people/views.py:88 apps/reports/views.py:114
 #: templates/admissions/index.html:33 templates/admissions/index.html:41
 #: templates/core/design_system.html:56 templates/fees/concessions.html:23
 #: templates/fees/family_vouchers.html:21 templates/fees/student.html:36
@@ -1263,65 +1271,67 @@ msgstr ""
 #: templates/hr/day.html:20 templates/hr/index.html:30
 #: templates/hr/leaves.html:22 templates/jobs/index.html:8
 #: templates/people/student_detail.html:54
-#: templates/people/student_list.html:23 templates/people/student_list.html:41
+#: templates/people/student_list.html:27 templates/people/student_list.html:45
 #: templates/reports/new_admissions.html:18 templates/setup/branches.html:13
 msgid "Status"
 msgstr "حیثیت"
 
-#: apps/attendance/views.py:186 apps/events/views.py:96
-#: apps/events/views.py:229 apps/exams/views.py:419 apps/fees/views.py:262
+#: apps/attendance/views.py:186 apps/events/views.py:102
+#: apps/events/views.py:291 apps/exams/views.py:419 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/fees/views.py:838 apps/hifz/views.py:214
 #: apps/insights/views.py:46 apps/inventory/views.py:318
-#: apps/people/views.py:99 apps/reports/views.py:113
-#: templates/events/class_list.html:8 templates/exams/award_list.html:15
+#: apps/people/views.py:87 apps/reports/views.py:113
+#: templates/events/class_list.html:8 templates/events/sell.html:19
+#: templates/events/sell.html:39 templates/exams/award_list.html:15
 #: templates/fees/find.html:6 templates/fees/student.html:5
 #: templates/hifz/student.html:6 templates/inventory/receipt.html:14
 #: templates/parents/child.html:6 templates/people/leave.html:6
 #: templates/people/student_detail.html:8
 #: templates/people/student_detail.html:54
-#: templates/people/student_list.html:40
+#: templates/people/student_list.html:44
 #: templates/reports/new_admissions.html:18
 msgid "Admission no."
 msgstr "داخلہ نمبر"
 
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/hifz/views.py:214
-#: apps/hr/views.py:86 apps/insights/views.py:46 apps/payroll/views.py:64
-#: apps/payroll/views.py:71 apps/people/views.py:99 apps/reports/views.py:113
+#: apps/hr/views.py:87 apps/insights/views.py:46 apps/payroll/views.py:65
+#: apps/payroll/views.py:72 apps/people/views.py:87 apps/reports/views.py:113
 #: apps/setup/forms.py:21 apps/setup/forms.py:232
 #: templates/exams/award_list.html:15 templates/hifz/report.html:14
 #: templates/hr/day.html:20 templates/hr/index.html:39
 #: templates/hr/leaves.html:8 templates/hr/leaves.html:22
 #: templates/hr/month.html:9 templates/notices/templates.html:10
-#: templates/payroll/index.html:31 templates/payroll/salaries.html:9
-#: templates/people/student_detail.html:42
+#: templates/payroll/index.html:42 templates/payroll/manual.html:9
+#: templates/payroll/salaries.html:14 templates/people/student_detail.html:42
 #: templates/people/student_detail.html:54
-#: templates/people/student_list.html:40
+#: templates/people/student_list.html:44
 #: templates/reports/new_admissions.html:18 templates/setup/fees.html:40
 #: templates/setup/password.html:7 templates/setup/users.html:19
 msgid "Name"
 msgstr "نام"
 
-#: apps/attendance/views.py:186 apps/events/views.py:96 apps/fees/forms.py:40
+#: apps/attendance/views.py:186 apps/events/views.py:102 apps/fees/forms.py:40
 #: apps/fees/views.py:262 apps/fees/views.py:790 apps/insights/views.py:46
 #: apps/inventory/views.py:55 apps/notices/views.py:151 apps/people/forms.py:44
-#: apps/people/views.py:99 apps/reports/views.py:77 apps/reports/views.py:113
+#: apps/people/views.py:87 apps/reports/views.py:77 apps/reports/views.py:113
 #: apps/reports/views.py:136 apps/setup/forms.py:20
 #: templates/academics/index.html:17 templates/admissions/index.html:31
 #: templates/admissions/index.html:41 templates/admissions/report.html:20
 #: templates/attendance/_people.html:3 templates/attendance/absentees.html:12
 #: templates/attendance/today.html:41 templates/core/design_system.html:56
 #: templates/core/design_system.html:69 templates/core/home.html:113
-#: templates/events/detail.html:25 templates/events/detail.html:51
-#: templates/events/receipt.html:13 templates/exams/award_list.html:8
-#: templates/exams/date_sheet.html:12 templates/fees/defaulters.html:10
-#: templates/fees/defaulters.html:31 templates/fees/family_receive.html:14
-#: templates/fees/vouchers.html:11 templates/fees/vouchers.html:25
-#: templates/insights/attention.html:12 templates/insights/attention.html:30
-#: templates/inventory/index.html:28 templates/parents/codes.html:7
-#: templates/people/_student_fields.html:13 templates/people/promotion.html:17
-#: templates/people/student_detail.html:54
+#: templates/events/detail.html:26 templates/events/detail.html:52
+#: templates/events/receipt.html:13 templates/events/sell.html:10
+#: templates/events/sell.html:19 templates/events/sell.html:39
+#: templates/exams/award_list.html:8 templates/exams/date_sheet.html:12
+#: templates/fees/defaulters.html:10 templates/fees/defaulters.html:31
+#: templates/fees/family_receive.html:14 templates/fees/vouchers.html:11
+#: templates/fees/vouchers.html:25 templates/insights/attention.html:12
+#: templates/insights/attention.html:30 templates/inventory/index.html:28
+#: templates/parents/codes.html:7 templates/people/_student_fields.html:13
+#: templates/people/promotion.html:17 templates/people/student_detail.html:54
 #: templates/people/student_detail.html:63
-#: templates/people/student_list.html:15 templates/people/student_list.html:41
+#: templates/people/student_list.html:15 templates/people/student_list.html:45
 #: templates/reports/attendance_month.html:11
 #: templates/reports/class_strength.html:17
 #: templates/reports/new_admissions.html:18 templates/setup/fees.html:12
@@ -1329,17 +1339,18 @@ msgstr "نام"
 msgid "Class"
 msgstr "جماعت"
 
-#: apps/attendance/views.py:186 apps/events/views.py:96
-#: apps/events/views.py:229 apps/fees/forms.py:41 apps/people/forms.py:45
-#: apps/people/views.py:99 apps/reports/views.py:77 apps/reports/views.py:114
+#: apps/attendance/views.py:186 apps/events/views.py:102
+#: apps/events/views.py:291 apps/fees/forms.py:41 apps/people/forms.py:45
+#: apps/people/views.py:87 apps/reports/views.py:77 apps/reports/views.py:114
 #: apps/reports/views.py:136 templates/attendance/_people.html:3
 #: templates/attendance/absentees.html:15 templates/attendance/today.html:41
 #: templates/diary/day.html:29 templates/events/class_list.html:8
-#: templates/exams/index.html:27 templates/hifz/index.html:21
-#: templates/hifz/report.html:9 templates/people/promotion.html:17
-#: templates/people/student_detail.html:54
+#: templates/events/sell.html:11 templates/events/sell.html:19
+#: templates/events/sell.html:39 templates/exams/index.html:27
+#: templates/hifz/index.html:21 templates/hifz/report.html:9
+#: templates/people/promotion.html:17 templates/people/student_detail.html:54
 #: templates/people/student_detail.html:63
-#: templates/people/student_list.html:19 templates/people/student_list.html:41
+#: templates/people/student_list.html:19 templates/people/student_list.html:45
 #: templates/reports/attendance_month.html:11
 #: templates/reports/class_strength.html:17 templates/setup/sections.html:13
 msgid "Section"
@@ -1381,7 +1392,7 @@ msgstr "سیکشن"
 msgid "fee rate"
 msgstr "فیس ریٹ"
 
-#: apps/core/deletion.py:45 apps/payroll/models.py:26
+#: apps/core/deletion.py:45 apps/events/models.py:84 apps/payroll/models.py:33
 msgid "bank"
 msgstr "بینک"
 
@@ -1465,7 +1476,7 @@ msgstr "نئی انکوائری"
 
 #: apps/core/views.py:103 templates/people/student_form.html:2
 #: templates/people/student_form.html:4 templates/people/student_list.html:7
-#: templates/people/student_list.html:68
+#: templates/people/student_list.html:72
 msgid "Add a student"
 msgstr "طالب علم شامل کریں"
 
@@ -1617,7 +1628,7 @@ msgstr "نام"
 msgid "type"
 msgstr "قسم"
 
-#: apps/events/models.py:34 apps/events/models.py:124 apps/hifz/models.py:72
+#: apps/events/models.py:34 apps/events/models.py:127 apps/hifz/models.py:72
 msgid "date"
 msgstr "تاریخ"
 
@@ -1646,7 +1657,7 @@ msgid "ticket (Rs)"
 msgstr "ٹکٹ (روپے)"
 
 #: apps/events/models.py:68 apps/fees/forms.py:136 apps/fees/views.py:843
-#: apps/inventory/models.py:86 apps/payroll/views.py:65
+#: apps/inventory/models.py:86 apps/payroll/models.py:18
 #: templates/fees/_day_breakdown.html:11 templates/fees/collections.html:23
 #: templates/fees/quick.html:16 templates/fees/receipt.html:14
 msgid "Cash"
@@ -1664,47 +1675,47 @@ msgstr "رسید نمبر"
 msgid "extra tickets"
 msgstr "اضافی ٹکٹ"
 
-#: apps/events/models.py:81 apps/events/models.py:122
+#: apps/events/models.py:81 apps/events/models.py:125
 msgid "amount (Rs)"
 msgstr "رقم (روپے)"
 
-#: apps/events/models.py:82
+#: apps/events/models.py:82 apps/payroll/models.py:147
 msgid "paid by"
 msgstr "ادائیگی"
 
-#: apps/events/models.py:83
+#: apps/events/models.py:86 apps/payroll/models.py:148
 msgid "reference"
 msgstr "حوالہ"
 
-#: apps/events/models.py:112
+#: apps/events/models.py:115
 msgid "Transport"
 msgstr "ٹرانسپورٹ"
 
-#: apps/events/models.py:113
+#: apps/events/models.py:116
 msgid "Food and drinks"
 msgstr "کھانا پینا"
 
-#: apps/events/models.py:114
+#: apps/events/models.py:117
 msgid "Venue and entry tickets"
 msgstr "جگہ اور داخلہ ٹکٹ"
 
-#: apps/events/models.py:115
+#: apps/events/models.py:118
 msgid "Decoration and sound"
 msgstr "سجاوٹ اور ساؤنڈ"
 
-#: apps/events/models.py:116
+#: apps/events/models.py:119
 msgid "Gifts and prizes"
 msgstr "تحائف اور انعامات"
 
-#: apps/events/models.py:120 apps/notices/models.py:49
+#: apps/events/models.py:123 apps/notices/models.py:49
 msgid "for"
 msgstr "کس کے لیے"
 
-#: apps/events/models.py:121
+#: apps/events/models.py:124
 msgid "details"
 msgstr "تفصیل"
 
-#: apps/events/models.py:123
+#: apps/events/models.py:126
 msgid "paid to"
 msgstr "کس کو دیے"
 
@@ -1725,26 +1736,26 @@ msgstr "%(s)s کی کلاس اس تقریب میں شامل نہیں۔"
 msgid "This event has no extra tickets."
 msgstr "اس تقریب میں اضافی ٹکٹ نہیں۔"
 
-#: apps/events/services.py:70
+#: apps/events/services.py:73
 msgid "This receipt was already refunded."
 msgstr "یہ رسید پہلے ہی واپس ہو چکی ہے۔"
 
-#: apps/events/views.py:83
+#: apps/events/views.py:89
 #, python-format
 msgid "Event %(e)s saved."
 msgstr "تقریب %(e)s محفوظ ہو گئی۔"
 
-#: apps/events/views.py:96 templates/events/detail.html:51
-#: templates/events/sell.html:27
+#: apps/events/views.py:102 templates/events/detail.html:52
+#: templates/events/sell.html:39
 msgid "Receipt no."
 msgstr "رسید نمبر"
 
-#: apps/events/views.py:96 apps/events/views.py:229 apps/fees/views.py:262
+#: apps/events/views.py:102 apps/events/views.py:291 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/fees/views.py:838 apps/notices/views.py:151
 #: templates/attendance/_people.html:3 templates/core/design_system.html:56
-#: templates/events/class_list.html:8 templates/events/detail.html:51
-#: templates/events/receipt.html:11 templates/events/sell.html:8
-#: templates/events/sell.html:27 templates/exams/enter_marks.html:9
+#: templates/events/class_list.html:8 templates/events/detail.html:52
+#: templates/events/receipt.html:11 templates/events/sell.html:19
+#: templates/events/sell.html:39 templates/exams/enter_marks.html:9
 #: templates/exams/ratings.html:19 templates/exams/section_results.html:14
 #: templates/fees/collections.html:18 templates/fees/concessions.html:8
 #: templates/fees/concessions.html:23 templates/fees/defaulters.html:31
@@ -1756,89 +1767,95 @@ msgstr "رسید نمبر"
 msgid "Student"
 msgstr "طالب علم"
 
-#: apps/events/views.py:97 templates/events/detail.html:16
-#: templates/events/detail.html:25 templates/events/receipt.html:15
+#: apps/events/views.py:103 templates/events/detail.html:17
+#: templates/events/detail.html:26 templates/events/receipt.html:15
+#: templates/events/sell.html:27
 msgid "Extra tickets"
 msgstr "اضافی ٹکٹ"
 
-#: apps/events/views.py:97 apps/inventory/views.py:318
-#: templates/events/detail.html:51 templates/events/receipt.html:17
-#: templates/events/sell.html:21 templates/inventory/receipt.html:20
-#: templates/inventory/sales.html:29 templates/inventory/sell.html:28
+#: apps/events/views.py:103 apps/inventory/views.py:318
+#: apps/payroll/views.py:74 templates/events/detail.html:52
+#: templates/events/receipt.html:17 templates/events/sell.html:28
+#: templates/inventory/receipt.html:20 templates/inventory/sales.html:29
+#: templates/inventory/sell.html:28 templates/payroll/person.html:28
+#: templates/payroll/salaries.html:14 templates/payroll/salaries.html:19
 msgid "Paid by"
 msgstr "ادائیگی"
 
-#: apps/events/views.py:97 apps/fees/views.py:839
-#: templates/events/detail.html:35 templates/events/detail.html:51
+#: apps/events/views.py:103 apps/fees/views.py:839
+#: templates/events/detail.html:36 templates/events/detail.html:52
 #: templates/events/receipt.html:18 templates/fees/collections.html:18
 #: templates/fees/receipt.html:17 templates/fees/student.html:52
 msgid "Received by"
 msgstr "وصول کنندہ"
 
-#: apps/events/views.py:97 templates/events/detail.html:53
+#: apps/events/views.py:103 templates/events/detail.html:54
 #: templates/events/receipt.html:7 templates/events/receipt.html:19
 msgid "Refunded"
 msgstr "واپس شدہ"
 
-#: apps/events/views.py:123 apps/people/views.py:220
+#: apps/events/views.py:129 apps/people/views.py:210
 msgid "No receipt printer is set for this branch. Find it in Setup → Receipt printer."
 msgstr "اس برانچ کا کوئی رسید پرنٹر درج نہیں۔ سیٹ اپ ← رسید پرنٹر میں تلاش کریں۔"
 
-#: apps/events/views.py:127
+#: apps/events/views.py:133
 #, python-format
 msgid "Receipt %(r)s printed."
 msgstr "رسید %(r)s پرنٹ ہو گئی۔"
 
-#: apps/events/views.py:129 apps/people/views.py:240
+#: apps/events/views.py:135 apps/people/views.py:230
 #, python-format
 msgid "The receipt printer (%(p)s) did not answer: %(e)s. Check that it is on and connected."
 msgstr "رسید پرنٹر (%(p)s) نے جواب نہیں دیا: %(e)s۔ دیکھیں کہ پرنٹر آن ہے اور نیٹ ورک سے جڑا ہے۔"
 
-#: apps/events/views.py:153
+#: apps/events/views.py:166
 #, python-format
 msgid "%(s)s: %(n)s ticket(s), Rs %(a)s received by %(by)s."
 msgstr "%(s)s: %(n)s ٹکٹ، %(a)s روپے %(by)s نے وصول کیے۔"
 
-#: apps/events/views.py:208
+#: apps/events/views.py:270
 msgid "Give a reason for the refund."
 msgstr "رقم واپسی کی وجہ لکھیں۔"
 
-#: apps/events/views.py:213
+#: apps/events/views.py:275
 #, python-format
 msgid "Receipt %(r)s refunded: Rs %(a)s."
 msgstr "رسید %(r)s واپس ہو گئی: %(a)s روپے۔"
 
-#: apps/events/views.py:229 apps/exams/views.py:419 apps/fees/views.py:262
+#: apps/events/views.py:291 apps/exams/views.py:419 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/fees/views.py:838 apps/hr/forms.py:49
-#: apps/people/forms.py:47 apps/people/views.py:99 apps/reports/views.py:113
+#: apps/people/forms.py:47 apps/people/views.py:87 apps/reports/views.py:113
 #: templates/events/class_list.html:8 templates/events/receipt.html:12
-#: templates/exams/award_list.html:15 templates/fees/collections.html:18
-#: templates/hr/employee.html:13 templates/people/student_list.html:40
+#: templates/events/sell.html:19 templates/exams/award_list.html:15
+#: templates/fees/collections.html:18 templates/hr/employee.html:14
+#: templates/people/student_list.html:44
 #: templates/reports/new_admissions.html:18
 msgid "Father name"
 msgstr "والد کا نام"
 
-#: apps/events/views.py:229 templates/events/class_list.html:8
+#: apps/events/views.py:291 templates/events/class_list.html:8
 msgid "Ticket"
 msgstr "ٹکٹ"
 
-#: apps/events/views.py:231 apps/fees/models.py:278 apps/fees/models.py:514
+#: apps/events/views.py:293 apps/fees/models.py:278 apps/fees/models.py:514
 #: templates/core/design_system.html:58 templates/events/class_list.html:10
-#: templates/events/detail.html:25
+#: templates/events/detail.html:26 templates/payroll/index.html:42
+#: templates/payroll/index.html:48 templates/payroll/person.html:21
+#: templates/payroll/person.html:37
 msgid "Paid"
 msgstr "ادا شدہ"
 
-#: apps/events/views.py:231 templates/events/class_list.html:10
-#: templates/events/detail.html:25 templates/hifz/index.html:26
+#: apps/events/views.py:293 templates/events/class_list.html:10
+#: templates/events/detail.html:26 templates/hifz/index.html:26
 msgid "Not yet"
 msgstr "ابھی نہیں"
 
-#: apps/events/views.py:250
+#: apps/events/views.py:312
 #, python-format
 msgid "Expense of Rs %(a)s saved."
 msgstr "%(a)s روپے کا خرچ محفوظ ہو گیا۔"
 
-#: apps/events/views.py:267
+#: apps/events/views.py:329
 msgid "Expense cancelled."
 msgstr "خرچ منسوخ ہو گیا۔"
 
@@ -2084,7 +2101,8 @@ msgstr "فیملی واؤچر: %(a)s روپے ادا ہوئے لیکن %(t)s ر�
 #: templates/fees/receive.html:44 templates/fees/royalty.html:7
 #: templates/fees/royalty_branch.html:17 templates/fees/student.html:28
 #: templates/fees/student.html:71 templates/fees/vouchers.html:10
-#: templates/hifz/report.html:10 templates/payroll/index.html:9
+#: templates/hifz/report.html:10 templates/payroll/index.html:13
+#: templates/payroll/person.html:8 templates/payroll/person.html:37
 #: templates/reports/attendance_month.html:7
 msgid "Month"
 msgstr "مہینہ"
@@ -2127,7 +2145,8 @@ msgstr "تمام جماعتیں"
 
 #: apps/fees/forms.py:65 templates/attendance/absentees.html:16
 #: templates/attendance/today.html:38 templates/diary/day.html:26
-#: templates/exams/index.html:24 templates/people/student_list.html:20
+#: templates/events/sell.html:11 templates/exams/index.html:24
+#: templates/people/student_list.html:20
 msgid "All sections"
 msgstr "تمام سیکشن"
 
@@ -2198,6 +2217,7 @@ msgid "Voucher ID"
 msgstr "واؤچر آئی ڈی"
 
 #: apps/fees/forms.py:243 apps/fees/views.py:262 apps/setup/forms.py:31
+#: templates/payroll/person.html:48 templates/payroll/person.html:56
 msgid "From month"
 msgstr "کس مہینے سے"
 
@@ -2209,15 +2229,16 @@ msgstr "کس مہینے تک"
 msgid "Leave empty until stopped."
 msgstr "روکے جانے تک خالی چھوڑ دیں۔"
 
-#: apps/fees/forms.py:257 apps/hr/forms.py:144 apps/hr/forms.py:170
+#: apps/fees/forms.py:257 apps/hr/forms.py:145 apps/hr/forms.py:171
 #: apps/people/forms.py:303 templates/accounting/incomes.html:26
 #: templates/accounting/index.html:44 templates/core/delete.html:20
-#: templates/events/detail.html:45 templates/events/receipt.html:24
+#: templates/events/detail.html:46 templates/events/receipt.html:24
 #: templates/fees/concessions.html:8 templates/fees/concessions.html:23
 #: templates/fees/receipt.html:28 templates/fees/student.html:44
 #: templates/fees/student.html:64 templates/fees/student.html:77
 #: templates/hr/day.html:30 templates/hr/leaves.html:8
-#: templates/inventory/receipt.html:25 templates/payroll/index.html:46
+#: templates/inventory/receipt.html:25 templates/payroll/index.html:58
+#: templates/payroll/person.html:48 templates/payroll/person.html:58
 msgid "Reason"
 msgstr "وجہ"
 
@@ -2328,7 +2349,7 @@ msgstr "سکول میں نقد"
 msgid "Deposited at bank with voucher"
 msgstr "واؤچر کے ساتھ بینک میں جمع"
 
-#: apps/fees/models.py:180
+#: apps/fees/models.py:180 apps/payroll/models.py:19
 msgid "Bank transfer"
 msgstr "بینک ٹرانسفر"
 
@@ -2365,6 +2386,8 @@ msgid "steps (Urdu)"
 msgstr "مراحل (اردو)"
 
 #: apps/fees/models.py:277 apps/fees/models.py:513
+#: templates/payroll/index.html:48 templates/payroll/person.html:21
+#: templates/payroll/person.html:42
 msgid "Not paid"
 msgstr "ادا نہیں ہوا"
 
@@ -2605,7 +2628,7 @@ msgstr ""
 msgid "Someone else must approve a discount you asked for."
 msgstr "آپ کی مانگی ہوئی رعایت کوئی دوسرا منظور کرے گا۔"
 
-#: apps/fees/views.py:712 apps/hr/views.py:395
+#: apps/fees/views.py:712 apps/hr/views.py:405
 msgid "Decision saved."
 msgstr "فیصلہ محفوظ ہو گیا۔"
 
@@ -2615,15 +2638,15 @@ msgid "Defaulters by family"
 msgstr "خاندان وار نادہندگان"
 
 #: apps/fees/views.py:780 apps/insights/views.py:46 apps/people/models.py:122
-#: templates/events/sell.html:14 templates/fees/defaulters.html:21
-#: templates/fees/family_vouchers.html:21 templates/fees/find.html:6
-#: templates/fees/student.html:5 templates/people/_student_fields.html:20
+#: templates/fees/defaulters.html:21 templates/fees/family_vouchers.html:21
+#: templates/fees/find.html:6 templates/fees/student.html:5
+#: templates/people/_student_fields.html:20
 msgid "Father"
 msgstr "والد"
 
-#: apps/fees/views.py:780 apps/fees/views.py:790 apps/people/views.py:99
+#: apps/fees/views.py:780 apps/fees/views.py:790 apps/people/views.py:87
 #: templates/core/design_system.html:78 templates/fees/defaulters.html:21
-#: templates/fees/defaulters.html:31 templates/people/student_list.html:41
+#: templates/fees/defaulters.html:31 templates/people/student_list.html:45
 msgid "Parent mobile"
 msgstr "والدین کا موبائل"
 
@@ -2723,13 +2746,13 @@ msgstr "پچھلے مہینوں سے باقی"
 msgid "Choose an Excel file (.xlsx)."
 msgstr "ایکسل فائل (.xlsx) منتخب کریں۔"
 
-#: apps/fees/views.py:1086 apps/people/views.py:582
+#: apps/fees/views.py:1086 apps/people/views.py:572
 msgid "The file is larger than 5 MB. Split it into smaller files."
 msgstr "فائل 5 MB سے بڑی ہے۔ اسے چھوٹی فائلوں میں تقسیم کریں۔"
 
-#: apps/fees/views.py:1101 apps/fees/views.py:1107 apps/hr/views.py:198
-#: apps/hr/views.py:204 apps/hr/views.py:257 apps/hr/views.py:263
-#: apps/people/views.py:599 apps/people/views.py:605
+#: apps/fees/views.py:1101 apps/fees/views.py:1107 apps/hr/views.py:208
+#: apps/hr/views.py:214 apps/hr/views.py:267 apps/hr/views.py:273
+#: apps/people/views.py:589 apps/people/views.py:595
 msgid "This import has expired. Please check the file again."
 msgstr "اس درآمد کی مدت ختم ہو گئی۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
@@ -2983,15 +3006,15 @@ msgstr "ملازم کوڈ"
 msgid "Full name"
 msgstr ""
 
-#: apps/hr/forms.py:50 templates/hr/employee.html:14
+#: apps/hr/forms.py:50 templates/hr/employee.html:15
 msgid "Husband name"
 msgstr "شوہر کا نام"
 
-#: apps/hr/forms.py:51 templates/hr/employee.html:17
+#: apps/hr/forms.py:51 templates/hr/employee.html:18
 msgid "Present address"
 msgstr "موجودہ پتہ"
 
-#: apps/hr/forms.py:52 apps/people/forms.py:104 templates/hr/employee.html:18
+#: apps/hr/forms.py:52 apps/people/forms.py:104 templates/hr/employee.html:19
 #: templates/people/student_detail.html:35
 msgid "Permanent address"
 msgstr "مستقل پتہ"
@@ -3000,7 +3023,7 @@ msgstr "مستقل پتہ"
 msgid "Staff type"
 msgstr "عملے کی قسم"
 
-#: apps/hr/forms.py:54 apps/hr/views.py:87 templates/hr/employee.html:19
+#: apps/hr/forms.py:54 apps/hr/views.py:88 templates/hr/employee.html:20
 msgid "Joining date"
 msgstr "تاریخِ تقرری"
 
@@ -3008,59 +3031,69 @@ msgstr "تاریخِ تقرری"
 msgid "CV (JPG or PDF)"
 msgstr "سی وی (JPG یا PDF)"
 
-#: apps/hr/forms.py:82 apps/hr/views.py:86 apps/payroll/views.py:71
+#: apps/hr/forms.py:56 templates/hr/employee.html:22
+msgid "Last qualification"
+msgstr "آخری تعلیمی قابلیت"
+
+#: apps/hr/forms.py:83 apps/hr/views.py:87 apps/payroll/views.py:72
 #: templates/hr/day.html:20 templates/hr/index.html:39
-#: templates/payroll/index.html:31 templates/payroll/salaries.html:9
+#: templates/payroll/index.html:15 templates/payroll/index.html:42
+#: templates/payroll/salaries.html:9 templates/payroll/salaries.html:14
 msgid "Designation"
 msgstr "عہدہ"
 
-#: apps/hr/forms.py:100
+#: apps/hr/forms.py:101
 msgid "This employee code is already used in this branch."
 msgstr "یہ ملازم کوڈ اس برانچ میں پہلے سے استعمال ہو رہا ہے۔"
 
-#: apps/hr/forms.py:109
+#: apps/hr/forms.py:110
 msgid "Another person already has this machine ID in this branch."
 msgstr "اس برانچ میں یہ مشین آئی ڈی کسی اور کی ہے۔"
 
-#: apps/hr/forms.py:127 apps/people/forms.py:215
+#: apps/hr/forms.py:128 apps/people/forms.py:215
 msgid "A CNIC has 13 digits, e.g. 33100-1234567-1."
 msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے، مثلاً 33100-1234567-1۔"
 
-#: apps/hr/forms.py:141
+#: apps/hr/forms.py:142
 msgid "Type of leave"
 msgstr "رخصت کی قسم"
 
-#: apps/hr/forms.py:143 templates/accounting/book.html:12
+#: apps/hr/forms.py:144 templates/accounting/book.html:12
 #: templates/accounting/branches.html:10
 #: templates/accounting/profit_loss.html:12 templates/admissions/report.html:7
-#: templates/fees/collections.html:9 templates/inventory/sales.html:11
-#: templates/notices/compose.html:13 templates/reports/new_admissions.html:10
+#: templates/fees/collections.html:9 templates/hr/employee.html:35
+#: templates/inventory/sales.html:11 templates/notices/compose.html:13
+#: templates/reports/new_admissions.html:10
 msgid "To"
 msgstr "تک"
 
-#: apps/hr/forms.py:153 apps/hr/models.py:240
+#: apps/hr/forms.py:154 apps/hr/models.py:240
 msgid "Leave longer than 180 days must be split."
 msgstr "180 دن سے لمبی رخصت کو حصوں میں درج کریں۔"
 
-#: apps/hr/forms.py:155
+#: apps/hr/forms.py:156
 msgid "This date is too far in the past."
 msgstr "یہ تاریخ بہت پرانی ہے۔"
 
-#: apps/hr/forms.py:167 templates/hr/day.html:27
+#: apps/hr/forms.py:168 templates/hr/day.html:27
 msgid "Mark as"
 msgstr "درج کریں بطور"
 
-#: apps/hr/forms.py:168 templates/hr/day.html:28
+#: apps/hr/forms.py:169 templates/hr/day.html:28
 msgid "Time in"
 msgstr "آمد کا وقت"
 
-#: apps/hr/forms.py:169 templates/hr/day.html:29
+#: apps/hr/forms.py:170 templates/hr/day.html:29
 msgid "Time out"
 msgstr "روانگی کا وقت"
 
-#: apps/hr/forms.py:170
+#: apps/hr/forms.py:171
 msgid "e.g. machine was not working"
 msgstr "مثلاً مشین کام نہیں کر رہی تھی"
+
+#: apps/hr/forms.py:201
+msgid "This is before the start date."
+msgstr "یہ شروع کی تاریخ سے پہلے ہے۔"
 
 #: apps/hr/importer.py:155
 #, python-format
@@ -3239,8 +3272,8 @@ msgstr "لڑکا"
 msgid "Female"
 msgstr "لڑکی"
 
-#: apps/hr/models.py:87 apps/hr/views.py:86 apps/people/models.py:29
-#: templates/hr/employee.html:15
+#: apps/hr/models.py:87 apps/hr/views.py:87 apps/people/models.py:29
+#: templates/hr/employee.html:16
 msgid "CNIC"
 msgstr "شناختی کارڈ نمبر"
 
@@ -3251,6 +3284,10 @@ msgstr "موجودہ پتہ"
 #: apps/hr/models.py:95
 msgid "Logins and what the person may do follow the designation."
 msgstr "لاگ اِن اور اس شخص کے اختیارات عہدے کے مطابق ہوتے ہیں۔"
+
+#: apps/hr/models.py:99
+msgid "last qualification"
+msgstr "آخری تعلیمی قابلیت"
 
 #: apps/hr/models.py:100
 msgid "joining date"
@@ -3342,6 +3379,122 @@ msgstr "ہفتہ وار چھٹی"
 msgid "Set by hand; kept when days are worked out again"
 msgstr "ہاتھ سے درج؛ دوبارہ حساب پر برقرار رہے گا"
 
+#: apps/hr/models.py:317
+msgid "Matric"
+msgstr "میٹرک"
+
+#: apps/hr/models.py:318
+msgid "O Level"
+msgstr "او لیول"
+
+#: apps/hr/models.py:319
+msgid "Intermediate"
+msgstr "انٹرمیڈیٹ"
+
+#: apps/hr/models.py:320
+msgid "A Level"
+msgstr "اے لیول"
+
+#: apps/hr/models.py:321
+msgid "Diploma"
+msgstr "ڈپلومہ"
+
+#: apps/hr/models.py:322
+msgid "Bachelor's"
+msgstr "بیچلرز"
+
+#: apps/hr/models.py:323
+msgid "Master's"
+msgstr "ماسٹرز"
+
+#: apps/hr/models.py:324
+msgid "MPhil"
+msgstr "ایم فل"
+
+#: apps/hr/models.py:325
+msgid "PhD"
+msgstr "پی ایچ ڈی"
+
+#: apps/hr/models.py:329
+msgid "level"
+msgstr "درجہ"
+
+#: apps/hr/models.py:330
+msgid "degree / title"
+msgstr "ڈگری / نام"
+
+#: apps/hr/models.py:330
+msgid "e.g. BS English, F.Sc"
+msgstr "مثلاً بی ایس انگلش، ایف ایس سی"
+
+#: apps/hr/models.py:331
+msgid "subjects / major"
+msgstr "مضامین / میجر"
+
+#: apps/hr/models.py:332
+msgid "board / university"
+msgstr "بورڈ / یونیورسٹی"
+
+#: apps/hr/models.py:333
+msgid "year passed"
+msgstr "پاس ہونے کا سال"
+
+#: apps/hr/models.py:334
+msgid "marks % / CGPA"
+msgstr "نمبر % / سی جی پی اے"
+
+#: apps/hr/models.py:335
+msgid "grade / division"
+msgstr "گریڈ / ڈویژن"
+
+#: apps/hr/models.py:343
+msgid "certificate / course"
+msgstr "سرٹیفکیٹ / کورس"
+
+#: apps/hr/models.py:344
+msgid "institute"
+msgstr "ادارہ"
+
+#: apps/hr/models.py:345
+msgid "year"
+msgstr "سال"
+
+#: apps/hr/models.py:346
+msgid "duration"
+msgstr "دورانیہ"
+
+#: apps/hr/models.py:346
+msgid "e.g. 3 months"
+msgstr "مثلاً 3 ماہ"
+
+#: apps/hr/models.py:354
+msgid "organisation / school"
+msgstr "ادارہ / سکول"
+
+#: apps/hr/models.py:355
+msgid "designation / post"
+msgstr "عہدہ"
+
+#: apps/hr/models.py:356
+msgid "from"
+msgstr "سے"
+
+#: apps/hr/models.py:357
+msgid "to"
+msgstr "تک"
+
+#: apps/hr/models.py:357
+msgid "Empty: still working there"
+msgstr "خالی: ابھی وہیں کام کر رہے ہیں"
+
+#: apps/hr/models.py:358
+msgid "reason for leaving"
+msgstr "چھوڑنے کی وجہ"
+
+#: apps/hr/models.py:359
+msgid "classes / subjects taught"
+msgstr "پڑھائی گئی کلاسیں / مضامین"
+
 #: apps/hr/services.py:131
 msgid "Worked on an off day"
 msgstr "چھٹی کے دن کام کیا"
@@ -3379,64 +3532,66 @@ msgid ""
 "No punches found. Export the attendance log from the machine and try again."
 msgstr "کوئی اندراج نہیں ملا۔ مشین سے حاضری لاگ نکال کر دوبارہ کوشش کریں۔"
 
-#: apps/hr/views.py:86 apps/payroll/views.py:64 apps/payroll/views.py:71
+#: apps/hr/views.py:87 apps/payroll/views.py:65 apps/payroll/views.py:72
 #: apps/setup/forms.py:43 templates/hr/index.html:39
 #: templates/setup/branches.html:19
 msgid "Code"
 msgstr "کوڈ"
 
-#: apps/hr/views.py:86
+#: apps/hr/views.py:87
 msgid "Father / husband name"
 msgstr "والد / شوہر کا نام"
 
-#: apps/hr/views.py:86 templates/exams/index.html:17 templates/hr/index.html:39
+#: apps/hr/views.py:87 templates/exams/index.html:17 templates/hr/index.html:39
 msgid "Type"
 msgstr "قسم"
 
-#: apps/hr/views.py:86 apps/notices/views.py:151 apps/setup/forms.py:370
-#: templates/admissions/index.html:41 templates/hr/employee.html:16
+#: apps/hr/views.py:87 apps/notices/views.py:151 apps/setup/forms.py:370
+#: templates/admissions/index.html:41 templates/hr/employee.html:17
 #: templates/hr/index.html:39 templates/notices/compose.html:28
 #: templates/setup/users.html:19
 msgid "Mobile"
 msgstr "موبائل"
 
-#: apps/hr/views.py:87 apps/reports/views.py:77 apps/setup/forms.py:23
-#: templates/hr/employee.html:20 templates/people/student_detail.html:63
+#: apps/hr/views.py:88 apps/reports/views.py:77 apps/setup/forms.py:23
+#: templates/events/sell.html:12 templates/events/sell.html:19
+#: templates/hr/employee.html:21 templates/people/student_detail.html:63
+#: templates/people/student_list.html:23
 #: templates/reports/class_strength.html:17 templates/setup/sections.html:13
 #: templates/setup/sections.html:31
 msgid "Campus"
 msgstr "کیمپس"
 
-#: apps/hr/views.py:87 templates/hr/employee.html:21
+#: apps/hr/views.py:88
 msgid "Qualification"
 msgstr "تعلیمی قابلیت"
 
-#: apps/hr/views.py:87 templates/hr/index.html:39
+#: apps/hr/views.py:88 templates/hr/index.html:39
 msgid "Machine ID"
 msgstr "مشین آئی ڈی"
 
-#: apps/hr/views.py:182
+#: apps/hr/views.py:192
 msgid "Choose an Excel file (.xlsx) smaller than 5 MB."
 msgstr "5 MB سے چھوٹی ایکسل فائل (.xlsx) چنیں۔"
 
-#: apps/hr/views.py:214 apps/people/views.py:615
+#: apps/hr/views.py:224 apps/people/views.py:605
 msgid "The data changed since the check. Please check the file again."
 msgstr "چیک کے بعد ڈیٹا بدل گیا ہے۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
-#: apps/hr/views.py:217
+#: apps/hr/views.py:227
 #, python-format
 msgid "%(n)s staff members added."
 msgstr "عملے کے %(n)s افراد شامل ہو گئے۔"
 
-#: apps/hr/views.py:239
+#: apps/hr/views.py:249
 msgid "Choose the machine's export file (.xlsx, .csv, .dat or .txt)."
 msgstr "مشین کی نکالی ہوئی فائل چنیں (.xlsx، .csv، .dat یا .txt)۔"
 
-#: apps/hr/views.py:241
+#: apps/hr/views.py:251
 msgid "The file is larger than 10 MB. Export one month at a time."
 msgstr "فائل 10 MB سے بڑی ہے۔ ایک وقت میں ایک مہینے کی فائل نکالیں۔"
 
-#: apps/hr/views.py:271
+#: apps/hr/views.py:281
 #, python-format
 msgid ""
 "%(n)s new punches saved for %(e)s staff; attendance worked out from %(a)s to "
@@ -3445,25 +3600,25 @@ msgstr ""
 "%(e)s افراد کے %(n)s نئے اندراجات محفوظ ہو گئے؛ %(a)s سے %(b)s تک حاضری کا "
 "حساب ہو گیا۔"
 
-#: apps/hr/views.py:293
+#: apps/hr/views.py:303
 #, python-format
 msgid "Correction removed for %(n)s."
 msgstr "%(n)s کی درستی ختم کر دی گئی۔"
 
-#: apps/hr/views.py:299
+#: apps/hr/views.py:309
 #, python-format
 msgid "Attendance corrected for %(n)s."
 msgstr "%(n)s کی حاضری درست کر دی گئی۔"
 
-#: apps/hr/views.py:301
+#: apps/hr/views.py:311
 msgid "Choose a status and write the reason."
 msgstr "حیثیت چنیں اور وجہ لکھیں۔"
 
-#: apps/hr/views.py:419
+#: apps/hr/views.py:429
 msgid "Leave request saved. It counts once the principal approves it."
 msgstr "رخصت کی درخواست محفوظ ہو گئی۔ پرنسپل کی منظوری کے بعد شمار ہو گی۔"
 
-#: apps/hr/views.py:474
+#: apps/hr/views.py:484
 msgid "Leave request withdrawn."
 msgstr "رخصت کی درخواست واپس لے لی گئی۔"
 
@@ -3538,7 +3693,7 @@ msgstr "والدین کا موبائل"
 msgid "Signals"
 msgstr "اشارے"
 
-#: apps/insights/views.py:46 templates/events/detail.html:40
+#: apps/insights/views.py:46 templates/events/detail.html:41
 #: templates/people/student_detail.html:11 templates/setup/user_detail.html:48
 msgid "Details"
 msgstr "تفصیلات"
@@ -4072,121 +4227,212 @@ msgstr ""
 "پرنٹ کے لیے کوئی خاندان نہیں: یا تو موبائل نمبر درج نہیں یا سب کا اکاؤنٹ "
 "پہلے سے موجود ہے۔"
 
-#: apps/payroll/models.py:24
+#: apps/payroll/models.py:20
+msgid "Online (JazzCash / Easypaisa)"
+msgstr "آن لائن (جاز کیش / ایزی پیسہ)"
+
+#: apps/payroll/models.py:28
+msgid "salary paid by"
+msgstr "تنخواہ کی ادائیگی"
+
+#: apps/payroll/models.py:31
 msgid "monthly salary (Rs)"
 msgstr "ماہانہ تنخواہ (روپے)"
 
-#: apps/payroll/models.py:26
+#: apps/payroll/models.py:33
 msgid "Empty: paid in cash"
 msgstr "خالی: نقد ادائیگی"
 
-#: apps/payroll/models.py:27
+#: apps/payroll/models.py:34
 msgid "account title"
 msgstr "اکاؤنٹ ٹائٹل"
 
-#: apps/payroll/models.py:28
+#: apps/payroll/models.py:35
 msgid "account number / IBAN"
 msgstr "اکاؤنٹ نمبر / IBAN"
 
-#: apps/payroll/models.py:42
+#: apps/payroll/models.py:49
 msgid "Finalised"
 msgstr "حتمی"
 
-#: apps/payroll/models.py:45
+#: apps/payroll/models.py:52
 msgid "First day of the month"
 msgstr "مہینے کا پہلا دن"
 
-#: apps/payroll/models.py:68
+#: apps/payroll/models.py:75
 msgid "Days of the month the person was on the staff"
 msgstr "مہینے کے وہ دن جب یہ فرد ملازمت پر تھا"
 
-#: apps/payroll/models.py:70
+#: apps/payroll/models.py:77
 msgid "Days of unpaid leave"
 msgstr "بلا تنخواہ رخصت کے دن"
 
-#: apps/payroll/models.py:71
+#: apps/payroll/models.py:78
 msgid "Half days: half a day's pay is cut"
 msgstr "آدھے دن: آدھے دن کی تنخواہ کٹتی ہے"
 
-#: apps/payroll/views.py:63
+#: apps/payroll/models.py:106
+msgid "from month"
+msgstr "ماہ سے"
+
+#: apps/payroll/models.py:107
+msgid "salary before (Rs)"
+msgstr "پہلے کی تنخواہ (روپے)"
+
+#: apps/payroll/models.py:108
+msgid "new salary (Rs)"
+msgstr "نئی تنخواہ (روپے)"
+
+#: apps/payroll/models.py:109
+msgid "reason"
+msgstr "وجہ"
+
+#: apps/payroll/models.py:110
+msgid "approved by"
+msgstr "منظور کنندہ"
+
+#: apps/payroll/models.py:146
+msgid "paid on"
+msgstr "ادائیگی کی تاریخ"
+
+#: apps/payroll/views.py:64
 msgid "Salary bank sheet"
 msgstr "تنخواہ بینک شیٹ"
 
-#: apps/payroll/views.py:64 apps/setup/forms.py:37 apps/setup/forms.py:208
-#: templates/payroll/salaries.html:9 templates/payroll/salaries.html:15
+#: apps/payroll/views.py:65 apps/setup/forms.py:37 apps/setup/forms.py:208
+#: templates/payroll/salaries.html:14 templates/payroll/salaries.html:21
 msgid "Account title"
 msgstr "اکاؤنٹ ٹائٹل"
 
-#: apps/payroll/views.py:64 templates/payroll/salaries.html:9
-#: templates/payroll/salaries.html:16
+#: apps/payroll/views.py:65 templates/payroll/salaries.html:14
+#: templates/payroll/salaries.html:22
 msgid "Account number / IBAN"
 msgstr "اکاؤنٹ نمبر / IBAN"
 
-#: apps/payroll/views.py:64 apps/payroll/views.py:72
-#: templates/payroll/index.html:20 templates/payroll/index.html:31
+#: apps/payroll/views.py:65 apps/payroll/views.py:73
+#: templates/payroll/index.html:42 templates/payroll/person.html:20
+#: templates/payroll/person.html:37
 msgid "Net pay (Rs)"
 msgstr "خالص تنخواہ (روپے)"
 
-#: apps/payroll/views.py:71 templates/payroll/index.html:31
-#: templates/payroll/salaries.html:9 templates/payroll/salaries.html:13
+#: apps/payroll/views.py:72 templates/payroll/index.html:42
+#: templates/payroll/person.html:14 templates/payroll/person.html:37
+#: templates/payroll/salaries.html:14 templates/payroll/salaries.html:18
 msgid "Monthly salary (Rs)"
 msgstr "ماہانہ تنخواہ (روپے)"
 
-#: apps/payroll/views.py:71
+#: apps/payroll/views.py:72 templates/payroll/manual.html:9
 msgid "Days in month"
 msgstr "مہینے کے دن"
 
-#: apps/payroll/views.py:71 templates/payroll/index.html:31
+#: apps/payroll/views.py:72 templates/payroll/index.html:42
+#: templates/payroll/manual.html:9 templates/payroll/person.html:15
 msgid "Days on staff"
 msgstr "ملازمت کے دن"
 
-#: apps/payroll/views.py:72
+#: apps/payroll/views.py:73
 msgid "Absent days"
 msgstr "غیر حاضر دن"
 
-#: apps/payroll/views.py:72
+#: apps/payroll/views.py:73
 msgid "Unpaid leave days"
 msgstr "بلا تنخواہ رخصت کے دن"
 
-#: apps/payroll/views.py:72 templates/payroll/index.html:31
+#: apps/payroll/views.py:73 templates/payroll/index.html:42
+#: templates/payroll/manual.html:9 templates/payroll/person.html:18
+#: templates/payroll/person.html:37
 msgid "Half days"
 msgstr "آدھے دن"
 
-#: apps/payroll/views.py:72 templates/payroll/index.html:31
+#: apps/payroll/views.py:73 templates/payroll/index.html:42
+#: templates/payroll/person.html:19 templates/payroll/person.html:37
 msgid "Deduction (Rs)"
 msgstr "کٹوتی (روپے)"
 
-#: apps/payroll/views.py:75 templates/payroll/index.html:34
+#: apps/payroll/views.py:74 templates/payroll/person.html:27
+msgid "Paid on"
+msgstr "ادائیگی کی تاریخ"
+
+#: apps/payroll/views.py:77 templates/payroll/index.html:45
+#: templates/payroll/manual.html:19 templates/payroll/person.html:7
 msgid "Salary not set"
 msgstr "تنخواہ مقرر نہیں"
 
-#: apps/payroll/views.py:100
+#: apps/payroll/views.py:121
+msgid "This month is finalised. Reopen it first to change the figures."
+msgstr "یہ مہینہ فائنل ہو چکا ہے۔ اعداد بدلنے کے لیے پہلے اسے دوبارہ کھولیں۔"
+
+#: apps/payroll/views.py:142
+#, python-format
+msgid "Check the days of: %(n)s"
+msgstr "ان کے دن چیک کریں: %(n)s"
+
+#: apps/payroll/views.py:144
+#, python-format
+msgid "Days entered by hand for %(n)s staff members."
+msgstr "%(n)s ملازمین کے دن ہاتھ سے درج ہو گئے۔"
+
+#: apps/payroll/views.py:174
+msgid "Give the date and how the salary was paid."
+msgstr "تاریخ اور ادائیگی کا طریقہ درج کریں۔"
+
+#: apps/payroll/views.py:176
+msgid "The date cannot be in the future."
+msgstr "تاریخ آنے والے دنوں کی نہیں ہو سکتی۔"
+
+#: apps/payroll/views.py:182
+#, python-format
+msgid "Salary of %(m)s paid to %(n)s: Rs %(a)s."
+msgstr "%(m)s کی تنخواہ %(n)s کو ادا ہو گئی: %(a)s روپے۔"
+
+#: apps/payroll/views.py:186
+msgid "This salary is already paid."
+msgstr "یہ تنخواہ پہلے ہی ادا ہو چکی ہے۔"
+
+#: apps/payroll/views.py:196
+msgid "Give the month and the new monthly salary."
+msgstr "مہینہ اور نئی ماہانہ تنخواہ درج کریں۔"
+
+#: apps/payroll/views.py:204
+#, python-format
+msgid "New salary Rs %(a)s from %(m)s saved."
+msgstr "%(m)s سے نئی تنخواہ %(a)s روپے محفوظ ہو گئی۔"
+
+#: apps/payroll/views.py:270
 msgid "A month can be finalised once it is over."
 msgstr "مہینہ ختم ہونے کے بعد ہی حتمی کیا جا سکتا ہے۔"
 
-#: apps/payroll/views.py:105
+#: apps/payroll/views.py:275
 msgid "This month is already finalised."
 msgstr "یہ مہینہ پہلے ہی حتمی ہو چکا ہے۔"
 
-#: apps/payroll/views.py:109
+#: apps/payroll/views.py:279
 #, python-format
 msgid "Payroll for %(m)s finalised: %(n)s payslips."
 msgstr "%(m)s کی تنخواہیں حتمی ہو گئیں: %(n)s تنخواہ پرچیاں۔"
 
-#: apps/payroll/views.py:123
+#: apps/payroll/views.py:293
+msgid "Salaries of this month are already paid to some staff; it cannot be reopened."
+msgstr "اس مہینے کی تنخواہ کچھ ملازمین کو ادا ہو چکی ہے؛ اسے دوبارہ نہیں کھولا جا سکتا۔"
+
+#: apps/payroll/views.py:295
 msgid "Give a reason for reopening the month."
 msgstr "مہینہ دوبارہ کھولنے کی وجہ لکھیں۔"
 
-#: apps/payroll/views.py:126
+#: apps/payroll/views.py:298
 msgid "The month is open again; its payslips are kept as cancelled."
 msgstr "مہینہ دوبارہ کھل گیا؛ اس کی تنخواہ پرچیاں منسوخ کے طور پر محفوظ ہیں۔"
 
-#: apps/payroll/views.py:199
+#: apps/payroll/views.py:381
+msgid "Changed on the Salaries page"
+msgstr "تنخواہوں کے صفحے پر تبدیل کی گئی"
+
+#: apps/payroll/views.py:395
 #, python-format
 msgid "Not a valid amount for: %(n)s"
 msgstr "درست رقم نہیں: %(n)s"
 
-#: apps/payroll/views.py:200
+#: apps/payroll/views.py:396
 #, python-format
 msgid "%(n)s salaries saved."
 msgstr "%(n)s تنخواہیں محفوظ ہو گئیں۔"
@@ -4259,23 +4505,23 @@ msgstr "پہلا نام"
 msgid "Last name"
 msgstr "آخری نام"
 
-#: apps/people/forms.py:98 apps/people/views.py:100 apps/reports/views.py:113
+#: apps/people/forms.py:98 apps/people/views.py:88 apps/reports/views.py:113
 #: templates/admissions/detail.html:20 templates/people/student_detail.html:26
 msgid "Gender"
 msgstr "جنس"
 
-#: apps/people/forms.py:99 apps/people/views.py:100
+#: apps/people/forms.py:99 apps/people/views.py:88
 #: templates/people/student_detail.html:27
 msgid "Date of birth"
 msgstr "تاریخ پیدائش"
 
-#: apps/people/forms.py:100 apps/people/views.py:100 apps/reports/views.py:113
+#: apps/people/forms.py:100 apps/people/views.py:88 apps/reports/views.py:113
 #: templates/core/design_system.html:79 templates/people/student_detail.html:28
 #: templates/reports/new_admissions.html:18
 msgid "Admission date"
 msgstr "تاریخ داخلہ"
 
-#: apps/people/forms.py:101 apps/people/views.py:100
+#: apps/people/forms.py:101 apps/people/views.py:88
 msgid "Father CNIC"
 msgstr "والد کا شناختی کارڈ نمبر"
 
@@ -4560,65 +4806,65 @@ msgstr "مثلاً HO-FAISALABAD-FSD-0001؛ کبھی دہرایا نہیں جا�
 msgid "Class and section at the time of leaving"
 msgstr "چھوڑتے وقت جماعت اور سیکشن"
 
-#: apps/people/views.py:235
+#: apps/people/views.py:225
 #, python-format
 msgid "Parent Tree printed: %(n)s student."
 msgid_plural "Parent Tree printed: %(n)s students."
 msgstr[0] "پیرنٹ ٹری پرنٹ ہو گیا: %(n)s طالب علم۔"
 msgstr[1] "پیرنٹ ٹری پرنٹ ہو گیا: %(n)s طلبہ۔"
 
-#: apps/people/views.py:275
+#: apps/people/views.py:265
 #, python-format
 msgid "Saved %(name)s."
 msgstr "%(name)s محفوظ ہو گیا۔"
 
-#: apps/people/views.py:303
+#: apps/people/views.py:293
 #, python-format
 msgid "%(n)s is now marked as %(s)s."
 msgstr "%(n)s اب %(s)s درج ہے۔"
 
-#: apps/people/views.py:360
+#: apps/people/views.py:350
 #, python-format
 msgid "%(n)s sections made for %(s)s."
 msgstr "%(s)s کے لیے %(n)s سیکشن بن گئے۔"
 
-#: apps/people/views.py:461
+#: apps/people/views.py:451
 #, python-format
 msgid "%(p)s promoted, %(k)s kept in the same class, %(g)s graduated, %(s)s left out."
 msgstr "%(p)s اگلی جماعت میں، %(k)s اسی جماعت میں، %(g)s فارغ التحصیل، %(s)s ابھی شامل نہیں۔"
 
-#: apps/people/views.py:487
+#: apps/people/views.py:477
 msgid "Promote"
 msgstr "اگلی جماعت میں"
 
-#: apps/people/views.py:488
+#: apps/people/views.py:478
 msgid "Keep in the same class"
 msgstr "اسی جماعت میں رکھیں"
 
-#: apps/people/views.py:489
+#: apps/people/views.py:479
 msgid "Graduate (passed out)"
 msgstr "فارغ التحصیل"
 
-#: apps/people/views.py:490
+#: apps/people/views.py:480
 msgid "Leave out for now"
 msgstr "ابھی شامل نہ کریں"
 
-#: apps/people/views.py:517
+#: apps/people/views.py:507
 msgid "No students to print ID cards for. Choose a class and section first."
 msgstr "آئی ڈی کارڈ کے لیے کوئی طالب علم نہیں۔ پہلے جماعت اور سیکشن منتخب کریں۔"
 
-#: apps/people/views.py:543
+#: apps/people/views.py:533
 #, python-format
 msgid "Row %(rows)s was not imported because of its problem. Correct it and import it again."
 msgid_plural "%(n)s rows were not imported because of their problems (rows %(rows)s). Correct them and import them again."
 msgstr[0] "قطار %(rows)s مسئلے کی وجہ سے شامل نہیں ہوئی۔ اسے درست کر کے دوبارہ شامل کریں۔"
 msgstr[1] "%(n)s قطاریں مسائل کی وجہ سے شامل نہیں ہوئیں (قطاریں %(rows)s)۔ انہیں درست کر کے دوبارہ شامل کریں۔"
 
-#: apps/people/views.py:580
+#: apps/people/views.py:570
 msgid "Choose the Excel template (.xlsx) or the old software's PDF report."
 msgstr "ایکسل ٹیمپلیٹ (.xlsx) یا پرانے سافٹ ویئر کی PDF رپورٹ چنیں۔"
 
-#: apps/people/views.py:618
+#: apps/people/views.py:608
 #, python-format
 msgid "%(n)s students imported."
 msgstr "%(n)s طلبہ درآمد ہو گئے۔"
@@ -5155,7 +5401,7 @@ msgstr "یہ موبائل نمبر کسی دوسرے لاگ اِن میں است
 
 #: apps/setup/views.py:81 templates/admissions/form.html:9
 #: templates/events/expense_form.html:10 templates/events/form.html:12
-#: templates/exams/ratings.html:23 templates/hr/employee_form.html:8
+#: templates/exams/ratings.html:23 templates/hr/employee_form.html:14
 #: templates/inventory/stock_form.html:10
 msgid "Save"
 msgstr "محفوظ کریں"
@@ -5442,7 +5688,7 @@ msgstr "طلبہ کی چھٹی کے دن حاضری یا ڈائری نہیں ہ�
 #: templates/fees/receipt.html:21 templates/fees/student.html:43
 #: templates/fees/vouchers.html:34 templates/includes_list_tools.html:4
 #: templates/notices/detail.html:8 templates/parents/slips.html:18
-#: templates/payroll/index.html:27 templates/people/student_detail.html:73
+#: templates/people/student_detail.html:73
 msgid "Print"
 msgstr "پرنٹ"
 
@@ -5459,7 +5705,7 @@ msgstr "چھٹی شامل کریں"
 msgid "Day"
 msgstr "دن"
 
-#: templates/academics/holidays.html:21 templates/events/detail.html:40
+#: templates/academics/holidays.html:21 templates/events/detail.html:41
 #: templates/notices/index.html:14
 msgid "For"
 msgstr "کس کے لیے"
@@ -5482,7 +5728,7 @@ msgid "This holiday will be removed."
 msgstr "یہ چھٹی ختم کر دی جائے گی۔"
 
 #: templates/academics/holidays.html:26 templates/academics/periods.html:11
-#: templates/inventory/sell.html:22
+#: templates/hr/_formset.html:6 templates/inventory/sell.html:22
 msgid "Remove"
 msgstr "ہٹائیں"
 
@@ -5508,7 +5754,7 @@ msgstr "پیریڈز کے اوقات مقرر کریں"
 msgid "Teachers in two classes at the same time"
 msgstr "ایک ہی وقت میں دو جماعتوں میں اساتذہ"
 
-#: templates/academics/index.html:14 templates/events/detail.html:23
+#: templates/academics/index.html:14 templates/events/detail.html:24
 msgid "Classes"
 msgstr "جماعتیں"
 
@@ -5610,7 +5856,7 @@ msgstr "ٹائم ٹیبل محفوظ کریں"
 #: templates/academics/section_timetable.html:31
 #: templates/accounting/incomes.html:24 templates/accounting/index.html:42
 #: templates/accounts/password_change.html:9 templates/core/delete.html:22
-#: templates/events/detail.html:45 templates/exams/date_sheet.html:36
+#: templates/events/detail.html:46 templates/exams/date_sheet.html:36
 #: templates/exams/enter_marks.html:19 templates/fees/student.html:44
 #: templates/fees/student.html:77 templates/hifz/student.html:33
 #: templates/people/leave.html:13 templates/people/student_form.html:10
@@ -5652,10 +5898,11 @@ msgstr "حسابات"
 #: templates/fees/royalty.html:8 templates/fees/royalty_branch.html:12
 #: templates/fees/vouchers.html:16 templates/hifz/index.html:11
 #: templates/hifz/report.html:11 templates/hr/day.html:7
-#: templates/hr/employee.html:31 templates/hr/index.html:32
+#: templates/hr/employee.html:44 templates/hr/index.html:32
 #: templates/hr/mine.html:12 templates/hr/month.html:5
 #: templates/insights/attention.html:15 templates/inventory/index.html:25
-#: templates/inventory/sales.html:13 templates/payroll/index.html:9
+#: templates/inventory/sales.html:13 templates/payroll/index.html:16
+#: templates/payroll/person.html:8 templates/payroll/salaries.html:10
 #: templates/reports/attendance_month.html:7
 #: templates/reports/new_admissions.html:12 templates/setup/branches.html:15
 #: templates/setup/users.html:15
@@ -5701,7 +5948,7 @@ msgid "Only what is recorded in TASEMS: a branch whose expenses are not entered 
 msgstr "صرف TASEMS میں درج ریکارڈ: جس برانچ کے اخراجات یہاں درج نہیں، اس کی صرف فیس نظر آتی ہے۔"
 
 #: templates/accounting/form.html:2 templates/accounting/form.html:5
-#: templates/accounting/index.html:6 templates/events/detail.html:9
+#: templates/accounting/index.html:6 templates/events/detail.html:10
 #: templates/events/expense_form.html:2 templates/events/expense_form.html:5
 msgid "Add expense"
 msgstr "خرچ شامل کریں"
@@ -5718,7 +5965,7 @@ msgstr "خرچ محفوظ کریں"
 #: templates/admissions/admit.html:10 templates/admissions/form.html:10
 #: templates/core/delete.html:4 templates/core/delete.html:14
 #: templates/fees/concession_form.html:10 templates/fees/issue.html:27
-#: templates/hr/employee_form.html:9 templates/hr/leave_form.html:9
+#: templates/hr/employee_form.html:15 templates/hr/leave_form.html:9
 #: templates/parents/account.html:10 templates/parents/slips.html:18
 #: templates/setup/form.html:4
 msgid "Back"
@@ -5790,7 +6037,7 @@ msgid "This expense will be marked as cancelled. The record is kept with your re
 msgstr "یہ خرچ منسوخ شمار ہوگا۔ ریکارڈ آپ کی وجہ کے ساتھ محفوظ رہے گا۔"
 
 #: templates/accounting/index.html:43 templates/accounting/index.html:44
-#: templates/events/detail.html:45
+#: templates/events/detail.html:46
 msgid "Cancel expense"
 msgstr "خرچ منسوخ کریں"
 
@@ -5950,7 +6197,7 @@ msgid "Call"
 msgstr "کال کریں"
 
 #: templates/admissions/detail.html:10 templates/diary/day.html:34
-#: templates/hr/employee.html:7 templates/setup/branches.html:23
+#: templates/hr/employee.html:8 templates/setup/branches.html:23
 #: templates/setup/branches.html:34 templates/setup/fees.html:18
 #: templates/setup/fees.html:31 templates/setup/fees.html:43
 #: templates/setup/sections.html:22 templates/setup/sections.html:32
@@ -6028,7 +6275,7 @@ msgstr ""
 msgid "Add inquiry"
 msgstr "انکوائری شامل کریں"
 
-#: templates/admissions/index.html:16
+#: templates/admissions/index.html:16 templates/events/detail.html:9
 msgid "Report"
 msgstr "رپورٹ"
 
@@ -6062,9 +6309,11 @@ msgid "All"
 msgstr "سب"
 
 #: templates/admissions/index.html:30 templates/core/design_system.html:68
-#: templates/hr/index.html:28 templates/inventory/index.html:21
-#: templates/inventory/sales.html:12 templates/people/student_list.html:13
-#: templates/setup/branches.html:11 templates/setup/users.html:11
+#: templates/events/sell.html:9 templates/hr/index.html:28
+#: templates/inventory/index.html:21 templates/inventory/sales.html:12
+#: templates/payroll/index.html:14 templates/payroll/salaries.html:8
+#: templates/people/student_list.html:13 templates/setup/branches.html:11
+#: templates/setup/users.html:11
 msgid "Search"
 msgstr "تلاش"
 
@@ -6082,14 +6331,14 @@ msgstr "بچہ"
 
 #: templates/admissions/index.html:51 templates/core/design_system.html:101
 #: templates/fees/vouchers.html:37 templates/inventory/_pages.html:1
-#: templates/people/student_list.html:59 templates/setup/branches.html:26
+#: templates/people/student_list.html:63 templates/setup/branches.html:26
 #: templates/setup/users.html:27
 msgid "Previous"
 msgstr "پچھلا"
 
 #: templates/admissions/index.html:51 templates/core/design_system.html:101
 #: templates/fees/vouchers.html:37 templates/inventory/_pages.html:1
-#: templates/people/student_list.html:61 templates/setup/branches.html:26
+#: templates/people/student_list.html:65 templates/setup/branches.html:26
 #: templates/setup/users.html:27
 msgid "Next"
 msgstr "اگلا"
@@ -6170,7 +6419,7 @@ msgid "Take register"
 msgstr "حاضری لگائیں"
 
 #: templates/attendance/take.html:5 templates/core/home.html:31
-#: templates/exams/section_exam.html:5
+#: templates/events/sell.html:17 templates/exams/section_exam.html:5
 #, python-format
 msgid "%(n)s student"
 msgid_plural "%(n)s students"
@@ -6566,7 +6815,7 @@ msgstr ""
 msgid "Diary"
 msgstr "ڈائری"
 
-#: templates/core/design_system.html:101 templates/people/student_list.html:58
+#: templates/core/design_system.html:101 templates/people/student_list.html:62
 msgid "Pages"
 msgstr "صفحات"
 
@@ -7022,65 +7271,75 @@ msgstr "بند"
 msgid "Sell tickets"
 msgstr "ٹکٹ فروخت کریں"
 
-#: templates/events/detail.html:10 templates/events/form.html:5
+#: templates/events/detail.html:11 templates/events/form.html:5
 msgid "Change event"
 msgstr "تقریب میں تبدیلی"
 
-#: templates/events/detail.html:15 templates/events/index.html:9
+#: templates/events/detail.html:16 templates/events/index.html:9
 msgid "Students with tickets"
 msgstr "ٹکٹ والے طلبہ"
 
-#: templates/events/detail.html:17 templates/events/detail.html:25
+#: templates/events/detail.html:18 templates/events/detail.html:26
 #: templates/events/index.html:9
 msgid "Collected (Rs)"
 msgstr "وصولی (روپے)"
 
-#: templates/events/detail.html:19
+#: templates/events/detail.html:20
 msgid "Loss (Rs)"
 msgstr "نقصان (روپے)"
 
-#: templates/events/detail.html:19
+#: templates/events/detail.html:20
 msgid "Profit (Rs)"
 msgstr "نفع (روپے)"
 
-#: templates/events/detail.html:21
+#: templates/events/detail.html:22
 #, python-format
 msgid "%(n)s receipt refunded (Rs %(a)s), not counted above."
 msgid_plural "%(n)s receipts refunded (Rs %(a)s), not counted above."
 msgstr[0] "%(n)s رسید واپس ہوئی (%(a)s روپے)، اوپر شامل نہیں۔"
 msgstr[1] "%(n)s رسیدیں واپس ہوئیں (%(a)s روپے)، اوپر شامل نہیں۔"
 
-#: templates/events/detail.html:25
+#: templates/events/detail.html:26 templates/events/sell.html:19
 msgid "Ticket (Rs)"
 msgstr "ٹکٹ (روپے)"
 
-#: templates/events/detail.html:32
+#: templates/events/detail.html:33
 #, python-format
 msgid "Extra ticket for a parent or guest: Rs %(p)s"
 msgstr "والدین یا مہمان کا اضافی ٹکٹ: %(p)s روپے"
 
-#: templates/events/detail.html:34
+#: templates/events/detail.html:35
 msgid "Cash received by"
 msgstr "رقم کس نے وصول کی"
 
-#: templates/events/detail.html:35 templates/events/detail.html:49
+#: templates/events/detail.html:36 templates/events/detail.html:50
 msgid "Receipts"
 msgstr "رسیدیں"
 
-#: templates/events/detail.html:45
+#: templates/events/detail.html:46
 msgid "Reason for cancelling"
 msgstr "منسوخی کی وجہ"
 
-#: templates/events/detail.html:47
+#: templates/events/detail.html:48
 msgid "No expenses yet."
 msgstr "ابھی کوئی خرچ نہیں۔"
 
-#: templates/events/detail.html:51 templates/events/index.html:9
-#: templates/events/sell.html:27
+#: templates/events/detail.html:51 templates/fees/vouchers.html:21
+#: templates/includes_list_tools.html:3 templates/inventory/sales.html:22
+#: templates/payroll/index.html:38
+msgid "Excel"
+msgstr "ایکسل"
+
+#: templates/events/detail.html:51
+msgid "Print report"
+msgstr "رپورٹ پرنٹ کریں"
+
+#: templates/events/detail.html:52 templates/events/index.html:9
+#: templates/events/sell.html:39
 msgid "Tickets"
 msgstr "ٹکٹ"
 
-#: templates/events/detail.html:60
+#: templates/events/detail.html:61
 msgid "No tickets sold yet."
 msgstr "ابھی کوئی ٹکٹ فروخت نہیں ہوا۔"
 
@@ -7121,7 +7380,7 @@ msgstr "ابھی کوئی تقریب نہیں۔"
 msgid "Print again"
 msgstr "دوبارہ پرنٹ کریں"
 
-#: templates/events/receipt.html:14 templates/events/sell.html:19
+#: templates/events/receipt.html:14
 msgid "Student ticket"
 msgstr "طالب علم کا ٹکٹ"
 
@@ -7141,45 +7400,55 @@ msgstr "مثلاً طالب علم بیمار ہے، ٹرپ منسوخ"
 msgid "The receipt prints on the receipt printer; the money is recorded as received by you."
 msgstr "رسید رسید پرنٹر پر پرنٹ ہوتی ہے؛ رقم آپ کے نام وصول شدہ درج ہوتی ہے۔"
 
-#: templates/events/sell.html:9
-msgid "Admission no., name or father name"
-msgstr "داخلہ نمبر، نام یا والد کا نام"
+#: templates/events/sell.html:9 templates/people/student_list.html:14
+msgid "Admission no., name, father name, any mobile or CNIC"
+msgstr "داخلہ نمبر، نام، والد کا نام، کوئی بھی موبائل یا شناختی کارڈ"
 
-#: templates/events/sell.html:10 templates/fees/find.html:2
-#: templates/fees/index.html:11
-msgid "Find"
-msgstr "تلاش کریں"
+#: templates/events/sell.html:10
+msgid "All classes in the event"
+msgstr "تقریب کی تمام کلاسیں"
 
-#: templates/events/sell.html:12
-msgid "No current student found."
-msgstr "کوئی موجودہ طالب علم نہیں ملا۔"
+#: templates/events/sell.html:12 templates/people/student_list.html:24
+msgid "All campuses"
+msgstr "تمام کیمپس"
 
-#: templates/events/sell.html:14 templates/people/student_list.html:49
-msgid "Not placed"
-msgstr "جماعت میں نہیں"
+#: templates/events/sell.html:14 templates/people/student_list.html:34
+msgid "Show students"
+msgstr "طلبہ دکھائیں"
 
-#: templates/events/sell.html:15
-msgid "Already has a ticket"
-msgstr "ٹکٹ پہلے سے ہے"
+#: templates/events/sell.html:24
+msgid "Class not in this event"
+msgstr "کلاس اس تقریب میں نہیں"
 
-#: templates/events/sell.html:16
-msgid "This student's class is not in this event."
-msgstr "اس طالب علم کی کلاس اس تقریب میں شامل نہیں۔"
+#: templates/events/sell.html:25
+msgid "Has a ticket"
+msgstr "ٹکٹ ہے"
 
-#: templates/events/sell.html:20
-#, python-format
-msgid "Extra tickets (Rs %(p)s each)"
-msgstr "اضافی ٹکٹ (%(p)s روپے فی ٹکٹ)"
+#: templates/events/sell.html:27
+msgid "Extra"
+msgstr "اضافی"
 
-#: templates/events/sell.html:22
+#: templates/events/sell.html:30
 msgid "Reference (bank / JazzCash)"
 msgstr "حوالہ (بینک / جاز کیش)"
 
-#: templates/events/sell.html:23
-msgid "Receive and print receipt"
-msgstr "رقم وصول کریں اور رسید پرنٹ کریں"
+#: templates/events/sell.html:31
+msgid "Sell again"
+msgstr "دوبارہ فروخت کریں"
 
-#: templates/events/sell.html:26
+#: templates/events/sell.html:31
+msgid "Receive and print"
+msgstr "وصول کریں اور پرنٹ کریں"
+
+#: templates/events/sell.html:35
+msgid "No current student found."
+msgstr "کوئی موجودہ طالب علم نہیں ملا۔"
+
+#: templates/events/sell.html:36
+msgid "Search for a student, or choose a class, section or campus to list its students."
+msgstr "طالب علم تلاش کریں، یا کلاس، سیکشن یا کیمپس چنیں تاکہ اس کے طلبہ کی فہرست آ جائے۔"
+
+#: templates/events/sell.html:38
 msgid "Your last receipts"
 msgstr "آپ کی آخری رسیدیں"
 
@@ -7594,6 +7863,10 @@ msgstr "وصول کریں"
 #: templates/fees/family_vouchers.html:32
 msgid "No families with two or more children have open vouchers for this month. Make the monthly vouchers first."
 msgstr "اس مہینے کسی ایسے خاندان کے واؤچر واجب الادا نہیں جس کے دو یا زیادہ بچے ہوں۔ پہلے ماہانہ واؤچر بنائیں۔"
+
+#: templates/fees/find.html:2 templates/fees/index.html:11
+msgid "Find"
+msgstr "تلاش کریں"
 
 #: templates/fees/find.html:4
 #, python-format
@@ -8049,11 +8322,6 @@ msgid_plural "Print %(n)s vouchers (PDF)"
 msgstr[0] "%(n)s واؤچر پرنٹ کریں (PDF)"
 msgstr[1] "%(n)s واؤچر پرنٹ کریں (PDF)"
 
-#: templates/fees/vouchers.html:21 templates/includes_list_tools.html:3
-#: templates/inventory/sales.html:22 templates/payroll/index.html:26
-msgid "Excel"
-msgstr "ایکسل"
-
 #: templates/hifz/index.html:5
 msgid "Each Hifz student's Sabaq, Sabqi and Manzil for the day, with mistakes."
 msgstr "ہر حفظ کے طالب علم کا دن کا سبق، سبقی اور منزل، غلطیوں کے ساتھ۔"
@@ -8212,27 +8480,100 @@ msgid "Remove correction"
 msgstr "درستی ختم کریں"
 
 #: templates/hr/day.html:36 templates/hr/month.html:13
-#: templates/payroll/salaries.html:20
+#: templates/payroll/salaries.html:26
 msgid "No staff records yet."
 msgstr "ابھی عملے کا کوئی ریکارڈ نہیں۔"
 
-#: templates/hr/employee.html:9
+#: templates/hr/employee.html:10
 msgid "Record leave"
 msgstr "رخصت درج کریں"
 
-#: templates/hr/employee.html:10
+#: templates/hr/employee.html:11
 msgid "Open CV"
 msgstr "سی وی کھولیں"
 
-#: templates/hr/employee.html:22
+#: templates/hr/employee.html:23
 msgid "Biometric machine ID"
 msgstr "بائیو میٹرک مشین آئی ڈی"
 
-#: templates/hr/employee.html:23
+#: templates/hr/employee.html:24
 msgid "TASEMS login"
 msgstr "TASEMS لاگ اِن"
 
-#: templates/hr/employee.html:26
+#: templates/hr/employee.html:28 templates/hr/employee_form.html:11
+msgid "Qualifications"
+msgstr "تعلیمی قابلیت"
+
+#: templates/hr/employee.html:29
+msgid "Level"
+msgstr "درجہ"
+
+#: templates/hr/employee.html:29
+msgid "Degree / title"
+msgstr "ڈگری / نام"
+
+#: templates/hr/employee.html:29
+msgid "Subjects / major"
+msgstr "مضامین / میجر"
+
+#: templates/hr/employee.html:29
+msgid "Board / university"
+msgstr "بورڈ / یونیورسٹی"
+
+#: templates/hr/employee.html:29 templates/hr/employee.html:32
+msgid "Year"
+msgstr "سال"
+
+#: templates/hr/employee.html:29
+#, python-format
+msgid "Marks %% / CGPA"
+msgstr "نمبر %% / سی جی پی اے"
+
+#: templates/hr/employee.html:29
+msgid "Grade / division"
+msgstr "گریڈ / ڈویژن"
+
+#: templates/hr/employee.html:31 templates/hr/employee_form.html:12
+msgid "Certificates and courses"
+msgstr "سرٹیفکیٹ اور کورسز"
+
+#: templates/hr/employee.html:32
+msgid "Certificate / course"
+msgstr "سرٹیفکیٹ / کورس"
+
+#: templates/hr/employee.html:32
+msgid "Institute"
+msgstr "ادارہ"
+
+#: templates/hr/employee.html:32
+msgid "Duration"
+msgstr "دورانیہ"
+
+#: templates/hr/employee.html:34 templates/hr/employee_form.html:13
+msgid "Experience"
+msgstr "تجربہ"
+
+#: templates/hr/employee.html:35
+msgid "Organisation / school"
+msgstr "ادارہ / سکول"
+
+#: templates/hr/employee.html:35
+msgid "Designation / post"
+msgstr "عہدہ"
+
+#: templates/hr/employee.html:35
+msgid "Reason for leaving"
+msgstr "چھوڑنے کی وجہ"
+
+#: templates/hr/employee.html:35
+msgid "Classes / subjects taught"
+msgstr "پڑھائی گئی کلاسیں / مضامین"
+
+#: templates/hr/employee.html:36
+msgid "Still working"
+msgstr "ابھی کام کر رہے ہیں"
+
+#: templates/hr/employee.html:39
 msgid "Leave this session"
 msgstr "اس سیشن کی رخصتیں"
 
@@ -8240,10 +8581,22 @@ msgstr "اس سیشن کی رخصتیں"
 msgid "Edit staff member"
 msgstr "ملازم کا ریکارڈ تبدیل کریں"
 
-#: templates/hr/employee_form.html:2 templates/hr/employee_form.html:4
+#: templates/hr/employee_form.html:2 templates/hr/employee_form.html:5
 #: templates/hr/index.html:7
 msgid "Add staff member"
 msgstr "نیا ملازم شامل کریں"
+
+#: templates/hr/employee_form.html:11
+msgid "Add qualification"
+msgstr "قابلیت شامل کریں"
+
+#: templates/hr/employee_form.html:12
+msgid "Add certificate"
+msgstr "سرٹیفکیٹ شامل کریں"
+
+#: templates/hr/employee_form.html:13
+msgid "Add experience"
+msgstr "تجربہ شامل کریں"
 
 #: templates/hr/index.html:6
 msgid "Staff records, attendance from the face-recognition machine, and leave."
@@ -9001,7 +9354,7 @@ msgid "No diary has been shared yet."
 msgstr "ابھی کوئی ڈائری جاری نہیں ہوئی۔"
 
 #: templates/parents/codes.html:2 templates/parents/codes.html:4
-#: templates/people/student_list.html:32
+#: templates/people/student_list.html:36
 msgid "Parent access codes"
 msgstr "والدین کے لاگ اِن کوڈ"
 
@@ -9135,85 +9488,237 @@ msgstr "لاگ اِن پر واپس"
 msgid "Fixed monthly salary; each day of absence or unpaid leave is cut at salary ÷ days in the month, and half that for a half day."
 msgstr "مقررہ ماہانہ تنخواہ؛ غیر حاضری یا بلا تنخواہ رخصت کے ہر دن کی کٹوتی تنخواہ ÷ مہینے کے دن کے حساب سے، اور آدھے دن پر اس کا آدھا۔"
 
-#: templates/payroll/index.html:7 templates/payroll/salaries.html:2
+#: templates/payroll/index.html:8 templates/payroll/manual.html:2
+#: templates/payroll/manual.html:5
+msgid "Enter manually"
+msgstr "دستی اندراج"
+
+#: templates/payroll/index.html:9 templates/payroll/salaries.html:2
 #: templates/payroll/salaries.html:5
 msgid "Salaries and bank details"
 msgstr "تنخواہیں اور بینک تفصیلات"
 
-#: templates/payroll/index.html:12
+#: templates/payroll/index.html:14 templates/payroll/salaries.html:8
+msgid "Name or code"
+msgstr "نام یا کوڈ"
+
+#: templates/payroll/index.html:15 templates/payroll/salaries.html:9
+msgid "All designations"
+msgstr "تمام عہدے"
+
+#: templates/payroll/index.html:20
 #, python-format
 msgid "Finalised on %(d)s by %(who)s. These figures are locked; later changes to attendance or salaries do not change them."
 msgstr "%(d)s کو %(who)s نے حتمی کیا۔ یہ اعداد مقفل ہیں؛ بعد میں حاضری یا تنخواہ کی تبدیلی سے نہیں بدلتے۔"
 
-#: templates/payroll/index.html:14
+#: templates/payroll/index.html:20
+msgid "Open a person to pay their salary."
+msgstr "تنخواہ ادا کرنے کے لیے متعلقہ شخص کو کھولیں۔"
+
+#: templates/payroll/index.html:22
 msgid "Not finalised yet: the figures follow the staff attendance sheet and change if attendance or salaries change."
 msgstr "ابھی حتمی نہیں: اعداد عملے کی حاضری شیٹ کے مطابق ہیں اور حاضری یا تنخواہ بدلنے سے بدل جاتے ہیں۔"
 
-#: templates/payroll/index.html:14
+#: templates/payroll/index.html:22
+msgid "Salaries are paid once the month is finalised."
+msgstr "مہینہ فائنل ہونے کے بعد تنخواہیں ادا ہوتی ہیں۔"
+
+#: templates/payroll/index.html:22
 #, python-format
 msgid "%(n)s person has no salary set and is left out."
 msgid_plural "%(n)s people have no salary set and are left out."
 msgstr[0] "%(n)s فرد کی تنخواہ مقرر نہیں، اس لیے شامل نہیں۔"
 msgstr[1] "%(n)s افراد کی تنخواہ مقرر نہیں، اس لیے شامل نہیں۔"
 
-#: templates/payroll/index.html:18
-msgid "Staff paid"
-msgstr "تنخواہ پانے والا عملہ"
+#: templates/payroll/index.html:27
+msgid "Salaries (Rs)"
+msgstr "تنخواہیں (روپے)"
 
-#: templates/payroll/index.html:19
+#: templates/payroll/index.html:28
 msgid "Deductions (Rs)"
 msgstr "کٹوتیاں (روپے)"
 
-#: templates/payroll/index.html:24
+#: templates/payroll/index.html:29
+msgid "Net pay to pay (Rs)"
+msgstr "ادا کرنی ہے (روپے)"
+
+#: templates/payroll/index.html:30
+#, python-format
+msgid "Paid to %(n)s person (Rs)"
+msgid_plural "Paid to %(n)s people (Rs)"
+msgstr[0] "%(n)s شخص کو ادا (روپے)"
+msgstr[1] "%(n)s افراد کو ادا (روپے)"
+
+#: templates/payroll/index.html:31
+msgid "Still to pay (Rs)"
+msgstr "باقی ادائیگی (روپے)"
+
+#: templates/payroll/index.html:35
+msgid "Acknowledgement sheet (PDF)"
+msgstr "وصولی کی شیٹ (پی ڈی ایف)"
+
+#: templates/payroll/index.html:36
 msgid "Payslips (PDF)"
 msgstr "تنخواہ پرچیاں (PDF)"
 
-#: templates/payroll/index.html:25
-msgid "Bank sheet (Excel)"
-msgstr "بینک شیٹ (ایکسل)"
+#: templates/payroll/index.html:37
+msgid "Bank transfer sheet (Excel)"
+msgstr "بینک ٹرانسفر شیٹ (ایکسل)"
 
-#: templates/payroll/index.html:31
+#: templates/payroll/index.html:42 templates/payroll/manual.html:9
+#: templates/payroll/person.html:17 templates/payroll/person.html:37
 msgid "Unpaid leave"
 msgstr "بلا تنخواہ رخصت"
 
-#: templates/payroll/index.html:37
-msgid "Payslip"
-msgstr "تنخواہ پرچی"
+#: templates/payroll/index.html:44 templates/payroll/manual.html:12
+msgid "Manual"
+msgstr "دستی"
 
-#: templates/payroll/index.html:40
+#: templates/payroll/index.html:51
+msgid "Nobody matches."
+msgstr "کوئی نہیں ملا۔"
+
+#: templates/payroll/index.html:52
 msgid "No staff on the staff list for this month."
 msgstr "اس مہینے کی فہرست میں کوئی ملازم نہیں۔"
 
-#: templates/payroll/index.html:44
+#: templates/payroll/index.html:56
 msgid "Reopen this month"
 msgstr "یہ مہینہ دوبارہ کھولیں"
 
-#: templates/payroll/index.html:45
+#: templates/payroll/index.html:57
 msgid "The payslips of this month will be kept as cancelled and the month can be finalised again."
 msgstr "اس مہینے کی تنخواہ پرچیاں منسوخ کے طور پر محفوظ رہیں گی اور مہینہ دوبارہ حتمی کیا جا سکے گا۔"
 
-#: templates/payroll/index.html:45 templates/payroll/index.html:46
+#: templates/payroll/index.html:57 templates/payroll/index.html:58
 msgid "Reopen"
 msgstr "دوبارہ کھولیں"
 
-#: templates/payroll/index.html:48
+#: templates/payroll/index.html:60
 #, python-format
 msgid "The payroll of %(m)s will be locked and payslips made. Check attendance and salaries first."
 msgstr "%(m)s کی تنخواہیں مقفل ہو جائیں گی اور پرچیاں بن جائیں گی۔ پہلے حاضری اور تنخواہیں چیک کر لیں۔"
 
-#: templates/payroll/index.html:48
+#: templates/payroll/index.html:60
 msgid "Finalise"
 msgstr "حتمی کریں"
 
-#: templates/payroll/index.html:49
+#: templates/payroll/index.html:61
 msgid "Finalise this month"
 msgstr "یہ مہینہ حتمی کریں"
 
-#: templates/payroll/salaries.html:6
-msgid "Fixed monthly salary of each staff member. Leave the bank empty for salary paid in cash. Every change is recorded in the history."
-msgstr "ہر ملازم کی مقررہ ماہانہ تنخواہ۔ نقد ادائیگی کے لیے بینک خالی چھوڑیں۔ ہر تبدیلی ریکارڈ میں محفوظ ہوتی ہے۔"
+#: templates/payroll/manual.html:6
+msgid "For when the attendance machine was out of order or its sheet is wrong. Tick the people whose days you type in; their figures replace the machine's for this month. Pay is worked out the same way: salary ÷ days in the month for each day absent or on unpaid leave, half that for a half day."
+msgstr "جب حاضری کی مشین خراب ہو یا اس کی شیٹ غلط ہو۔ جن کے دن آپ لکھ رہے ہیں ان پر نشان لگائیں؛ اس مہینے کے لیے ان کے اعداد مشین کی جگہ لیں گے۔ تنخواہ کا حساب وہی رہے گا: ہر غیر حاضری یا بلا تنخواہ چھٹی پر تنخواہ ÷ مہینے کے دن، آدھے دن پر اس کا آدھا۔"
 
-#: templates/payroll/salaries.html:22
+#: templates/payroll/manual.html:9
+msgid "Use"
+msgstr "استعمال"
+
+#: templates/payroll/manual.html:9 templates/payroll/person.html:15
+msgid "Working days"
+msgstr "کام کے دن"
+
+#: templates/payroll/manual.html:9
+msgid "Net pay now (Rs)"
+msgstr "موجودہ خالص تنخواہ (روپے)"
+
+#: templates/payroll/manual.html:11
+#, python-format
+msgid "Type in the days of %(n)s"
+msgstr "%(n)s کے دن درج کریں"
+
+#: templates/payroll/manual.html:22
+msgid "Save and work out the pay"
+msgstr "محفوظ کریں اور تنخواہ نکالیں"
+
+#: templates/payroll/person.html:7
+msgid "Salary now"
+msgstr "موجودہ تنخواہ"
+
+#: templates/payroll/person.html:15
+msgid "Entered manually"
+msgstr "دستی اندراج"
+
+#: templates/payroll/person.html:21
+msgid "recorded by"
+msgstr "درج کنندہ"
+
+#: templates/payroll/person.html:21
+msgid "The month is not finalised yet."
+msgstr "مہینہ ابھی فائنل نہیں ہوا۔"
+
+#: templates/payroll/person.html:24
+#, python-format
+msgid "Rs %(a)s paid to %(n)s? It cannot be changed afterwards."
+msgstr "%(a)s روپے %(n)s کو ادا کیے؟ بعد میں تبدیل نہیں ہو سکتا۔"
+
+#: templates/payroll/person.html:24 templates/payroll/person.html:25
+#: templates/payroll/person.html:31
+msgid "Pay salary"
+msgstr "تنخواہ ادا کریں"
+
+#: templates/payroll/person.html:29
+msgid "Reference (bank / cheque no.)"
+msgstr "حوالہ (بینک / چیک نمبر)"
+
+#: templates/payroll/person.html:33
+msgid "No pay for this month (salary not set, or not on the staff)."
+msgstr "اس مہینے کی کوئی تنخواہ نہیں (تنخواہ درج نہیں یا عملے میں شامل نہیں)۔"
+
+#: templates/payroll/person.html:35
+msgid "Salary history"
+msgstr "تنخواہ کی تاریخ"
+
+#: templates/payroll/person.html:44
+msgid "No finalised months yet."
+msgstr "ابھی کوئی مہینہ فائنل نہیں ہوا۔"
+
+#: templates/payroll/person.html:46
+msgid "Increments and salary changes"
+msgstr "اضافے اور تنخواہ میں تبدیلیاں"
+
+#: templates/payroll/person.html:48
+msgid "Before (Rs)"
+msgstr "پہلے (روپے)"
+
+#: templates/payroll/person.html:48
+msgid "New salary (Rs)"
+msgstr "نئی تنخواہ (روپے)"
+
+#: templates/payroll/person.html:48
+msgid "Change (Rs)"
+msgstr "تبدیلی (روپے)"
+
+#: templates/payroll/person.html:48 templates/payroll/person.html:59
+msgid "Approved by"
+msgstr "منظور کنندہ"
+
+#: templates/payroll/person.html:51
+msgid "No increments recorded."
+msgstr "کوئی اضافہ درج نہیں۔"
+
+#: templates/payroll/person.html:53
+msgid "Add an increment"
+msgstr "اضافہ درج کریں"
+
+#: templates/payroll/person.html:57
+msgid "New monthly salary (Rs)"
+msgstr "نئی ماہانہ تنخواہ (روپے)"
+
+#: templates/payroll/person.html:58
+msgid "e.g. annual increment"
+msgstr "مثلاً سالانہ اضافہ"
+
+#: templates/payroll/person.html:61
+msgid "Save increment"
+msgstr "اضافہ محفوظ کریں"
+
+#: templates/payroll/salaries.html:6
+msgid "Fixed monthly salary of each staff member. Choose how each person takes the salary; bank details are needed only for bank transfer. Every change is recorded in the history; increments are added on each person's page."
+msgstr "ہر ملازم کی مقررہ ماہانہ تنخواہ۔ ہر شخص تنخواہ کیسے لیتا ہے یہ چنیں؛ بینک کی تفصیل صرف بینک ٹرانسفر کے لیے ضروری ہے۔ ہر تبدیلی ریکارڈ میں درج ہوتی ہے؛ اضافے ہر شخص کے صفحے پر درج ہوتے ہیں۔"
+
+#: templates/payroll/salaries.html:28
 msgid "Save salaries"
 msgstr "تنخواہیں محفوظ کریں"
 
@@ -9231,7 +9736,7 @@ msgid "Print Parent Tree for %(n)s"
 msgstr "%(n)s کا پیرنٹ ٹری پرنٹ کریں"
 
 #: templates/people/_parent_tree_button.html:4
-#: templates/people/student_list.html:41
+#: templates/people/student_list.html:45
 msgid "Parent Tree"
 msgstr "پیرنٹ ٹری"
 
@@ -9528,36 +10033,32 @@ msgid_plural "%(n)s students found"
 msgstr[0] "%(n)s طالب علم ملا"
 msgstr[1] "%(n)s طلبہ ملے"
 
-#: templates/people/student_list.html:14
-msgid "Admission no., name, father name or mobile"
-msgstr "داخلہ نمبر، نام، والد کا نام یا موبائل"
-
-#: templates/people/student_list.html:26
+#: templates/people/student_list.html:30
 msgid "All statuses"
 msgstr "تمام حیثیتیں"
 
-#: templates/people/student_list.html:30
-msgid "Show students"
-msgstr "طلبہ دکھائیں"
-
-#: templates/people/student_list.html:31
+#: templates/people/student_list.html:35
 msgid "Print ID cards"
 msgstr "آئی ڈی کارڈ پرنٹ کریں"
 
-#: templates/people/student_list.html:60 templates/setup/branches.html:26
+#: templates/people/student_list.html:53
+msgid "Not placed"
+msgstr "جماعت میں نہیں"
+
+#: templates/people/student_list.html:64 templates/setup/branches.html:26
 #: templates/setup/users.html:27
 #, python-format
 msgid "Page %(a)s of %(b)s"
 msgstr "صفحہ %(a)s از %(b)s"
 
-#: templates/people/student_list.html:67
+#: templates/people/student_list.html:71
 msgid ""
 "No students match these filters. Clear the search or choose another class."
 msgstr ""
 "ان فلٹرز سے کوئی طالب علم نہیں ملا۔ تلاش صاف کریں یا کوئی اور جماعت منتخب "
 "کریں۔"
 
-#: templates/people/student_list.html:67
+#: templates/people/student_list.html:71
 msgid "No students yet in this branch."
 msgstr "اس برانچ میں ابھی کوئی طالب علم نہیں۔"
 
@@ -9964,6 +10465,22 @@ msgstr "کھلا"
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
 
+#~ msgid "Admission no., name or father name"
+#~ msgstr "داخلہ نمبر، نام یا والد کا نام"
+
+#~ msgid "This student's class is not in this event."
+#~ msgstr "اس طالب علم کی کلاس اس تقریب میں شامل نہیں۔"
+
+#, python-format
+#~ msgid "Extra tickets (Rs %(p)s each)"
+#~ msgstr "اضافی ٹکٹ (%(p)s روپے فی ٹکٹ)"
+
+#~ msgid "Staff paid"
+#~ msgstr "تنخواہ پانے والا عملہ"
+
+#~ msgid "Payslip"
+#~ msgstr "تنخواہ پرچی"
+
 #~ msgid ""
 #~ "Building where this section studies. Leave empty if the branch has one "
 #~ "building."
@@ -10077,9 +10594,6 @@ msgstr "ان شرائط کے مطابق کوئی نہیں۔"
 
 #~ msgid "Full name (Urdu)"
 #~ msgstr "پورا نام (اردو)"
-
-#~ msgid "Parents and guardians"
-#~ msgstr "والدین اور سرپرست"
 
 #~ msgid ""
 #~ "If this mobile number already belongs to a parent in this branch, the "

@@ -80,6 +80,9 @@ class TicketSale(BranchOwnedModel):
     guest_price = models.DecimalField(**MONEY, default=0)
     amount = models.DecimalField(_("amount (Rs)"), **MONEY)
     paid_by = models.CharField(_("paid by"), max_length=8, choices=PaidBy.choices, default=PaidBy.CASH)
+    bank = models.ForeignKey(
+        "fees.BankAccount", on_delete=models.PROTECT, null=True, blank=True, related_name="+", verbose_name=_("bank")
+    )
     reference = models.CharField(_("reference"), max_length=60, blank=True)
     received_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
     received_at = models.DateTimeField(auto_now_add=True)

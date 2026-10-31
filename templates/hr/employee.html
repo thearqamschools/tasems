@@ -1,6 +1,7 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{{ employee.full_name }}{% endblock %}
 {% block content %}
+<p><a href="{% url 'hr:index' %}">‹ {% trans "Staff" %}</a></p>
 <h1>{{ employee.full_name }}</h1>
 <p class="lede">{{ employee.designation }} · {{ employee.get_staff_type_display }} · <span class="num">{{ employee.code }}</span>{% if employee.status != "active" %} · {{ employee.get_status_display }}{% endif %}</p>
 <div class="actions">
@@ -18,10 +19,22 @@
   <tr><th>{% trans "Permanent address" %}</th><td>{{ employee.permanent_address|default:"—"|linebreaksbr }}</td></tr>
   <tr><th>{% trans "Joining date" %}</th><td>{{ employee.joined_on|date:"d M Y" }}{% if employee.left_on %} – {{ employee.left_on|date:"d M Y" }}{% endif %}</td></tr>
   <tr><th>{% trans "Campus" %}</th><td>{{ employee.campus|default:"—" }}</td></tr>
-  <tr><th>{% trans "Qualification" %}</th><td>{{ employee.qualification|default:"—" }}</td></tr>
+  <tr><th>{% trans "Last qualification" %}</th><td>{{ employee.qualification|default:"—" }}</td></tr>
   <tr><th>{% trans "Biometric machine ID" %}</th><td class="num">{{ employee.machine_id|default:"—" }}</td></tr>
   <tr><th>{% trans "TASEMS login" %}</th><td>{{ employee.user.username|default:"—" }}</td></tr>
 </tbody></table></div>
+
+{% with q=employee.qualifications.all c=employee.certificates.all x=employee.experiences.all %}
+{% if q %}<h2>{% trans "Qualifications" %}</h2><div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Level" %}</th><th>{% trans "Degree / title" %}</th><th>{% trans "Subjects / major" %}</th><th>{% trans "Board / university" %}</th><th class="num">{% trans "Year" %}</th><th>{% trans "Marks % / CGPA" %}</th><th>{% trans "Grade / division" %}</th></tr></thead>
+  <tbody>{% for r in q %}<tr><td>{{ r.get_level_display }}</td><td>{{ r.degree|default:"—" }}</td><td>{{ r.subjects|default:"—" }}</td><td>{{ r.institute|default:"—" }}</td><td class="num">{{ r.year|default:"—" }}</td><td>{{ r.marks|default:"—" }}</td><td>{{ r.grade|default:"—" }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% if c %}<h2>{% trans "Certificates and courses" %}</h2><div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Certificate / course" %}</th><th>{% trans "Institute" %}</th><th class="num">{% trans "Year" %}</th><th>{% trans "Duration" %}</th></tr></thead>
+  <tbody>{% for r in c %}<tr><td>{{ r.name }}</td><td>{{ r.institute|default:"—" }}</td><td class="num">{{ r.year|default:"—" }}</td><td>{{ r.duration|default:"—" }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% if x %}<h2>{% trans "Experience" %}</h2><div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Organisation / school" %}</th><th>{% trans "Designation / post" %}</th><th>{% trans "From" %}</th><th>{% trans "To" %}</th><th>{% trans "Reason for leaving" %}</th><th>{% trans "Classes / subjects taught" %}</th></tr></thead>
+  <tbody>{% for r in x %}<tr><td>{{ r.organisation }}</td><td>{{ r.designation|default:"—" }}</td><td>{{ r.started_on|date:"M Y"|default:"—" }}</td><td>{% if r.ended_on %}{{ r.ended_on|date:"M Y" }}{% else %}{% trans "Still working" %}{% endif %}</td><td>{{ r.reason_left|default:"—" }}</td><td>{{ r.taught|default:"—" }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% endwith %}
 
 <h2>{% trans "Leave this session" %}</h2>
 {% include "hr/_leave_balance.html" %}

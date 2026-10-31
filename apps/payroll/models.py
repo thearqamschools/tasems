@@ -14,11 +14,18 @@ from apps.core.models import BranchOwnedModel
 MONEY = {"max_digits": 12, "decimal_places": 2}
 
 
+class PayMethod(models.TextChoices):
+    CASH = "cash", _("Cash")
+    BANK = "bank", _("Bank transfer")
+    ONLINE = "online", _("Online (JazzCash / Easypaisa)")
+
+
 @audited
 class EmployeePay(BranchOwnedModel):
     """A staff member's fixed monthly salary and where it is paid. Kept apart from the staff record, so only
     people with payroll rights see salaries."""
 
+    method = models.CharField(_("salary paid by"), max_length=8, choices=PayMethod.choices, default=PayMethod.CASH)
     employee = models.OneToOneField("hr.Employee", on_delete=models.CASCADE, related_name="pay")
     monthly_salary = models.DecimalField(
         _("monthly salary (Rs)"), **MONEY, validators=[MinValueValidator(Decimal("0"))]
@@ -69,6 +76,9 @@ class Payslip(BranchOwnedModel):
     absent_days = models.PositiveSmallIntegerField(default=0)
     leave_days = models.PositiveSmallIntegerField(default=0, help_text=_("Days of unpaid leave"))
     half_days = models.PositiveSmallIntegerField(default=0, help_text=_("Half days: half a day's pay is cut"))
+    working_days = models.PositiveSmallIntegerField(default=0)
+    is_manual = models.BooleanField(default=False)
+    method = models.CharField(max_length=8, choices=PayMethod.choices, default=PayMethod.CASH)
     deduction = models.DecimalField(**MONEY)
     net_pay = models.DecimalField(**MONEY)
     bank_name = models.CharField(max_length=80, blank=True)
@@ -85,3 +95,58 @@ class Payslip(BranchOwnedModel):
     @property
     def unpaid_days(self):
         return self.absent_days + self.leave_days
+
+
+@audited
+class SalaryChange(BranchOwnedModel):
+    """An increment (or other change) of a staff member's monthly salary from a month on (project lead, 31 Oct
+    2026). The salary of any month is the latest change from that month or earlier, so past months keep theirs."""
+
+    employee = models.ForeignKey("hr.Employee", on_delete=models.CASCADE, related_name="salary_changes")
+    from_month = models.DateField(_("from month"))
+    old_salary = models.DecimalField(_("salary before (Rs)"), **MONEY)
+    new_salary = models.DecimalField(_("new salary (Rs)"), **MONEY, validators=[MinValueValidator(Decimal("0"))])
+    reason = models.CharField(_("reason"), max_length=200, blank=True)
+    approved_by = models.CharField(_("approved by"), max_length=120, blank=True)
+    recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["employee", "from_month", "id"]
+
+    @property
+    def increase(self):
+        return self.new_salary - self.old_salary
+
+
+@audited
+class ManualDays(BranchOwnedModel):
+    """A month's attendance figures typed in for one person when the machine sheet cannot be used (machine out of
+    order, wrong sheet). They replace the machine figures for that person and month (project lead, 31 Oct 2026)."""
+
+    employee = models.ForeignKey("hr.Employee", on_delete=models.CASCADE, related_name="manual_days")
+    month = models.DateField()
+    days_in_month = models.PositiveSmallIntegerField()
+    working_days = models.PositiveSmallIntegerField(default=0)
+    days_employed = models.PositiveSmallIntegerField()
+    absent_days = models.PositiveSmallIntegerField(default=0)
+    leave_days = models.PositiveSmallIntegerField(default=0)
+    half_days = models.PositiveSmallIntegerField(default=0)
+    entered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["employee", "month"], name="one_manual_days_per_month")]
+
+
+@audited
+class SalaryPayment(BranchOwnedModel):
+    """The salary of one finalised month handed over to one person: when and how. Locked once recorded."""
+
+    payslip = models.OneToOneField(Payslip, on_delete=models.PROTECT, related_name="payment")
+    amount = models.DecimalField(**MONEY)
+    paid_on = models.DateField(_("paid on"))
+    method = models.CharField(_("paid by"), max_length=8, choices=PayMethod.choices)
+    reference = models.CharField(_("reference"), max_length=60, blank=True)
+    recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["-paid_on"]

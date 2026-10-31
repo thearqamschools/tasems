@@ -221,6 +221,8 @@ th, td { padding: 0.65rem 0.8rem; text-align: start; border-block-end: 1px solid
 th { font-weight: 600; color: var(--ink-soft); background: var(--surface-sunk); white-space: nowrap; }
 html[lang="en"] thead th { font-size: var(--step--2); letter-spacing: 0.04em; text-transform: uppercase; }
 tbody tr:hover td { background: #fafbfe; }
+tr[data-href] { cursor: pointer; }
+tr[data-href]:hover td { background: var(--surface-hover, #f1f3fb); }
 tr:last-child td { border-block-end: 0; }
 td.num, th.num { text-align: end; }
 tfoot td, tfoot th { font-weight: 600; background: var(--surface-sunk); border-block-start: 1px solid var(--line-strong); }
@@ -423,7 +425,7 @@ textarea.ur { font-family: var(--font-ur); line-height: 2.1; }
 .brand-sub { font-size: 0.75rem; letter-spacing: 0.12em; color: #c9cbe8; }
 .side-nav { padding: 0.5rem 0.6rem 1.5rem; }
 .nav-group { margin-block-start: 0.75rem; }
-.nav-group-label { margin: 0 0 0.25rem; padding: 0 0.6rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #a9acd9; }
+.nav-group-label { display: flex; align-items: center; justify-content: space-between; inline-size: 100%; background: none; border: 0; cursor: pointer; font-family: inherit; text-align: start; border-radius: 0.4rem; min-block-size: 2rem; margin: 0 0 0.25rem; padding: 0 0.6rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #a9acd9; }
 html[lang="ur"] .nav-group-label { text-transform: none; letter-spacing: 0; font-size: 0.8rem; }
 .side-nav ul { list-style: none; margin: 0; padding: 0; }
 .side-nav a {
@@ -680,3 +682,20 @@ section > h2:first-child { margin-block-start: 0; }
 .para-key.done { background: var(--ok-soft); border-color: var(--ok); }
 .para-key.current { border: 2px solid var(--brand); }
 @media (max-width: 40rem) { .para-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+/* Rows of a form that can be added (staff qualifications, certificates, experience) */
+table.formset td { padding: 0.35rem 0.4rem; }
+table.formset input, table.formset select { min-inline-size: 7rem; inline-size: 100%; }
+table.formset input[type="checkbox"] { min-inline-size: 0; inline-size: auto; }
+form.sell-row { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; margin: 0.25rem 0 0; }
+form.sell-row select, form.sell-row input { padding-block: 0.3rem; inline-size: auto; min-inline-size: 0; }
+form.sell-row input[type="number"] { inline-size: 4rem; }
+form.sell-row input[name="reference"] { inline-size: 7rem; }
+
+/* Side menu groups open and close (project lead, 31 Oct 2026); the group of the page you are on starts open. */
+.nav-group-label:hover, .nav-group-label:focus-visible { color: #fff; background: rgba(255, 255, 255, 0.06); }
+.nav-group-label svg { inline-size: 0.9rem; block-size: 0.9rem; transition: transform 0.15s; }
+.nav-group-label[aria-expanded="false"] svg { transform: rotate(-90deg); }
+html[dir="rtl"] .nav-group-label[aria-expanded="false"] svg { transform: rotate(90deg); }
+.sidebar-collapsed .nav-group > ul[hidden] { display: block; }
+.sidebar-collapsed .nav-group-label { display: none; }

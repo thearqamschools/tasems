@@ -239,8 +239,7 @@ with the child and all brothers and sisters, and the children are called with it
 - Decided by the lead: name **Events & Tickets**; student ticket **plus extra tickets** for parents/guests; Director
   and Principal make events, Director/Accountant/Admin take the money; **refunds allowed** with a reason.
 
-## Round 5 (31 Oct 2026) — NOTED ONLY, not built yet
-Build nothing until the lead says to make the changes; then all together (next Windows installer: v11).
+## Round 5 (31 Oct 2026) — built 31 Oct 2026 (Windows installer v11, CHANGELOG 0.40.0, D-093)
 
 ### Students → search and filters
 - R5-1. Student search also finds by **mobile number** — the father's, mother's or guardian's, any of them — and

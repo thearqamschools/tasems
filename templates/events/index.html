@@ -7,7 +7,7 @@
 </div>
 {% if events %}<div class="table-wrap"><table>
   <thead><tr><th>{% trans "Event" %}</th><th>{% trans "Date" %}</th><th class="num">{% trans "Students with tickets" %}</th><th class="num">{% trans "Collected (Rs)" %}</th><th class="num">{% trans "Expenses (Rs)" %}</th><th class="num">{% trans "Profit / loss (Rs)" %}</th><th>{% trans "Tickets" %}</th></tr></thead>
-  <tbody>{% for e in events %}<tr>
+  <tbody>{% for e in events %}<tr data-href="{% url 'events:detail' e.id %}">
     <td><a href="{% url 'events:detail' e.id %}">{{ e.name }}</a><br><span class="muted small">{{ e.get_kind_display }}</span></td>
     <td>{{ e.date|date:"d M Y" }}</td>
     <td class="num">{{ e.account.students }}{% if e.account.guests %} <span class="muted">+ {{ e.account.guests }}</span>{% endif %}</td>

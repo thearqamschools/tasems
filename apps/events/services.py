@@ -32,7 +32,7 @@ def current_place(student):
 
 
 @transaction.atomic
-def sell(event, student, guests, paid_by, reference, user):
+def sell(event, student, guests, paid_by, reference, user, bank=None):
     event = Event.objects.select_for_update().get(pk=event.pk)
     if not event.is_open:
         raise SaleError(_("Tickets for this event are closed."))
@@ -44,6 +44,8 @@ def sell(event, student, guests, paid_by, reference, user):
         raise SaleError(_("%(s)s's class is not in this event.") % {"s": student.full_name})
     if guests and not event.guest_price:
         raise SaleError(_("This event has no extra tickets."))
+    if paid_by == TicketSale.PaidBy.BANK and (bank is None or bank.branch_id != event.branch_id):
+        raise SaleError(_("Choose the bank the money came in."))
     price = prices[place.section.class_level_id]
     number = (event.sales.aggregate(n=Max("number"))["n"] or 0) + 1
     return TicketSale.objects.create(
@@ -58,6 +60,7 @@ def sell(event, student, guests, paid_by, reference, user):
         guest_price=event.guest_price if guests else 0,
         amount=price + (event.guest_price * guests if guests else Decimal("0")),
         paid_by=paid_by,
+        bank=bank if paid_by == TicketSale.PaidBy.BANK else None,
         reference=reference[:60],
         received_by=user,
     )
@@ -163,3 +166,16 @@ def student_search(branch, q):
 
 def expense_total(event):
     return EventExpense.objects.filter(event=event, is_cancelled=False).aggregate(t=Sum("amount"))["t"] or 0
+
+
+def by_channel(event):
+    """Money in by way of payment: cash, each bank, JazzCash / Easypaisa (refunds left out)."""
+    out = defaultdict(lambda: {"n": 0, "amount": Decimal("0")})
+    for s in event.sales.filter(is_refunded=False).select_related("bank"):
+        if s.paid_by == TicketSale.PaidBy.BANK:
+            key = s.bank.name if s.bank else _("Bank")
+        else:
+            key = s.get_paid_by_display()
+        out[key]["n"] += 1
+        out[key]["amount"] += s.amount
+    return sorted(out.items(), key=lambda kv: (kv[0] != str(TicketSale.PaidBy.CASH.label), kv[0]))

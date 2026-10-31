@@ -1,0 +1,53 @@
+{% load tasems_tags %}<!doctype html>
+{# Salary acknowledgement sheet (project lead, 31 Oct 2026): a page per designation group; staff paid in cash sign. English, as printed documents are. #}
+<html lang="en"><head><meta charset="utf-8"><title>Salary acknowledgement</title>
+<style>
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
+  @page { size: A4 landscape; margin: 9mm 10mm 12mm; @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 7.5pt "PSans"; color: #3b4157; } }
+  body { margin: 0; font-family: "PSans", sans-serif; color: #14182b; font-size: 8.6pt; }
+  .group { page-break-after: always; }
+  .group:last-child { page-break-after: auto; }
+  .head { display: flex; align-items: center; gap: 3mm; border-bottom: 1mm solid #ed3237; padding-bottom: 2mm; }
+  .head img { width: 12mm; height: 12mm; }
+  .school { font-weight: 700; font-size: 13pt; color: #3e4095; }
+  .branch { font-size: 8pt; color: #3b4157; }
+  .title { margin-inline-start: auto; text-align: right; }
+  .title b { display: block; font-size: 11.5pt; letter-spacing: .04em; }
+  h2 { font-size: 10.5pt; margin: 3mm 0 1.5mm; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: .4pt solid #9aa0b8; padding: 1.6mm 1.4mm; text-align: left; vertical-align: middle; }
+  th { background: #eef0f8; font-weight: 700; font-size: 7.6pt; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  td.sr { width: 6mm; text-align: center; }
+  td.how { white-space: nowrap; font-size: 7.6pt; }
+  td.sign { width: 34mm; height: 9mm; }
+  td.got { width: 16mm; }
+  tr.total td { font-weight: 700; background: #f6f7fb; }
+  .box { display: inline-block; width: 2.6mm; height: 2.6mm; border: .5pt solid #14182b; vertical-align: -.4mm; margin-inline-end: .6mm; }
+  .box.on { background: #14182b; }
+  .foot { display: flex; justify-content: space-between; margin-top: 12mm; font-size: 8pt; }
+  .foot div { width: 50mm; border-top: .5pt solid #14182b; text-align: center; padding-top: .8mm; }
+  .note { font-size: 7.4pt; color: #3b4157; margin-top: 2mm; }
+</style></head>
+<body>
+{% for g in groups %}<div class="group">
+  <div class="head"><img src="{% official_logo layout media_base font_base %}" alt="">
+    <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}{% if branch.contact_numbers %} · {{ branch.contact_numbers|join:", " }}{% endif %}</div></div>
+    <div class="title"><b>PAYROLL — {{ month|date:"F Y"|upper }} — ACKNOWLEDGEMENT</b>{% if run %}Finalised {{ run.created_at|date:"d M Y" }}{% else %}Not finalised yet{% endif %}</div></div>
+  <h2>{{ g.name }}</h2>
+  <table>
+    <thead><tr><th>#</th><th>Name</th><th>Designation</th><th class="n">Monthly salary</th><th class="n">Absent</th><th class="n">Unpaid leave</th><th class="n">Half days</th><th class="n">Deduction</th><th class="n">Net pay (Rs)</th><th>Payment received by</th><th>Payment received</th><th>Signature</th></tr></thead>
+    <tbody>{% for r in g.rows %}<tr>
+      <td class="sr">{{ forloop.counter }}</td><td>{{ r.employee.full_name }}<br><span class="note">{{ r.employee.code }}</span></td><td>{{ r.employee.designation }}</td>
+      <td class="n">{{ r.salary|rupees }}</td><td class="n">{{ r.absent }}</td><td class="n">{{ r.leave }}</td><td class="n">{{ r.half }}</td>
+      <td class="n">{{ r.deduction|rupees }}</td><td class="n"><b>{{ r.net|rupees }}</b></td>
+      <td class="how">{% with m=r.payment.method|default:"" %}<span class="box{% if m == 'cash' %} on{% endif %}"></span>Cash &nbsp;<span class="box{% if m == 'bank' %} on{% endif %}"></span>Bank &nbsp;<span class="box{% if m == 'online' %} on{% endif %}"></span>Online{% endwith %}</td>
+      <td class="got">{% if r.payment %}{{ r.payment.paid_on|date:"d/m/Y" }}{% endif %}</td><td class="sign"></td>
+    </tr>{% endfor %}
+    <tr class="total"><td></td><td colspan="7">Total — {{ g.rows|length }} staff</td><td class="n">{{ g.net|rupees }}</td><td colspan="3"></td></tr></tbody>
+  </table>
+  <p class="note">I have received my salary for {{ month|date:"F Y" }} as shown above.</p>
+  <div class="foot"><div>Prepared by</div><div>Checked by (Accountant)</div><div>Principal</div><div>Director</div></div>
+</div>{% endfor %}
+</body></html>

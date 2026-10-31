@@ -5,15 +5,21 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.db.models.functions import Length
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from apps.academics.models import ClassLevel
+from apps.academics.models import ClassLevel, Section
 from apps.core import escpos, exports
 from apps.core.branch import current_branch
-from apps.people.models import Student
+from apps.fees.models import BankAccount
+from apps.organisation.models import AcademicSession, Campus
+from apps.people.forms import section_order
+from apps.people.models import Enrolment, Student
+from apps.people.services import place_filter
+from apps.people.services import search as search_students
 
 from . import services as S
 from .forms import EventForm, ExpenseForm
@@ -89,7 +95,7 @@ def event_form(request, pk=None):
 def detail(request, pk):
     branch = _branch(request)
     event = _event(branch, pk)
-    sales = event.sales.select_related("student", "class_level", "received_by", "refunded_by")
+    sales = event.sales.select_related("student", "class_level", "received_by", "refunded_by", "bank")
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             event.name,
@@ -109,7 +115,7 @@ def detail(request, pk):
             "account": S.account(event),
             "classes": S.by_class(event),
             "receivers": S.by_receiver(event),
-            "sales": sales,
+            "sales": sorted(sales, key=lambda x: (x.is_refunded, -x.number)),  # refunded ones at the end
             "expenses": event.expenses.select_related("recorded_by"),
             "can": _can(request, branch),
         },
@@ -132,9 +138,13 @@ def _print_receipt(request, sale):
 
 @login_required
 def sell(request, pk):
+    """Find students (same search as Students, plus class, section and campus) and sell tickets row by row; the
+    list stays after each sale (project lead, 31 Oct 2026)."""
     branch = _branch(request, S.SELL_PERM)
     event = _event(branch, pk)
     if request.method == "POST":
+        back = request.POST.get("next", "")
+        back = back if back.startswith(f"/events/{event.pk}/sell/") else f"/events/{event.pk}/sell/"
         student = get_object_or_404(Student, pk=request.POST.get("student"), branch=branch)
         try:
             guests = max(int(request.POST.get("guests") or 0), 0)
@@ -143,33 +153,50 @@ def sell(request, pk):
         paid_by = request.POST.get("paid_by", TicketSale.PaidBy.CASH)
         if paid_by not in TicketSale.PaidBy.values:
             paid_by = TicketSale.PaidBy.CASH
+        bank = BankAccount.objects.filter(branch=branch, pk=request.POST.get("bank") or 0, is_active=True).first()
         try:
-            sale = S.sell(event, student, guests, paid_by, request.POST.get("reference", "").strip(), request.user)
+            sale = S.sell(
+                event, student, guests, paid_by, request.POST.get("reference", "").strip(), request.user, bank
+            )
         except S.SaleError as error:
-            messages.error(request, str(error))
-            return redirect(f"{request.path}?q={student.admission_no}")
+            messages.error(request, f"{student.full_name}: {error}")
+            return redirect(back)
         messages.success(
             request,
             _("%(s)s: %(n)s ticket(s), Rs %(a)s received by %(by)s.")
             % {"s": student.full_name, "n": sale.tickets, "a": f"{sale.amount:,.0f}", "by": _name(request.user)},
         )
         _print_receipt(request, sale)
-        return redirect("events:sell", event.pk)
-    q = request.GET.get("q", "")
+        return redirect(back)
+    session = AcademicSession.objects.filter(is_current=True).first()
+    q = request.GET.get("q", "").strip()
+    level_id, section_name, campus_id = (request.GET.get(k, "") for k in ("class", "section", "campus"))
     found = []
-    prices = {c.class_level_id: c.price for c in event.classes.all()}
-    paid = set(event.sales.filter(is_refunded=False).values_list("student_id", flat=True))
-    for student in S.student_search(branch, q):
-        place = S.current_place(student)
-        level_id = place.section.class_level_id if place else None
-        found.append(
-            {
-                "student": student,
-                "place": place,
-                "price": prices.get(level_id),
-                "has_ticket": student.id in paid,
-            }
-        )
+    searched = bool(q or level_id or section_name or campus_id)
+    if searched:
+        students = Student.objects.filter(branch=branch, status=Student.Status.ACTIVE)
+        students = place_filter(search_students(students, q), session, level_id, section_name, campus_id)
+        prices = {c.class_level_id: c.price for c in event.classes.all()}
+        paid = set(event.sales.filter(is_refunded=False).values_list("student_id", flat=True))
+        places = {
+            e.student_id: e
+            for e in Enrolment.objects.filter(session=session, student__in=students).select_related(
+                "section__class_level", "section__campus"
+            )
+        } if session else {}  # fmt: skip
+        for student in students.order_by(Length("admission_no"), "admission_no")[:300]:
+            place = places.get(student.id)
+            found.append(
+                {
+                    "student": student,
+                    "place": place,
+                    "has_ticket": student.id in paid,
+                    "price": prices.get(place.section.class_level_id) if place else None,
+                }  # fmt: skip
+            )
+        found.sort(key=lambda f: (f["place"].section.class_level.sort_order if f["place"] else 999,
+                                  f["place"].section.name if f["place"] else "", f["student"].first_name))  # fmt: skip
+    sections = Section.objects.filter(branch=branch, session=session) if session else Section.objects.none()
     return render(
         request,
         "events/sell.html",
@@ -177,9 +204,44 @@ def sell(request, pk):
             "branch": branch,
             "event": event,
             "q": q,
+            "filters": {"class": level_id, "section": section_name, "campus": campus_id},
+            "levels": [c.class_level for c in event.classes.select_related("class_level")],
+            "section_names": sorted(set(sections.values_list("name", flat=True)), key=section_order),
+            "campuses": Campus.objects.filter(branch=branch, is_active=True),
+            "searched": searched,
             "found": found,
             "paid_by": TicketSale.PaidBy.choices,
-            "recent": event.sales.filter(received_by=request.user).select_related("student")[:10],
+            "banks": BankAccount.objects.filter(branch=branch, is_active=True),
+            "recent": event.sales.filter(received_by=request.user).select_related("student", "class_level")[:10],
+            "here": request.get_full_path(),
+        },
+    )
+
+
+@login_required
+def report(request, pk):
+    """The event report to print (A4): receipts sold, refunded receipts, expenses, money in by person and by bank;
+    then a summary page with profit or loss (project lead, 31 Oct 2026)."""
+    branch = _branch(request)
+    event = _event(branch, pk)
+    sales = event.sales.select_related("student", "class_level", "received_by", "refunded_by", "bank")
+    sold = [s for s in sales.order_by("number") if not s.is_refunded]
+    account = S.account(event)
+    return render(
+        request,
+        "events/report.html",
+        {
+            "branch": branch,
+            "event": event,
+            "sold": sold,
+            "refunded": [s for s in sales.order_by("number") if s.is_refunded],
+            "expenses": event.expenses.filter(is_cancelled=False).select_related("recorded_by").order_by("date", "id"),
+            "account": account,
+            "classes": S.by_class(event),
+            "receivers": S.by_receiver(event),
+            "channels": S.by_channel(event),
+            "sold_amount": sum((s.amount for s in sold), 0),
+            "printed": timezone.localtime(),
         },
     )
 

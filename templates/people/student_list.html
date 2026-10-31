@@ -11,7 +11,7 @@
 <form method="get" class="card">
   <div class="form-grid">
     <div class="field"><label for="q">{% trans "Search" %}</label>
-      <input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Admission no., name, father name or mobile' %}"></div>
+      <input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Admission no., name, father name, any mobile or CNIC' %}"></div>
     <div class="field"><label for="class">{% trans "Class" %}</label>
       <select id="class" name="class"><option value="">{% trans "All classes" %}</option>
         {% for l in levels %}<option value="{{ l.id }}" {% if level_id == l.id|stringformat:"s" %}selected{% endif %}>{{ l }}</option>{% endfor %}
@@ -19,6 +19,10 @@
     <div class="field"><label for="section">{% trans "Section" %}</label>
       <select id="section" name="section"><option value="">{% trans "All sections" %}</option>
         {% for n in section_names %}<option value="{{ n }}" {% if section_name == n %}selected{% endif %}>{{ n }}</option>{% endfor %}
+      </select></div>
+    <div class="field"><label for="campus">{% trans "Campus" %}</label>
+      <select id="campus" name="campus"><option value="">{% trans "All campuses" %}</option>
+        {% for c in campuses %}<option value="{{ c.id }}" {% if campus_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
       </select></div>
     <div class="field"><label for="status">{% trans "Status" %}</label>
       <select id="status" name="status">

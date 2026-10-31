@@ -225,6 +225,63 @@
     });
   });
 
+  // ---------- Side menu groups open and close; the choice is remembered on this computer ----------
+  var NAV_KEY = "tasems-nav-open";
+  var navState = {};
+  try { navState = JSON.parse(localStorage.getItem(NAV_KEY) || "{}"); } catch (e) { navState = {}; }
+  function setGroup(group, open) {
+    var button = group.querySelector(".nav-group-label");
+    var list = group.querySelector("ul");
+    if (!button || !list) return;
+    button.setAttribute("aria-expanded", open ? "true" : "false");
+    list.hidden = !open;
+  }
+  document.querySelectorAll("[data-nav-group]").forEach(function (group) {
+    var key = group.querySelector(".nav-group-label") ? group.querySelector(".nav-group-label").textContent.trim() : "";
+    if (group.hasAttribute("data-current")) setGroup(group, true); // the page you are on stays visible
+    else if (key in navState) setGroup(group, navState[key]);
+  });
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest(".nav-group-label");
+    if (!button) return;
+    var group = button.closest("[data-nav-group]");
+    var open = button.getAttribute("aria-expanded") !== "true";
+    setGroup(group, open);
+    navState[button.textContent.trim()] = open;
+    try { localStorage.setItem(NAV_KEY, JSON.stringify(navState)); } catch (e) { /* not kept: fine */ }
+  });
+
+  // ---------- Form rows that can be added: <section data-formset="prefix"> with a <template> row and [data-add-row] ----
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest("[data-add-row]");
+    if (!button) return;
+    var box = button.closest("[data-formset]");
+    var prefix = box.dataset.formset;
+    var total = box.querySelector('input[name="' + prefix + '-TOTAL_FORMS"]');
+    var html = box.querySelector("template").innerHTML.replace(/__prefix__/g, total.value);
+    box.querySelector("tbody").insertAdjacentHTML("beforeend", html);
+    total.value = String(Number(total.value) + 1);
+    var first = box.querySelector("tbody tr:last-child input, tbody tr:last-child select");
+    if (first) first.focus();
+  });
+
+  // ---------- Paid by bank: show the bank list next to it ([data-bank-toggle] + [data-bank]) ----------
+  document.addEventListener("change", function (event) {
+    var select = event.target.closest("[data-bank-toggle]");
+    if (!select) return;
+    var bank = select.form && select.form.querySelector("[data-bank]");
+    if (bank) { bank.hidden = select.value !== "bank"; bank.required = select.value === "bank"; }
+  });
+
+  // ---------- Whole table row opens its record: <tr data-href="…"> (links, buttons and fields inside still work) ----
+  document.addEventListener("click", function (event) {
+    var row = event.target.closest("tr[data-href]");
+    if (!row || event.target.closest("a, button, input, select, textarea, label, summary, form")) return;
+    if (window.getSelection && String(window.getSelection())) return; // selecting text, not opening
+    if (event.ctrlKey || event.metaKey) window.open(row.dataset.href, "_blank");
+    else window.location.href = row.dataset.href;
+  });
+
   // ---------- Print: <button data-print>; a full list opened with ?print=1 prints itself ----------
   document.addEventListener("click", function (event) {
     if (event.target.closest("[data-print]")) window.print();
