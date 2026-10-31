@@ -42,6 +42,8 @@ def sell(event, student, guests, paid_by, reference, user, bank=None):
     prices = {c.class_level_id: c.price for c in event.classes.all()}
     if place is None or place.section.class_level_id not in prices:
         raise SaleError(_("%(s)s's class is not in this event.") % {"s": student.full_name})
+    if event.sales.filter(student=student, is_refunded=False).exists():
+        raise SaleError(_("%(s)s already has a ticket.") % {"s": student.full_name})
     if guests and not event.guest_price:
         raise SaleError(_("This event has no extra tickets."))
     if paid_by == TicketSale.PaidBy.BANK and (bank is None or bank.branch_id != event.branch_id):

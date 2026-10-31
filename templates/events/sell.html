@@ -6,7 +6,7 @@
 <p class="lede">{{ event.name }} · {{ event.date|date:"d M Y" }} · {% trans "The receipt prints on the receipt printer; the money is recorded as received by you." %}</p>
 <form method="get" class="card" role="search">
   <div class="form-grid">
-    <div class="field"><label for="q">{% trans "Search" %}</label><input id="q" name="q" value="{{ q }}" autofocus placeholder="{% trans 'Admission no., name, father name, any mobile or CNIC' %}"></div>
+    <div class="field"><label for="q">{% trans "Search" %}</label><input id="q" name="q" value="" autofocus placeholder="{% trans 'Admission no., name, father name, any mobile or CNIC' %}"></div>
     <div class="field"><label for="class">{% trans "Class" %}</label><select id="class" name="class"><option value="">{% trans "All classes in the event" %}</option>{% for l in levels %}<option value="{{ l.id }}"{% if filters.class == l.id|stringformat:"s" %} selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
     <div class="field"><label for="section">{% trans "Section" %}</label><select id="section" name="section"><option value="">{% trans "All sections" %}</option>{% for n in section_names %}<option value="{{ n }}"{% if filters.section == n %} selected{% endif %}>{{ n }}</option>{% endfor %}</select></div>
     <div class="field"><label for="campus">{% trans "Campus" %}</label><select id="campus" name="campus"><option value="">{% trans "All campuses" %}</option>{% for c in campuses %}<option value="{{ c.id }}"{% if filters.campus == c.id|stringformat:"s" %} selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
@@ -18,17 +18,17 @@
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Admission no." %}</th><th>{% trans "Student" %}</th><th>{% trans "Father name" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Ticket (Rs)" %}</th><th>{% trans "Sell" %}</th></tr></thead>
   <tbody>{% for f in found %}<tr{% if f.has_ticket %} class="muted"{% endif %}>
-    <td class="num" style="text-align:start">{{ f.student.admission_no }}</td><td>{{ f.student.full_name }}</td><td>{{ f.student.father_name|default:"—" }}</td>
-    <td>{{ f.place.section.class_level|default:"—" }}</td><td>{{ f.place.section.name|default:"—" }}</td><td>{{ f.place.section.campus.name|default:"—" }}</td>
+    <td class="num" style="text-align:start">{{ f.student.admission_no }}</td><td class="nowrap">{{ f.student.full_name }}</td><td>{{ f.student.father_name|default:"—" }}</td>
+    <td class="nowrap">{{ f.place.section.class_level|default:"—" }}</td><td>{{ f.place.section.name|default:"—" }}</td><td class="nowrap">{{ f.place.section.campus|short_campus|default:"—" }}</td>
     <td class="num money">{% if f.price is not None %}{{ f.price|rupees }}{% else %}—{% endif %}</td>
-    <td>{% if f.price is None %}<span class="muted small">{% trans "Class not in this event" %}</span>
-      {% else %}{% if f.has_ticket %}<span class="badge">{% trans "Has a ticket" %}</span> {% endif %}
-      <form method="post" class="sell-row" data-busy>{% csrf_token %}<input type="hidden" name="student" value="{{ f.student.id }}"><input type="hidden" name="next" value="{{ here }}">
-        {% if event.guest_price %}<label class="small">{% trans "Extra" %} <input type="number" name="guests" min="0" max="20" value="0" inputmode="numeric" style="inline-size:4rem" aria-label="{% trans 'Extra tickets' %}"></label>{% endif %}
+    <td>{% if f.price is None %}<span class="muted small nowrap">{% trans "Class not in this event" %}</span>
+      {% elif f.has_ticket %}<span class="badge">{% trans "Has a ticket" %}</span>
+      {% else %}<form method="post" class="sell-row" data-busy>{% csrf_token %}<input type="hidden" name="student" value="{{ f.student.id }}"><input type="hidden" name="next" value="{{ here }}">
+        {% if event.guest_price %}<input type="number" name="guests" min="0" max="20" value="0" inputmode="numeric" title="{% trans 'Extra tickets' %}" aria-label="{% trans 'Extra tickets' %}">{% endif %}
         <select name="paid_by" aria-label="{% trans 'Paid by' %}" data-bank-toggle>{% for v, l in paid_by %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select>
         {% if banks %}<select name="bank" aria-label="{% trans 'Bank' %}" data-bank hidden><option value="">{% trans "Bank" %}…</option>{% for b in banks %}<option value="{{ b.id }}">{{ b.name }}</option>{% endfor %}</select>{% endif %}
-        <input name="reference" maxlength="60" placeholder="{% trans 'Reference' %}" aria-label="{% trans 'Reference (bank / JazzCash)' %}" style="inline-size:7rem">
-        <button class="button sm" type="submit">{% icon "printer" %}{% if f.has_ticket %}{% trans "Sell again" %}{% else %}{% trans "Receive and print" %}{% endif %}</button>
+        <input name="reference" maxlength="60" placeholder="{% trans 'Reference' %}" aria-label="{% trans 'Reference (bank / JazzCash)' %}" data-reference hidden>
+        <button class="button sm" type="submit" title="{% trans 'Receive and print' %}">{% icon "printer" %}{% trans "Receive" %}</button>
       </form>{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>

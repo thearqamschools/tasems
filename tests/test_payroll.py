@@ -56,7 +56,8 @@ def test_absence_and_leave_are_cut_per_day(staff):
     rows, totals = S.compute(staff["branch"], OCT)
     by = {r["employee"].code: r for r in rows}
     a = by["E1"]
-    assert (a["absent"], a["leave"], a["half"], a["days_in_month"]) == (2, 1, 1, 31)
+    # Unpaid leave counts as absent: one "Absent" figure (project lead, 31 Oct 2026).
+    assert (a["absent"], a["half"], a["days_in_month"]) == (3, 1, 31)
     assert (a["deduction"], a["net"]) == (D(3387), D(26613))  # 30000 ÷ 31 × 3.5: half day is half, late not cut
     assert by["E2"]["days_employed"] == 15 and by["E2"]["net"] == D(14516)  # joined on the 17th
     assert by["E3"]["missing"] and totals["missing"] == 1

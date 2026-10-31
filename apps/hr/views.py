@@ -119,7 +119,8 @@ def index(request):
 def employee_form(request, employee_id=None):
     branch = _branch(request, S.EDIT_PERM if employee_id else S.ADD_PERM)
     instance = _employee(branch, employee_id) if employee_id else None
-    form = EmployeeForm(request.POST or None, request.FILES or None, instance=instance, branch=branch)
+    money = request.user.has_branch_perm("payroll.change_employeepay", branch.id)
+    form = EmployeeForm(request.POST or None, request.FILES or None, instance=instance, branch=branch, money=money)
     sets = staff_formsets(request.POST or None, instance)
     if request.method == "POST" and form.is_valid() and all(f.is_valid() for f in sets.values() if f.is_bound):
         with transaction.atomic():
@@ -483,3 +484,53 @@ def my_leave_cancel(request, leave_id):
     S.cancel_leave(req, request.user)
     messages.success(request, _("Leave request withdrawn."))
     return redirect("hr:mine")
+
+
+# ---------- Attendance machine (Setup → Attendance machine; project lead, 31 Oct 2026) ----------
+@login_required
+def machines(request):
+    """ZKTeco machines on the office network: add, test the connection, read punches now."""
+    from . import zk
+    from .models import AttendanceMachine
+
+    branch = _branch(request, "hr.view_attendancemachine")
+    can_edit = request.user.has_branch_perm("hr.change_attendancemachine", branch.id)
+    if request.method == "POST":
+        if not can_edit:
+            raise PermissionDenied
+        action = request.POST.get("action")
+        machine = AttendanceMachine.objects.filter(pk=request.POST.get("machine") or 0, branch=branch).first()
+        if action == "save":
+            host = request.POST.get("host", "").strip()
+            try:
+                port = int(request.POST.get("port") or zk.DEFAULT_PORT)
+                key = int(request.POST.get("comm_key") or 0)
+            except ValueError:
+                port, key = -1, -1
+            if not host or port <= 0 or key < 0:
+                messages.error(request, _("Give the machine's IP address, port and comm key (numbers)."))
+                return redirect("hr:machines")
+            machine = machine or AttendanceMachine(branch=branch, added_by=request.user)
+            machine.name = request.POST.get("name", "").strip()[:80] or _("Attendance machine")
+            machine.host, machine.port, machine.comm_key = host[:60], port, key
+            machine.auto_read = request.POST.get("auto_read") == "on"
+            machine.is_active = request.POST.get("is_active", "on") == "on"
+            machine.save()
+            messages.success(request, _("Machine saved."))
+        elif machine and action == "test":
+            try:
+                reading = zk.read(machine.host, machine.port, machine.comm_key, with_punches=False)
+                clock = reading.clock.strftime("%d %b %Y %H:%M") if reading.clock else "?"
+                messages.success(
+                    request,
+                    _("Connected. Machine clock %(c)s · %(u)s users · %(r)s records.")
+                    % {"c": clock, "u": reading.users, "r": reading.records},
+                )
+            except (zk.MachineError, OSError) as error:
+                messages.error(request, _("The machine did not answer: %(e)s") % {"e": error})
+        elif machine and action == "read":
+            result = S.read_machine(machine, request.user)
+            (messages.success if machine.last_ok else messages.error)(request, result)
+        return redirect("hr:machines")
+    rows = list(AttendanceMachine.objects.filter(branch=branch))
+    return render(request, "hr/machines.html", {"branch": branch, "machines": rows, "can_edit": can_edit})

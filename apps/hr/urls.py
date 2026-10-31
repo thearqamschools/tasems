@@ -13,6 +13,7 @@ urlpatterns = [
     path("<int:employee_id>/leave/", views.leave_new, name="leave_new"),
     path("import/", views.staff_import, name="staff_import"),
     path("attendance/import/", views.punches_import, name="punches_import"),
+    path("attendance/machines/", views.machines, name="machines"),
     path("attendance/", views.day, name="day"),
     path("attendance/month/", views.month, name="month"),
     path("leave/", views.leaves, name="leaves"),

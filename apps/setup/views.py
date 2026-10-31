@@ -113,6 +113,22 @@ def hub(request):
             any(here(p) for p in PRINTER_PERMS),
         ),
         (
+            "payroll_rules",
+            "payroll:rules",
+            _("Payroll rules"),
+            _("Attendance bonus: on or off, how many days, and which designations get it."),
+            "wallet",
+            here("payroll.view_payrollrules"),
+        ),
+        (
+            "machine",
+            "hr:machines",
+            _("Attendance machine"),
+            _("Connect the staff attendance machine (ZKTeco) on the office network; punches come in by themselves."),
+            "clock",
+            here("hr.view_attendancemachine"),
+        ),
+        (
             "fees",
             "setup:fees",
             _("Fee rates and vouchers"),

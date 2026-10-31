@@ -543,3 +543,36 @@ def month_sheet(branch, month_start_date):
                     totals["unpaid"] += 1
         rows.append({"employee": e, "cells": cells, "totals": dict(totals)})
     return dates, rows
+
+
+@dataclass
+class _MachineFile:
+    punches: list
+
+
+def read_machine(machine, user=None, since_days=45):
+    """Reads the machine's punches into TASEMS (only the last `since_days`; older ones are already in or not
+    needed) and works out the staff days again. Returns a short result line; never raises for network problems."""
+    from . import zk
+
+    machine.last_read_at = timezone.now()
+    try:
+        reading = zk.read(machine.host, machine.port, machine.comm_key)
+    except (zk.MachineError, OSError) as error:
+        machine.last_ok, machine.last_result = False, str(error)[:300]
+        machine.save(update_fields=["last_read_at", "last_ok", "last_result"])
+        return machine.last_result
+    cutoff = timezone.localtime().replace(tzinfo=None) - dt.timedelta(days=since_days)
+    recent = [(uid, at) for uid, at in reading.punches if at >= cutoff]
+    check = check_punches(machine.branch, _MachineFile(recent))
+    new = len(check.matched) - check.already
+    if check.matched:
+        save_punches(machine.branch, check, user or machine.added_by, f"machine {machine.pk} {timezone.localdate()}")
+    clock = reading.clock.strftime("%d %b %Y %H:%M") if reading.clock else "?"
+    machine.last_ok = True
+    machine.unknown_ids = check.unknown_ids
+    machine.last_result = (
+        f"OK · machine clock {clock} · {reading.users} users · {reading.records} records · {new} new punches"
+    )[:300]
+    machine.save(update_fields=["last_read_at", "last_ok", "last_result", "unknown_ids"])
+    return machine.last_result

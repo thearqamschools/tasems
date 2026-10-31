@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -18,10 +18,21 @@ from apps.core import exports
 from apps.core.branch import current_branch
 from apps.diary.models import DiaryLayout
 from apps.fees.models import month_start
-from apps.hr.models import Employee
+from apps.hr.models import DESIGNATIONS, Employee
 
 from . import services as S
-from .models import EmployeePay, PayMethod, PayrollRun, SalaryChange
+from .models import (
+    Advance,
+    AdvanceMonth,
+    AdvanceRecovery,
+    EmployeePay,
+    PayAdjustment,
+    PayMethod,
+    PayrollRules,
+    PayrollRun,
+    SalaryChange,
+    SecurityRelease,
+)
 
 
 def _branch(request, perm=S.VIEW_PERM):
@@ -101,7 +112,7 @@ def index(request):
     )
 
 
-MANUAL_FIELDS = ("days_in_month", "working_days", "days_employed", "absent_days", "leave_days", "half_days")
+MANUAL_FIELDS = ("days_in_month", "working_days", "days_employed", "absent_days", "half_days")
 
 
 def _number(raw, low=0, high=31):
@@ -132,7 +143,8 @@ def manual(request):
             if None in fields.values() or not fields["days_in_month"] or fields["days_in_month"] < 28:
                 errors.append(e.full_name)
                 continue
-            lost = fields["absent_days"] + fields["leave_days"] + fields["half_days"]
+            fields["leave_days"] = 0  # every absence is unpaid: one "Absent" figure (project lead, 31 Oct 2026)
+            lost = fields["absent_days"] + fields["half_days"]
             if fields["days_employed"] > fields["days_in_month"] or lost > fields["days_employed"]:
                 errors.append(e.full_name)
                 continue
@@ -184,6 +196,40 @@ def person(request, employee_id):
                     )
                 except ValueError:
                     messages.error(request, _("This salary is already paid."))
+        elif action == "extras":
+            if not can("payroll.add_payadjustment") or run:
+                raise PermissionDenied
+            values = {}
+            try:
+                for name in ("gp_fund", "eobi", "other_deduction", "other_addition"):
+                    raw = request.POST.get(name, "").replace(",", "").strip() or "0"
+                    values[name] = Decimal(raw)
+                    if values[name] < 0:
+                        raise InvalidOperation
+            except InvalidOperation:
+                messages.error(request, _("Amounts must be numbers of 0 or more."))
+            else:
+                values["other_deduction_reason"] = request.POST.get("other_deduction_reason", "").strip()[:120]
+                values["other_addition_reason"] = request.POST.get("other_addition_reason", "").strip()[:120]
+                PayAdjustment.objects.update_or_create(
+                    branch=branch, employee=employee, month=month, defaults={**values, "entered_by": request.user}
+                )
+                messages.success(request, _("Amounts for %(m)s saved.") % {"m": f"{month:%B %Y}"})
+        elif action == "instalment":
+            if not can("payroll.change_advance") or run:
+                raise PermissionDenied
+            adv = Advance.objects.filter(pk=request.POST.get("advance"), employee=employee).first()
+            try:
+                amount = Decimal(request.POST.get("amount", "").replace(",", "").strip())
+                if amount < 0 or adv is None:
+                    raise InvalidOperation
+            except InvalidOperation:
+                messages.error(request, _("Give the amount to cut this month (0 to skip)."))
+            else:
+                AdvanceMonth.objects.update_or_create(
+                    advance=adv, month=month, defaults={"amount": amount, "branch": branch}
+                )
+                messages.success(request, _("This month's instalment set to Rs %(a)s.") % {"a": f"{amount:,.0f}"})
         elif action == "increment":
             if not can(S.INCREMENT_PERM) or pay is None:
                 raise PermissionDenied
@@ -217,6 +263,15 @@ def person(request, employee_id):
             "pay": pay,
             "history": S.history(employee),
             "changes": employee.salary_changes.select_related("recorded_by").order_by("-from_month", "-id"),
+            "extras": PayAdjustment.objects.filter(employee=employee, month=month).first(),
+            "advances": S.advances_of(employee),
+            "security": {
+                "target": S.security_target(employee, pay, list(employee.salary_changes.order_by("from_month", "id"))),
+                "collected": S.security_collected(employee),
+            },
+            "can_extras": can("payroll.add_payadjustment") and not run,
+            "can_instalment": can("payroll.change_advance") and not run,
+            "left": employee.status != Employee.Status.ACTIVE or employee.left_on is not None,
             "methods": PayMethod.choices,
             "today": timezone.localdate(),
             "can_pay": can(S.PAY_PERM),
@@ -406,5 +461,161 @@ def salaries(request):
             "q": q,
             "designation": designation,
             "designations": designations,
+        },
+    )
+
+
+@login_required
+def rules(request):
+    """Setup → Payroll rules: the attendance bonus and who gets it (project lead, 31 Oct 2026)."""
+    branch = _branch(request)
+    can_edit = request.user.has_branch_perm("payroll.change_payrollrules", branch.id)
+    current = PayrollRules.for_branch(branch)
+    designations = [d for d, _label in DESIGNATIONS]
+    if request.method == "POST":
+        if not can_edit:
+            raise PermissionDenied
+        try:
+            days = max(min(int(request.POST.get("bonus_days") or 1), 5), 0)
+        except ValueError:
+            days = 1
+        current.bonus_enabled = request.POST.get("bonus_enabled") == "on"
+        current.bonus_days = days
+        current.bonus_designations = [d for d in request.POST.getlist("bonus_designations") if d in designations]
+        current.save()
+        messages.success(request, _("Payroll rules saved."))
+        return redirect("payroll:rules")
+    return render(
+        request,
+        "payroll/rules.html",
+        {"branch": branch, "rules": current, "designations": DESIGNATIONS, "can_edit": can_edit},
+    )
+
+
+@login_required
+def advances(request):
+    """All advances of the branch with what is still due, and giving a new one."""
+    branch = _branch(request)
+    can_add = request.user.has_branch_perm("payroll.add_advance", branch.id)
+    staff = Employee.objects.filter(branch=branch).order_by("full_name")
+    if request.method == "POST":
+        if not can_add:
+            raise PermissionDenied
+        employee = staff.filter(pk=request.POST.get("employee")).first()
+        kind = request.POST.get("kind", Advance.Kind.THIS_MONTH)
+        method = request.POST.get("method", PayMethod.CASH)
+        try:
+            amount = Decimal(request.POST.get("amount", "").replace(",", "").strip())
+            cut = Decimal(request.POST.get("monthly_cut", "").replace(",", "").strip() or "0")
+            given_on = dt.date.fromisoformat(request.POST.get("given_on", ""))
+            start = month_start(dt.date.fromisoformat(request.POST.get("start_month", "") + "-01"))
+            if employee is None or amount <= 0 or cut < 0 or kind not in Advance.Kind.values:
+                raise ValueError
+            if kind == Advance.Kind.INSTALMENTS and cut <= 0:
+                raise ValueError
+        except (ValueError, InvalidOperation):
+            messages.error(
+                request, _("Choose the staff member and give the amount, dates and (for instalments) the monthly cut.")
+            )
+            return redirect("payroll:advances")
+        upload = request.FILES.get("application")
+        if upload and (
+            upload.size > 5 * 1024 * 1024 or not upload.name.lower().endswith((".jpg", ".jpeg", ".png", ".pdf"))
+        ):
+            messages.error(request, _("The application must be a JPG, PNG or PDF of up to 5 MB."))
+            return redirect("payroll:advances")
+        adv = Advance.objects.create(
+            branch=branch, employee=employee, kind=kind, amount=amount, given_on=given_on, start_month=start,
+            monthly_cut=cut if kind == Advance.Kind.INSTALMENTS else 0,
+            method=method if method in PayMethod.values else PayMethod.CASH,
+            approved_by=request.POST.get("approved_by", "").strip()[:120],
+            reason=request.POST.get("reason", "").strip()[:200], application=upload or "", recorded_by=request.user,
+        )  # fmt: skip
+        messages.success(
+            request, _("Advance of Rs %(a)s to %(n)s saved.") % {"a": f"{adv.amount:,.0f}", "n": employee.full_name}
+        )
+        return redirect("payroll:advances")
+    rows = []
+    for adv in Advance.objects.filter(branch=branch).select_related("employee", "recorded_by"):
+        recovered = adv.recovered()
+        rows.append({"advance": adv, "recovered": recovered, "remaining": adv.amount - recovered})
+    show = request.GET.get("show", "due")
+    shown = [r for r in rows if show == "all" or r["remaining"] > 0]
+    return render(
+        request,
+        "payroll/advances.html",
+        {
+            "branch": branch,
+            "rows": shown,
+            "show": show,
+            "total_due": sum((r["remaining"] for r in rows), Decimal("0")),
+            "staff": staff.filter(status=Employee.Status.ACTIVE),
+            "kinds": Advance.Kind.choices,
+            "methods": PayMethod.choices,
+            "today": timezone.localdate(),
+            "can_add": can_add,
+        },
+    )
+
+
+@login_required
+def advance_application(request, advance_id):
+    branch = _branch(request)
+    adv = Advance.objects.filter(pk=advance_id, branch=branch).first()
+    if adv is None or not adv.application:
+        raise Http404
+    return FileResponse(adv.application.open("rb"), filename=f"Advance application {adv.employee.full_name}")
+
+
+@login_required
+def settlement(request, employee_id):
+    """Final settlement of a person who leaves: unpaid salary, security returned or kept, advance still due."""
+    branch = _branch(request)
+    employee = Employee.objects.filter(pk=employee_id, branch=branch).first()
+    if employee is None:
+        raise Http404
+    can_decide = request.user.has_branch_perm("payroll.add_securityrelease", branch.id)
+    if request.method == "POST":
+        if not can_decide:
+            raise PermissionDenied
+        action = request.POST.get("action")
+        today = timezone.localdate()
+        if action == "security":
+            decision = request.POST.get("decision")
+            reason = request.POST.get("reason", "").strip()
+            if decision not in SecurityRelease.Decision.values or (decision == "kept" and not reason):
+                messages.error(request, _("Choose return or not; give the reason when it is not returned."))
+            else:
+                try:
+                    S.release_security(
+                        employee, decision, request.POST.get("method", PayMethod.CASH), reason, today, request.user
+                    )
+                    messages.success(request, _("Security decision saved."))
+                except ValueError:
+                    messages.error(request, _("The security decision is already made."))
+        elif action in (AdvanceRecovery.How.PAID_BACK, AdvanceRecovery.How.WRITTEN_OFF):
+            adv = Advance.objects.filter(pk=request.POST.get("advance"), employee=employee).first()
+            note = request.POST.get("note", "").strip()
+            try:
+                amount = Decimal(request.POST.get("amount", "").replace(",", "").strip())
+                if adv is None or amount <= 0 or not note:
+                    raise InvalidOperation
+                S.close_advance(adv, action, amount, note, today, request.user)
+                messages.success(request, _("Saved."))
+            except (InvalidOperation, ValueError):
+                messages.error(request, _("Give the amount and a note (who decided, how it was paid)."))
+        return redirect("payroll:settlement", employee_id=employee.id)
+    return render(
+        request,
+        "payroll/settlement.html",
+        {
+            "branch": branch,
+            "employee": employee,
+            "s": S.settlement(employee),
+            "advances": S.advances_of(employee),
+            "methods": PayMethod.choices,
+            "decisions": SecurityRelease.Decision.choices,
+            "can_decide": can_decide,
+            "printed": timezone.localtime(),
         },
     )

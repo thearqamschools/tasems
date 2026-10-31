@@ -191,6 +191,7 @@ def start():
         make_first_master_login(call_command)
     # Large PDFs are made in the background, as on the server.
     threading.Thread(target=lambda: call_command("run_jobs"), daemon=True).start()
+    threading.Thread(target=read_machines_now_and_then, daemon=True).start()
 
     if WINDOWS:  # closing this window also stops the database
         import ctypes
@@ -219,6 +220,23 @@ def start():
         serve(application, host="0.0.0.0", port=WEB_PORT, threads=8, _quiet=True)
     finally:
         database_down()
+
+
+def read_machines_now_and_then(minutes=5):
+    """Staff punches from the attendance machines on the office network, every few minutes."""
+    import time
+
+    from django.core.management import call_command
+    from django.db import close_old_connections
+
+    while True:
+        time.sleep(minutes * 60)
+        try:
+            close_old_connections()
+            call_command("read_machines", verbosity=0)
+        except Exception as error:  # a machine that is off must not stop TASEMS
+            with open(LOGS / "machines.log", "a", encoding="utf-8") as log:
+                log.write(f"{dt.datetime.now()} {error}\n")
 
 
 def make_first_master_login(call_command):

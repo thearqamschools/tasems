@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.41.0 — 2026-10-31 — Round 6: Payroll bonus, advances, security, settlement; attendance machine (installer v12)
+
+Payroll
+- Columns: **Code, Name, Designation, Monthly salary**, days, **Absent** (unpaid leave counts as absent; no
+  separate column), Half days, **Bonus days, Bonus, GP Fund, EOBI, Advance, Security, Other ±**, Absence cut,
+  Net pay, Paid.
+- **Attendance bonus** (Setup → Payroll rules): no absence and no half day in a full month = one extra day's
+  salary, only for **Aapa, Guard, Office boy (peon), Qari, Janitorial staff (sweeper)**; on/off, days and the
+  designations can be changed.
+- **GP Fund and EOBI** columns, 0 unless typed in by hand (person's page, this month); **Other deduction /
+  addition** with a reason.
+- **Advances** (Payroll → Advances): from one month's salary, or in **monthly instalments**; date, cash/bank,
+  approved by, reason, **application upload**. Cut on the payroll by itself; a month's instalment can be
+  **skipped or made smaller** on the person's page. Each person's advances with cut so far and still due.
+- **Salary security**: tick on Add / Edit staff (Director / Accountant only) with **1, 2 or 3 months**; one month's
+  salary is collected from the first pays, what a short month cannot cover is cut next month.
+- **Final settlement** (person's page, when the person has left): unpaid salary, security held, advance still due
+  (cut from the last salary, then the security), **return or keep the security** (Director / Accountant; a reason
+  when kept), amount to pay, amount still to recover — paid back or written off by management. Printable with
+  signature lines.
+- Payslips and the acknowledgement sheet show every new column.
+
+Staff attendance machine
+- **Setup → Attendance machine** (Staff → attendance): ZKTeco machine on the office network — IP, port 4370, comm
+  key; **Test connection**, **Get attendance now**, and read **by itself every 5 minutes** while TASEMS runs on the
+  Windows computer. Staff matched by Biometric machine ID; machine users without a staff record are listed. Nothing
+  on the machine is changed.
+
+Events & Tickets — Sell tickets
+- The search box is empty again after a search or a sale; **no second ticket** for the same student (no "Sell
+  again"); one line per student, Reference only for bank / JazzCash.
+- Campus shown short (**Girls / Boys**) in lists, on one line.
+
 ## 0.40.0 — 2026-10-31 — Round 5: search, Events report, side menu, staff qualifications, Payroll (installer v11)
 
 Students

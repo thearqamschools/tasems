@@ -1,0 +1,11 @@
+{% load i18n %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="save">{% if m %}<input type="hidden" name="machine" value="{{ m.id }}">{% endif %}
+  <div class="form-grid">
+    <div class="field"><label>{% trans "Name" %}</label><input name="name" value="{{ m.name|default:'' }}" maxlength="80" placeholder="{% trans 'e.g. Main gate' %}"></div>
+    <div class="field"><label>{% trans "IP address" %}</label><input name="host" value="{{ m.host|default:'' }}" required dir="ltr" placeholder="192.168.1.201"></div>
+    <div class="field"><label>{% trans "Port" %}</label><input name="port" value="{{ m.port|default:4370 }}" inputmode="numeric" dir="ltr"></div>
+    <div class="field"><label>{% trans "Comm key (password)" %}</label><input name="comm_key" value="{{ m.comm_key|default:0 }}" inputmode="numeric" dir="ltr"></div>
+    <div class="field"><label><input type="checkbox" name="auto_read"{% if not m or m.auto_read %} checked{% endif %}> {% trans "Read every few minutes" %}</label></div>
+    <div class="field"><label><input type="checkbox" name="is_active"{% if not m or m.is_active %} checked{% endif %}> {% trans "In use" %}</label></div>
+  </div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>
+</form>

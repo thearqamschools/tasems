@@ -51,6 +51,15 @@ def sub(value, other):
 
 
 @register.filter
+def short_campus(campus):
+    """ "Girls Campus" → "Girls" in tables, so the cell stays on one line (project lead, 31 Oct 2026)."""
+    name = getattr(campus, "name", campus) or ""
+    for tail in (" Campus", " campus"):
+        name = name.removesuffix(tail)
+    return name
+
+
+@register.filter
 def split(value):
     """ "a b c"|split → ["a", "b", "c"] (lists of field names in templates)."""
     return value.split()

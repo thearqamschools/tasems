@@ -175,7 +175,8 @@ def test_pay_each_person_totals_and_lock(payroll, login_as):
     )
     assert "already paid" in again.content.decode() and slip.payment.method == "cash"
     rows, totals = P.run_rows(run)
-    assert totals["paid"] == D(30000) and totals["to_pay"] == D(20000) and totals["paid_staff"] == 1
+    # The guard's 20,000 includes the attendance bonus of one day (645) since round 6.
+    assert totals["paid"] == D(30000) and totals["to_pay"] == D(20645) and totals["paid_staff"] == 1
     page = client.get(f"/payroll/?month={OCT}&designation=Guard").content.decode()
     assert "Staff E2" in page and "Staff E1" not in page  # filter by designation
     person = client.get(f"/payroll/staff/{t.id}/?month={OCT}").content.decode()

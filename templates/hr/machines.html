@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Attendance machine" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<h1>{% trans "Attendance machine" %}</h1>
+<p class="lede">{{ branch.name }} · {% trans "TASEMS reads the staff punches straight from the ZKTeco machine on the office network, and works out the staff attendance. Staff are matched by the Biometric machine ID on their staff record. Nothing on the machine is changed." %}</p>
+{% for m in machines %}<div class="card">
+  <h2>{{ m.name }} <span class="muted small num" dir="ltr">{{ m.host }}:{{ m.port }}</span>{% if not m.is_active %} <span class="badge muted">{% trans "Not in use" %}</span>{% endif %}</h2>
+  <p>{% if m.last_read_at %}{% if m.last_ok %}<span class="badge">{% trans "Read" %}</span>{% else %}<span class="badge danger">{% trans "Did not answer" %}</span>{% endif %} {{ m.last_read_at|date:"d M Y, h:i A" }} · <span class="small">{{ m.last_result }}</span>{% else %}<span class="muted">{% trans "Not read yet." %}</span>{% endif %}
+  {% if m.auto_read %}<br><span class="small muted">{% trans "Read by itself every few minutes while TASEMS is running on this computer." %}</span>{% endif %}</p>
+  {% if m.unknown_ids %}<p class="callout attention">{% blocktrans %}Machine users not matched to any staff member (give their number as the staff member's Biometric machine ID):{% endblocktrans %} <span class="num">{% for uid, n in m.unknown_ids.items %}{{ uid }} ({{ n }}){% if not forloop.last %}, {% endif %}{% endfor %}</span></p>{% endif %}
+  {% if can_edit %}<form method="post" class="actions" style="margin:0">{% csrf_token %}<input type="hidden" name="machine" value="{{ m.id }}">
+    <button class="button" name="action" value="read" type="submit">{% trans "Get attendance now" %}</button>
+    <button class="button secondary" name="action" value="test" type="submit">{% trans "Test connection" %}</button></form>
+  <details><summary>{% trans "Change" %}</summary>{% include "hr/_machine_form.html" with m=m %}</details>{% endif %}
+</div>{% empty %}<div class="card empty-state"><p>{% trans "No machine added yet." %}</p></div>{% endfor %}
+{% if can_edit %}<details class="card"{% if not machines %} open{% endif %}><summary>{% trans "Add a machine" %}</summary>{% include "hr/_machine_form.html" with m=None %}</details>{% endif %}
+<p class="small muted">{% trans "On the machine: M/OK → Comm → Ethernet shows its IP address; the comm key is under Comm → Comm. Key (0 if none). This computer and the machine must be on the same network." %}</p>
+{% endblock %}

@@ -14,9 +14,14 @@
   <tr><th>{% trans "Monthly salary (Rs)" %}</th><td class="money">{{ row.salary|rupees }}</td></tr>
   <tr><th>{% trans "Days on staff" %}</th><td>{{ row.days_employed }} / {{ row.days_in_month }}{% if row.working_days %} · {% trans "Working days" %}: {{ row.working_days }}{% endif %}{% if row.manual %} <span class="badge muted">{% trans "Entered manually" %}</span>{% endif %}</td></tr>
   <tr><th>{% trans "Absent" %}</th><td>{{ row.absent }}</td></tr>
-  <tr><th>{% trans "Unpaid leave" %}</th><td>{{ row.leave }}</td></tr>
   <tr><th>{% trans "Half days" %}</th><td>{{ row.half }}</td></tr>
-  <tr><th>{% trans "Deduction (Rs)" %}</th><td class="money">{{ row.deduction|rupees }}</td></tr>
+  <tr><th>{% trans "Absence cut (Rs)" %}</th><td class="money">{{ row.deduction|rupees }}</td></tr>
+  <tr><th>{% trans "Bonus" %}</th><td class="money">{% if row.bonus %}+{{ row.bonus|rupees }} ({% blocktrans count n=row.bonus_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktrans %}){% else %}—{% endif %}</td></tr>
+  <tr><th>{% trans "GP Fund" %} · {% trans "EOBI" %}</th><td class="money">{{ row.gp_fund|rupees }} · {{ row.eobi|rupees }}</td></tr>
+  <tr><th>{% trans "Other addition" %}</th><td class="money">{% if row.other_addition %}+{{ row.other_addition|rupees }} · {{ row.other_addition_reason }}{% else %}—{% endif %}</td></tr>
+  <tr><th>{% trans "Other deduction" %}</th><td class="money">{% if row.other_deduction %}−{{ row.other_deduction|rupees }} · {{ row.other_deduction_reason }}{% else %}—{% endif %}</td></tr>
+  <tr><th>{% trans "Advance cut" %}</th><td class="money">{% if row.advance %}−{{ row.advance|rupees }}{% else %}—{% endif %}</td></tr>
+  <tr><th>{% trans "Security cut" %}</th><td class="money">{% if row.security %}−{{ row.security|rupees }}{% else %}—{% endif %}</td></tr>
   <tr><th>{% trans "Net pay (Rs)" %}</th><td class="money"><strong>{{ row.net|rupees }}</strong></td></tr>
   <tr><th>{% trans "Paid" %}</th><td>{% if row.payment %}<span class="badge">{% trans "Paid" %}</span> {{ row.payment.paid_on|date:"d M Y" }} · {{ row.payment.get_method_display }}{% if row.payment.reference %} · {{ row.payment.reference }}{% endif %} · {% trans "recorded by" %} {{ row.payment.recorded_by.get_full_name|default:row.payment.recorded_by.username }}{% elif run %}<span class="badge attention">{% trans "Not paid" %}</span>{% else %}{% trans "The month is not finalised yet." %}{% endif %}</td></tr>
 </tbody></table></div>
@@ -32,13 +37,43 @@
 </form>{% endif %}
 {% else %}<p class="muted">{% trans "No pay for this month (salary not set, or not on the staff)." %}</p>{% endif %}
 
+{% if can_extras and row and not row.missing %}
+<details class="card"{% if extras %} open{% endif %}><summary>{% trans "This month's GP Fund, EOBI, other deduction or addition" %}</summary>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="extras">
+  <div class="form-grid">
+    <div class="field"><label for="gp_fund">{% trans "GP Fund (Rs)" %}</label><input id="gp_fund" name="gp_fund" value="{{ extras.gp_fund|default_if_none:''|floatformat:'-2' }}" inputmode="decimal" dir="ltr"></div>
+    <div class="field"><label for="eobi">{% trans "EOBI (Rs)" %}</label><input id="eobi" name="eobi" value="{{ extras.eobi|default_if_none:''|floatformat:'-2' }}" inputmode="decimal" dir="ltr"></div>
+    <div class="field"><label for="other_deduction">{% trans "Other deduction (Rs)" %}</label><input id="other_deduction" name="other_deduction" value="{{ extras.other_deduction|default_if_none:''|floatformat:'-2' }}" inputmode="decimal" dir="ltr"></div>
+    <div class="field"><label for="other_deduction_reason">{% trans "Reason" %}</label><input id="other_deduction_reason" name="other_deduction_reason" value="{{ extras.other_deduction_reason|default:'' }}" maxlength="120" placeholder="{% trans 'e.g. fine, damage' %}"></div>
+    <div class="field"><label for="other_addition">{% trans "Other addition (Rs)" %}</label><input id="other_addition" name="other_addition" value="{{ extras.other_addition|default_if_none:''|floatformat:'-2' }}" inputmode="decimal" dir="ltr"></div>
+    <div class="field"><label for="other_addition_reason">{% trans "Reason" %}</label><input id="other_addition_reason" name="other_addition_reason" value="{{ extras.other_addition_reason|default:'' }}" maxlength="120" placeholder="{% trans 'e.g. arrears' %}"></div>
+  </div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>
+</form></details>{% endif %}
+
+<h2>{% trans "Advances" %}</h2>
+{% if advances %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Given on" %}</th><th>{% trans "Type" %}</th><th class="num">{% trans "Amount (Rs)" %}</th><th class="num">{% trans "Every month (Rs)" %}</th><th class="num">{% trans "Cut so far (Rs)" %}</th><th class="num">{% trans "Still due (Rs)" %}</th><th>{% trans "This month" %}</th></tr></thead>
+  <tbody>{% for a in advances %}<tr>
+    <td class="nowrap">{{ a.advance.given_on|date:"d M Y" }}</td><td>{{ a.advance.get_kind_display }}{% if a.advance.application %} · <a href="{% url 'payroll:advance_application' a.advance.id %}">{% trans "Application" %}</a>{% endif %}</td>
+    <td class="num money">{{ a.advance.amount|rupees }}</td><td class="num money">{% if a.advance.monthly_cut %}{{ a.advance.monthly_cut|rupees }}{% else %}—{% endif %}</td>
+    <td class="num money">{{ a.recovered|rupees }}</td><td class="num money"><strong>{{ a.remaining|rupees }}</strong></td>
+    <td>{% if can_instalment and a.remaining > 0 and a.advance.kind == "instalments" %}<form method="post" class="sell-row">{% csrf_token %}<input type="hidden" name="action" value="instalment"><input type="hidden" name="advance" value="{{ a.advance.id }}"><input name="amount" inputmode="decimal" dir="ltr" style="inline-size:6rem" placeholder="{{ a.advance.monthly_cut|floatformat:0 }}" aria-label="{% trans 'Cut this month (Rs)' %}"><button class="button quiet sm" type="submit">{% trans "Set (0 = skip)" %}</button></form>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>{% else %}<p class="muted">{% trans "No advances." %} <a href="{% url 'payroll:advances' %}">{% trans "Give an advance" %}</a></p>{% endif %}
+
+<h2>{% trans "Security" %}</h2>
+{% if employee.keep_security %}<p>{% blocktrans with t=security.target|rupees c=security.collected|rupees n=employee.security_months %}One month's salary (Rs {{ t }}) kept as security, collected in {{ n }} month(s). Collected so far: Rs {{ c }}.{% endblocktrans %}</p>
+{% else %}<p class="muted">{% trans "No salary security for this person (tick it on the staff form)." %}</p>{% endif %}
+{% if left %}<p><a class="button secondary" href="{% url 'payroll:settlement' employee.id %}">{% trans "Final settlement" %}</a></p>{% endif %}
+
 <h2>{% trans "Salary history" %}</h2>
 {% if history %}<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Month" %}</th><th class="num">{% trans "Monthly salary (Rs)" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Unpaid leave" %}</th><th class="num">{% trans "Half days" %}</th><th class="num">{% trans "Deduction (Rs)" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th><th>{% trans "Paid" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Month" %}</th><th class="num">{% trans "Monthly salary (Rs)" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Half days" %}</th><th class="num">{% trans "Bonus" %}</th><th class="num">{% trans "Advance" %}</th><th class="num">{% trans "Security" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th><th>{% trans "Paid" %}</th></tr></thead>
   <tbody>{% for p in history %}<tr>
     <td><a href="?month={{ p.run.month|date:'Y-m' }}">{{ p.run.month|date:"F Y" }}</a></td><td class="num money">{{ p.monthly_salary|rupees }}</td>
-    <td class="num">{{ p.absent_days }}</td><td class="num">{{ p.leave_days }}</td><td class="num">{{ p.half_days }}</td>
-    <td class="num money">{{ p.deduction|rupees }}</td><td class="num money">{{ p.net_pay|rupees }}</td>
+    <td class="num">{{ p.absent_days|add:p.leave_days }}</td><td class="num">{{ p.half_days }}</td>
+    <td class="num money">{{ p.bonus|rupees }}</td><td class="num money">{{ p.advance|rupees }}</td><td class="num money">{{ p.security|rupees }}</td><td class="num money">{{ p.net_pay|rupees }}</td>
     <td>{% if p.payment %}{{ p.payment.paid_on|date:"d M Y" }} · {{ p.payment.get_method_display }}{% else %}<span class="badge attention">{% trans "Not paid" %}</span>{% endif %}</td>
   </tr>{% endfor %}</tbody>
 </table></div>{% else %}<p class="muted">{% trans "No finalised months yet." %}</p>{% endif %}

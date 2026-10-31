@@ -14,7 +14,7 @@
   .title { margin-inline-start: auto; text-align: right; }
   .title b { display: block; font-size: 11pt; letter-spacing: .06em; }
   table { width: 100%; border-collapse: collapse; margin-top: 3mm; }
-  th, td { padding: 1.4mm 2mm; border-bottom: .4pt solid #d6d9e6; text-align: left; }
+  th, td { padding: 1.1mm 2mm; border-bottom: .4pt solid #d6d9e6; text-align: left; }
   th { color: #3b4157; font-weight: 400; width: 45%; }
   td.amt { text-align: right; font-variant-numeric: tabular-nums; }
   tr.net td, tr.net th { font-weight: 700; font-size: 11pt; border-top: .8pt solid #14182b; color: #14182b; }
@@ -35,10 +35,14 @@
   <table>
     <tr><th>Monthly salary</th><td class="amt">Rs {{ p.monthly_salary|rupees }}</td></tr>
     <tr><th>Days in the month / days on the staff</th><td class="amt">{{ p.days_in_month }} / {{ p.days_employed }}</td></tr>
-    <tr><th>Absent days</th><td class="amt">{{ p.absent_days }}</td></tr>
-    <tr><th>Unpaid leave days</th><td class="amt">{{ p.leave_days }}</td></tr>
-    <tr><th>Half days</th><td class="amt">{{ p.half_days }}</td></tr>
-    <tr><th>Deduction (salary ÷ {{ p.days_in_month }} × {{ p.unpaid_days }} days)</th><td class="amt">Rs {{ p.deduction|rupees }}</td></tr>
+    <tr><th>Absent days · half days</th><td class="amt">{{ p.absent_days|add:p.leave_days }} · {{ p.half_days }}</td></tr>
+    <tr><th>Absence cut (salary ÷ {{ p.days_in_month }} per day)</th><td class="amt">− Rs {{ p.deduction|rupees }}</td></tr>
+    {% if p.bonus %}<tr><th>Attendance bonus ({{ p.bonus_days }} day{{ p.bonus_days|pluralize }})</th><td class="amt">+ Rs {{ p.bonus|rupees }}</td></tr>{% endif %}
+    {% if p.other_addition %}<tr><th>Other addition{% if p.other_addition_reason %} ({{ p.other_addition_reason }}){% endif %}</th><td class="amt">+ Rs {{ p.other_addition|rupees }}</td></tr>{% endif %}
+    <tr><th>GP Fund · EOBI</th><td class="amt">− Rs {{ p.gp_fund|rupees }} · {{ p.eobi|rupees }}</td></tr>
+    {% if p.other_deduction %}<tr><th>Other deduction{% if p.other_deduction_reason %} ({{ p.other_deduction_reason }}){% endif %}</th><td class="amt">− Rs {{ p.other_deduction|rupees }}</td></tr>{% endif %}
+    {% if p.advance %}<tr><th>Advance cut</th><td class="amt">− Rs {{ p.advance|rupees }}</td></tr>{% endif %}
+    {% if p.security %}<tr><th>Security kept</th><td class="amt">− Rs {{ p.security|rupees }}</td></tr>{% endif %}
     <tr class="net"><th>Net pay</th><td class="amt">Rs {{ p.net_pay|rupees }}</td></tr>
   </table>
   <div class="sign"><div>Received by</div><div>Principal</div></div>

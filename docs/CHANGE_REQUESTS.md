@@ -325,8 +325,7 @@ with the child and all brothers and sisters, and the children are called with it
   - To confirm when building: "working days" in manual entry — today a day's pay = salary ÷ days in the month
     (decided 23 Oct 2026). Working days would be shown but not change the rate, unless the lead says otherwise.
 
-## Round 6 (31 Oct 2026) — NOTED ONLY, not built yet
-Build nothing until the lead says to make the changes; then all together (next Windows installer: v12).
+## Round 6 (31 Oct 2026) — built 31 Oct 2026 (Windows installer v12, CHANGELOG 0.41.0, D-094)
 
 ### Payroll
 - R6-1. Column order: **Employee code first**, then Name, Designation, Monthly salary, then the rest (code is
@@ -412,5 +411,6 @@ Build nothing until the lead says to make the changes; then all together (next W
   - Optional later: **set the machine's clock** from TASEMS; more than one machine per branch.
   - When TASEMS goes online, the machine can instead **send** punches to the server itself (ZKTeco "Cloud server /
     ADMS" setting) — to choose then.
-  - To confirm when building: the machine's **IP** (Menu → Comm → Ethernet) and **model** (Menu → System info →
-    Device info); is another software (e.g. ZKTime) using it today, and should it keep running?
+  - **Given by the lead (31 Oct 2026)**: IP **192.168.1.222**, mask 255.255.255.0, gateway 192.168.1.1, TCP port
+    **4370**, DHCP off; platform **ZMM220_TFT**, ZKFinger VX10.0, ZKFace VX7.0, MAC 00:17:61:10:da:4c. **No other
+    software** uses the machine.

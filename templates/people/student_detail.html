@@ -61,7 +61,7 @@
 <h2 id="classes">{% trans "Classes by session" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Roll no." %}</th></tr></thead>
-  <tbody>{% for e in enrolments %}<tr><td>{{ e.session }}</td><td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td><td>{{ e.section.campus.name|default:"—" }}</td><td class="num">{{ e.roll_no|default:"—" }}</td></tr>
+  <tbody>{% for e in enrolments %}<tr><td>{{ e.session }}</td><td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td><td>{{ e.section.campus|short_campus|default:"—" }}</td><td class="num">{{ e.roll_no|default:"—" }}</td></tr>
   {% empty %}<tr><td colspan="5">{% trans "Not placed in any class yet." %}</td></tr>{% endfor %}</tbody>
 </table></div>
 

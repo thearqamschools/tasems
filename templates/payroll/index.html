@@ -3,10 +3,12 @@
 {% block content %}
 <div class="page-header">
   <div><h1>{% trans "Payroll" %} · {{ month|date:"F Y" }}</h1>
-  <p class="lede">{{ branch.name }} · {% trans "Fixed monthly salary; each day of absence or unpaid leave is cut at salary ÷ days in the month, and half that for a half day." %}</p></div>
+  <p class="lede">{{ branch.name }} · {% trans "Fixed monthly salary; each day absent is cut at salary ÷ days in the month, half that for a half day; bonus, advances, security and other amounts as set." %}</p></div>
   <div class="actions">
     {% if can_manual %}<a class="button secondary" href="{% url 'payroll:manual' %}?month={{ month|date:'Y-m' }}">{% icon "notebook-pen" %}{% trans "Enter manually" %}</a>{% endif %}
     {% if can_salaries %}<a class="button quiet" href="{% url 'payroll:salaries' %}">{% trans "Salaries and bank details" %}</a>{% endif %}
+    <a class="button quiet" href="{% url 'payroll:advances' %}">{% trans "Advances" %}</a>
+    <a class="button quiet" href="{% url 'payroll:rules' %}">{% trans "Payroll rules" %}</a>
   </div>
 </div>
 <form method="get" class="filter-inline">
@@ -25,7 +27,8 @@
 <div class="figures">
   <div class="figure"><div class="value">{{ totals.staff }}</div><div class="label">{% trans "Staff" %}</div></div>
   <div class="figure"><div class="value money">{{ totals.salaries|rupees }}</div><div class="label">{% trans "Salaries (Rs)" %}</div></div>
-  <div class="figure"><div class="value money">{{ totals.deduction|rupees }}</div><div class="label">{% trans "Deductions (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ totals.deduction|rupees }}</div><div class="label">{% trans "Absence cut (Rs)" %}</div></div>
+  <div class="figure"><div class="value money">{{ totals.bonus|rupees }}</div><div class="label">{% trans "Bonus (Rs)" %}</div></div>
   <div class="figure"><div class="value money">{{ totals.net|rupees }}</div><div class="label">{% trans "Net pay to pay (Rs)" %}</div></div>
   <div class="figure"><div class="value money">{{ totals.paid|rupees }}</div><div class="label">{% blocktrans count n=totals.paid_staff %}Paid to {{ n }} person (Rs){% plural %}Paid to {{ n }} people (Rs){% endblocktrans %}</div></div>
   <div class="figure{% if totals.to_pay and run %} attention{% endif %}"><div class="value money">{{ totals.to_pay|rupees }}</div><div class="label">{% trans "Still to pay (Rs)" %}</div></div>
@@ -38,14 +41,20 @@
   <a class="button quiet sm" href="{% list_url format='xlsx' %}">{% icon "file-spreadsheet" %}{% trans "Excel" %}</a>
 </div>
 {% if rows %}
-<div class="table-wrap"><table class="rows-link">
-  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th class="num">{% trans "Monthly salary (Rs)" %}</th><th class="num">{% trans "Days on staff" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Unpaid leave" %}</th><th class="num">{% trans "Half days" %}</th><th class="num">{% trans "Deduction (Rs)" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th><th>{% trans "Paid" %}</th></tr></thead>
+<div class="table-wrap"><table class="rows-link payroll-table">
+  <thead><tr><th>{% trans "Code" %}</th><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th class="num">{% trans "Monthly salary" %}</th><th class="num">{% trans "Days" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Half days" %}</th><th class="num">{% trans "Bonus days" %}</th><th class="num">{% trans "Bonus" %}</th><th class="num">{% trans "GP Fund" %}</th><th class="num">{% trans "EOBI" %}</th><th class="num">{% trans "Advance" %}</th><th class="num">{% trans "Security" %}</th><th class="num">{% trans "Other ±" %}</th><th class="num">{% trans "Absence cut" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th><th>{% trans "Paid" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr data-href="{% url 'payroll:person' r.employee.id %}?month={{ month|date:'Y-m' }}">
-    <td><a href="{% url 'payroll:person' r.employee.id %}?month={{ month|date:'Y-m' }}">{{ r.employee.full_name }}</a> <span class="muted small num">{{ r.employee.code }}</span>{% if r.manual %} <span class="badge muted">{% trans "Manual" %}</span>{% endif %}</td><td>{{ r.employee.designation }}</td>
-    {% if r.missing %}<td colspan="8"><span class="badge attention">{% trans "Salary not set" %}</span></td>
-    {% else %}<td class="num money">{{ r.salary|rupees }}</td><td class="num">{{ r.days_employed }}/{{ r.days_in_month }}</td>
-    <td class="num">{{ r.absent }}</td><td class="num">{{ r.leave }}</td><td class="num">{{ r.half }}</td><td class="num money">{{ r.deduction|rupees }}</td><td class="num money"><strong>{{ r.net|rupees }}</strong></td>
-    <td>{% if r.payment %}<span class="badge">{% trans "Paid" %}</span> <span class="small">{{ r.payment.get_method_display }} · {{ r.payment.paid_on|date:"d M" }}</span>{% elif run %}<span class="badge attention">{% trans "Not paid" %}</span>{% else %}<span class="muted">—</span>{% endif %}</td>{% endif %}
+    <td class="num nowrap" style="text-align:start">{{ r.employee.code }}</td>
+    <td class="nowrap"><a href="{% url 'payroll:person' r.employee.id %}?month={{ month|date:'Y-m' }}">{{ r.employee.full_name }}</a>{% if r.manual %} <span class="badge muted">{% trans "Manual" %}</span>{% endif %}</td><td class="nowrap">{{ r.employee.designation }}</td>
+    {% if r.missing %}<td colspan="14"><span class="badge attention">{% trans "Salary not set" %}</span></td>
+    {% else %}<td class="num money">{{ r.salary|rupees }}</td><td class="num nowrap">{{ r.days_employed }}/{{ r.days_in_month }}</td>
+    <td class="num">{{ r.absent }}</td><td class="num">{{ r.half }}</td>
+    <td class="num">{{ r.bonus_days|default:"—" }}</td><td class="num money">{% if r.bonus %}{{ r.bonus|rupees }}{% else %}—{% endif %}</td>
+    <td class="num money">{% if r.gp_fund %}{{ r.gp_fund|rupees }}{% else %}—{% endif %}</td><td class="num money">{% if r.eobi %}{{ r.eobi|rupees }}{% else %}—{% endif %}</td>
+    <td class="num money">{% if r.advance %}{{ r.advance|rupees }}{% else %}—{% endif %}</td><td class="num money">{% if r.security %}{{ r.security|rupees }}{% else %}—{% endif %}</td>
+    <td class="num money nowrap">{% if r.other_addition %}+{{ r.other_addition|rupees }}{% endif %}{% if r.other_deduction %} −{{ r.other_deduction|rupees }}{% endif %}{% if not r.other_addition and not r.other_deduction %}—{% endif %}</td>
+    <td class="num money">{{ r.deduction|rupees }}</td><td class="num money"><strong>{{ r.net|rupees }}</strong></td>
+    <td class="nowrap">{% if r.payment %}<span class="badge">{% trans "Paid" %}</span> <span class="small">{{ r.payment.get_method_display }} · {{ r.payment.paid_on|date:"d M" }}</span>{% elif run %}<span class="badge attention">{% trans "Not paid" %}</span>{% else %}<span class="muted">—</span>{% endif %}</td>{% endif %}
   </tr>{% endfor %}</tbody>
 </table></div>
 {% elif all_rows %}<p class="muted">{% trans "Nobody matches." %}</p>

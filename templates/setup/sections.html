@@ -15,7 +15,7 @@
     <td>{{ s.class_level }}</td>
     <td>{{ s.name }}{% if not s.is_active %} <span class="badge muted">{% trans "Closed" %}</span>{% endif %}</td>
     <td>{{ s.get_gender_group_display }}</td>
-    <td>{% if s.campus %}{{ s.campus.name }}{% else %}<span class="badge attention">{% trans "Choose a campus" %}</span>{% endif %}</td>
+    <td>{% if s.campus %}{{ s.campus|short_campus }}{% else %}<span class="badge attention">{% trans "Choose a campus" %}</span>{% endif %}</td>
     <td>{% if s.class_teacher %}{{ s.class_teacher.get_full_name|default:s.class_teacher.username }}{% else %}<span class="badge attention">{% trans "None" %}</span>{% endif %}</td>
     <td class="num">{{ s.students }}</td>
     <td class="num">{% if s.capacity %}{% if s.students > s.capacity %}<span class="badge danger">{{ s.capacity }}</span>{% else %}{{ s.capacity }}{% endif %}{% else %}—{% endif %}</td>

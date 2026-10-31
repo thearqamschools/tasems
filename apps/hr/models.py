@@ -109,6 +109,12 @@ class Employee(BranchOwnedModel):
         help_text=_("The person's TASEMS login, if they have one."),
     )
     notes = models.TextField(blank=True)
+    # One month's salary kept as security, collected over 1-3 months from the first pay (project lead, 31 Oct 2026).
+    keep_security = models.BooleanField(_("keep salary security"), default=False)
+    security_months = models.PositiveSmallIntegerField(
+        _("security collected in"), default=1, choices=[(1, _("1 month")), (2, _("2 months")), (3, _("3 months"))]
+    )
+    security_from = models.DateField(_("security from month"), null=True, blank=True)
     cv = models.FileField(_("CV"), upload_to=cv_path, blank=True, help_text=_("JPG, PNG or PDF, up to 5 MB."))
 
     class Meta:
@@ -360,3 +366,30 @@ class Experience(BranchOwnedModel):
 
     class Meta:
         ordering = ["employee", "-started_on", "id"]
+
+
+class AttendanceMachine(BranchOwnedModel):
+    """A ZKTeco attendance machine on the office network (Setup → Attendance machine). TASEMS reads its punches;
+    staff are matched by their Biometric machine ID (project lead, 31 Oct 2026)."""
+
+    name = models.CharField(_("name"), max_length=80, default="Attendance machine")
+    host = models.CharField(
+        _("IP address"), max_length=60, help_text=_("e.g. 192.168.1.201 (on the machine: M/OK → Comm → Ethernet)")
+    )
+    port = models.PositiveIntegerField(_("port"), default=4370)
+    comm_key = models.PositiveIntegerField(
+        _("comm key (password)"), default=0, help_text=_("0 when the machine has none")
+    )
+    auto_read = models.BooleanField(_("read every few minutes"), default=True)
+    is_active = models.BooleanField(_("in use"), default=True)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+    last_read_at = models.DateTimeField(null=True, blank=True)
+    last_result = models.CharField(max_length=300, blank=True)
+    last_ok = models.BooleanField(default=False)
+    unknown_ids = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.host})"

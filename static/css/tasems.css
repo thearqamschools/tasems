@@ -689,7 +689,8 @@ table.formset input, table.formset select { min-inline-size: 7rem; inline-size: 
 table.formset input[type="checkbox"] { min-inline-size: 0; inline-size: auto; }
 form.sell-row { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; margin: 0.25rem 0 0; }
 form.sell-row select, form.sell-row input { padding-block: 0.3rem; inline-size: auto; min-inline-size: 0; }
-form.sell-row input[type="number"] { inline-size: 4rem; }
+form.sell-row input[type="number"] { inline-size: 3.4rem; }
+form.sell-row select { inline-size: 8.5rem; }
 form.sell-row input[name="reference"] { inline-size: 7rem; }
 
 /* Side menu groups open and close (project lead, 31 Oct 2026); the group of the page you are on starts open. */
@@ -699,3 +700,10 @@ form.sell-row input[name="reference"] { inline-size: 7rem; }
 html[dir="rtl"] .nav-group-label[aria-expanded="false"] svg { transform: rotate(90deg); }
 .sidebar-collapsed .nav-group > ul[hidden] { display: block; }
 .sidebar-collapsed .nav-group-label { display: none; }
+.nowrap { white-space: nowrap; }
+form.sell-row { flex-wrap: nowrap; }
+form.sell-row .button { white-space: nowrap; }
+table.payroll-table th, table.payroll-table td { padding-inline: 0.45rem; font-size: 0.92em; }
+.sign-lines { display: flex; justify-content: space-between; gap: 2rem; margin-block: 3rem 1rem; }
+.sign-lines div { flex: 1; border-block-start: 1px solid var(--ink, #14182b); padding-block-start: 0.3rem; text-align: center; font-size: 0.9em; }
+.checks { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }

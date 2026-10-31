@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Payroll rules" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'payroll:index' %}">‹ {% trans "Payroll" %}</a></p>
+<h1>{% trans "Payroll rules" %}</h1>
+<p class="lede">{{ branch.name }} · {% trans "Attendance bonus: a person with no absence and no half day in a full month gets extra days of salary. Only for the designations ticked below." %}</p>
+<form method="post" class="card">{% csrf_token %}
+  <div class="form-grid">
+    <div class="field"><label><input type="checkbox" name="bonus_enabled"{% if rules.bonus_enabled %} checked{% endif %}{% if not can_edit %} disabled{% endif %}> {% trans "Give the attendance bonus" %}</label></div>
+    <div class="field"><label for="bonus_days">{% trans "Bonus (days of salary)" %}</label><input type="number" id="bonus_days" name="bonus_days" min="0" max="5" value="{{ rules.bonus_days }}"{% if not can_edit %} disabled{% endif %}></div>
+  </div>
+  <h2>{% trans "Bonus for" %}</h2>
+  <div class="checks">{% for value, label in designations %}<label class="nowrap"><input type="checkbox" name="bonus_designations" value="{{ value }}"{% if value in rules.bonus_designations %} checked{% endif %}{% if not can_edit %} disabled{% endif %}> {{ label }}</label> {% endfor %}</div>
+  {% if can_edit %}<div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>{% endif %}
+</form>
+{% endblock %}

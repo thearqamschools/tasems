@@ -75,3 +75,12 @@ Set it up once:
 If Find printers lists nothing: check the printer is on and its cable is in, and that this computer is on the same
 network. Some printers come with a fixed address from another network (e.g. 192.168.123.x while the office is
 192.168.1.x); the shop that sold it can change it. The address can also be typed by hand in Setup → Branches.
+
+## Staff attendance machine (ZKTeco, LAN)
+1. On the machine: **M/OK → Comm → Ethernet** shows its IP address (e.g. 192.168.1.201); **Comm → Comm. Key** its
+   password (0 if none).
+2. TASEMS → **Setup → Attendance machine** → Add a machine: IP, port 4370, comm key → Save → **Test connection**.
+3. **Get attendance now** reads the punches; afterwards TASEMS reads them by itself every 5 minutes while the
+   TASEMS window is open. Each staff member's **Biometric machine ID** must be the number they have on the machine;
+   numbers that match nobody are listed on the page.
+

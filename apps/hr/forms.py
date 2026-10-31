@@ -1,3 +1,4 @@
+import datetime as dt
 from pathlib import Path
 
 from django import forms
@@ -39,6 +40,8 @@ class EmployeeForm(forms.ModelForm):
             "qualification",
             "joined_on",
             "machine_id",
+            "keep_security",
+            "security_months",
             "status",
             "left_on",
             "notes",
@@ -68,10 +71,18 @@ class EmployeeForm(forms.ModelForm):
             "notes": forms.Textarea(attrs={"rows": 2}),
         }
 
-    def __init__(self, *args, branch, **kwargs):
+    def __init__(self, *args, branch, money=True, **kwargs):
         self.branch = branch
         super().__init__(*args, **kwargs)
         self.instance.branch = branch
+        if not money:  # salary security is for people with payroll rights only
+            self.fields.pop("keep_security")
+            self.fields.pop("security_months")
+        else:
+            self.fields["security_months"].required = False
+            self.fields["keep_security"].help_text = _(
+                "One month's salary is kept by the school and returned when the person leaves with notice."
+            )
         self.fields["campus"].queryset = Campus.objects.filter(branch=branch, is_active=True)
         self.fields["father_name"].required = True
         # A fixed list; an older record's own designation stays selectable until it is changed.
@@ -109,6 +120,23 @@ class EmployeeForm(forms.ModelForm):
         ):
             raise forms.ValidationError(_("Another person already has this machine ID in this branch."))
         return value
+
+    def clean_security_months(self):
+        return self.cleaned_data.get("security_months") or 1
+
+    def save(self, commit=True):
+        employee = super().save(commit=False)
+        if employee.keep_security and not employee.security_from:
+            # Collected from the month of joining, or from this month for someone who joined earlier.
+            this_month = timezone.localdate().replace(day=1)
+            joined = employee.joined_on.replace(day=1)
+            employee.security_from = (
+                joined if joined >= this_month.replace(day=1) - dt.timedelta(days=31) else this_month
+            )
+        if commit:
+            employee.save()
+            self.save_m2m()
+        return employee
 
     def clean_cv(self):
         cv = self.cleaned_data.get("cv")

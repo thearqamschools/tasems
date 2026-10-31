@@ -271,6 +271,8 @@
     if (!select) return;
     var bank = select.form && select.form.querySelector("[data-bank]");
     if (bank) { bank.hidden = select.value !== "bank"; bank.required = select.value === "bank"; }
+    var reference = select.form && select.form.querySelector("[data-reference]");
+    if (reference) reference.hidden = select.value === "cash"; // a reference only for bank or JazzCash / Easypaisa
   });
 
   // ---------- Whole table row opens its record: <tr data-href="…"> (links, buttons and fields inside still work) ----

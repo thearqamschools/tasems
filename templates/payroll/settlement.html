@@ -1,0 +1,46 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Final settlement" %} · {{ employee.full_name }}{% endblock %}
+{% block content %}
+<p class="no-print"><a href="{% url 'payroll:person' employee.id %}">‹ {{ employee.full_name }}</a></p>
+<div class="page-header"><div><h1>{% trans "Final settlement" %}</h1>
+<p class="lede">{{ employee.full_name }} · <span class="num">{{ employee.code }}</span> · {{ employee.designation }} · {% trans "Joined" %} {{ employee.joined_on|date:"d M Y" }}{% if employee.left_on %} · {% trans "Left" %} {{ employee.left_on|date:"d M Y" }}{% endif %}</p></div>
+<div class="actions no-print"><button class="button secondary" type="button" data-print>{% icon "printer" %}{% trans "Print" %}</button></div></div>
+
+<div class="table-wrap"><table><tbody>
+  <tr><th>{% trans "Salary not yet paid" %}</th><td class="num money">{{ s.salary_due|rupees }}{% for p in s.unpaid %}<br><span class="small muted">{{ p.run.month|date:"F Y" }}: {{ p.net_pay|rupees }}</span>{% endfor %}</td></tr>
+  <tr><th>{% trans "Security held" %}</th><td class="num money">{{ s.held|rupees }}</td></tr>
+  <tr><th>{% trans "Advance still due" %}</th><td class="num money">{{ s.advance_due|rupees }}</td></tr>
+  <tr><th>{% trans "Advance taken from the security" %}</th><td class="num money">{{ s.from_security|rupees }}</td></tr>
+  {% if s.release %}
+  <tr><th>{% trans "Security decision" %}</th><td>{{ s.release.get_decision_display }} · {{ s.release.decided_on|date:"d M Y" }} · {{ s.release.decided_by.get_full_name|default:s.release.decided_by.username }}{% if s.release.reason %} · {{ s.release.reason }}{% endif %}</td></tr>
+  <tr><th>{% trans "Security returned" %}</th><td class="num money">{{ s.returned|rupees }}</td></tr>
+  <tr><th>{% trans "Security kept by the school" %}</th><td class="num money">{{ s.kept|rupees }}</td></tr>
+  {% endif %}
+  <tr class="total"><th>{% trans "To pay to the person" %}</th><td class="num money"><strong>{{ s.to_pay|rupees }}</strong>{% if not s.release and s.held %} <span class="small muted">({% trans "plus the security if it is returned" %})</span>{% endif %}</td></tr>
+  <tr><th>{% trans "Still to recover from the person" %}</th><td class="num money"><strong>{{ s.still_due|rupees }}</strong></td></tr>
+</tbody></table></div>
+
+{% if can_decide and not s.release and s.held %}
+<form method="post" class="card no-print" data-confirm="{% trans 'Save the security decision? It cannot be changed afterwards.' %}">{% csrf_token %}<input type="hidden" name="action" value="security">
+  <h2>{% trans "Return the security?" %}</h2>
+  <div class="form-grid">
+    <div class="field"><label for="decision">{% trans "Decision" %}</label><select id="decision" name="decision">{% for v, l in decisions %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="method">{% trans "Returned by" %}</label><select id="method" name="method">{% for v, l in methods %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="reason">{% trans "Reason" %}</label><input id="reason" name="reason" maxlength="200" placeholder="{% trans 'Needed when it is not returned, e.g. left without notice' %}"></div>
+  </div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save decision" %}</button></div>
+</form>{% endif %}
+
+{% if can_decide and s.release %}{% for a in advances %}{% if a.remaining > 0 %}
+<form method="post" class="card no-print">{% csrf_token %}<input type="hidden" name="advance" value="{{ a.advance.id }}">
+  <h2>{% blocktrans with d=a.advance.given_on|date:"d M Y" r=a.remaining|rupees %}Advance of {{ d }}: Rs {{ r }} still due{% endblocktrans %}</h2>
+  <div class="form-grid">
+    <div class="field"><label>{% trans "Amount (Rs)" %}</label><input name="amount" value="{{ a.remaining|floatformat:0 }}" inputmode="decimal" dir="ltr"></div>
+    <div class="field"><label>{% trans "Note" %}</label><input name="note" maxlength="200" required placeholder="{% trans 'Who decided, how it was paid' %}"></div>
+  </div>
+  <div class="actions"><button class="button" name="action" value="paid_back" type="submit">{% trans "Paid back" %}</button> <button class="button danger" name="action" value="written_off" type="submit">{% trans "Written off by management" %}</button></div>
+</form>{% endif %}{% endfor %}{% endif %}
+
+<div class="sign-lines"><div>{% trans "Staff member" %}</div><div>{% trans "Accountant" %}</div><div>{% trans "Director" %}</div></div>
+<p class="small muted">{% blocktrans with d=printed|date:"d M Y, h:i A" %}Printed {{ d }}{% endblocktrans %}</p>
+{% endblock %}

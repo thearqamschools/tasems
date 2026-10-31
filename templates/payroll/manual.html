@@ -3,10 +3,10 @@
 {% block content %}
 <p><a href="{% url 'payroll:index' %}?month={{ month|date:'Y-m' }}">‹ {% trans "Payroll" %}</a></p>
 <h1>{% trans "Enter manually" %} · {{ month|date:"F Y" }}</h1>
-<p class="lede">{% trans "For when the attendance machine was out of order or its sheet is wrong. Tick the people whose days you type in; their figures replace the machine's for this month. Pay is worked out the same way: salary ÷ days in the month for each day absent or on unpaid leave, half that for a half day." %}</p>
+<p class="lede">{% trans "For when the attendance machine was out of order or its sheet is wrong. Tick the people whose days you type in; their figures replace the machine's for this month. Pay is worked out the same way: salary ÷ days in the month for each day absent, half that for a half day." %}</p>
 <form method="post" data-busy>{% csrf_token %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Use" %}</th><th>{% trans "Name" %}</th><th>{% trans "Days in month" %}</th><th>{% trans "Working days" %}</th><th>{% trans "Days on staff" %}</th><th>{% trans "Absent" %}</th><th>{% trans "Unpaid leave" %}</th><th>{% trans "Half days" %}</th><th class="num">{% trans "Net pay now (Rs)" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Use" %}</th><th>{% trans "Name" %}</th><th>{% trans "Days in month" %}</th><th>{% trans "Working days" %}</th><th>{% trans "Days on staff" %}</th><th>{% trans "Absent" %}</th><th>{% trans "Half days" %}</th><th class="num">{% trans "Net pay now (Rs)" %}</th></tr></thead>
   <tbody>{% for r in rows %}{% with id=r.employee.id %}<tr>
     <td><input type="checkbox" name="use_{{ id }}" value="1"{% if r.manual %} checked{% endif %} aria-label="{% blocktrans with n=r.employee.full_name %}Type in the days of {{ n }}{% endblocktrans %}"></td>
     <td>{{ r.employee.full_name }}<br><span class="muted small">{{ r.employee.designation }}</span>{% if r.manual %} <span class="badge muted">{% trans "Manual" %}</span>{% endif %}</td>
@@ -14,7 +14,6 @@
     <td><input name="working_days_{{ id }}" value="{{ r.working_days|default:'' }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
     <td><input name="days_employed_{{ id }}" value="{{ r.days_employed }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
     <td><input name="absent_days_{{ id }}" value="{{ r.absent }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
-    <td><input name="leave_days_{{ id }}" value="{{ r.leave }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
     <td><input name="half_days_{{ id }}" value="{{ r.half }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
     <td class="num money">{% if r.missing %}<span class="badge attention">{% trans "Salary not set" %}</span>{% else %}{{ r.net|rupees }}{% endif %}</td>
   </tr>{% endwith %}{% endfor %}</tbody>
