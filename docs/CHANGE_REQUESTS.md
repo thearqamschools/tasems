@@ -342,3 +342,15 @@ Build nothing until the lead says to make the changes; then all together (next W
     (Director, Principal, Vice Principal, Coordinator, Admin, Accountant, teachers, Lawyer, Helping staff / Other).
   - The **rules are set in Setup** (to choose the best place): bonus on or off, how many days, and which
     designations get it (the list above to start with). Column order is ours to arrange.
+
+### Payroll — salary security
+- R6-5. **Security**: for some staff, the school keeps **one salary as security** (usually the **first** month's
+  salary, e.g. Rs 15,000). It is given back when the person leaves **with proper notice**.
+  - Payroll: a setting per person — security held: amount, which month's salary was kept (e.g. "first salary,
+    October 2026"), date. That month's net pay is **held, not paid** (shown as "Held as security").
+  - When a staff member **leaves** (Staff → leaving date / status), TASEMS asks: **return the security or not**.
+    Left with proper notice → returned (date, how: cash / bank, by whom). Left **without notice** → **not
+    returned** (forfeited), with the reason.
+  - A list of securities held, returned and kept (forfeited), per branch.
+  - To confirm when building: the security is always the full **first** month's net pay, or any amount / month
+    chosen per person? Who decides return or not (Director, Accountant)?
