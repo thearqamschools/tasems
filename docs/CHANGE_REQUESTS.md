@@ -333,8 +333,8 @@ Build nothing until the lead says to make the changes; then all together (next W
   now written after the name).
 - R6-2. **Absent only**: remove the separate "Unpaid leave" column — there is no paid/unpaid idea, every absence is
   unpaid. Days columns: Absent, Half days (unpaid leave days count as absent). Working days stay automatic.
-- R6-3. After Half days, before Deduction: **GP Fund** and **EOBI** — deduction columns kept **empty for now**
-  (not used yet; to be decided later), only the place is kept.
+- R6-3. After Half days, before Deduction: **GP Fund** and **EOBI** — deduction columns, **shown always**, empty
+  (0) unless an amount is **typed in by hand** for a person and month (e.g. on Enter manually); no automatic rule.
 - R6-4. **Bonus** (attendance bonus): a staff member with **no absence** in the month gets **one extra day's
   salary**. Columns after Half days: **Bonus days** and **Bonus amount**; net pay includes it.
   - **Decided by the lead (31 Oct 2026)**: a **half day also stops the bonus**. The bonus applies **only** to these
