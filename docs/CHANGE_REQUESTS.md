@@ -274,3 +274,6 @@ Build nothing until the lead says to make the changes; then all together (next W
   - **Summary on a separate page**: tickets sold and amount (refunds not shown here, only what was sold and kept),
     expenses, totals, and **profit or loss**.
   (R5-6 — printing only the receipts list — is covered by this report.)
+- R5-9. The event report (R5-8) also shows **who received how much**: cash received by each person (name, receipts,
+  amount), and money that came **in each bank** (and JazzCash / Easypaisa) — so the cash and bank amounts can be
+  checked. (Ticket sales by bank then choose the bank, like fee receiving.)
