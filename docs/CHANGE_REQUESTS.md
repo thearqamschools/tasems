@@ -257,3 +257,6 @@ Build nothing until the lead says to make the changes; then all together (next W
   (each sale prints its receipt and the list stays, showing who already has a ticket).
 - R5-5. Sell tickets → "Your last receipts": show the student's **admission no., name, class and section** (today
   only the name).
+- R5-6. Event page → Receipts → **Print**: today it prints the whole page. It must print **only the receipts list**
+  (the tickets sold), as a report: first the paid receipts, then the **refunded ones in a separate part at the
+  end**, so it is clear which tickets are sold. (The on-screen list follows the same order.)
