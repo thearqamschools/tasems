@@ -255,3 +255,5 @@ Build nothing until the lead says to make the changes; then all together (next W
   number** (father, mother, guardian), **CNIC / B-Form** — plus filters **Class, Section, Campus**, so a whole class
   (or section, or campus) can be listed at once. From that list the office sells tickets one student after another
   (each sale prints its receipt and the list stays, showing who already has a ticket).
+- R5-5. Sell tickets → "Your last receipts": show the student's **admission no., name, class and section** (today
+  only the name).
