@@ -50,7 +50,7 @@ rm -rf "$WORK/gtk"
 echo "TASEMS..."
 mkdir -p "$B/app" && (cd "$ROOT" && git archive HEAD) | tar -x -C "$B/app"
 mkdir -p "$B/app/windows" && cp "$ROOT/windows/launcher.py" "$B/app/windows/launcher.py"   # the working copy, in case it is not committed yet
-rm -rf "$B/app/tests" "$B/app/screenshots-m3" "$B/app/offline" "$B/app/windows/dist"
+rm -rf "$B/app/tests" "$B/app/screenshots-m3" "$B/app/offline" "$B/app/windows/dist" "$B/app/docs/reference"
 (cd "$B/app" && SECRET_KEY=build FIELD_ENCRYPTION_KEY=Y2ktb25seS1ub3Qtc2VjcmV0LWtleS0zMmJ5dGVzISE= \
   DATABASE_URL=postgres://x@localhost/x python manage.py collectstatic --noinput -v0)
 python - "$ROOT/static/img/arqam-logo-512.png" "$B/app/windows/tasems.ico" <<'PY'
