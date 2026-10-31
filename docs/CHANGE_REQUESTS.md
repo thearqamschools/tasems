@@ -295,3 +295,19 @@ Build nothing until the lead says to make the changes; then all together (next W
   Shown and saved only for logins with payroll rights (Director, Accountant; Principal sees, cannot change); others
   do not see the box. It is the same salary as Staff → Payroll → Salaries (one record, with history).
   Asked: where is the salary module today → **Staff → Payroll** (side menu), button **Salaries**.
+- R5-13 (extended, same day). On Add staff member, after Date of joining / Biometric ID:
+  **Monthly salary (Rs)** (the salary at joining), then **How is the salary paid: Cash or Bank transfer**; for Bank
+  transfer: **bank name, account title, account number**. Cash: nothing more.
+- R5-14. Add / Edit staff member: **CV upload moves to the top** (first line of the form), not at the end. Notes and
+  Biometric machine ID stay as they are.
+
+### Salaries (the lead could not find it: it is Staff → Payroll today)
+- R5-15. A clear **Salaries** module in the menu (today "Payroll" under Staff, with "Salaries and bank details").
+  Already there: salary from attendance (absence and unpaid leave cut, half day = half), finalise the month,
+  payslips with a "Received by" signature line, bank sheet in Excel. To add:
+  - **Increments**: new salary from a month, with the amount, reason and who approved; the salary history of each
+    person.
+  - **Salary sheet** for the month (A4) with a **signature column** — staff paid in cash sign that they received it.
+  - **Bank transfer sheet** for staff paid by bank (bank, account title, account number, amount).
+  - Mark the month's salaries **paid** (date, cash or bank).
+
