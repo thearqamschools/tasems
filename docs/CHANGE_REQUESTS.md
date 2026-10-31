@@ -248,3 +248,10 @@ Build nothing until the lead says to make the changes; then all together (next W
   (Today: admission no., name, father name; mobile only partly.)
 - R5-2. Filters: Class, Section, then a new **Campus** filter (Boys Campus / Girls Campus — choose one), then
   Status.
+
+### Events & Tickets
+- R5-3. Events list: the **whole row** of an event opens it (click anywhere on the row), not only its name.
+- R5-4. Sell tickets: the same search as Students (R5-1) — student name, father name, admission no., **any mobile
+  number** (father, mother, guardian), **CNIC / B-Form** — plus filters **Class, Section, Campus**, so a whole class
+  (or section, or campus) can be listed at once. From that list the office sells tickets one student after another
+  (each sale prints its receipt and the list stays, showing who already has a ticket).
