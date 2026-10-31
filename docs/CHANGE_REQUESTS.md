@@ -396,3 +396,21 @@ Build nothing until the lead says to make the changes; then all together (next W
   not on a second line. **Reference** only when Bank or JazzCash / Easypaisa is chosen (hidden for Cash).
 - R6-14. **Campus in short and on one line** wherever it is shown in lists: "Girls" / "Boys" instead of
   "Girls Campus" / "Boys Campus"; in general, avoid table cells breaking into two lines where possible.
+
+### Staff attendance machine — photos in `docs/reference/attendance-machine/`
+- R6-15. Settings to connect the staff **attendance machine** to TASEMS. The machine: **ZKTeco** face + fingerprint
+  terminal with keypad (SN QWC5245000036), **LAN (Ethernet) connected**, 12 V; shows "Check-In".
+  Today TASEMS only imports the machine's file (Excel / CSV / .dat). To add:
+  - Setup → **Attendance machine**: machine name, **IP address**, port (ZKTeco default **4370**), comm key
+    (password, often 0), which branch / campus; **Test connection** (shows the machine's time, number of users and
+    records).
+  - **Get attendance now** button, and **automatic every few minutes** while TASEMS is running: punches come in
+    by themselves and the daily staff attendance (present, late, half day, absent) is worked out as today from the
+    duty times.
+  - Staff are matched by the **Biometric machine ID** already on each staff record; a list of machine users not
+    matched to any staff member.
+  - Optional later: **set the machine's clock** from TASEMS; more than one machine per branch.
+  - When TASEMS goes online, the machine can instead **send** punches to the server itself (ZKTeco "Cloud server /
+    ADMS" setting) — to choose then.
+  - To confirm when building: the machine's **IP** (Menu → Comm → Ethernet) and **model** (Menu → System info →
+    Device info); is another software (e.g. ZKTime) using it today, and should it keep running?
