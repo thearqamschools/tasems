@@ -316,5 +316,12 @@ Build nothing until the lead says to make the changes; then all together (next W
      can be seen (a table; a graph is not needed).
   6. Kept from before: **increments** (new salary from a month, amount, reason, approved by), **salary sheet** (A4)
      with a **signature column** for cash payments, **bank transfer sheet**.
+  7. **Salary acknowledgement sheet** (print, A4), after the month's figures are ready (from the machine or entered
+     manually): title "Payroll — <Month Year> — Acknowledgement", **one page (or set of pages) per designation group**
+     — administration, teachers, helping staff… — each with a list: name, designation, monthly salary, days absent,
+     unpaid leave, half days, deduction, net pay, **payment received by: Cash / Bank / Online** (tick; no bank
+     details), **"Payment received"** and a **signature** column, with signature lines at the bottom (prepared by,
+     checked by, principal / director). Kept on paper as the school's record; can be printed again at any time.
+     (Replaces the plain salary sheet of item 6.) Groups to confirm when building, from the designations list.
   - To confirm when building: "working days" in manual entry — today a day's pay = salary ÷ days in the month
     (decided 23 Oct 2026). Working days would be shown but not change the rate, unless the lead says otherwise.
