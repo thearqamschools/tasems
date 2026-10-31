@@ -354,3 +354,15 @@ Build nothing until the lead says to make the changes; then all together (next W
   - A list of securities held, returned and kept (forfeited), per branch.
   - To confirm when building: the security is always the full **first** month's net pay, or any amount / month
     chosen per person? Who decides return or not (Director, Accountant)?
+
+### Payroll — advances
+- R6-6. **Salary advance**, two kinds:
+  1. **Advance from this month's salary**: e.g. salary Rs 15,000, paid on the 10th; the person takes Rs 5,000
+     earlier (on an application). It is **cut from that month's salary** (net pay 10,000).
+  2. **Large advance in instalments (loan)**: e.g. salary 15,000, advance Rs 50,000, cut **Rs 5,000 every month**
+     until it is paid back — the person gets 10,000 for those months, automatically.
+  - Recorded with: date given, amount, cash / bank, approved by, application / reason, and for instalments the
+    monthly cut and the month the cuts start. Payroll shows an **Advance** column (deduction); each person's
+    page shows the advance, what is cut so far and **what is still due**; a list of all advances with balances.
+  - To confirm when building: can a month's instalment be skipped or changed (e.g. Eid month)? When a person
+    leaves with an advance still due, is it cut from their last salary / security?
