@@ -266,3 +266,11 @@ Build nothing until the lead says to make the changes; then all together (next W
   **drop-down** — click the heading to open or close its items, so one can go straight to e.g. Events without
   scrolling past all of Finance. (To decide when building: the group of the page you are on stays open; the
   open/closed choice is remembered on that computer.)
+
+### Events & Tickets — event report
+- R5-8. A **Report** button on the event page opens one printable report (A4) of the event:
+  - **Detail part**: first all receipts sold (paid), then the **refunded** receipts (if any) in their own part,
+    then the **expenses**.
+  - **Summary on a separate page**: tickets sold and amount (refunds not shown here, only what was sold and kept),
+    expenses, totals, and **profit or loss**.
+  (R5-6 — printing only the receipts list — is covered by this report.)
