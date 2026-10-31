@@ -364,5 +364,9 @@ Build nothing until the lead says to make the changes; then all together (next W
   - Recorded with: date given, amount, cash / bank, approved by, application / reason, and for instalments the
     monthly cut and the month the cuts start. Payroll shows an **Advance** column (deduction); each person's
     page shows the advance, what is cut so far and **what is still due**; a list of all advances with balances.
-  - To confirm when building: can a month's instalment be skipped or changed (e.g. Eid month)? When a person
-    leaves with an advance still due, is it cut from their last salary / security?
+  - **Decided by the lead (31 Oct 2026)**:
+    - A month's instalment **can be skipped or made smaller** (the rest stays due and the cuts carry on after).
+    - When a person **leaves with an advance still due**, it is cut from their **last salary and then their
+      security**. If something is **still due after that**, it stays as an amount to recover from the person —
+      **management decides** (shown as "still due after leaving"; recorded when paid back or written off, with
+      who decided).
