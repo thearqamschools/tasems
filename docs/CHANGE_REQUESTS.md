@@ -346,14 +346,20 @@ Build nothing until the lead says to make the changes; then all together (next W
 ### Payroll — salary security
 - R6-5. **Security**: for some staff, the school keeps **one salary as security** (usually the **first** month's
   salary, e.g. Rs 15,000). It is given back when the person leaves **with proper notice**.
-  - Payroll: a setting per person — security held: amount, which month's salary was kept (e.g. "first salary,
-    October 2026"), date. That month's net pay is **held, not paid** (shown as "Held as security").
+  - Payroll shows a **Security** column (the cut each month) and each person's page the security collected so
+    far, still to collect, and held.
   - When a staff member **leaves** (Staff → leaving date / status), TASEMS asks: **return the security or not**.
     Left with proper notice → returned (date, how: cash / bank, by whom). Left **without notice** → **not
     returned** (forfeited), with the reason.
   - A list of securities held, returned and kept (forfeited), per branch.
-  - To confirm when building: the security is always the full **first** month's net pay, or any amount / month
-    chosen per person? Who decides return or not (Director, Accountant)?
+  - **Decided by the lead (31 Oct 2026)**:
+    - Security = **one month's salary** (the monthly salary, e.g. 15,000). It is chosen **when the staff member is
+      added**: Add / Edit staff → tick **"Keep salary security"**; no tick, no security.
+    - Also chosen there: collected in **1, 2 or 3 months** (e.g. 15,000 in 3 months = 5,000 a month), cut from
+      the net pay of the first months and kept aside.
+    - If a month's net pay is less than the cut (e.g. absent days in the first month: net 12,000 instead of
+      15,000), the rest is **cut from the next month's pay**, until the full security is collected.
+    - **Director and Accountant** (both) decide whether it is returned when the person leaves.
 
 ### Payroll — advances
 - R6-6. **Salary advance**, two kinds:
