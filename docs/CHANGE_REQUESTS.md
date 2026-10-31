@@ -291,23 +291,30 @@ Build nothing until the lead says to make the changes; then all together (next W
     3. **Experience** — organisation, designation / post, from, to (or "still working"), reason for leaving,
        (classes / subjects taught — to confirm).
   - Then Save.
-- R5-13. Add / Edit staff member: a **Monthly salary (Rs)** box after Date of joining and Biometric (machine) ID.
+- R5-13. ~~Monthly salary on the staff form~~ — **withdrawn by the lead (31 Oct 2026)**: salaries and bank /
+  cash details stay in **Payroll → Salaries and bank details** only. (Original note: a **Monthly salary (Rs)** box after Date of joining and Biometric (machine) ID.
   Shown and saved only for logins with payroll rights (Director, Accountant; Principal sees, cannot change); others
   do not see the box. It is the same salary as Staff → Payroll → Salaries (one record, with history).
   Asked: where is the salary module today → **Staff → Payroll** (side menu), button **Salaries**.
-- R5-13 (extended, same day). On Add staff member, after Date of joining / Biometric ID:
-  **Monthly salary (Rs)** (the salary at joining), then **How is the salary paid: Cash or Bank transfer**; for Bank
-  transfer: **bank name, account title, account number**. Cash: nothing more.
 - R5-14. Add / Edit staff member: **CV upload moves to the top** (first line of the form), not at the end. Notes and
   Biometric machine ID stay as they are.
 
-### Salaries (the lead could not find it: it is Staff → Payroll today)
-- R5-15. A clear **Salaries** module in the menu (today "Payroll" under Staff, with "Salaries and bank details").
-  Already there: salary from attendance (absence and unpaid leave cut, half day = half), finalise the month,
-  payslips with a "Received by" signature line, bank sheet in Excel. To add:
-  - **Increments**: new salary from a month, with the amount, reason and who approved; the salary history of each
-    person.
-  - **Salary sheet** for the month (A4) with a **signature column** — staff paid in cash sign that they received it.
-  - **Bank transfer sheet** for staff paid by bank (bank, account title, account number, amount).
-  - Mark the month's salaries **paid** (date, cash or bank).
-
+### Payroll (found by the lead under Staff → Payroll, 31 Oct 2026) — make it complete and professional
+- R5-15. Linked to staff attendance as today, plus:
+  1. **Enter manually** (button on the Payroll page, for the month shown): all staff listed; for each person type
+     days in the month, working days, days on staff, absent, unpaid leave, half days → TASEMS works out deduction
+     and net pay. For when the machine was out of order or the sheet is wrong. Manual figures are marked as manual
+     and replace the machine figures for that person and month.
+  2. **Search** by staff name and **filter by designation** (teachers, vice principal, admin staff, sweeper…) on
+     Payroll and on Salaries and bank details.
+  3. **Totals at the top** of the month: total salaries, deductions, net pay to pay, **paid so far**, **still to pay**.
+  4. **Pay salary** (tab / button): the month's staff list; open a person → that month's detail (salary, days on
+     staff, absent, unpaid leave, half days, deduction, net pay) → **pay**: date, **cash or bank transfer**
+     (bank from their bank details), then it is **locked**. People are paid on different days. The Payroll table
+     shows for each person: Paid / Not paid, how, and the date.
+  5. **History** of each person: every month from the start — salary, net pay, date paid, how — so increases or cuts
+     can be seen (a table; a graph is not needed).
+  6. Kept from before: **increments** (new salary from a month, amount, reason, approved by), **salary sheet** (A4)
+     with a **signature column** for cash payments, **bank transfer sheet**.
+  - To confirm when building: "working days" in manual entry — today a day's pay = salary ÷ days in the month
+    (decided 23 Oct 2026). Working days would be shown but not change the rate, unless the lead says otherwise.
