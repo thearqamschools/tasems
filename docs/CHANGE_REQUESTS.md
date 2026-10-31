@@ -337,9 +337,8 @@ Build nothing until the lead says to make the changes; then all together (next W
   (not used yet; to be decided later), only the place is kept.
 - R6-4. **Bonus** (attendance bonus): a staff member with **no absence** in the month gets **one extra day's
   salary**. Columns after Half days: **Bonus days** and **Bonus amount**; net pay includes it.
-  - Not for: **administrators, office in-charge, Director, Principal, Vice Principal** (by default); everyone else
-    gets it.
-  - The **rules are set somewhere** (Setup / Settings — to choose the best place): bonus on or off, how many days,
-    which designations are left out. Column order is ours to arrange.
-  - To confirm when building: does a **half day** stop the bonus? Is "office in-charge" the Admin / Accountant
-    designation, or a new one?
+  - **Decided by the lead (31 Oct 2026)**: a **half day also stops the bonus**. The bonus applies **only** to these
+    designations: **Aapa, Guard, Peon (Office boy), Qari, Sweeper (Janitorial staff)**. Not to anyone else
+    (Director, Principal, Vice Principal, Coordinator, Admin, Accountant, teachers, Lawyer, Helping staff / Other).
+  - The **rules are set in Setup** (to choose the best place): bonus on or off, how many days, and which
+    designations get it (the list above to start with). Column order is ours to arrange.
