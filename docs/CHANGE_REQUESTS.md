@@ -376,3 +376,23 @@ Build nothing until the lead says to make the changes; then all together (next W
       security**. If something is **still due after that**, it stays as an amount to recover from the person —
       **management decides** (shown as "still due after leaving"; recorded when paid back or written off, with
       who decided).
+
+### Payroll — extras accepted by the lead (31 Oct 2026)
+- R6-7. **Final settlement** page / print when a staff member leaves: last month's pay, bonus, advance still due
+  cut, security returned or kept, and at the end **amount to pay or to recover**; signature lines for Director
+  and Accountant.
+- R6-8. **Other deduction** and **Other addition** for a person and month, amount and reason typed by hand (fine,
+  damage, arrears…).
+- R6-9. **Advance application** (photo / scan) can be uploaded with the advance.
+- R6-10. **Payslip and acknowledgement sheet** show all the new columns: Bonus, Advance, Security, GP Fund, EOBI,
+  Other deduction / addition.
+- (Late-arrival rule — "3 lates = 1 half day" — **not wanted**.)
+
+### Events & Tickets — Sell tickets
+- R6-11. After a search shows the student (e.g. 1385, 1398), the **search box is empty again**, so the next
+  admission no. can be typed at once — also after a sale (today the old number stays and must be deleted first).
+- R6-12. **Remove "Sell again"**: once a student has a ticket, no second sale button (shows "Has a ticket" only).
+- R6-13. **One line per student**: Paid by and the **Receive and print** button **beside** the other fields, small,
+  not on a second line. **Reference** only when Bank or JazzCash / Easypaisa is chosen (hidden for Cash).
+- R6-14. **Campus in short and on one line** wherever it is shown in lists: "Girls" / "Boys" instead of
+  "Girls Campus" / "Boys Campus"; in general, avoid table cells breaking into two lines where possible.
