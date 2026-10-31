@@ -324,3 +324,22 @@ with the child and all brothers and sisters, and the children are called with it
      (Replaces the plain salary sheet of item 6.) Groups to confirm when building, from the designations list.
   - To confirm when building: "working days" in manual entry — today a day's pay = salary ÷ days in the month
     (decided 23 Oct 2026). Working days would be shown but not change the rate, unless the lead says otherwise.
+
+## Round 6 (31 Oct 2026) — NOTED ONLY, not built yet
+Build nothing until the lead says to make the changes; then all together (next Windows installer: v12).
+
+### Payroll
+- R6-1. Column order: **Employee code first**, then Name, Designation, Monthly salary, then the rest (code is
+  now written after the name).
+- R6-2. **Absent only**: remove the separate "Unpaid leave" column — there is no paid/unpaid idea, every absence is
+  unpaid. Days columns: Absent, Half days (unpaid leave days count as absent). Working days stay automatic.
+- R6-3. After Half days, before Deduction: **GP Fund** and **EOBI** — deduction columns kept **empty for now**
+  (not used yet; to be decided later), only the place is kept.
+- R6-4. **Bonus** (attendance bonus): a staff member with **no absence** in the month gets **one extra day's
+  salary**. Columns after Half days: **Bonus days** and **Bonus amount**; net pay includes it.
+  - Not for: **administrators, office in-charge, Director, Principal, Vice Principal** (by default); everyone else
+    gets it.
+  - The **rules are set somewhere** (Setup / Settings — to choose the best place): bonus on or off, how many days,
+    which designations are left out. Column order is ours to arrange.
+  - To confirm when building: does a **half day** stop the bonus? Is "office in-charge" the Admin / Accountant
+    designation, or a new one?
