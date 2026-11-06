@@ -431,10 +431,10 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
   Import machine file, Monthly sheet, Leave) **stay as they are**; do not change them.
 - R7-2. ~~The side menu **Staff** group keeps only staff items. **Monthly sheet** and **Leave** move to the
   **Staff attendance** side (with Today's attendance, Import machine file, Attendance machine): everything about
-  attendance lives under Staff attendance.
-
-### Computer code and Biometric ID~~
+  attendance lives under Staff attendance.~~
   **Withdrawn by the lead (6 Nov 2026)**: the side menu stays as it is; do not change it.
+
+### Computer code and Biometric ID
 - R7-3. Every staff member has two separate numbers: **Computer code** (our own, for records and documents) and
   **Biometric ID** (the user number on the machine, used only to match punches). (Both fields exist today:
   "Code" and "Biometric machine ID"; to label them clearly.)
