@@ -84,7 +84,13 @@ def home(request):
     if employee is not None:
         context["my_month"] = metrics.my_month(employee, today)
 
-    branch_ids = user.accessible_branch_ids("people.view_student")
+    from apps.organisation.models import Branch
+
+    branch_ids = set(
+        Branch.objects.filter(id__in=user.accessible_branch_ids("people.view_student"), is_active=True).values_list(
+            "id", flat=True
+        )
+    )
     if len(branch_ids) > 1:
         context.update(_network_context(request, user, branch_ids, session, today))
     context["has_money"] = "fees" in context or context.get("network_totals", {}).get("has_fees", False)

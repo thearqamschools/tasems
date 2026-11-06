@@ -13,7 +13,7 @@ from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
 from apps.exams.models import GradingComponent, GradingScheme
 from apps.fees.models import BranchFeeSettings, FeeHead, FeeRate, PaymentChannel, VoucherCounter
-from apps.hr.models import HRSettings, LeaveType
+from apps.hr.models import Employee, HRSettings, LeaveType
 from apps.organisation.models import Branch, HeadOffice
 
 VIEW_PEOPLE = ["people.view_student", "people.view_guardian", "people.view_enrolment", "people.view_studentguardian"]
@@ -566,11 +566,74 @@ def perms(names):
     return result
 
 
+SAMANABAD_CODE = "fsd-samanabad"
+SAMANABAD_NAME = "The Arqam Schools — Samanabad Campus (Head Office)"
+
+
+def _has_records(branch):
+    from apps.academics.models import Section
+    from apps.fees.models import Voucher
+    from apps.people.models import Student
+
+    return (
+        Student.objects.filter(branch=branch).exists()
+        or Employee.objects.filter(branch=branch).exists()
+        or Section.objects.filter(branch=branch).exists()
+        or Voucher.objects.filter(branch=branch).exists()
+    )
+
+
+def retire_seed_duplicate():
+    """Up to v14 the seed found the head-office campus by its code only. When the code was changed in Setup →
+    Branches, the next start made a second, empty campus with the same name, and the top bar could show that one
+    (project lead, 6 Nov 2026: "students and staff disappeared"). That empty copy is taken out of use here:
+    marked not in use and renamed, never deleted, and only when it holds no records at all."""
+    copy = Branch.objects.filter(code=SAMANABAD_CODE).first()
+    if copy is None:
+        return None
+    original = (
+        Branch.objects.filter(name=copy.name, is_active=True, id__lt=copy.id).exclude(pk=copy.pk).order_by("id").first()
+    )
+    if original is None or _has_records(copy):
+        return None
+    Branch.objects.filter(pk=copy.pk).update(
+        code=f"unused-copy-{copy.pk}",
+        name=f"{copy.name} — unused copy {copy.pk}"[:160],
+        is_active=False,
+        is_head_office=False,
+    )
+    return original
+
+
+def head_office_campus(fsd):
+    """The Samanabad head-office campus: by its first code, else the active head-office campus of Faisalabad,
+    else one with its name. Made only when none exists (a new install); an existing one is never changed here,
+    so a code or name changed in Setup → Branches stays."""
+    found = (
+        Branch.objects.filter(code=SAMANABAD_CODE, is_active=True).first()
+        or Branch.objects.filter(head_office=fsd, is_head_office=True, is_active=True).order_by("id").first()
+        or Branch.objects.filter(name=SAMANABAD_NAME, is_active=True).order_by("id").first()
+    )
+    if found is not None:
+        return found
+    return Branch.objects.create(
+        code=SAMANABAD_CODE,
+        name=SAMANABAD_NAME,
+        head_office=fsd,
+        ownership=Branch.Ownership.COMPANY,
+        royalty_percent=0,
+        city="Faisalabad",
+        # Head office campus: certificate references read TAS-HO-FSD-0001 (project lead, 23 Oct 2026).
+        is_head_office=True,
+    )
+
+
 class Command(BaseCommand):
     help = "Seed head offices, the Samanabad campus, system roles and class levels."
 
     @transaction.atomic
     def handle(self, *args, **options):
+        retire_seed_duplicate()
         fsd, _ = HeadOffice.objects.update_or_create(
             code="faisalabad",
             defaults={
@@ -583,20 +646,8 @@ class Command(BaseCommand):
         HeadOffice.objects.update_or_create(
             code="lahore", defaults={"name": "The Arqam Schools — Lahore Head Office", "city": "Lahore"}
         )
-        Branch.objects.update_or_create(
-            code="fsd-samanabad",
-            defaults={
-                "name": "The Arqam Schools — Samanabad Campus (Head Office)",
-                "head_office": fsd,
-                "ownership": Branch.Ownership.COMPANY,
-                "royalty_percent": 0,
-                "city": "Faisalabad",
-                # Head office campus: certificate references read TAS-HO-FSD-0001 (project lead, 23 Oct 2026).
-                "is_head_office": True,
-            },
-        )
+        samanabad = head_office_campus(HeadOffice.objects.get(code="faisalabad"))
         # Official contacts; filled only where empty, so changes made in Setup → Branches are kept.
-        samanabad = Branch.objects.get(code="fsd-samanabad")
         contacts = {
             "address": "Sanora Colony, Samanabad, Faisalabad, Pakistan",
             "phone": "041-2660265",
@@ -686,7 +737,7 @@ class Command(BaseCommand):
         if not VoucherCounter.objects.exists():
             VoucherCounter.objects.create()
 
-        samanabad = Branch.objects.get(code="fsd-samanabad")
+        samanabad = head_office_campus(HeadOffice.objects.get(code="faisalabad"))
         # Rates and settings are created once; after that head office edits them in Setup.
         if not FeeRate.objects.filter(branch=samanabad).exists():
             for head, level, amount, sibling in SAMANABAD_RATES:
@@ -729,6 +780,6 @@ class Command(BaseCommand):
         # Samanabad staff duty 07:45–13:45, Monday to Saturday (confirmed 16 Oct 2026). Created once;
         # head office changes it in Setup afterwards.
         HRSettings.objects.get_or_create(
-            branch=Branch.objects.get(code="fsd-samanabad"),
+            branch=head_office_campus(HeadOffice.objects.get(code="faisalabad")),
             defaults={"duty_starts": "07:45", "duty_ends": "13:45", "working_days": [0, 1, 2, 3, 4, 5]},
         )

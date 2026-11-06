@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.41.3 — 2026-11-06 — Fix: empty copy of the head-office campus after a restart (installer v15)
+- Reported: after installing v14 the Students and Staff lists were empty while the dashboard showed 1,215 active
+  students. Cause: at every start the seed looked for the Samanabad campus by its first code `fsd-samanabad`.
+  Its code had been changed in Setup → Branches, so the seed made a **second, empty campus with the same name**,
+  and the top bar showed that one. No record was lost.
+- The seed now finds the campus by its code, else as Faisalabad's head-office campus, else by name, and only makes
+  one on a new install. It no longer resets the campus name or settings at each start.
+- On start, an empty copy made by the old seed (code `fsd-samanabad`, same name as an older campus, no students,
+  staff, sections or vouchers) is **taken out of use**: marked not in use and renamed "… unused copy N". It is not
+  deleted; a copy holding any record is left alone. The dashboard's branch table counts only branches in use.
+- Tests: tests/test_seed_branch.py.
+
 ## 0.41.2 — 2026-11-06 — Attendance machine: frames the machine accepts (installer v14)
 - With v13 the head-office machine (192.168.1.222, same network, answers ping) still gave no answer. Cause: TASEMS
   worked out each frame's checksum with the reply id it sent; ZKTeco machines (and pyzk / node-zklib, which talk to

@@ -458,4 +458,5 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
 ### Problem reported 6 Nov 2026 (after installing v14) — to investigate first
 - R7-9. Dashboard shows **1,215 active students**, but **Students** list and search show nothing; **Staff** list is
   empty too (it showed before). The dashboard counts straight from the database, so the records are there; the
-  lists are not showing them. Asked the lead for screenshots of both pages and of the black TASEMS window.
+  lists are not showing them. **Found and fixed 6 Nov 2026 (v15, CHANGELOG 0.41.3)**: a second, empty campus with
+  the same name made by the seed after the campus code was changed; the top bar showed the empty one.
