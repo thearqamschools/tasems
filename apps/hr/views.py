@@ -2,6 +2,7 @@
 
 import datetime as dt
 import io
+import ipaddress
 import secrets
 from pathlib import Path
 
@@ -523,8 +524,8 @@ def machines(request):
                 clock = reading.clock.strftime("%d %b %Y %H:%M") if reading.clock else "?"
                 messages.success(
                     request,
-                    _("Connected. Machine clock %(c)s · %(u)s users · %(r)s records.")
-                    % {"c": clock, "u": reading.users, "r": reading.records},
+                    _("Connected (%(t)s). Machine clock %(c)s · %(u)s users · %(r)s records.")
+                    % {"t": reading.transport.upper(), "c": clock, "u": reading.users, "r": reading.records},
                 )
             except (zk.MachineError, OSError) as error:
                 messages.error(request, _("The machine did not answer: %(e)s") % {"e": error})
@@ -532,5 +533,15 @@ def machines(request):
             result = S.read_machine(machine, request.user)
             (messages.success if machine.last_ok else messages.error)(request, result)
         return redirect("hr:machines")
+    from apps.core.escpos import local_networks
+
     rows = list(AttendanceMachine.objects.filter(branch=branch))
-    return render(request, "hr/machines.html", {"branch": branch, "machines": rows, "can_edit": can_edit})
+    networks = local_networks()
+    for m in rows:  # a machine on another network can never answer: say so before anyone presses a button
+        try:
+            ip = ipaddress.ip_address(m.host)
+        except ValueError:
+            ip = None
+        m.other_network = bool(ip and networks) and not any(ip in n for n in networks)
+    here = [str(n.network_address).rsplit(".", 1)[0] + ".x" for n in networks]
+    return render(request, "hr/machines.html", {"branch": branch, "machines": rows, "can_edit": can_edit, "here": here})

@@ -162,31 +162,41 @@ def encode_time(t):
                 + t.minute * 60 + t.second)  # fmt: skip
 
 
-def fake_machine(punches, key=0):
-    server = socket.socket()
+def fake_machine(punches, key=0, udp=False):
+    server = socket.socket(type=socket.SOCK_DGRAM if udp else socket.SOCK_STREAM)
     server.bind(("127.0.0.1", 0))
-    server.listen(1)
+    if not udp:
+        server.listen(1)
     records = b"".join(
         pack("<H24sB4sB8s", i + 1, uid.encode().ljust(24, b"\x00"), 0, encode_time(at), 0, b"\x00" * 8)
         for i, (uid, at) in enumerate(punches)
     )
     log = pack("<I", len(records)) + records
 
+    peer = {}
+
     def reply(conn, command, reply_id, data=b""):
-        conn.sendall(zk.packet(command, 77, reply_id, data))
+        frame = zk.packet(command, 77, reply_id, data)
+        if udp:
+            conn.sendto(frame[8:], peer["addr"])
+        else:
+            conn.sendall(frame)
 
     def serve():
-        conn, _a = server.accept()
+        conn = server if udp else server.accept()[0]
         with conn:
             authed = key == 0
             while True:
-                head = conn.recv(8)
-                if not head:
-                    break
-                _m1, _m2, length = unpack("<HHI", head)
-                body = b""
-                while len(body) < length:
-                    body += conn.recv(length - len(body))
+                if udp:
+                    body, peer["addr"] = conn.recvfrom(65535)
+                else:
+                    head = conn.recv(8)
+                    if not head:
+                        break
+                    _m1, _m2, length = unpack("<HHI", head)
+                    body = b""
+                    while len(body) < length:
+                        body += conn.recv(length - len(body))
                 command, _c, _s, rid = unpack("<4H", body[:8])
                 data = body[8:]
                 if command == zk.CMD_CONNECT:
@@ -241,6 +251,25 @@ def test_attendance_machine_read(staff, login_as):
     assert Punch.objects.filter(employee=g).count() == 2
     page = client.get("/staff/attendance/machines/").content.decode()
     assert "99 (1)" in page and "Get attendance now" in page
+
+
+def test_machine_that_only_talks_udp(monkeypatch):
+    """Many ZKTeco machines answer only UDP on port 4370: TASEMS tries TCP, then UDP."""
+    day = dt.datetime.now().replace(hour=8, minute=0, second=0, microsecond=0) - dt.timedelta(days=1)
+    port, thread = fake_machine([("5", day), ("6", day)], key=99, udp=True)
+    reading = zk.read("127.0.0.1", port, 99, timeout=2)
+    thread.join(5)
+    assert reading.transport == "udp" and reading.users == 2 and [u for u, _t in reading.punches] == ["5", "6"]
+
+
+def test_machine_on_another_network_is_explained(monkeypatch):
+    import ipaddress
+
+    from apps.core import escpos
+
+    monkeypatch.setattr(escpos, "local_networks", lambda: [ipaddress.ip_network("192.168.0.0/24")])
+    text = zk.explain("192.168.1.222", 4370, {"tcp": "timed out", "udp": "timed out"})
+    assert "192.168.0.x" in text and "192.168.1.x" in text
 
 
 def test_machine_that_does_not_answer(staff, login_as):

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.41.1 — 2026-11-06 — Attendance machine: UDP and clear "no answer" reasons (installer v13)
+- The real machine at the head office (192.168.1.222:4370) gave "timed out". TASEMS now tries TCP and then UDP
+  (many ZKTeco machines answer only UDP on port 4370); the result line says which one worked.
+- When neither answers, the message says why in plain words: this computer is on another network (e.g. 192.168.0.x
+  while the machine is 192.168.1.x), the port is closed, or no answer at all (power, cable, IP, firewall).
+- The Attendance machine page warns before any button is pressed when a machine is not on this computer's network,
+  and shows the network this computer is on.
+- Tests: a fake UDP-only machine and the "other network" message.
+
 ## 0.41.0 — 2026-10-31 — Round 6: Payroll bonus, advances, security, settlement; attendance machine (installer v12)
 
 Payroll

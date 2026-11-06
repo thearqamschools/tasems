@@ -83,4 +83,7 @@ network. Some printers come with a fixed address from another network (e.g. 192.
 3. **Get attendance now** reads the punches; afterwards TASEMS reads them by itself every 5 minutes while the
    TASEMS window is open. Each staff member's **Biometric machine ID** must be the number they have on the machine;
    numbers that match nobody are listed on the page.
+4. If it says the machine did not answer: the page shows the network this computer is on (e.g. 192.168.1.x). The
+   machine's IP must start the same way. Check from this computer: Command Prompt → `ping 192.168.1.222`. If the
+   ping gets no reply, the problem is the network (cable, switch, IP), not TASEMS. TASEMS tries TCP and UDP itself.
 

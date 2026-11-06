@@ -6,6 +6,7 @@ counts, read the attendance log, disconnect. Read-only: nothing on the machine i
 Project lead, 31 Oct 2026 (ZKTeco face + fingerprint terminal on LAN)."""
 
 import datetime as dt
+import ipaddress
 import socket
 from dataclasses import dataclass, field
 from struct import pack, unpack
@@ -18,6 +19,7 @@ CMD_PREPARE_BUFFER, CMD_READ_BUFFER = 1503, 1504
 USHRT_MAX = 65535
 TCP_START = (0x5050, 0x7D82)
 MAX_CHUNK = 0xFFC0
+MAX_CHUNK_UDP = 16 * 1024
 DEFAULT_PORT = 4370
 
 
@@ -31,6 +33,7 @@ class Reading:
     users: int = 0
     records: int = 0
     punches: list = field(default_factory=list)  # (machine user id, naive local datetime)
+    transport: str = "tcp"
 
 
 def checksum(data):
@@ -111,8 +114,12 @@ def parse_attendance(data, records):
 
 
 class Machine:
-    def __init__(self, host, port=DEFAULT_PORT, password=0, timeout=10):
+    """One connection to the machine. Newer machines talk TCP; many older ones (and some newer firmware) only
+    answer UDP on the same port, so `transport` is "tcp" or "udp" (`read()` tries both)."""
+
+    def __init__(self, host, port=DEFAULT_PORT, password=0, timeout=10, transport="tcp"):
         self.host, self.port, self.password, self.timeout = host, int(port or DEFAULT_PORT), password or 0, timeout
+        self.transport = transport
         self.sock = None
         self.session, self.reply = 0, USHRT_MAX - 1
 
@@ -127,17 +134,26 @@ class Machine:
         return buf
 
     def _recv_frame(self):
-        start = self._recv_exact(8)
-        m1, m2, length = unpack("<HHI", start)
-        if (m1, m2) != TCP_START:
-            raise MachineError("not a ZKTeco machine (wrong reply)")
-        body = self._recv_exact(length)
+        if self.transport == "udp":
+            body = self.sock.recv(65535)  # one datagram is one whole frame, without the TCP start marker
+        else:
+            start = self._recv_exact(8)
+            m1, m2, length = unpack("<HHI", start)
+            if (m1, m2) != TCP_START:
+                raise MachineError("not a ZKTeco machine (wrong reply)")
+            body = self._recv_exact(length)
+        if len(body) < 8:
+            raise MachineError("not a ZKTeco machine (short reply)")
         command, _checksum, session, reply = unpack("<4H", body[:8])
         return command, session, reply, body[8:]
 
+    def _frame(self, command, session, reply, data=b""):
+        frame = packet(command, session, reply, data)
+        return frame[8:] if self.transport == "udp" else frame
+
     def _send(self, command, data=b""):
         self.reply = (self.reply + 1) % USHRT_MAX
-        self.sock.sendall(packet(command, self.session, self.reply, data))
+        self.sock.sendall(self._frame(command, self.session, self.reply, data))
         command, _session, reply, payload = self._recv_frame()
         self.reply = reply
         return command, payload
@@ -145,18 +161,30 @@ class Machine:
     # --- commands ---
     def connect(self):
         try:
-            self.sock = socket.create_connection((self.host, self.port), timeout=self.timeout)
+            if self.transport == "udp":
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.sock.settimeout(self.timeout)
+                self.sock.connect((self.host, self.port))
+            else:
+                self.sock = socket.create_connection((self.host, self.port), timeout=self.timeout)
+            self.reply = (self.reply + 1) % USHRT_MAX
+            self.sock.sendall(self._frame(CMD_CONNECT, 0, self.reply))
+            command, session, reply, _payload = self._recv_frame()
         except OSError as error:
+            self.close()
             raise MachineError(str(error)) from error
-        self.reply = (self.reply + 1) % USHRT_MAX
-        self.sock.sendall(packet(CMD_CONNECT, 0, self.reply))
-        command, session, reply, _payload = self._recv_frame()
         self.session, self.reply = session, reply
         if command == CMD_ACK_UNAUTH:
             command, _p = self._send(CMD_AUTH, comm_key(self.password, self.session))
         if command != CMD_ACK_OK:
+            self.close()
             raise MachineError("the machine refused the connection (check the comm key)")
         return self
+
+    def close(self):
+        if self.sock:
+            self.sock.close()
+            self.sock = None
 
     def disconnect(self):
         if self.sock:
@@ -164,8 +192,7 @@ class Machine:
                 self._send(CMD_EXIT)
             except (OSError, MachineError):
                 pass
-            self.sock.close()
-            self.sock = None
+            self.close()
 
     def __enter__(self):
         return self.connect()
@@ -190,15 +217,15 @@ class Machine:
             return payload
         if command != CMD_PREPARE_DATA:
             raise MachineError("unexpected reply while reading")
-        total = unpack("<I", payload[:4])[0]
         data = b""
-        while len(data) < total:
+        while True:  # data frames, then the closing ACK_OK
             command, _s, _r, part = self._recv_frame()
-            if command != CMD_DATA:
-                break
-            data += part
-        command, _s, _r, _p = self._recv_frame()  # the closing ACK_OK
-        return data
+            if command == CMD_DATA:
+                data += part
+            elif command == CMD_ACK_OK:
+                return data
+            else:
+                raise MachineError("unexpected reply while reading")
 
     def read_buffer(self, command):
         cmd, payload = self._send(CMD_PREPARE_BUFFER, pack("<bhii", 1, command, 0, 0))
@@ -209,7 +236,7 @@ class Machine:
         size = unpack("<I", payload[1:5])[0]
         data, start = b"", 0
         while start < size:
-            part = min(MAX_CHUNK, size - start)
+            part = min(MAX_CHUNK_UDP if self.transport == "udp" else MAX_CHUNK, size - start)
             data += self._read_chunk(start, part)
             start += part
         self._send(CMD_FREE_DATA)
@@ -221,11 +248,52 @@ class Machine:
         return parse_attendance(self.read_buffer(CMD_ATTLOG_RRQ), records)
 
 
-def read(host, port=DEFAULT_PORT, password=0, with_punches=True):
-    """Clock, counts and (optionally) every punch on the machine."""
-    with Machine(host, port, password) as machine:
-        reading = Reading(clock=machine.clock())
+def _read_with(transport, host, port, password, with_punches, timeout):
+    with Machine(host, port, password, timeout=timeout, transport=transport) as machine:
+        reading = Reading(clock=machine.clock(), transport=transport)
         reading.users, reading.records = machine.sizes()
         if with_punches:
             reading.punches = machine.attendance(reading.records)
         return reading
+
+
+def read(host, port=DEFAULT_PORT, password=0, with_punches=True, timeout=6):
+    """Clock, counts and (optionally) every punch on the machine. Tries TCP, then UDP; when neither answers the
+    error says why in plain words (see `explain`)."""
+    errors = {}
+    for transport in ("tcp", "udp"):
+        try:
+            return _read_with(transport, host, port, password, with_punches, timeout)
+        except (MachineError, OSError) as error:
+            errors[transport] = str(error)
+            if "comm key" in str(error):
+                raise  # it answered: the key is wrong, UDP will say the same
+    raise MachineError(explain(host, port, errors))
+
+
+def explain(host, port, errors=None):
+    """Why the machine could not be reached, in words the office can act on."""
+    from apps.core.escpos import local_networks
+
+    errors = errors or {}
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        ip = None
+    networks = local_networks()
+    here = ", ".join(str(n.network_address).rsplit(".", 1)[0] + ".x" for n in networks) or "?"
+    if ip is not None and networks and not any(ip in n for n in networks):
+        return (
+            f"This computer is on network {here} but the machine ({host}) is on "
+            f"{str(ip).rsplit('.', 1)[0]}.x, so they cannot reach each other. Give the machine an IP address on "
+            f"this computer's network (on the machine: M/OK → Comm → Ethernet), or connect this computer to the "
+            f"machine's network."
+        )
+    tcp = errors.get("tcp", "")
+    if "refused" in tcp.lower():
+        return f"{host} is on the network but port {port} is closed. Check the port on the machine (Comm → Ethernet)."
+    return (
+        f"No answer from {host} on port {port} (tried TCP and UDP; this computer is on {here}). Check that the "
+        f"machine is on and its network cable is in, that the IP address is right, and that Windows Firewall or "
+        f"antivirus is not blocking TASEMS."
+    )

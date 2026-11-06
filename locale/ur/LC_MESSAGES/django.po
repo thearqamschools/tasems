@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 15:35+0500\n"
+"POT-Creation-Date: 2026-11-06 11:44+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -830,7 +830,7 @@ msgid "Events & Tickets"
 msgstr "تقریبات اور ٹکٹ"
 
 #: apps/accounts/context_processors.py:119
-#: apps/accounts/context_processors.py:121 apps/hr/views.py:86
+#: apps/accounts/context_processors.py:121 apps/hr/views.py:87
 #: apps/notices/models.py:40 apps/reports/catalogue.py:238
 #: templates/academics/holidays.html:24 templates/hr/employee.html:4
 #: templates/hr/employee_form.html:4 templates/hr/index.html:2
@@ -1219,7 +1219,7 @@ msgstr "حیثیت میں تبدیلی"
 msgid "Inquiry saved for %(n)s."
 msgstr "%(n)s کی انکوائری محفوظ ہو گئی۔"
 
-#: apps/admissions/views.py:129 apps/hr/views.py:137 apps/payroll/views.py:604
+#: apps/admissions/views.py:129 apps/hr/views.py:138 apps/payroll/views.py:604
 msgid "Saved."
 msgstr "محفوظ ہو گیا۔"
 
@@ -1264,7 +1264,7 @@ msgstr ""
 "%(section)s کی حاضری محفوظ ہو گئی: %(present)s حاضر، %(absent)s غیر حاضر۔"
 
 #: apps/attendance/views.py:186 apps/fees/views.py:263 apps/hifz/views.py:152
-#: apps/hr/views.py:88 apps/inventory/views.py:319 apps/people/forms.py:108
+#: apps/hr/views.py:89 apps/inventory/views.py:319 apps/people/forms.py:108
 #: apps/people/views.py:88 apps/reports/views.py:114
 #: templates/admissions/index.html:33 templates/admissions/index.html:41
 #: templates/core/design_system.html:56 templates/fees/concessions.html:23
@@ -1298,7 +1298,7 @@ msgid "Admission no."
 msgstr "داخلہ نمبر"
 
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/hifz/views.py:214
-#: apps/hr/views.py:87 apps/insights/views.py:46 apps/payroll/views.py:76
+#: apps/hr/views.py:88 apps/insights/views.py:46 apps/payroll/views.py:76
 #: apps/payroll/views.py:83 apps/people/views.py:87 apps/reports/views.py:113
 #: apps/setup/forms.py:21 apps/setup/forms.py:232
 #: templates/exams/award_list.html:15 templates/hifz/report.html:14
@@ -2643,7 +2643,7 @@ msgstr ""
 msgid "Someone else must approve a discount you asked for."
 msgstr "آپ کی مانگی ہوئی رعایت کوئی دوسرا منظور کرے گا۔"
 
-#: apps/fees/views.py:712 apps/hr/views.py:406
+#: apps/fees/views.py:712 apps/hr/views.py:407
 msgid "Decision saved."
 msgstr "فیصلہ محفوظ ہو گیا۔"
 
@@ -2765,8 +2765,8 @@ msgstr "ایکسل فائل (.xlsx) منتخب کریں۔"
 msgid "The file is larger than 5 MB. Split it into smaller files."
 msgstr "فائل 5 MB سے بڑی ہے۔ اسے چھوٹی فائلوں میں تقسیم کریں۔"
 
-#: apps/fees/views.py:1101 apps/fees/views.py:1107 apps/hr/views.py:209
-#: apps/hr/views.py:215 apps/hr/views.py:268 apps/hr/views.py:274
+#: apps/fees/views.py:1101 apps/fees/views.py:1107 apps/hr/views.py:210
+#: apps/hr/views.py:216 apps/hr/views.py:269 apps/hr/views.py:275
 #: apps/people/views.py:589 apps/people/views.py:595
 msgid "This import has expired. Please check the file again."
 msgstr "اس درآمد کی مدت ختم ہو گئی۔ براہ کرم فائل دوبارہ چیک کریں۔"
@@ -3038,7 +3038,7 @@ msgstr "مستقل پتہ"
 msgid "Staff type"
 msgstr "عملے کی قسم"
 
-#: apps/hr/forms.py:57 apps/hr/views.py:88 templates/hr/employee.html:20
+#: apps/hr/forms.py:57 apps/hr/views.py:89 templates/hr/employee.html:20
 msgid "Joining date"
 msgstr "تاریخِ تقرری"
 
@@ -3054,7 +3054,7 @@ msgstr "آخری تعلیمی قابلیت"
 msgid "One month's salary is kept by the school and returned when the person leaves with notice."
 msgstr "ایک ماہ کی تنخواہ سکول کے پاس رہتی ہے اور نوٹس دے کر چھوڑنے پر واپس ملتی ہے۔"
 
-#: apps/hr/forms.py:94 apps/hr/views.py:87 apps/payroll/views.py:83
+#: apps/hr/forms.py:94 apps/hr/views.py:88 apps/payroll/views.py:83
 #: templates/hr/day.html:20 templates/hr/index.html:39
 #: templates/payroll/index.html:17 templates/payroll/index.html:45
 #: templates/payroll/salaries.html:9 templates/payroll/salaries.html:14
@@ -3291,7 +3291,7 @@ msgstr "لڑکا"
 msgid "Female"
 msgstr "لڑکی"
 
-#: apps/hr/models.py:87 apps/hr/views.py:87 apps/people/models.py:29
+#: apps/hr/models.py:87 apps/hr/views.py:88 apps/people/models.py:29
 #: templates/hr/employee.html:16
 msgid "CNIC"
 msgstr "شناختی کارڈ نمبر"
@@ -3603,31 +3603,31 @@ msgid ""
 "No punches found. Export the attendance log from the machine and try again."
 msgstr "کوئی اندراج نہیں ملا۔ مشین سے حاضری لاگ نکال کر دوبارہ کوشش کریں۔"
 
-#: apps/hr/views.py:87 apps/payroll/views.py:76 apps/payroll/views.py:83
+#: apps/hr/views.py:88 apps/payroll/views.py:76 apps/payroll/views.py:83
 #: apps/setup/forms.py:43 templates/hr/index.html:39
 #: templates/payroll/advances.html:10 templates/payroll/index.html:45
 #: templates/setup/branches.html:19
 msgid "Code"
 msgstr "کوڈ"
 
-#: apps/hr/views.py:87
+#: apps/hr/views.py:88
 msgid "Father / husband name"
 msgstr "والد / شوہر کا نام"
 
-#: apps/hr/views.py:87 templates/exams/index.html:17 templates/hr/index.html:39
+#: apps/hr/views.py:88 templates/exams/index.html:17 templates/hr/index.html:39
 #: templates/payroll/advances.html:10 templates/payroll/advances.html:23
 #: templates/payroll/person.html:56
 msgid "Type"
 msgstr "قسم"
 
-#: apps/hr/views.py:87 apps/notices/views.py:151 apps/setup/forms.py:370
+#: apps/hr/views.py:88 apps/notices/views.py:151 apps/setup/forms.py:370
 #: templates/admissions/index.html:41 templates/hr/employee.html:17
 #: templates/hr/index.html:39 templates/notices/compose.html:28
 #: templates/setup/users.html:19
 msgid "Mobile"
 msgstr "موبائل"
 
-#: apps/hr/views.py:88 apps/reports/views.py:77 apps/setup/forms.py:23
+#: apps/hr/views.py:89 apps/reports/views.py:77 apps/setup/forms.py:23
 #: templates/events/sell.html:12 templates/events/sell.html:19
 #: templates/hr/employee.html:21 templates/people/student_detail.html:63
 #: templates/people/student_list.html:23
@@ -3636,36 +3636,36 @@ msgstr "موبائل"
 msgid "Campus"
 msgstr "کیمپس"
 
-#: apps/hr/views.py:88
+#: apps/hr/views.py:89
 msgid "Qualification"
 msgstr "تعلیمی قابلیت"
 
-#: apps/hr/views.py:88 templates/hr/index.html:39
+#: apps/hr/views.py:89 templates/hr/index.html:39
 msgid "Machine ID"
 msgstr "مشین آئی ڈی"
 
-#: apps/hr/views.py:193
+#: apps/hr/views.py:194
 msgid "Choose an Excel file (.xlsx) smaller than 5 MB."
 msgstr "5 MB سے چھوٹی ایکسل فائل (.xlsx) چنیں۔"
 
-#: apps/hr/views.py:225 apps/people/views.py:605
+#: apps/hr/views.py:226 apps/people/views.py:605
 msgid "The data changed since the check. Please check the file again."
 msgstr "چیک کے بعد ڈیٹا بدل گیا ہے۔ براہ کرم فائل دوبارہ چیک کریں۔"
 
-#: apps/hr/views.py:228
+#: apps/hr/views.py:229
 #, python-format
 msgid "%(n)s staff members added."
 msgstr "عملے کے %(n)s افراد شامل ہو گئے۔"
 
-#: apps/hr/views.py:250
+#: apps/hr/views.py:251
 msgid "Choose the machine's export file (.xlsx, .csv, .dat or .txt)."
 msgstr "مشین کی نکالی ہوئی فائل چنیں (.xlsx، .csv، .dat یا .txt)۔"
 
-#: apps/hr/views.py:252
+#: apps/hr/views.py:253
 msgid "The file is larger than 10 MB. Export one month at a time."
 msgstr "فائل 10 MB سے بڑی ہے۔ ایک وقت میں ایک مہینے کی فائل نکالیں۔"
 
-#: apps/hr/views.py:282
+#: apps/hr/views.py:283
 #, python-format
 msgid ""
 "%(n)s new punches saved for %(e)s staff; attendance worked out from %(a)s to "
@@ -3674,47 +3674,47 @@ msgstr ""
 "%(e)s افراد کے %(n)s نئے اندراجات محفوظ ہو گئے؛ %(a)s سے %(b)s تک حاضری کا "
 "حساب ہو گیا۔"
 
-#: apps/hr/views.py:304
+#: apps/hr/views.py:305
 #, python-format
 msgid "Correction removed for %(n)s."
 msgstr "%(n)s کی درستی ختم کر دی گئی۔"
 
-#: apps/hr/views.py:310
+#: apps/hr/views.py:311
 #, python-format
 msgid "Attendance corrected for %(n)s."
 msgstr "%(n)s کی حاضری درست کر دی گئی۔"
 
-#: apps/hr/views.py:312
+#: apps/hr/views.py:313
 msgid "Choose a status and write the reason."
 msgstr "حیثیت چنیں اور وجہ لکھیں۔"
 
-#: apps/hr/views.py:430
+#: apps/hr/views.py:431
 msgid "Leave request saved. It counts once the principal approves it."
 msgstr "رخصت کی درخواست محفوظ ہو گئی۔ پرنسپل کی منظوری کے بعد شمار ہو گی۔"
 
-#: apps/hr/views.py:485
+#: apps/hr/views.py:486
 msgid "Leave request withdrawn."
 msgstr "رخصت کی درخواست واپس لے لی گئی۔"
 
-#: apps/hr/views.py:511
+#: apps/hr/views.py:512
 msgid "Give the machine's IP address, port and comm key (numbers)."
 msgstr "مشین کا IP ایڈریس، پورٹ اور کام کی (نمبر) لکھیں۔"
 
-#: apps/hr/views.py:514 apps/setup/views.py:126 templates/hr/machines.html:2
+#: apps/hr/views.py:515 apps/setup/views.py:126 templates/hr/machines.html:2
 #: templates/hr/machines.html:5
 msgid "Attendance machine"
 msgstr "حاضری مشین"
 
-#: apps/hr/views.py:519
+#: apps/hr/views.py:520
 msgid "Machine saved."
 msgstr "مشین محفوظ ہو گئی۔"
 
-#: apps/hr/views.py:526
+#: apps/hr/views.py:527
 #, python-format
-msgid "Connected. Machine clock %(c)s · %(u)s users · %(r)s records."
-msgstr "رابطہ ہو گیا۔ مشین کا وقت %(c)s · %(u)s صارفین · %(r)s ریکارڈ۔"
+msgid "Connected (%(t)s). Machine clock %(c)s · %(u)s users · %(r)s records."
+msgstr "رابطہ ہو گیا (%(t)s)۔ مشین کا وقت %(c)s · %(u)s صارفین · %(r)s ریکارڈ۔"
 
-#: apps/hr/views.py:530
+#: apps/hr/views.py:531
 #, python-format
 msgid "The machine did not answer: %(e)s"
 msgstr "مشین نے جواب نہیں دیا: %(e)s"
@@ -8937,32 +8937,41 @@ msgid "Read by itself every few minutes while TASEMS is running on this computer
 msgstr "جب تک اس کمپیوٹر پر TASEMS چل رہا ہے، ہر چند منٹ بعد خود پڑھی جاتی ہے۔"
 
 #: templates/hr/machines.html:11
+#, python-format
+msgid "This machine (%(host)s) is not on this computer's network, so TASEMS cannot reach it. Give the machine an IP address on this computer's network (on the machine: M/OK → Comm → Ethernet), or connect this computer to the machine's network."
+msgstr "یہ مشین (%(host)s) اس کمپیوٹر کے نیٹ ورک پر نہیں ہے، اس لیے TASEMS اس تک نہیں پہنچ سکتا۔ مشین کو اس کمپیوٹر کے نیٹ ورک کا IP ایڈریس دیں (مشین پر: M/OK ← Comm ← Ethernet)، یا اس کمپیوٹر کو مشین کے نیٹ ورک سے جوڑیں۔"
+
+#: templates/hr/machines.html:12
 msgid "Machine users not matched to any staff member (give their number as the staff member's Biometric machine ID):"
 msgstr "مشین کے وہ صارف جو کسی ملازم سے نہیں ملے (ان کا نمبر ملازم کے بایومیٹرک مشین آئی ڈی میں لکھیں):"
 
-#: templates/hr/machines.html:13
+#: templates/hr/machines.html:14
 msgid "Get attendance now"
 msgstr "ابھی حاضری لیں"
 
-#: templates/hr/machines.html:14
+#: templates/hr/machines.html:15
 msgid "Test connection"
 msgstr "رابطہ چیک کریں"
 
-#: templates/hr/machines.html:15
+#: templates/hr/machines.html:16
 msgid "Change"
 msgstr "تبدیل کریں"
 
-#: templates/hr/machines.html:16
+#: templates/hr/machines.html:17
 msgid "No machine added yet."
 msgstr "ابھی کوئی مشین شامل نہیں۔"
 
-#: templates/hr/machines.html:17
+#: templates/hr/machines.html:18
 msgid "Add a machine"
 msgstr "مشین شامل کریں"
 
-#: templates/hr/machines.html:18
+#: templates/hr/machines.html:19
 msgid "On the machine: M/OK → Comm → Ethernet shows its IP address; the comm key is under Comm → Comm. Key (0 if none). This computer and the machine must be on the same network."
 msgstr "مشین پر: M/OK ← Comm ← Ethernet میں IP ایڈریس ہوتا ہے؛ کام کی Comm ← Comm. Key میں (نہ ہو تو 0)۔ یہ کمپیوٹر اور مشین ایک ہی نیٹ ورک پر ہوں۔"
+
+#: templates/hr/machines.html:19
+msgid "This computer is on network:"
+msgstr "یہ کمپیوٹر اس نیٹ ورک پر ہے:"
 
 #: templates/hr/mine.html:6
 msgid "Ask for leave"

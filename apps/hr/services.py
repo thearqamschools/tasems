@@ -572,7 +572,8 @@ def read_machine(machine, user=None, since_days=45):
     machine.last_ok = True
     machine.unknown_ids = check.unknown_ids
     machine.last_result = (
-        f"OK · machine clock {clock} · {reading.users} users · {reading.records} records · {new} new punches"
+        f"OK ({reading.transport.upper()}) · machine clock {clock} · {reading.users} users · {reading.records} records"
+        f" · {new} new punches"
     )[:300]
     machine.save(update_fields=["last_read_at", "last_ok", "last_result", "unknown_ids"])
     return machine.last_result
