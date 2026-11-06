@@ -455,6 +455,12 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
     **MAC.ID** (the lead, 6 Nov 2026).
   - The same two columns, **before the name**, also on **Staff attendance** (today's page) and the **Monthly
     sheet**.
+  - **Joining date** added as the last column of the staff list (after Mobile): EMP.code, Machine ID, Name,
+    Designation, Type, Mobile, **Joining date** (the lead, 6 Nov 2026).
+  - **Monthly sheet** starts with: EMP.code, Machine ID, Name, **Designation** (designation added), then the days.
+- R7-17. **Sort by clicking a column heading** (the lead, 6 Nov 2026): on the **Staff list** — EMP.code, Machine ID,
+  Name (A–Z), Designation, Type, Mobile, Joining date — one click ascending, a second click descending, with an
+  arrow showing the order. The same on **Staff attendance** (today's page) for its headings.
 ### Staff member page (6 Nov 2026)
 - R7-15. Buttons at the top of a staff member's page: today **Edit, Delete, Record leave** — Delete sits in the
   middle and can be pressed by mistake. New order: **Edit**, **Record leave**, then empty space, and **Delete on
