@@ -53,9 +53,15 @@ def checksum(data):
 
 
 def packet(command, session, reply, data=b""):
-    """One TCP frame: start marker, length, then command, checksum, session id, reply id and data."""
+    """One TCP frame: start marker, length, then command, checksum, session id, reply id and data.
+
+    As the machines expect it (and as pyzk and node-zklib send it): the checksum is worked out with the *previous*
+    reply id `reply`, and the frame carries `reply + 1`. A frame with any other checksum is dropped by the machine
+    without an answer, which looks like a time-out."""
     body = pack("<4H", command, 0, session, reply) + data
-    body = pack("<4H", command, checksum(body), session, reply) + data
+    total = checksum(body)
+    reply = (reply + 1) % USHRT_MAX
+    body = pack("<4H", command, total, session, reply) + data
     return pack("<HHI", *TCP_START, len(body)) + body
 
 
@@ -152,7 +158,6 @@ class Machine:
         return frame[8:] if self.transport == "udp" else frame
 
     def _send(self, command, data=b""):
-        self.reply = (self.reply + 1) % USHRT_MAX
         self.sock.sendall(self._frame(command, self.session, self.reply, data))
         command, _session, reply, payload = self._recv_frame()
         self.reply = reply
@@ -167,12 +172,16 @@ class Machine:
                 self.sock.connect((self.host, self.port))
             else:
                 self.sock = socket.create_connection((self.host, self.port), timeout=self.timeout)
-            self.reply = (self.reply + 1) % USHRT_MAX
+        except OSError as error:
+            self.close()
+            raise MachineError(f"could not open a connection: {error}") from error
+        try:
+            self.session, self.reply = 0, USHRT_MAX - 1
             self.sock.sendall(self._frame(CMD_CONNECT, 0, self.reply))
             command, session, reply, _payload = self._recv_frame()
         except OSError as error:
             self.close()
-            raise MachineError(str(error)) from error
+            raise MachineError(f"connected, but no reply to TASEMS: {error}") from error
         self.session, self.reply = session, reply
         if command == CMD_ACK_UNAUTH:
             command, _p = self._send(CMD_AUTH, comm_key(self.password, self.session))
@@ -292,8 +301,37 @@ def explain(host, port, errors=None):
     tcp = errors.get("tcp", "")
     if "refused" in tcp.lower():
         return f"{host} is on the network but port {port} is closed. Check the port on the machine (Comm → Ethernet)."
+    if "no reply" in tcp:
+        return (
+            f"{host} accepted the connection on port {port} but did not reply (tried TCP and UDP). Check the comm key "
+            f"and the port on the machine (Comm → Comm. Key / Ethernet), then restart the machine once."
+        )
+    pinged = ping(host)
+    if pinged is False:
+        return (
+            f"{host} does not answer a ping from this computer ({here}): the machine is off, its network cable is "
+            f"out, or its IP address is not {host} (check M/OK → Comm → Ethernet on the machine)."
+        )
+    seen = "answers a ping but " if pinged else ""
     return (
-        f"No answer from {host} on port {port} (tried TCP and UDP; this computer is on {here}). Check that the "
-        f"machine is on and its network cable is in, that the IP address is right, and that Windows Firewall or "
-        f"antivirus is not blocking TASEMS."
+        f"{host} {seen}gives no answer on port {port} (tried TCP and UDP; this computer is on {here}). Check the "
+        f"port on the machine (Comm → Ethernet), and that Windows Firewall or antivirus is not blocking TASEMS."
     )
+
+
+def ping(host):
+    """True / False from one ping, or None when ping cannot be run here."""
+    import platform
+    import subprocess
+
+    windows = platform.system() == "Windows"
+    command = ["ping", "-n", "1", "-w", "1500", host] if windows else ["ping", "-c", "1", "-W", "2", host]
+    try:
+        done = subprocess.run(  # noqa: S603 - fixed program, the host is an IP address typed by staff
+            command, capture_output=True, timeout=6, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    out = done.stdout.decode(errors="ignore")
+    # Windows says "Reply from x: Destination host unreachable" with exit code 0 when it fails, so look for TTL.
+    return done.returncode == 0 and "TTL=" in out.upper()

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.41.2 — 2026-11-06 — Attendance machine: frames the machine accepts (installer v14)
+- With v13 the head-office machine (192.168.1.222, same network, answers ping) still gave no answer. Cause: TASEMS
+  worked out each frame's checksum with the reply id it sent; ZKTeco machines (and pyzk / node-zklib, which talk to
+  them) use the previous reply id, and a machine drops a frame with any other checksum without answering. Fixed, and
+  the first frame was checked byte for byte against pyzk.
+- The fake machine in the tests now drops wrong-checksum frames like a real one (the v13 code fails that test).
+- "No answer" messages now say which step failed: no connection, connected but no reply, or no ping reply.
+
 ## 0.41.1 — 2026-11-06 — Attendance machine: UDP and clear "no answer" reasons (installer v13)
 - The real machine at the head office (192.168.1.222:4370) gave "timed out". TASEMS now tries TCP and then UDP
   (many ZKTeco machines answer only UDP on port 4370); the result line says which one worked.

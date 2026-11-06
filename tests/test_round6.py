@@ -197,8 +197,12 @@ def fake_machine(punches, key=0, udp=False):
                     body = b""
                     while len(body) < length:
                         body += conn.recv(length - len(body))
-                command, _c, _s, rid = unpack("<4H", body[:8])
+                command, chk, sid, rid = unpack("<4H", body[:8])
                 data = body[8:]
+                # Like a real machine: the checksum must be the one worked out with the previous reply id, or the
+                # frame is dropped without an answer.
+                if chk != zk.checksum(pack("<4H", command, 0, sid, (rid - 1) % zk.USHRT_MAX) + data):
+                    continue
                 if command == zk.CMD_CONNECT:
                     reply(conn, zk.CMD_ACK_OK if authed else zk.CMD_ACK_UNAUTH, rid)
                 elif command == zk.CMD_AUTH:
@@ -260,6 +264,12 @@ def test_machine_that_only_talks_udp(monkeypatch):
     reading = zk.read("127.0.0.1", port, 99, timeout=2)
     thread.join(5)
     assert reading.transport == "udp" and reading.users == 2 and [u for u, _t in reading.punches] == ["5", "6"]
+
+
+def test_frames_carry_the_checksum_machines_expect():
+    """Checked against pyzk's __create_header: checksum over the previous reply id, frame carries the next one."""
+    frame = zk.packet(zk.CMD_CONNECT, 0, zk.USHRT_MAX - 1)
+    assert frame.hex() == "5050827d08000000e80317fc00000000"
 
 
 def test_machine_on_another_network_is_explained(monkeypatch):
