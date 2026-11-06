@@ -429,11 +429,12 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
   the staff list. Remove **Today's staff attendance** and **Import machine file** buttons from it.~~
   **Withdrawn by the lead (6 Nov 2026)**: the buttons at the top of the Staff page (Today's staff attendance,
   Import machine file, Monthly sheet, Leave) **stay as they are**; do not change them.
-- R7-2. (To confirm with the lead after R7-1 was withdrawn: does this side-menu change still apply?) The side menu **Staff** group keeps only staff items. **Monthly sheet** and **Leave** move to the
+- R7-2. ~~The side menu **Staff** group keeps only staff items. **Monthly sheet** and **Leave** move to the
   **Staff attendance** side (with Today's attendance, Import machine file, Attendance machine): everything about
   attendance lives under Staff attendance.
 
-### Computer code and Biometric ID
+### Computer code and Biometric ID~~
+  **Withdrawn by the lead (6 Nov 2026)**: the side menu stays as it is; do not change it.
 - R7-3. Every staff member has two separate numbers: **Computer code** (our own, for records and documents) and
   **Biometric ID** (the user number on the machine, used only to match punches). (Both fields exist today:
   "Code" and "Biometric machine ID"; to label them clearly.)
@@ -443,7 +444,8 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
   page shows "Biometric ID not set" for them.
 - R7-5. New staff are often put on the machine weeks or a month after joining. Until the ID is typed into TASEMS
   nothing is taken for them; once it is typed, punches are taken **from then on** (the lead's wording: "phir wo
-  uthana shuru kar de"; to confirm whether earlier punches still on the machine should also come in).
+  uthana shuru kar de"). **Answered by the lead (6 Nov 2026)**: there are no earlier punches to bring — a person
+  gets their machine ID only when enrolled on the machine, and punches start from then.
 - R7-6. Investigation: where the 93 staff went missing (machine or TASEMS), and how to get them back.
 
 - R7-10. **Staff list columns** (Staff page), in this order: **EMP.code** (heading renamed from "Code"),
