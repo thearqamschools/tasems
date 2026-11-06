@@ -3,24 +3,25 @@
 {% block content %}
 <p><a href="{% url 'hr:index' %}">‹ {% trans "Staff" %}</a></p>
 <h1>{{ employee.full_name }}</h1>
-<p class="lede">{{ employee.designation }} · {{ employee.get_staff_type_display }} · <span class="num">{{ employee.code }}</span>{% if employee.status != "active" %} · {{ employee.get_status_display }}{% endif %}</p>
+<p class="lede">{{ employee.designation }} · {{ employee.get_staff_type_display }} · {% trans "EMP.code" %} <span class="num">{{ employee.code }}</span> · {% trans "MAC.ID" %} {% if employee.machine_id %}<span class="num">{{ employee.machine_id }}</span>{% else %}<span class="badge attention">{% trans "Biometric ID not set" %}</span>{% endif %}{% if employee.status != "active" %} · {{ employee.get_status_display }}{% endif %}</p>
+{# Delete on the far right, away from Edit, so it is not pressed by mistake (project lead, 6 Nov 2026). #}
 <div class="actions">
   {% if can_edit %}<a class="button" href="{% url 'hr:employee_edit' employee.id %}">{% trans "Edit" %}</a>{% endif %}
-  {% delete_button "employee" employee %}
   {% if can_leave %}<a class="button secondary" href="{% url 'hr:leave_new' employee.id %}">{% trans "Record leave" %}</a>{% endif %}
   {% if employee.cv %}<a class="button quiet" href="{% url 'hr:employee_cv' employee.id %}">{% icon "file-text" %}{% trans "Open CV" %}</a>{% endif %}
+  <span class="actions-end">{% delete_button "employee" employee %}</span>
 </div>
-<div class="table-wrap"><table><tbody>
+<div class="table-wrap"><table class="details"><tbody>
   <tr><th>{% trans "Father name" %}</th><td>{{ employee.father_name|default:"—" }}</td></tr>
   {% if employee.husband_name %}<tr><th>{% trans "Husband name" %}</th><td>{{ employee.husband_name }}</td></tr>{% endif %}
-  <tr><th>{% trans "CNIC" %}</th><td class="num">{{ employee.cnic|cnic|default:"—" }}</td></tr>
+  <tr><th>{% trans "CNIC" %}</th><td><span class="num">{{ employee.cnic|cnic|default:"—" }}</span></td></tr>
   <tr><th>{% trans "Mobile" %}</th><td>{% if employee.phone %}<a href="tel:{{ employee.phone }}" class="num">{{ employee.phone }}</a>{% else %}—{% endif %}</td></tr>
   <tr><th>{% trans "Present address" %}</th><td>{{ employee.address|default:"—"|linebreaksbr }}</td></tr>
   <tr><th>{% trans "Permanent address" %}</th><td>{{ employee.permanent_address|default:"—"|linebreaksbr }}</td></tr>
   <tr><th>{% trans "Joining date" %}</th><td>{{ employee.joined_on|date:"d M Y" }}{% if employee.left_on %} – {{ employee.left_on|date:"d M Y" }}{% endif %}</td></tr>
   <tr><th>{% trans "Campus" %}</th><td>{{ employee.campus|default:"—" }}</td></tr>
   <tr><th>{% trans "Last qualification" %}</th><td>{{ employee.qualification|default:"—" }}</td></tr>
-  <tr><th>{% trans "Biometric machine ID" %}</th><td class="num">{{ employee.machine_id|default:"—" }}</td></tr>
+  <tr><th>{% trans "Biometric machine ID" %}</th><td>{% if employee.machine_id %}<span class="num">{{ employee.machine_id }}</span>{% else %}{% trans "Not set — attendance is entered by hand; the machine does not mark this person." %}{% endif %}</td></tr>
   <tr><th>{% trans "TASEMS login" %}</th><td>{{ employee.user.username|default:"—" }}</td></tr>
 </tbody></table></div>
 

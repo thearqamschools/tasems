@@ -1,0 +1,43 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Staff duty times" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<h1>{% trans "Staff duty times" %}</h1>
+<p class="lede">{{ branch.name }} · {% trans "In and Out time of each staff type. Coming in after the In time (plus the grace minutes) is Late; going before the Out time is Early left. When the times change (summer, winter), enter the new times from the date they start: earlier days keep the times of their own date." %}</p>
+
+<h2>{% trans "Times today" %} <span class="muted small">{{ today|date:"d M Y" }}</span></h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Staff type" %}</th><th class="num">{% trans "In time" %}</th><th class="num">{% trans "Out time" %}</th><th class="num">{% trans "Grace minutes" %}</th><th class="num">{% trans "Half day after" %}</th><th>{% trans "From" %}</th></tr></thead>
+  <tbody>{% for value, name, t in current %}<tr><td>{{ name }}</td>
+    <td class="num">{{ t.duty_starts|time:"H:i"|default:"—" }}</td><td class="num">{{ t.duty_ends|time:"H:i"|default:"—" }}</td>
+    <td class="num">{{ t.grace_minutes|default:0 }}</td><td class="num">{{ t.half_day_after|time:"H:i"|default:"—" }}</td>
+    <td>{% if t.starts_from %}{{ t.starts_from|date:"d M Y" }}{% if t.label %} · {{ t.label }}{% endif %}{% else %}<span class="muted">{% trans "branch duty time" %}</span>{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+
+{% if can_edit %}
+<details class="card"{% if not history %} open{% endif %}><summary>{% trans "Enter new times from a date" %}</summary>
+<form method="post">{% csrf_token %}
+  <div class="form-grid">
+    <div class="field"><label for="starts_from">{% trans "Times start from" %}</label><input type="date" id="starts_from" name="starts_from" required value="{{ today|date:'Y-m-d' }}"></div>
+    <div class="field"><label for="label">{% trans "Name (optional)" %}</label><input type="text" id="label" name="label" maxlength="60" placeholder="{% trans 'e.g. Winter times' %}"></div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>{% trans "Staff type" %}</th><th>{% trans "In time" %}</th><th>{% trans "Out time" %}</th><th>{% trans "Grace minutes" %}</th><th>{% trans "Half day after" %}</th></tr></thead>
+    <tbody>{% for value, name, t in current %}<tr><td>{{ name }}</td>
+      <td><input type="time" name="in_{{ value }}" value="{{ t.duty_starts|time:'H:i' }}" aria-label="{% trans 'In time' %} {{ name }}"></td>
+      <td><input type="time" name="out_{{ value }}" value="{{ t.duty_ends|time:'H:i' }}" aria-label="{% trans 'Out time' %} {{ name }}"></td>
+      <td><input type="number" name="grace_{{ value }}" min="0" max="120" value="{{ t.grace_minutes|default:0 }}" style="max-inline-size:6rem" aria-label="{% trans 'Grace minutes' %} {{ name }}"></td>
+      <td><input type="time" name="half_{{ value }}" value="{{ t.half_day_after|time:'H:i' }}" aria-label="{% trans 'Half day after' %} {{ name }}"></td></tr>{% endfor %}</tbody>
+  </table></div>
+  <p class="small muted">{% trans "A date in the past works out the days from that date again (up to two months back); days corrected by hand are kept." %}</p>
+  <button class="button" type="submit">{% trans "Save times" %}</button>
+</form></details>
+{% endif %}
+
+{% if history %}<h2>{% trans "All times" %}</h2>
+{% for date, items in history %}<div class="card">
+  <h3>{% trans "From" %} {{ date|date:"d M Y" }}{% if items.0.label %} · {{ items.0.label }}{% endif %}</h3>
+  <p class="small">{% for t in items %}{{ t.get_staff_type_display }}: <span class="num">{{ t.duty_starts|time:"H:i" }}–{{ t.duty_ends|time:"H:i" }}</span>{% if t.grace_minutes %} (+{{ t.grace_minutes }} {% trans "min" %}){% endif %}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+  {% if can_edit %}<form method="post" style="margin:0">{% csrf_token %}<input type="hidden" name="action" value="remove"><input type="hidden" name="starts_from" value="{{ date|date:'Y-m-d' }}"><button class="button quiet danger" type="submit" data-confirm="{% trans 'Remove these times? The days from this date are worked out again with the times before them.' %}">{% trans "Remove (entered by mistake)" %}</button></form>{% endif %}
+</div>{% endfor %}{% endif %}
+{% endblock %}

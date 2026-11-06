@@ -5,6 +5,8 @@ confirmed (Lahore address, regions, subjects, session dates) is left for head
 office to enter, so nothing is invented.
 """
 
+import datetime as dt
+
 from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
 from django.db import models, transaction
@@ -13,7 +15,7 @@ from apps.academics.models import ClassLevel, CurriculumSubject, Subject
 from apps.accounts.models import Role, Scope
 from apps.exams.models import GradingComponent, GradingScheme
 from apps.fees.models import BranchFeeSettings, FeeHead, FeeRate, PaymentChannel, VoucherCounter
-from apps.hr.models import Employee, HRSettings, LeaveType
+from apps.hr.models import DutyTime, Employee, HRSettings, LeaveType
 from apps.organisation.models import Branch, HeadOffice
 
 VIEW_PEOPLE = ["people.view_student", "people.view_guardian", "people.view_enrolment", "people.view_studentguardian"]
@@ -779,7 +781,15 @@ class Command(BaseCommand):
             )
         # Samanabad staff duty 07:45–13:45, Monday to Saturday (confirmed 16 Oct 2026). Created once;
         # head office changes it in Setup afterwards.
-        HRSettings.objects.get_or_create(
+        hr, _ = HRSettings.objects.get_or_create(
             branch=head_office_campus(HeadOffice.objects.get(code="faisalabad")),
             defaults={"duty_starts": "07:45", "duty_ends": "13:45", "working_days": [0, 1, 2, 3, 4, 5]},
         )
+        # Round 7: the same times as the starting In / Out time of each staff type (changed in Setup afterwards).
+        if not DutyTime.objects.filter(branch=hr.branch).exists() and hr.duty_starts and hr.duty_ends:
+            for staff_type, _label in Employee.StaffType.choices:
+                DutyTime.objects.create(
+                    branch=hr.branch, staff_type=staff_type, starts_from=dt.date(2020, 1, 1),
+                    duty_starts=hr.duty_starts, duty_ends=hr.duty_ends, grace_minutes=hr.grace_minutes,
+                    half_day_after=hr.half_day_after,
+                )  # fmt: skip

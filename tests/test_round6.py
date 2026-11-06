@@ -162,7 +162,7 @@ def encode_time(t):
                 + t.minute * 60 + t.second)  # fmt: skip
 
 
-def fake_machine(punches, key=0, udp=False):
+def fake_machine(punches, key=0, udp=False, users=None):
     server = socket.socket(type=socket.SOCK_DGRAM if udp else socket.SOCK_STREAM)
     server.bind(("127.0.0.1", 0))
     if not udp:
@@ -172,6 +172,12 @@ def fake_machine(punches, key=0, udp=False):
         for i, (uid, at) in enumerate(punches)
     )
     log = pack("<I", len(records)) + records
+    people = b"".join(
+        pack("<HB8s24sIx7sx24s", i + 1, 0, b"", name.encode(), 0, b"", number.encode())
+        for i, (number, name) in enumerate((users or {}).items())
+    )
+    user_list = pack("<I", len(people)) + people
+    wanted = {"blob": log}
 
     peer = {}
 
@@ -212,13 +218,15 @@ def fake_machine(punches, key=0, udp=False):
                     reply(conn, zk.CMD_ACK_OK, rid, encode_time(dt.datetime(2026, 11, 5, 9, 0)))
                 elif command == zk.CMD_GET_FREE_SIZES:
                     fields = [0] * 20
-                    fields[4], fields[8] = 2, len(punches)
+                    fields[4], fields[8] = len(users or {}) or 2, len(punches)
                     reply(conn, zk.CMD_ACK_OK, rid, pack("<20i", *fields))
                 elif command == zk.CMD_PREPARE_BUFFER:
-                    reply(conn, zk.CMD_ACK_OK, rid, b"\x00" + pack("<I", len(log)))
+                    _one, asked, _fct, _ext = unpack("<bhii", data)
+                    wanted["blob"] = user_list if asked == zk.CMD_USERTEMP_RRQ else log
+                    reply(conn, zk.CMD_ACK_OK, rid, b"\x00" + pack("<I", len(wanted["blob"])))
                 elif command == zk.CMD_READ_BUFFER:
                     start, size = unpack("<ii", data)
-                    part = log[start : start + size]
+                    part = wanted["blob"][start : start + size]
                     reply(conn, zk.CMD_PREPARE_DATA, rid, pack("<I", len(part)))
                     for i in range(0, len(part), 100):
                         reply(conn, zk.CMD_DATA, rid, part[i : i + 100])
@@ -254,7 +262,7 @@ def test_attendance_machine_read(staff, login_as):
     assert machine.last_ok and "2 new punches" in machine.last_result and machine.unknown_ids == {"99": 1}
     assert Punch.objects.filter(employee=g).count() == 2
     page = client.get("/staff/attendance/machines/").content.decode()
-    assert "99 (1)" in page and "Get attendance now" in page
+    assert 'name="staff_99"' in page and "Get attendance now" in page  # 99 is offered for matching
 
 
 def test_machine_that_only_talks_udp(monkeypatch):

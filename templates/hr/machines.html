@@ -9,7 +9,19 @@
   <p>{% if m.last_read_at %}{% if m.last_ok %}<span class="badge">{% trans "Read" %}</span>{% else %}<span class="badge danger">{% trans "Did not answer" %}</span>{% endif %} {{ m.last_read_at|date:"d M Y, h:i A" }} · <span class="small">{{ m.last_result }}</span>{% else %}<span class="muted">{% trans "Not read yet." %}</span>{% endif %}
   {% if m.auto_read %}<br><span class="small muted">{% trans "Read by itself every few minutes while TASEMS is running on this computer." %}</span>{% endif %}</p>
   {% if m.other_network %}<p class="callout attention">{% blocktrans with host=m.host %}This machine ({{ host }}) is not on this computer's network, so TASEMS cannot reach it. Give the machine an IP address on this computer's network (on the machine: M/OK → Comm → Ethernet), or connect this computer to the machine's network.{% endblocktrans %}</p>{% endif %}
-  {% if m.unknown_ids %}<p class="callout attention">{% blocktrans %}Machine users not matched to any staff member (give their number as the staff member's Biometric machine ID):{% endblocktrans %} <span class="num">{% for uid, n in m.unknown_ids.items %}{{ uid }} ({{ n }}){% if not forloop.last %}, {% endif %}{% endfor %}</span></p>{% endif %}
+  {% if m.match %}<details class="callout attention"{% if can_match %} open{% endif %}><summary>{% blocktrans count n=m.match|length %}{{ n }} machine user is not given to any staff member{% plural %}{{ n }} machine users are not given to any staff member{% endblocktrans %}</summary>
+    <p class="small">{% trans "Name on the machine and the staff member TASEMS suggests. Nothing is saved until you tick a row and press Save. When two people have the same name, choose by hand. Staff with no Biometric ID are never marked from the machine; their attendance is entered by hand." %}</p>
+    {% if can_match %}<form method="post">{% csrf_token %}<input type="hidden" name="machine" value="{{ m.id }}">{% endif %}
+    <div class="table-wrap"><table>
+      <thead><tr>{% if can_match %}<th>{% trans "Save" %}</th>{% endif %}<th class="center">{% trans "MAC.ID" %}</th><th>{% trans "Name on the machine" %}</th><th class="num">{% trans "Punches (45 days)" %}</th><th>{% trans "Staff member" %}</th></tr></thead>
+      <tbody>{% for r in m.match %}<tr>
+        {% if can_match %}<td><input type="checkbox" name="use" value="{{ r.number }}" aria-label="{% trans 'Save this row' %}"></td>{% endif %}
+        <td class="center num">{{ r.number }}</td><td>{{ r.name|default:"—" }}</td><td class="num">{{ r.punches|default:"" }}</td>
+        <td>{% if can_match %}<select name="staff_{{ r.number }}"><option value="">—</option>{% for e in m.free_staff %}<option value="{{ e.id }}"{% if r.suggested and r.suggested.id == e.id %} selected{% endif %}>{{ e.full_name }} · {{ e.code }}</option>{% endfor %}</select>{% elif r.suggested %}{{ r.suggested.full_name }}{% endif %}
+          {% if r.suggested %} <span class="badge">{% trans "name matches" %}</span>{% elif r.same_name %} <span class="badge attention">{% trans "same name, choose by hand" %}</span>{% endif %}</td>
+      </tr>{% endfor %}</tbody></table></div>
+    {% if can_match %}<button class="button" type="submit" name="action" value="match">{% trans "Save the ticked rows" %}</button></form>{% endif %}
+  </details>{% endif %}
   {% if can_edit %}<form method="post" class="actions" style="margin:0">{% csrf_token %}<input type="hidden" name="machine" value="{{ m.id }}">
     <button class="button" name="action" value="read" type="submit">{% trans "Get attendance now" %}</button>
     <button class="button secondary" name="action" value="test" type="submit">{% trans "Test connection" %}</button></form>

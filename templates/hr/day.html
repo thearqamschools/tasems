@@ -15,23 +15,40 @@
   <div class="figure"><div class="value">{{ counts.leave|default:0 }}</div><div class="label">{% trans "On leave" %}</div></div>
   <div class="figure"><div class="value">{{ counts.none|default:0 }}</div><div class="label">{% trans "Nothing recorded" %}</div></div>
 </div>
-{% if rows %}
+{% if not machine_rows and not hand_rows %}<div class="card empty-state">{% icon "briefcase" %}<p>{% trans "No staff records yet." %}</p></div>{% endif %}
+{% trans "Entered by hand" as hand_note %}
+
+{% if machine_rows %}
+<h2>{% trans "From the attendance machine" %} <span class="muted small">({{ machine_rows|length }})</span></h2>
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Status" %}</th><th>{% trans "In" %}</th><th>{% trans "Out" %}</th><th>{% trans "Note" %}</th>{% if can_correct %}<th></th>{% endif %}</tr></thead>
-  <tbody>{% for e, d in rows %}<tr>
+  <thead><tr>{% trans "EMP.code" as h %}{% sort_th "code" h "center" %}{% trans "MAC.ID" as h %}{% sort_th "machine" h "center" %}{% trans "Name" as h %}{% sort_th "name" h %}{% trans "Designation" as h %}{% sort_th "designation" h %}{% trans "Status" as h %}{% sort_th "status" h %}{% trans "In" as h %}{% sort_th "in" h "num" %}{% trans "Out" as h %}{% sort_th "out" h "num" %}<th>{% trans "Note" %}</th>{% if can_correct %}<th></th>{% endif %}</tr></thead>
+  <tbody>{% for e, d in machine_rows %}<tr>
+    <td class="num center">{{ e.code }}</td><td class="num center">{{ e.machine_id }}</td>
     <td><a href="{% url 'hr:employee' e.id %}">{{ e.full_name }}</a></td><td>{{ e.designation }}</td>
-    <td>{% if d %}{% if d.status == "absent" or d.status == "late" or d.status == "half_day" %}<span class="badge attention">{{ d.get_status_display }}</span>{% elif d.status == "off" or d.status == "holiday" %}<span class="badge muted">{{ d.get_status_display }}</span>{% else %}<span class="badge">{{ d.get_status_display }}</span>{% endif %}{% if d.is_corrected %} <span class="muted">({% trans "corrected" %})</span>{% endif %}{% else %}<span class="muted">—</span>{% endif %}</td>
+    <td>{% include "hr/_day_status.html" %}</td>
     <td class="num">{{ d.first_in|time:"H:i"|default:"—" }}</td><td class="num">{{ d.last_out|time:"H:i"|default:"—" }}</td><td class="muted">{{ d.note }}</td>
-    {% if can_correct %}<td><details><summary>{% trans "Correct" %}</summary>
-      <form method="post" class="card" style="padding:.75rem">{% csrf_token %}<input type="hidden" name="employee" value="{{ e.id }}">
-        <div class="field"><label>{% trans "Mark as" %}</label><select name="status">{% for v, l in statuses %}<option value="{{ v }}" {% if d.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
-        <div class="field"><label>{% trans "Time in" %}</label><input type="time" name="first_in" value="{{ d.first_in|time:'H:i' }}"></div>
-        <div class="field"><label>{% trans "Time out" %}</label><input type="time" name="last_out" value="{{ d.last_out|time:'H:i' }}"></div>
-        <div class="field"><label>{% trans "Reason" %}</label><input type="text" name="note" required maxlength="200"></div>
-        <button class="button" type="submit">{% trans "Save correction" %}</button>
-        {% if d.is_corrected %}<button class="button quiet" type="submit" name="remove" value="1" formnovalidate>{% trans "Remove correction" %}</button>{% endif %}
-      </form></details></td>{% endif %}
+    {% if can_correct %}<td>{% include "hr/_correct_form.html" %}</td>{% endif %}
   </tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card empty-state">{% icon "briefcase" %}<p>{% trans "No staff records yet." %}</p></div>{% endif %}
+{% endif %}
+
+{% if hand_rows %}
+<h2>{% trans "Entered by hand — no Biometric ID" %} <span class="muted small">({{ hand_rows|length }})</span></h2>
+<p class="small muted">{% trans "These staff are not on the attendance machine (no Biometric machine ID on their record), so the machine never marks them. Choose each person's status and press Save. Give them their machine ID on their staff record (or Setup → Attendance machine) once they are enrolled on the machine." %}</p>
+{% if can_correct %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="hand">{% endif %}
+<div class="table-wrap"><table>
+  <thead><tr>{% trans "EMP.code" as h %}{% sort_th "code" h "center" %}<th class="center">{% trans "MAC.ID" %}</th>{% trans "Name" as h %}{% sort_th "name" h %}{% trans "Designation" as h %}{% sort_th "designation" h %}{% trans "Status" as h %}{% sort_th "status" h %}<th>{% trans "In" %}</th><th>{% trans "Out" %}</th>{% if can_correct %}<th>{% trans "Enter" %}</th>{% endif %}</tr></thead>
+  <tbody>{% for e, d in hand_rows %}<tr>
+    <td class="num center">{{ e.code }}</td><td class="center"><span class="badge muted" title="{% trans 'Biometric ID not set' %}">{% trans "not set" %}</span></td>
+    <td><a href="{% url 'hr:employee' e.id %}">{{ e.full_name }}</a></td><td>{{ e.designation }}</td>
+    <td>{% include "hr/_day_status.html" %}</td>
+    {% if can_correct %}
+    <td><input type="time" name="in_{{ e.id }}" value="{{ d.first_in|time:'H:i' }}" aria-label="{% trans 'In' %} {{ e.full_name }}"></td>
+    <td><input type="time" name="out_{{ e.id }}" value="{{ d.last_out|time:'H:i' }}" aria-label="{% trans 'Out' %} {{ e.full_name }}"></td>
+    <td><select name="status_{{ e.id }}" aria-label="{% trans 'Status' %} {{ e.full_name }}"><option value="">—</option>{% for v, l in statuses %}<option value="{{ v }}" {% if d.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></td>
+    {% else %}<td class="num">{{ d.first_in|time:"H:i"|default:"—" }}</td><td class="num">{{ d.last_out|time:"H:i"|default:"—" }}</td>{% endif %}
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% if can_correct %}<button class="button" type="submit">{% trans "Save attendance entered by hand" %}</button></form>{% endif %}
+{% endif %}
 {% endblock %}

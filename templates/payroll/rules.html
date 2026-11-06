@@ -1,5 +1,6 @@
 {% extends "base.html" %}{% load i18n %}
-{% block title %}{% trans "Payroll rules" %}{% endblock %}
+{% block title %}{% trans "Payroll rules" %}<p class="small muted">{% trans "In and Out times (late, early left) of each staff type are set in" %} <a href="{% url 'hr:duty_times' %}">{% trans "Staff duty times" %}</a>.</p>
+{% endblock %}
 {% block content %}
 <p><a href="{% url 'payroll:index' %}">‹ {% trans "Payroll" %}</a></p>
 <h1>{% trans "Payroll rules" %}</h1>
@@ -13,4 +14,5 @@
   <div class="checks">{% for value, label in designations %}<label class="nowrap"><input type="checkbox" name="bonus_designations" value="{{ value }}"{% if value in rules.bonus_designations %} checked{% endif %}{% if not can_edit %} disabled{% endif %}> {{ label }}</label> {% endfor %}</div>
   {% if can_edit %}<div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>{% endif %}
 </form>
+<p class="small muted">{% trans "In and Out times (late, early left) of each staff type are set in" %} <a href="{% url 'hr:duty_times' %}">{% trans "Staff duty times" %}</a>.</p>
 {% endblock %}

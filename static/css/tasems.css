@@ -113,6 +113,9 @@ main:focus { outline: none; }
 .page-header .lede { margin: var(--space-1) 0 0; }
 .page-header .actions { margin: 0; }
 .actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin: var(--space-4) 0; }
+.actions .actions-end { margin-inline-start: auto; }
+.actions .actions-end:empty { display: none; }
+table.details td { text-align: start; }
 .stack > * + * { margin-block-start: var(--space-4); }
 
 /* ---------- Parent portal top bar ---------- */
@@ -225,6 +228,11 @@ tr[data-href] { cursor: pointer; }
 tr[data-href]:hover td { background: var(--surface-hover, #f1f3fb); }
 tr:last-child td { border-block-end: 0; }
 td.num, th.num { text-align: end; }
+td.center, th.center, td.num.center { text-align: center; }
+td.start, th.start, td.num.start { text-align: start; }
+th a.sort { color: inherit; text-decoration: none; white-space: nowrap; }
+th a.sort:hover, th a.sort:focus-visible { text-decoration: underline; }
+th a.sort .arrow { font-size: 0.8em; margin-inline-start: 0.2em; }
 tfoot td, tfoot th { font-weight: 600; background: var(--surface-sunk); border-block-start: 1px solid var(--line-strong); }
 td .button { min-height: 2.25rem; padding: 0.3rem 0.75rem; font-size: var(--step--1); }
 td form { margin: 0; }

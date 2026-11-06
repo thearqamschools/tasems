@@ -17,14 +17,14 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 
 from django.db import transaction
-from django.db.models import Q, Sum
+from django.db.models import Min, Q, Sum
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from openpyxl import load_workbook
 
 from apps.core.models import AuditEvent
 
-from .models import Employee, Holiday, HRSettings, LeaveRequest, LeaveType, Punch, StaffDay
+from .models import DutyTime, Employee, Holiday, HRSettings, LeaveRequest, LeaveType, Punch, StaffDay
 
 VIEW_PERM = "hr.view_employee"
 EDIT_PERM = "hr.change_employee"
@@ -75,15 +75,67 @@ def _late_status(hr, first_in):
     return StaffDay.Status.PRESENT
 
 
+def duty_lookup(branch, hr=None):
+    """(staff type, date) → the In / Out times that applied (Setup → Staff duty times; each set from its own date,
+    project lead, 6 Nov 2026). Falls back to the branch's one duty time (HR settings)."""
+    hr = hr or HRSettings.for_branch(branch)
+    by_type = defaultdict(list)
+    for d in DutyTime.objects.filter(branch=branch).order_by("-starts_from"):
+        by_type[d.staff_type].append(d)
+
+    def lookup(staff_type, date):
+        return next((d for d in by_type.get(staff_type, []) if d.starts_from <= date), hr)
+
+    return lookup
+
+
+def _on_machine(employee, first_punch):
+    """The first day the machine can mark this person absent: their first punch on it, or the day their machine ID
+    was typed in, whichever is earlier (R7-5)."""
+    known = [d for d in (first_punch, employee.machine_id_since) if d]
+    return min(known) if known else dt.date.max
+
+
+SAME_PUNCH = dt.timedelta(minutes=30)  # two punches closer than this are one (a person pressing twice)
+
+
+def judge_day(duty, times, date, today):
+    """first_in, last_out, status, early_left, missing for a working day with punches (R7-12 to R7-14).
+
+    One punch (or punches within half an hour) counts as an Out when it is nearer the Out time than the In time,
+    else as an In. In after In time + grace → Late (after "half day after" → Half day). Out before the Out time →
+    Early left. In with no Out → "In, no Out" once the day is over; Out with no In → "Out, no In". Either way the
+    attendance counts."""
+    times = sorted(times)
+    first, last = times[0], times[-1]
+    span = dt.datetime.combine(date, last) - dt.datetime.combine(date, first)
+    ends = getattr(duty, "duty_ends", None)
+    starts = getattr(duty, "duty_starts", None)
+    if span >= SAME_PUNCH:
+        early = bool(ends and last < ends)
+        return first, last, _late_status(duty, first), early, ""
+    if starts and ends and starts < ends:
+        day_start, day_end = dt.datetime.combine(date, starts), dt.datetime.combine(date, ends)
+        middle = (day_start + (day_end - day_start) / 2).time()
+        if first >= middle:  # an Out with no In
+            return None, last, StaffDay.Status.PRESENT, last < ends, "in"
+    return first, None, _late_status(duty, first), False, ("out" if date < today else "")
+
+
 @transaction.atomic
 def rebuild_days(branch, start, end, employee_ids=None):
     """Works out StaffDay rows for every employee (or the ones given) between two dates.
-    Corrected days are left alone. Returns the number of days written."""
+    Corrected days are left alone. Returns the number of days written.
+
+    Round 7 (project lead, 6 Nov 2026): staff with no Biometric machine ID are never marked absent from the machine
+    (their attendance is entered by hand), and staff on the machine are marked absent only from their first punch
+    on it (they are put on the machine some weeks after joining)."""
     today = timezone.localdate()
     end = min(end, today)
     if end < start:
         return 0
     hr = HRSettings.for_branch(branch)
+    duty_for = duty_lookup(branch, hr)
     holiday_map = holidays(branch, start, end)
     employees = Employee.objects.filter(branch=branch, joined_on__lte=end).filter(
         Q(left_on__isnull=True) | Q(left_on__gte=start)
@@ -92,7 +144,6 @@ def rebuild_days(branch, start, end, employee_ids=None):
         employees = employees.filter(id__in=employee_ids)
     employees = list(employees)
     ids = [e.id for e in employees]
-
     tz = timezone.get_current_timezone()
     punches = defaultdict(list)
     first_moment = dt.datetime.combine(start, dt.time.min, tzinfo=tz)
@@ -101,6 +152,12 @@ def rebuild_days(branch, start, end, employee_ids=None):
     for employee_id, at in found.values_list("employee_id", "at"):
         local = timezone.localtime(at, tz)
         punches[(employee_id, local.date())].append(local.time().replace(microsecond=0))
+    on_machine_from = {
+        row["employee_id"]: timezone.localtime(row["first"], tz).date()
+        for row in Punch.objects.filter(employee_id__in=ids, source=Punch.Source.MACHINE)
+        .values("employee_id")
+        .annotate(first=Min("at"))
+    }
 
     leaves = defaultdict(list)
     for lr in LeaveRequest.objects.filter(
@@ -111,7 +168,7 @@ def rebuild_days(branch, start, end, employee_ids=None):
     existing = {
         (d.employee_id, d.date): d for d in StaffDay.objects.filter(employee_id__in=ids, date__gte=start, date__lte=end)
     }
-    to_create, to_update = [], []
+    to_create, to_update, to_delete = [], [], []
     for e in employees:
         for date in dates_between(start, end):
             if not e.employed_on(date):
@@ -122,12 +179,16 @@ def rebuild_days(branch, start, end, employee_ids=None):
             times = sorted(punches.get((e.id, date), []))
             kind = kind_of_day(hr, holiday_map, date)
             leave = next((lr for lr in leaves[e.id] if lr.starts_on <= date <= lr.ends_on), None)
-            first_in = times[0] if times else None
-            last_out = times[-1] if len(times) > 1 else None
-            note = ""
+            first_in = last_out = None
+            early, missing, note = False, "", ""
             if times:
-                status = _late_status(hr, first_in) if kind == "work" else StaffDay.Status.PRESENT
-                if kind != "work":
+                if kind == "work":
+                    first_in, last_out, status, early, missing = judge_day(
+                        duty_for(e.staff_type, date), times, date, today
+                    )
+                else:
+                    first_in, last_out = times[0], (times[-1] if len(times) > 1 else None)
+                    status = StaffDay.Status.PRESENT
                     note = holiday_map.get(date, "") or _("Worked on an off day")
                 leave = None if kind != "work" else leave
                 if leave:
@@ -139,16 +200,22 @@ def rebuild_days(branch, start, end, employee_ids=None):
                 status = StaffDay.Status.OFF
             elif leave:
                 status = StaffDay.Status.LEAVE
-            elif date < today:
+            elif date < today and e.machine_id and _on_machine(e, on_machine_from.get(e.id)) <= date:
                 status = StaffDay.Status.ABSENT
             else:
-                continue  # today, not in yet
+                # Today (not in yet), or nothing to go on: no Biometric ID (entered by hand), or not on the machine
+                # yet. A day worked out earlier from the machine is taken away.
+                if current:
+                    to_delete.append(current.pk)
+                continue
             values = {
                 "first_in": first_in,
                 "last_out": last_out,
                 "status": status,
                 "leave": leave,
                 "note": note[:200],
+                "early_left": early,
+                "missing": missing,
             }
             if current:
                 if any(getattr(current, k) != v for k, v in values.items()):
@@ -159,8 +226,11 @@ def rebuild_days(branch, start, end, employee_ids=None):
                 to_create.append(StaffDay(branch_id=branch.id, employee=e, date=date, **values))
         if not e.employed_on(end):
             StaffDay.objects.filter(employee=e, date__gt=e.left_on or end, is_corrected=False).delete()
+    StaffDay.objects.filter(pk__in=to_delete).delete()
     StaffDay.objects.bulk_create(to_create)
-    StaffDay.objects.bulk_update(to_update, ["first_in", "last_out", "status", "leave", "note", "updated_at"])
+    StaffDay.objects.bulk_update(
+        to_update, ["first_in", "last_out", "status", "leave", "note", "early_left", "missing", "updated_at"]
+    )
     return len(to_create) + len(to_update)
 
 
@@ -173,6 +243,9 @@ def correct_day(employee, date, status, note, user, first_in=None, last_out=None
         day = StaffDay(branch_id=employee.branch_id, employee=employee, date=date)
     day.status, day.note, day.is_corrected, day.corrected_by = status, note[:200], True, user
     day.first_in, day.last_out = first_in, last_out
+    ends = getattr(duty_lookup(employee.branch)(employee.staff_type, date), "duty_ends", None)
+    day.early_left = bool(last_out and ends and last_out < ends)
+    day.missing = ""
     day.save()
     AuditEvent.objects.create(
         actor=user,
@@ -484,8 +557,8 @@ def save_punches(branch, check, user, batch):
         for e, a in check.matched
     ]
     created = Punch.objects.bulk_create(rows, ignore_conflicts=True, batch_size=2000)
-    if check.first:
-        rebuild_days(branch, check.first, check.last)
+    if check.first:  # only the staff whose punches came in (R7-4)
+        rebuild_days(branch, check.first, check.last, sorted({e.id for e, _a in check.matched}))
     AuditEvent.objects.create(
         actor=user,
         action=AuditEvent.Action.CREATE,
@@ -536,6 +609,8 @@ def month_sheet(branch, month_start_date):
         for c in cells:
             if c:
                 totals[c.status] += 1
+                totals["early_left"] += int(c.early_left)
+                totals["missing"] += int(bool(c.missing))
                 # Salary is deducted for absence and for unpaid leave (confirmed 16 Oct 2026).
                 if c.status == StaffDay.Status.ABSENT or (
                     c.status == StaffDay.Status.LEAVE and not (c.leave and c.leave.leave_type.is_paid)
@@ -571,9 +646,74 @@ def read_machine(machine, user=None, since_days=45):
     clock = reading.clock.strftime("%d %b %Y %H:%M") if reading.clock else "?"
     machine.last_ok = True
     machine.unknown_ids = check.unknown_ids
+    if reading.names:
+        machine.users = reading.names
     machine.last_result = (
         f"OK ({reading.transport.upper()}) · machine clock {clock} · {reading.users} users · {reading.records} records"
         f" · {new} new punches"
     )[:300]
-    machine.save(update_fields=["last_read_at", "last_ok", "last_result", "unknown_ids"])
+    machine.save(update_fields=["last_read_at", "last_ok", "last_result", "unknown_ids", "users"])
     return machine.last_result
+
+
+# --- Matching machine users to staff by name (R7-7; project lead, 6 Nov 2026) --------------------
+
+
+def name_key(name):
+    return " ".join(re.sub(r"[^a-z\s]", " ", (name or "").lower()).split())
+
+
+def match_rows(machine):
+    """Machine users not yet given to any staff member, each with the staff member whose name matches — only when
+    exactly one machine user and exactly one staff member (with no Biometric ID yet) have that name. Two people with
+    the same name are never paired here ("same name, choose by hand"). Nothing is saved: a person confirms."""
+    branch = machine.branch
+    staff = Employee.objects.filter(branch=branch, status=Employee.Status.ACTIVE)
+    used = set(staff.exclude(machine_id="").values_list("machine_id", flat=True)) | set(
+        Employee.objects.filter(branch=branch).exclude(machine_id="").values_list("machine_id", flat=True)
+    )
+    free_staff = list(staff.filter(machine_id="").order_by("full_name"))
+    staff_by_key = defaultdict(list)
+    for e in free_staff:
+        staff_by_key[name_key(e.full_name)].append(e)
+    users = {n: name for n, name in (machine.users or {}).items() if n not in used and n.lstrip("0") not in used}
+    numbers = set(users) | {n for n in (machine.unknown_ids or {}) if n not in used}
+    machine_by_key = defaultdict(int)
+    for n in numbers:
+        machine_by_key[name_key(users.get(n, ""))] += 1
+    rows = []
+    for n in sorted(numbers, key=lambda x: (len(x), x)):
+        name = users.get(n, "")
+        key = name_key(name)
+        candidates = staff_by_key.get(key, []) if key else []
+        if not candidates and len(key) >= 6:  # the machine keeps a short name: "Muhammad Ali Kh" for a longer one
+            candidates = [e for e in free_staff if name_key(e.full_name).startswith(key)]
+        same_name = len(candidates) > 1 or (key and machine_by_key[key] > 1)
+        rows.append({
+            "number": n, "name": name, "punches": (machine.unknown_ids or {}).get(n, 0),
+            "suggested": candidates[0] if len(candidates) == 1 and not same_name else None,
+            "same_name": bool(same_name and candidates),
+        })  # fmt: skip
+    return rows, free_staff
+
+
+@transaction.atomic
+def give_machine_ids(branch, pairs):
+    """pairs: [(machine number, employee id)] a person confirmed. Returns (saved, problems)."""
+    saved, problems = [], []
+    taken = set(Employee.objects.filter(branch=branch).exclude(machine_id="").values_list("machine_id", flat=True))
+    for number, employee_id in pairs:
+        e = Employee.objects.filter(branch=branch, pk=employee_id).first()
+        if e is None:
+            continue
+        if number in taken:
+            problems.append(_("%(n)s is already given to another staff member.") % {"n": number})
+            continue
+        if e.machine_id:
+            problems.append(_("%(e)s already has Biometric ID %(n)s.") % {"e": e.full_name, "n": e.machine_id})
+            continue
+        e.machine_id = number
+        e.save(update_fields=["machine_id", "updated_at"])  # Employee is audited: the change is recorded
+        taken.add(number)
+        saved.append(e)
+    return saved, problems

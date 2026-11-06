@@ -1,0 +1,9 @@
+{% load i18n %}<details><summary>{% trans "Correct" %}</summary>
+  <form method="post" class="card" style="padding:.75rem">{% csrf_token %}<input type="hidden" name="employee" value="{{ e.id }}">
+    <div class="field"><label>{% trans "Mark as" %}</label><select name="status">{% for v, l in statuses %}<option value="{{ v }}" {% if d.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="field"><label>{% trans "Time in" %}</label><input type="time" name="first_in" value="{{ d.first_in|time:'H:i' }}"></div>
+    <div class="field"><label>{% trans "Time out" %}</label><input type="time" name="last_out" value="{{ d.last_out|time:'H:i' }}"></div>
+    <div class="field"><label>{% trans "Reason" %}</label><input type="text" name="note" required maxlength="200"></div>
+    <button class="button" type="submit">{% trans "Save correction" %}</button>
+    {% if d.is_corrected %}<button class="button quiet" type="submit" name="remove" value="1" formnovalidate>{% trans "Remove correction" %}</button>{% endif %}
+  </form></details>

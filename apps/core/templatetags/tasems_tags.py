@@ -127,3 +127,30 @@ def delete_button(context, kind, obj):
         return ""
     url = reverse("delete_record", args=[kind, obj.pk]) + "?back=" + request.path
     return format_html('<a class="button danger quiet" href="{}">{}{}</a>', url, icon("x"), _("Delete"))
+
+
+@register.simple_tag(takes_context=True)
+def sort_th(context, key, label, css=""):
+    """A table heading that sorts the list by `key`: first click ascending, second descending, with an arrow
+    (project lead, 6 Nov 2026). Keeps the page's other filters; goes back to page 1."""
+    from django.utils.html import format_html
+
+    request = context["request"]
+    current = request.GET.get("sort", "")
+    params = request.GET.copy()
+    params.pop("page", None)
+    if current == key:
+        params["sort"], arrow, order = f"-{key}", "▲", "ascending"
+    elif current == f"-{key}":
+        params["sort"], arrow, order = key, "▼", "descending"
+    else:
+        params["sort"], arrow, order = key, "", "none"
+    return format_html(
+        '<th class="{}" aria-sort="{}"><a class="sort" href="?{}">{}<span class="arrow" aria-hidden="true">{}</span>'
+        "</a></th>",
+        css,
+        order,
+        params.urlencode(),
+        label,
+        arrow,
+    )

@@ -71,6 +71,7 @@ RLS_TABLES = [
     "hr_certificate",
     "hr_experience",
     "hr_attendancemachine",
+    "hr_dutytime",
     "admissions_inquiry",
     "admissions_followup",
 ]

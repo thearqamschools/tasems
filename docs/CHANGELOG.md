@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.42.0 — 2026-11-06 — Round 7: staff attendance rules, duty times per staff type, machine names (installer v16)
+- **EMP.code and Machine ID**: the staff list shows EMP.code, Machine ID, Name, Designation, Type, Mobile, Joining
+  date (codes centred); the same two columns before the name on Staff attendance and the Monthly sheet (which also
+  gets Designation). Click a heading to sort (again for the other way; arrow shows the order) on the staff list,
+  Staff attendance and Monthly sheet. Excel export follows.
+- **No Biometric ID = never marked by the machine** (R7-4): a machine reading works out only the staff whose punches
+  came in; staff without a machine ID are never made absent; staff on the machine are marked absent only from the
+  day their ID was typed in or their first punch (new field `machine_id_since`, R7-5).
+- **Staff attendance in two parts** (R7-8): "From the attendance machine" and "Entered by hand — no Biometric ID",
+  where each person's status and In / Out time is entered in one form. Both can be corrected; hand entries are kept
+  when days are worked out again.
+- **Staff duty times** (Setup → Staff duty times, R7-11): In time, Out time, grace minutes and half-day time for
+  each staff type, from a date (summer / winter times); earlier days keep their own times. The branch's one duty
+  time (07:45–13:45) is the first set. Saving times from a past date works out those days again (up to 2 months).
+- **Late, Early left, In no Out, Out no In** (R7-12 to R7-14), shown on Staff attendance, the staff member's page
+  and the Monthly sheet (`e` and `!` marks, EL and ! totals).
+- **Machine user names** (R7-7): names are read from the machine with the punches; Setup → Attendance machine lists
+  the machine users not given to anyone with their name and punch count, suggests the staff member with the same
+  name, and saves only the rows ticked. Same names are never paired ("same name, choose by hand").
+- **Staff member page** (R7-15, R7-16): Edit, Record leave, then Delete on the far right; details all left-aligned;
+  "Biometric ID not set" shown when empty.
+- Migrations hr 0010–0012 (new table `hr_dutytime` with row-level security). Tests: tests/test_round7.py.
+
 ## 0.41.3 — 2026-11-06 — Fix: empty copy of the head-office campus after a restart (installer v15)
 - Reported: after installing v14 the Students and Staff lists were empty while the dashboard showed 1,215 active
   students. Cause: at every start the seed looked for the Samanabad campus by its first code `fsd-samanabad`.

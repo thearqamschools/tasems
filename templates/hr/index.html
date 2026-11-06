@@ -7,7 +7,7 @@
   {% if can_edit %}<div class="actions"><a class="button" href="{% url 'hr:employee_new' %}">{% icon "user-plus" %}{% trans "Add staff member" %}</a>
   <a class="button secondary" href="{% url 'hr:staff_import' %}">{% trans "Import staff from Excel" %}</a></div>{% endif %}
 </div>
-{% if settings_missing %}<ul class="messages"><li class="warning">{% trans "Duty time is not set for this branch, so late arrivals are not worked out yet (Advanced setup → HR settings)." %}</li></ul>{% endif %}
+{% if settings_missing %}<ul class="messages"><li class="warning">{% trans "Duty time is not set for this branch, so late arrivals are not worked out yet (Setup → Staff duty times)." %}</li></ul>{% endif %}
 
 <div class="figures">
   <a class="figure" href="{% url 'hr:day' %}" style="color:inherit;text-decoration:none"><div class="value">{{ counts.in|default:0 }}</div><div class="label">{% trans "In today" %}</div></a>
@@ -36,12 +36,14 @@
 {% if employees %}
 {% include "includes_list_tools.html" %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Code" %}</th><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Type" %}</th><th>{% trans "Mobile" %}</th><th>{% trans "Machine ID" %}</th></tr></thead>
+  <thead><tr>{% trans "EMP.code" as h %}{% sort_th "code" h "center" %}{% trans "Machine ID" as h %}{% sort_th "machine" h "center" %}{% trans "Name" as h %}{% sort_th "name" h %}{% trans "Designation" as h %}{% sort_th "designation" h %}{% trans "Type" as h %}{% sort_th "type" h %}{% trans "Mobile" as h %}{% sort_th "mobile" h %}{% trans "Joining date" as h %}{% sort_th "joined" h %}</tr></thead>
   <tbody>{% for e in employees %}<tr data-href="{% url 'hr:employee' e.id %}">
-    <td class="num">{{ e.code }}</td><td><a href="{% url 'hr:employee' e.id %}">{{ e.full_name }}</a>{% if e.status != "active" %} <span class="badge muted">{{ e.get_status_display }}</span>{% endif %}</td>
+    <td class="num center">{{ e.code }}</td>
+    <td class="num center">{% if e.machine_id %}{{ e.machine_id }}{% else %}<span class="muted" title="{% trans 'Biometric ID not set: attendance is entered by hand' %}">—</span>{% endif %}</td>
+    <td><a href="{% url 'hr:employee' e.id %}">{{ e.full_name }}</a>{% if e.status != "active" %} <span class="badge muted">{{ e.get_status_display }}</span>{% endif %}</td>
     <td>{{ e.designation }}</td><td>{{ e.get_staff_type_display }}</td>
     <td>{% if e.phone %}<a href="tel:{{ e.phone }}" class="num">{{ e.phone }}</a>{% else %}—{% endif %}</td>
-    <td class="num">{{ e.machine_id|default:"—" }}</td>
+    <td style="white-space:nowrap">{{ e.joined_on|date:"d M Y" }}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<div class="card empty-state">{% icon "briefcase" %}<p>{% trans "No staff records yet. Add them one by one or import the staff list from Excel." %}</p></div>{% endif %}

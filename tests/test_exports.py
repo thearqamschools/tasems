@@ -95,7 +95,7 @@ def test_staff_absentees_and_expenses_download(school, login_as):
     )  # fmt: skip
     client = login_as(user)
     staff = sheet(client.get("/staff/?format=xlsx"))
-    assert staff[3][1] == "Teacher One" and staff[3][3] == "Senior Teacher"
+    assert staff[3][2] == "Teacher One" and staff[3][4] == "Senior Teacher"  # EMP.code, Machine ID, Name, …
     spent = sheet(client.get("/expenses/?format=xlsx"))
     assert spent[3][2] == "Electricity bill" and spent[3][7] == 1500
     absent = sheet(client.get("/attendance/absent/?format=xlsx"))

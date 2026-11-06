@@ -121,6 +121,14 @@ def hub(request):
             here("payroll.view_payrollrules"),
         ),
         (
+            "duty_times",
+            "hr:duty_times",
+            _("Staff duty times"),
+            _("In and Out time of each staff type (teachers, Qari, office, support), with summer and winter times."),
+            "clock",
+            here("hr.view_hrsettings"),
+        ),
+        (
             "machine",
             "hr:machines",
             _("Attendance machine"),

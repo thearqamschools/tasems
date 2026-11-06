@@ -9,7 +9,7 @@ from openpyxl import Workbook
 
 from apps.accounts.models import Scope
 from apps.hr import services as S
-from apps.hr.models import Employee, Holiday, HRSettings, LeaveType, Punch, StaffDay
+from apps.hr.models import DutyTime, Employee, Holiday, HRSettings, LeaveType, Punch, StaffDay
 
 pytestmark = pytest.mark.django_db
 TODAY = dt.date(2026, 10, 16)  # Friday
@@ -27,6 +27,8 @@ def fixed_today(monkeypatch):
 def hr(org, make_user):
     branch = org["samanabad"]
     HRSettings.objects.filter(branch=branch).update(grace_minutes=10, half_day_after=dt.time(10, 0))
+    # Since round 7 the times are kept per staff type (Setup → Staff duty times).
+    DutyTime.objects.filter(branch=branch).update(grace_minutes=10, half_day_after=dt.time(10, 0))
     principal = make_user("principal", Scope.BRANCH, branch)
     counter = {"n": 0}
 
@@ -43,7 +45,11 @@ def hr(org, make_user):
             "joined_on": dt.date(2025, 1, 1),
         }
         data.update(extra)
-        return Employee.objects.create(**data)
+        e = Employee.objects.create(**data)
+        if e.machine_id:  # on the machine since joining, so days without a punch are absent
+            Employee.objects.filter(pk=e.pk).update(machine_id_since=e.joined_on)
+            e.refresh_from_db()
+        return e
 
     return {"branch": branch, "principal": principal, "employee": employee, "session": org["session"]}
 
@@ -83,6 +89,7 @@ def test_off_days_holidays_and_today(hr):
 
 def test_without_duty_time_everyone_who_came_is_present(hr):
     HRSettings.objects.filter(branch=hr["branch"]).update(duty_starts=None, half_day_after=None)
+    DutyTime.objects.filter(branch=hr["branch"]).delete()
     e = hr["employee"]()
     punch(e, WED, 11, 0, hr["principal"])
     S.rebuild_days(hr["branch"], WED, WED)

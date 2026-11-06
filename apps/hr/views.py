@@ -3,7 +3,9 @@
 import datetime as dt
 import io
 import ipaddress
+import re
 import secrets
+from collections import defaultdict
 from pathlib import Path
 
 from django.contrib import messages
@@ -25,7 +27,7 @@ from apps.organisation.models import AcademicSession
 from . import importer
 from . import services as S
 from .forms import CorrectionForm, EmployeeForm, LeaveForm, staff_formsets
-from .models import Employee, HRSettings, LeaveRequest, StaffDay
+from .models import DutyTime, Employee, HRSettings, LeaveRequest, StaffDay
 
 
 def _branch(request, perm=S.VIEW_PERM):
@@ -66,6 +68,32 @@ def _month_end(first):
     return (first.replace(day=28) + dt.timedelta(days=4)).replace(day=1) - dt.timedelta(days=1)
 
 
+def _natural(text):
+    """'E2' before 'E10'; empty last."""
+    text = str(text or "")
+    return (not text, [(0, int(t), "") if t.isdigit() else (1, 0, t.lower()) for t in re.split(r"(\d+)", text) if t])
+
+
+STAFF_SORTS = {
+    "code": lambda e: _natural(e.code),
+    "machine": lambda e: _natural(e.machine_id),
+    "name": lambda e: e.full_name.lower(),
+    "designation": lambda e: (e.designation or "").lower(),
+    "type": lambda e: str(e.get_staff_type_display()),
+    "mobile": lambda e: _natural(e.phone),
+    "joined": lambda e: e.joined_on,
+}
+
+
+def sort_by_heading(request, items, sorts, person=lambda x: x, default=None):
+    """Sorts a list by the heading clicked (?sort=name, ?sort=-name for the other way; project lead, 6 Nov 2026)."""
+    wanted = request.GET.get("sort", "") or (default or "")
+    key = wanted.lstrip("-")
+    if key not in sorts:
+        return items
+    return sorted(items, key=lambda x: sorts[key](person(x)), reverse=wanted.startswith("-"))
+
+
 @login_required
 def index(request):
     branch = _branch(request)
@@ -85,13 +113,13 @@ def index(request):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("Staff"),
-            [_("Code"), _("Name"), _("Father / husband name"), _("Designation"), _("Type"), _("Mobile"), _("CNIC"),
-             _("Campus"), _("Qualification"), _("Joining date"), _("Machine ID"), _("Status")],
+            [_("EMP.code"), _("Machine ID"), _("Name"), _("Father / husband name"), _("Designation"), _("Type"),
+             _("Mobile"), _("CNIC"), _("Campus"), _("Qualification"), _("Joining date"), _("Status")],
             (
-                [e.code, e.full_name, e.father_name or e.husband_name, e.designation, e.get_staff_type_display(),
-                 e.phone, e.cnic, str(e.campus or ""), e.qualification, e.joined_on, e.machine_id,
+                [e.code, e.machine_id, e.full_name, e.father_name or e.husband_name, e.designation,
+                 e.get_staff_type_display(), e.phone, e.cnic, str(e.campus or ""), e.qualification, e.joined_on,
                  e.get_status_display()]
-                for e in qs.order_by("staff_type", "full_name")
+                for e in sort_by_heading(request, list(qs.order_by("staff_type", "full_name")), STAFF_SORTS)
             ),
             branch=branch,
         )  # fmt: skip
@@ -101,14 +129,15 @@ def index(request):
         request,
         "hr/index.html",
         {
-            "employees": qs.order_by("staff_type", "full_name")[:500],
+            "employees": sort_by_heading(request, list(qs.order_by("staff_type", "full_name")[:500]), STAFF_SORTS),
             "counts": counts,
             "status": status,
             "staff_type": staff_type,
             "q": q,
             "statuses": Employee.Status.choices,
             "types": Employee.StaffType.choices,
-            "settings_missing": hr.pk is None or hr.duty_starts is None,
+            "settings_missing": (hr.pk is None or hr.duty_starts is None)
+            and not DutyTime.objects.filter(branch=branch).exists(),
             "can_edit": request.user.has_branch_perm(S.ADD_PERM, branch.id),
             "can_import": request.user.has_branch_perm(S.IMPORT_PERM, branch.id),
             "today": today,
@@ -290,8 +319,18 @@ def punches_import(request):
 # --- Daily and monthly attendance ------------------------------------------------------------
 
 
+DAY_SORTS = {
+    **{k: (lambda f: lambda r: f(r[0]))(f) for k, f in STAFF_SORTS.items()},
+    "status": lambda r: str(r[1].get_status_display()) if r[1] else "~",
+    "in": lambda r: (r[1] is None or r[1].first_in is None, r[1].first_in if r[1] and r[1].first_in else dt.time()),
+    "out": lambda r: (r[1] is None or r[1].last_out is None, r[1].last_out if r[1] and r[1].last_out else dt.time()),
+}
+
+
 @login_required
 def day(request):
+    """One day's staff attendance in two parts (R7-8, project lead 6 Nov 2026): staff on the attendance machine
+    (worked out from their punches) and staff with no Biometric ID (entered by hand here). Both can be corrected."""
     branch = _branch(request)
     today = timezone.localdate()
     date = min(_date(request.GET.get("date"), today), today)
@@ -299,6 +338,13 @@ def day(request):
     if request.method == "POST":
         if not can_correct:
             raise PermissionDenied
+        if request.POST.get("action") == "hand":
+            saved = _save_hand_entries(request, branch, date)
+            if saved:
+                messages.success(request, _("Attendance entered for %(n)s staff.") % {"n": saved})
+            else:
+                messages.error(request, _("Choose a status for at least one person."))
+            return redirect(f"{reverse('hr:day')}?date={date:%Y-%m-%d}")
         e = _employee(branch, request.POST.get("employee"))
         if request.POST.get("remove"):
             S.remove_correction(e, date, request.user)
@@ -315,12 +361,14 @@ def day(request):
     if request.GET.get("refresh") and can_correct:
         S.rebuild_days(branch, date, date)
     rows, counts = S.day_summary(branch, date)
+    rows = sort_by_heading(request, rows, DAY_SORTS, default="code")
     return render(
         request,
         "hr/day.html",
         {
             "date": date,
-            "rows": rows,
+            "machine_rows": [r for r in rows if r[0].machine_id],
+            "hand_rows": [r for r in rows if not r[0].machine_id],
             "counts": counts,
             "previous": date - dt.timedelta(days=1),
             "next": date + dt.timedelta(days=1) if date < today else None,
@@ -330,11 +378,36 @@ def day(request):
     )
 
 
+def _clock(value):
+    try:
+        return dt.time.fromisoformat(value) if value else None
+    except ValueError:
+        return None
+
+
+def _save_hand_entries(request, branch, date):
+    """Rows of the "entered by hand" part: a status (and times, if known) for each person who has one."""
+    allowed = {v for v, _l in CorrectionForm.base_fields["status"].choices}
+    saved = 0
+    for e in Employee.objects.filter(branch=branch, machine_id=""):
+        status = request.POST.get(f"status_{e.id}", "")
+        if status not in allowed:
+            continue
+        first_in, last_out = _clock(request.POST.get(f"in_{e.id}")), _clock(request.POST.get(f"out_{e.id}"))
+        current = StaffDay.objects.filter(employee=e, date=date).first()
+        if current and (current.status, current.first_in, current.last_out) == (status, first_in, last_out):
+            continue
+        S.correct_day(e, date, status, _("Entered by hand"), request.user, first_in, last_out)
+        saved += 1
+    return saved
+
+
 @login_required
 def month(request):
     branch = _branch(request)
     first = _month(request)
     dates, rows = S.month_sheet(branch, first)
+    rows = sort_by_heading(request, rows, STAFF_SORTS, person=lambda r: r["employee"])
     if request.GET.get("format") == "xlsx":
         return _month_xlsx(branch, first, dates, rows)
     return render(request, "hr/month.html", {"month": first, "dates": dates, "rows": rows})
@@ -346,6 +419,8 @@ TOTAL_COLUMNS = [
     ("half_day", "H"),
     ("absent", "A"),
     ("leave", "LV"),
+    ("early_left", "EL"),
+    ("missing", "No In/Out"),
     ("unpaid", "Unpaid days"),
 ]
 
@@ -358,23 +433,24 @@ def _month_xlsx(branch, first, dates, rows):
     ws = wb.active
     ws.title = f"{first:%b %Y}"
     ws.append([f"{branch.name} — staff attendance {first:%B %Y}"])
-    ws.append(["Code", "Name", "Designation"] + [d.day for d in dates] + [c for _s, c in TOTAL_COLUMNS])
+    ws.append(["EMP.code", "MAC.ID", "Name", "Designation"] + [d.day for d in dates] + [c for _s, c in TOTAL_COLUMNS])
     for cell in ws[2]:
         cell.font = Font(bold=True)
         cell.fill = PatternFill("solid", fgColor="E3EFEB")
     for r in rows:
         e = r["employee"]
         ws.append(
-            [e.code, e.full_name, e.designation]
-            + [c.code if c else "" for c in r["cells"]]
+            [e.code, e.machine_id, e.full_name, e.designation]
+            + [c.mark if c else "" for c in r["cells"]]
             + [r["totals"].get(s, 0) for s, _c in TOTAL_COLUMNS]
         )
     ws.append([])
     ws.append(["P = present, L = late, H = half day, A = absent, LV = leave, HD = holiday, – = off day"])
+    ws.append(["e = early left; ! = In with no Out, or Out with no In (the day still counts)."])
     ws.append(["Unpaid days = absent days + days of unpaid leave (salary is deducted for these)."])
-    ws.column_dimensions["B"].width = 24
-    ws.column_dimensions["C"].width = 18
-    ws.freeze_panes = "D3"
+    ws.column_dimensions["C"].width = 24
+    ws.column_dimensions["D"].width = 18
+    ws.freeze_panes = "E3"
     buffer = io.BytesIO()
     wb.save(buffer)
     response = HttpResponse(
@@ -532,6 +608,26 @@ def machines(request):
         elif machine and action == "read":
             result = S.read_machine(machine, request.user)
             (messages.success if machine.last_ok else messages.error)(request, result)
+        elif machine and action == "match":
+            # Only the rows a person ticked; each with the staff member chosen in its row (R7-7).
+            if not request.user.has_branch_perm(S.EDIT_PERM, branch.id):
+                raise PermissionDenied
+            pairs = [
+                (number, request.POST.get(f"staff_{number}"))
+                for number in request.POST.getlist("use")
+                if str(request.POST.get(f"staff_{number}") or "").isdigit()
+            ]
+            saved, problems = S.give_machine_ids(branch, pairs)
+            if saved:
+                messages.success(
+                    request,
+                    _("Biometric ID given to %(n)s staff: %(names)s. Their punches come in at the next reading.")
+                    % {"n": len(saved), "names": ", ".join(f"{e.full_name} ({e.machine_id})" for e in saved)},
+                )
+            for p in problems:
+                messages.error(request, p)
+            if not pairs:
+                messages.error(request, _("Tick the rows to save and choose the staff member in each."))
         return redirect("hr:machines")
     from apps.core.escpos import local_networks
 
@@ -544,4 +640,81 @@ def machines(request):
             ip = None
         m.other_network = bool(ip and networks) and not any(ip in n for n in networks)
     here = [str(n.network_address).rsplit(".", 1)[0] + ".x" for n in networks]
-    return render(request, "hr/machines.html", {"branch": branch, "machines": rows, "can_edit": can_edit, "here": here})
+    for m in rows:
+        m.match, m.free_staff = S.match_rows(m)
+    can_match = can_edit and request.user.has_branch_perm(S.EDIT_PERM, branch.id)
+    return render(
+        request,
+        "hr/machines.html",
+        {"branch": branch, "machines": rows, "can_edit": can_edit, "can_match": can_match, "here": here},
+    )
+
+
+# ---------- Staff duty times (Setup → Staff duty times; project lead, 6 Nov 2026) ----------
+@login_required
+def duty_times(request):
+    """In and Out time of each staff type, from a date: summer and winter times keep their own dates, so earlier
+    days keep the times that applied then."""
+    branch = _branch(request, "hr.view_hrsettings")
+    can_edit = request.user.has_branch_perm("hr.change_hrsettings", branch.id)
+    types = Employee.StaffType.choices
+    if request.method == "POST":
+        if not can_edit:
+            raise PermissionDenied
+        if request.POST.get("action") == "remove":
+            date = _date(request.POST.get("starts_from"), None)
+            removed, _detail = DutyTime.objects.filter(branch=branch, starts_from=date).delete()
+            if removed:
+                S.rebuild_days(branch, max(date, timezone.localdate() - dt.timedelta(days=62)), timezone.localdate())
+                messages.success(request, _("Times from %(d)s removed.") % {"d": date})
+            return redirect("hr:duty_times")
+        date = _date(request.POST.get("starts_from"), None)
+        label = request.POST.get("label", "").strip()[:60]
+        rows, problems = [], []
+        for value, name in types:
+            starts, ends = _clock(request.POST.get(f"in_{value}")), _clock(request.POST.get(f"out_{value}"))
+            if not starts and not ends:
+                continue
+            if not starts or not ends or ends <= starts:
+                problems.append(str(name))
+                continue
+            try:
+                grace = max(min(int(request.POST.get(f"grace_{value}") or 0), 120), 0)
+            except ValueError:
+                grace = 0
+            rows.append((value, starts, ends, grace, _clock(request.POST.get(f"half_{value}"))))
+        if date is None or problems or not rows:
+            messages.error(
+                request,
+                _("Give the date the times start from, and an In time before the Out time for: %(t)s.")
+                % {"t": ", ".join(problems) or _("at least one staff type")},
+            )
+            return redirect("hr:duty_times")
+        for value, starts, ends, grace, half in rows:
+            DutyTime.objects.update_or_create(
+                branch=branch, staff_type=value, starts_from=date,
+                defaults={"duty_starts": starts, "duty_ends": ends, "grace_minutes": grace,
+                          "half_day_after": half, "label": label},
+            )  # fmt: skip
+        today = timezone.localdate()
+        if date <= today:  # days already worked out from this date are worked out again with the new times
+            S.rebuild_days(branch, max(date, today - dt.timedelta(days=62)), today)
+        messages.success(request, _("Staff duty times saved, from %(d)s.") % {"d": date.strftime("%d %b %Y")})
+        return redirect("hr:duty_times")
+    today = timezone.localdate()
+    lookup = S.duty_lookup(branch)
+    current = [(value, name, lookup(value, today)) for value, name in types]
+    history = defaultdict(list)
+    for d in DutyTime.objects.filter(branch=branch).order_by("-starts_from", "staff_type"):
+        history[d.starts_from].append(d)
+    return render(
+        request,
+        "hr/duty_times.html",
+        {
+            "branch": branch,
+            "can_edit": can_edit,
+            "current": current,
+            "history": sorted(history.items(), reverse=True),
+            "today": today,
+        },
+    )

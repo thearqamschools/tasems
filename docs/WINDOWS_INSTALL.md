@@ -82,7 +82,11 @@ network. Some printers come with a fixed address from another network (e.g. 192.
 2. TASEMS → **Setup → Attendance machine** → Add a machine: IP, port 4370, comm key → Save → **Test connection**.
 3. **Get attendance now** reads the punches; afterwards TASEMS reads them by itself every 5 minutes while the
    TASEMS window is open. Each staff member's **Biometric machine ID** must be the number they have on the machine;
-   numbers that match nobody are listed on the page.
+   numbers that match nobody are listed on the page with the name kept on the machine. TASEMS suggests the staff
+   member with the same name; tick the rows that are right and press **Save the ticked rows** (nothing is saved by
+   itself). Staff with no machine ID are never marked by the machine: enter their attendance on Staff attendance →
+   "Entered by hand".
+   In / Out times per staff type (and summer / winter times) are in **Setup → Staff duty times**.
 4. If it says the machine did not answer: the page shows the network this computer is on (e.g. 192.168.1.x). The
    machine's IP must start the same way. Check from this computer: Command Prompt → `ping 192.168.1.222`. If the
    ping gets no reply, the problem is the network (cable, switch, IP), not TASEMS. TASEMS tries TCP and UDP itself.

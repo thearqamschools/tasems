@@ -72,12 +72,18 @@ class Employee(BranchOwnedModel):
         TERMINATED = "terminated", _("Services ended")
         RETIRED = "retired", _("Retired")
 
-    code = models.CharField(_("employee code"), max_length=20)
+    code = models.CharField(_("EMP.code"), max_length=20, help_text=_("Our own employee code, for records."))
     machine_id = models.CharField(
         _("biometric machine ID"),
         max_length=20,
         blank=True,
-        help_text=_("The number this person is enrolled under on the attendance machine."),
+        help_text=_(
+            "The number this person is enrolled under on the attendance machine. Empty: attendance is entered by "
+            "hand and the machine never marks this person."
+        ),
+    )
+    machine_id_since = models.DateField(
+        null=True, blank=True, editable=False, help_text="The day the Biometric machine ID was first typed in."
     )
     full_name = models.CharField(max_length=150)
     full_name_ur = models.CharField(_("full name (Urdu)"), max_length=150, blank=True)
@@ -138,6 +144,20 @@ class Employee(BranchOwnedModel):
         if self.campus_id and self.branch_id and self.campus.branch_id != self.branch_id:
             raise ValidationError({"campus": _("Campus belongs to a different branch.")})
 
+    def save(self, *args, **kwargs):
+        # R7-5: the machine marks a person only from the day their machine ID is known (or their first punch).
+        if self.machine_id and not self.machine_id_since:
+            from django.utils import timezone
+
+            self.machine_id_since = timezone.localdate()
+            if kwargs.get("update_fields") is not None:
+                kwargs["update_fields"] = list(set(kwargs["update_fields"]) | {"machine_id_since"})
+        elif not self.machine_id:
+            self.machine_id_since = None
+            if kwargs.get("update_fields") is not None:
+                kwargs["update_fields"] = list(set(kwargs["update_fields"]) | {"machine_id_since"})
+        super().save(*args, **kwargs)
+
     def employed_on(self, date):
         return self.joined_on <= date and (self.left_on is None or date <= self.left_on)
 
@@ -169,6 +189,31 @@ class HRSettings(TimeStampedModel):
     @classmethod
     def for_branch(cls, branch):
         return cls.objects.filter(branch=branch).first() or cls(branch=branch)
+
+
+class DutyTime(BranchOwnedModel):
+    """In and Out time of one staff type from a date (project lead, 6 Nov 2026: each of the four staff types has its
+    own times; summer and winter times change during the year, so each set applies from its own date and earlier
+    days keep the times of their date)."""
+
+    staff_type = models.CharField(_("staff type"), max_length=10, choices=Employee.StaffType.choices)
+    starts_from = models.DateField(_("from"))
+    duty_starts = models.TimeField(_("In time"))
+    duty_ends = models.TimeField(_("Out time"))
+    grace_minutes = models.PositiveSmallIntegerField(_("grace minutes"), default=0, validators=[MaxValueValidator(120)])
+    half_day_after = models.TimeField(_("half day after"), null=True, blank=True)
+    label = models.CharField(_("name"), max_length=60, blank=True, help_text=_("e.g. Winter times"))
+
+    class Meta:
+        ordering = ["staff_type", "-starts_from"]
+        constraints = [
+            models.UniqueConstraint(fields=["branch", "staff_type", "starts_from"], name="one_duty_time_per_date")
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.get_staff_type_display()} {self.duty_starts:%H:%M}–{self.duty_ends:%H:%M} from {self.starts_from}"
+        )
 
 
 @audited
@@ -281,6 +326,11 @@ class StaffDay(BranchOwnedModel):
     last_out = models.TimeField(null=True, blank=True)
     status = models.CharField(max_length=10, choices=Status.choices)
     leave = models.ForeignKey(LeaveRequest, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
+    # Round 7 (project lead, 6 Nov 2026): out before the duty end, and a day with only one punch.
+    early_left = models.BooleanField(default=False)
+    missing = models.CharField(
+        max_length=3, blank=True, choices=[("out", _("In, no Out")), ("in", _("Out, no In"))], default=""
+    )
     is_corrected = models.BooleanField(default=False, help_text=_("Set by hand; kept when days are worked out again"))
     note = models.CharField(max_length=200, blank=True)
     corrected_by = models.ForeignKey(
@@ -308,6 +358,11 @@ class StaffDay(BranchOwnedModel):
     @property
     def code(self):
         return self.CODES.get(self.status, "")
+
+    @property
+    def mark(self):
+        """The code with e (early left) or ! (In with no Out / Out with no In), for the monthly sheet."""
+        return self.code + ("e" if self.early_left else "") + ("!" if self.missing else "")
 
     @property
     def hours(self):
@@ -387,6 +442,7 @@ class AttendanceMachine(BranchOwnedModel):
     last_result = models.CharField(max_length=300, blank=True)
     last_ok = models.BooleanField(default=False)
     unknown_ids = models.JSONField(default=dict, blank=True)
+    users = models.JSONField(default=dict, blank=True, help_text="Machine user number → name, as last read.")
 
     class Meta:
         ordering = ["name"]

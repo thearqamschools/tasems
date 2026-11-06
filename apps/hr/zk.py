@@ -13,7 +13,8 @@ from struct import pack, unpack
 
 CMD_CONNECT, CMD_EXIT, CMD_AUTH = 1000, 1001, 1102
 CMD_ACK_OK, CMD_ACK_UNAUTH = 2000, 2005
-CMD_GET_TIME, CMD_GET_FREE_SIZES, CMD_ATTLOG_RRQ = 201, 50, 13
+CMD_GET_TIME, CMD_GET_FREE_SIZES, CMD_ATTLOG_RRQ, CMD_USERTEMP_RRQ = 201, 50, 13, 9
+FCT_USER = 5
 CMD_PREPARE_DATA, CMD_DATA, CMD_FREE_DATA = 1500, 1501, 1502
 CMD_PREPARE_BUFFER, CMD_READ_BUFFER = 1503, 1504
 USHRT_MAX = 65535
@@ -34,6 +35,7 @@ class Reading:
     records: int = 0
     punches: list = field(default_factory=list)  # (machine user id, naive local datetime)
     transport: str = "tcp"
+    names: dict = field(default_factory=dict)  # machine user number → name
 
 
 def checksum(data):
@@ -98,6 +100,8 @@ def parse_attendance(data, records):
     if not records:
         return []
     record = size // records
+    if record <= 0:
+        return []
     out = []
     for i in range(0, len(data) - record + 1, record):
         chunk = data[i : i + record]
@@ -116,6 +120,38 @@ def parse_attendance(data, records):
             out.append((user, decode_time(stamp)))
         except ValueError:
             continue  # a damaged record on the machine
+    return out
+
+
+def _text(raw):
+    return raw.split(b"\x00")[0].decode("utf-8", "ignore").strip()
+
+
+def parse_users(data, count):
+    """User list → {user number: name}. Records are 28 bytes (older machines), 72 or 120 bytes (NGTeco)."""
+    if len(data) < 4 or not count:
+        return {}
+    size = unpack("<I", data[:4])[0]
+    data = data[4 : 4 + size]
+    record = size // count
+    if record <= 0:
+        return {}
+    out = {}
+    for i in range(0, len(data) - record + 1, record):
+        chunk = data[i : i + record]
+        if record == 28:
+            _uid, _priv, _pw, name, _card, _group, _tz, user_id = unpack("<HB5s8sIxBhI", chunk)
+            number, name = str(user_id), _text(name)
+        elif record == 120:
+            number = _text(chunk[96:120])
+            name = f"{_text(chunk[35:59])} {_text(chunk[59:83])}".strip()
+        elif record >= 72:
+            _uid, _priv, _pw, name, _card, _group, user_id = unpack("<HB8s24sIx7sx24s", chunk[:72])
+            number, name = _text(user_id), _text(name)
+        else:
+            raise MachineError(f"unknown user record size {record}")
+        if number:
+            out[number] = name
     return out
 
 
@@ -236,8 +272,8 @@ class Machine:
             else:
                 raise MachineError("unexpected reply while reading")
 
-    def read_buffer(self, command):
-        cmd, payload = self._send(CMD_PREPARE_BUFFER, pack("<bhii", 1, command, 0, 0))
+    def read_buffer(self, command, fct=0):
+        cmd, payload = self._send(CMD_PREPARE_BUFFER, pack("<bhii", 1, command, fct, 0))
         if cmd == CMD_DATA:
             return payload
         if cmd != CMD_ACK_OK or len(payload) < 5:
@@ -251,6 +287,12 @@ class Machine:
         self._send(CMD_FREE_DATA)
         return data
 
+    def users(self, count):
+        """Machine user number → name (read only; the user list as pyzk reads it)."""
+        if not count:
+            return {}
+        return parse_users(self.read_buffer(CMD_USERTEMP_RRQ, FCT_USER), count)
+
     def attendance(self, records):
         if not records:
             return []
@@ -263,6 +305,10 @@ def _read_with(transport, host, port, password, with_punches, timeout):
         reading.users, reading.records = machine.sizes()
         if with_punches:
             reading.punches = machine.attendance(reading.records)
+            try:  # names only help matching; a machine that will not give them still gives its punches
+                reading.names = machine.users(reading.users)
+            except (MachineError, OSError):
+                reading.names = {}
         return reading
 
 

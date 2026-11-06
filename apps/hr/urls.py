@@ -14,6 +14,7 @@ urlpatterns = [
     path("import/", views.staff_import, name="staff_import"),
     path("attendance/import/", views.punches_import, name="punches_import"),
     path("attendance/machines/", views.machines, name="machines"),
+    path("attendance/times/", views.duty_times, name="duty_times"),
     path("attendance/", views.day, name="day"),
     path("attendance/month/", views.month, name="month"),
     path("leave/", views.leaves, name="leaves"),
