@@ -455,6 +455,13 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
     **MAC.ID** (the lead, 6 Nov 2026).
   - The same two columns, **before the name**, also on **Staff attendance** (today's page) and the **Monthly
     sheet**.
+### Staff member page (6 Nov 2026)
+- R7-15. Buttons at the top of a staff member's page: today **Edit, Delete, Record leave** — Delete sits in the
+  middle and can be pressed by mistake. New order: **Edit**, **Record leave**, then empty space, and **Delete on
+  the far right** of the box.
+- R7-16. Details on the staff member's page: all values **left-aligned** alike (today Father name is on the left
+  but CNIC and Biometric machine ID sit on the right).
+
 ### In / Out times and late / early left (6 Nov 2026)
 Today (checked): the branch has one duty time for everyone, **07:45 to 13:45**, Monday to Saturday, with "grace
 minutes" and "half day after" settings, and **late** is worked out from the In time. But these can only be changed
