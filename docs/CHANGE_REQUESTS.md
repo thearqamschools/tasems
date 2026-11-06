@@ -425,9 +425,11 @@ deletes users. In TASEMS, a read with 0 matched staff saves nothing and changes 
 lead to say where the staff are missing** (on the machine's User Mgt, or in TASEMS → Staff) — see R7-6.
 
 ### Staff menu
-- R7-1. **Staff** page (first item of the Staff menu) is for staff information only: Add staff, Import staff,
-  the staff list. Remove **Today's staff attendance** and **Import machine file** buttons from it.
-- R7-2. The side menu **Staff** group keeps only staff items. **Monthly sheet** and **Leave** move to the
+- R7-1. ~~**Staff** page (first item of the Staff menu) is for staff information only: Add staff, Import staff,
+  the staff list. Remove **Today's staff attendance** and **Import machine file** buttons from it.~~
+  **Withdrawn by the lead (6 Nov 2026)**: the buttons at the top of the Staff page (Today's staff attendance,
+  Import machine file, Monthly sheet, Leave) **stay as they are**; do not change them.
+- R7-2. (To confirm with the lead after R7-1 was withdrawn: does this side-menu change still apply?) The side menu **Staff** group keeps only staff items. **Monthly sheet** and **Leave** move to the
   **Staff attendance** side (with Today's attendance, Import machine file, Attendance machine): everything about
   attendance lives under Staff attendance.
 
@@ -444,6 +446,9 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
   uthana shuru kar de"; to confirm whether earlier punches still on the machine should also come in).
 - R7-6. Investigation: where the 93 staff went missing (machine or TASEMS), and how to get them back.
 
+- R7-10. **Staff list columns** (Staff page), in this order: **EMP.code** (heading renamed from "Code"),
+  **Machine ID** (moved from the last column to right after the code), **Name**, **Designation**, **Type**,
+  **Mobile**. EMP.code and Machine ID values **centred** under their headings (today they sit to one side).
 - R7-8. Staff attendance has **two parts**: (1) staff **with a Biometric ID** — attendance comes from the
   machine; (2) staff **without** one — attendance is **entered by hand**. Attendance of **both** parts can be
   **edited** by hand.
