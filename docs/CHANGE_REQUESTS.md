@@ -456,8 +456,12 @@ in the technical admin screen (no page in Setup), there is **no early-left**, an
 flagged.
 - R7-11. **Payroll rules** (Setup) get the **In time** and **Out time** (with grace minutes and half-day-after),
   editable by the office.
-  - **To confirm**: the same times for everyone, or **per person / per designation** (the lead: "kis kis ka kya kya
-    time hai")? E.g. guards and Aapa may keep other hours than teachers.
+  - **Decided by the lead (6 Nov 2026)**: times are set **per staff type**, the four types on the staff form:
+    **Teacher**, **Hifz teacher (Qari)**, **Administration / office**, **Support staff** — each with its own In
+    and Out time, in Setup (Payroll rules / settings).
+  - **Summer and winter** times differ: the office can change the times during the year. Each change has a
+    **"from" date**, so earlier days keep the times that applied then (late / early left of last month does not
+    change when the winter times are entered). E.g. "Winter times from 1 Nov", "Summer times from 1 Apr".
 - R7-12. In after the In time (+ grace) = **Late**. Out before the Out time = **Early left** (new; shown on the day,
   the monthly sheet and the staff member's page).
 - R7-13. **In but no Out**: the day closes at midnight; the attendance counts (present / late), and the day shows
