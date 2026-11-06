@@ -451,6 +451,10 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
 - R7-10. **Staff list columns** (Staff page), in this order: **EMP.code** (heading renamed from "Code"),
   **Machine ID** (moved from the last column to right after the code), **Name**, **Designation**, **Type**,
   **Mobile**. EMP.code and Machine ID values **centred** under their headings (today they sit to one side).
+  - Heading names: **EMP.code** (employee code) and **Machine ID**; where the full heading does not fit, short form
+    **MAC.ID** (the lead, 6 Nov 2026).
+  - The same two columns, **before the name**, also on **Staff attendance** (today's page) and the **Monthly
+    sheet**.
 ### In / Out times and late / early left (6 Nov 2026)
 Today (checked): the branch has one duty time for everyone, **07:45 to 13:45**, Monday to Saturday, with "grace
 minutes" and "half day after" settings, and **late** is worked out from the In time. But these can only be changed
