@@ -444,6 +444,18 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
   uthana shuru kar de"; to confirm whether earlier punches still on the machine should also come in).
 - R7-6. Investigation: where the 93 staff went missing (machine or TASEMS), and how to get them back.
 
-### Suggested by Claude (to confirm)
-- R7-7. Read machine user **names** with the numbers; show "13 – name (112)" in the not-matched list and offer a
-  **match by name** button that fills Biometric IDs (read-only on the machine).
+- R7-8. Staff attendance has **two parts**: (1) staff **with a Biometric ID** — attendance comes from the
+  machine; (2) staff **without** one — attendance is **entered by hand**. Attendance of **both** parts can be
+  **edited** by hand.
+
+### Accepted from Claude's suggestion (6 Nov 2026), with confirmation
+- R7-7. Read machine user **names** with the numbers; show "13 – name (112)" in the not-matched list.
+  **Match by name only with confirmation**: TASEMS shows the suggested pairs (machine number + machine name ↔
+  staff member); nothing is filled until a person ticks / OKs each pair. Two people with the same name (e.g. two
+  "Ahmad") are never matched by themselves — they are shown as "same name, choose by hand". The ID can always be
+  typed by hand instead. Read-only on the machine.
+
+### Problem reported 6 Nov 2026 (after installing v14) — to investigate first
+- R7-9. Dashboard shows **1,215 active students**, but **Students** list and search show nothing; **Staff** list is
+  empty too (it showed before). The dashboard counts straight from the database, so the records are there; the
+  lists are not showing them. Asked the lead for screenshots of both pages and of the black TASEMS window.
