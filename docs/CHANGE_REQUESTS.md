@@ -414,3 +414,36 @@ with the child and all brothers and sisters, and the children are called with it
   - **Given by the lead (31 Oct 2026)**: IP **192.168.1.222**, mask 255.255.255.0, gateway 192.168.1.1, TCP port
     **4370**, DHCP off; platform **ZMM220_TFT**, ZKFinger VX10.0, ZKFace VX7.0, MAC 00:17:61:10:da:4c. **No other
     software** uses the machine.
+
+## Round 7 (6 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+
+Context: installer v14 connected to the head-office machine (192.168.1.222, TCP): 93 users, 39,979 records,
+0 staff matched (no staff record has a Biometric machine ID yet). After **Get attendance now** the lead reported
+that "all 93 enrolled staff disappeared". Checked: TASEMS sends the machine only read commands (connect, clock,
+counts, read attendance log, free buffer, disconnect — codes checked against pyzk's list); none adds, changes or
+deletes users. In TASEMS, a read with 0 matched staff saves nothing and changes no staff record. **Waiting for the
+lead to say where the staff are missing** (on the machine's User Mgt, or in TASEMS → Staff) — see R7-6.
+
+### Staff menu
+- R7-1. **Staff** page (first item of the Staff menu) is for staff information only: Add staff, Import staff,
+  the staff list. Remove **Today's staff attendance** and **Import machine file** buttons from it.
+- R7-2. The side menu **Staff** group keeps only staff items. **Monthly sheet** and **Leave** move to the
+  **Staff attendance** side (with Today's attendance, Import machine file, Attendance machine): everything about
+  attendance lives under Staff attendance.
+
+### Computer code and Biometric ID
+- R7-3. Every staff member has two separate numbers: **Computer code** (our own, for records and documents) and
+  **Biometric ID** (the user number on the machine, used only to match punches). (Both fields exist today:
+  "Code" and "Biometric machine ID"; to label them clearly.)
+- R7-4. **No Biometric ID = never touched by the machine.** Punches are not taken for them and **no attendance is
+  marked for them from the machine** (today a read that matches anyone works out the days of *every* staff member
+  in that date range, so staff without an ID would get "absent" — to stop). They are never removed or hidden. The
+  page shows "Biometric ID not set" for them.
+- R7-5. New staff are often put on the machine weeks or a month after joining. Until the ID is typed into TASEMS
+  nothing is taken for them; once it is typed, punches are taken **from then on** (the lead's wording: "phir wo
+  uthana shuru kar de"; to confirm whether earlier punches still on the machine should also come in).
+- R7-6. Investigation: where the 93 staff went missing (machine or TASEMS), and how to get them back.
+
+### Suggested by Claude (to confirm)
+- R7-7. Read machine user **names** with the numbers; show "13 – name (112)" in the not-matched list and offer a
+  **match by name** button that fills Biometric IDs (read-only on the machine).
