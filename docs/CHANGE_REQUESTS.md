@@ -449,6 +449,21 @@ lead to say where the staff are missing** (on the machine's User Mgt, or in TASE
 - R7-10. **Staff list columns** (Staff page), in this order: **EMP.code** (heading renamed from "Code"),
   **Machine ID** (moved from the last column to right after the code), **Name**, **Designation**, **Type**,
   **Mobile**. EMP.code and Machine ID values **centred** under their headings (today they sit to one side).
+### In / Out times and late / early left (6 Nov 2026)
+Today (checked): the branch has one duty time for everyone, **07:45 to 13:45**, Monday to Saturday, with "grace
+minutes" and "half day after" settings, and **late** is worked out from the In time. But these can only be changed
+in the technical admin screen (no page in Setup), there is **no early-left**, and a day with one punch is not
+flagged.
+- R7-11. **Payroll rules** (Setup) get the **In time** and **Out time** (with grace minutes and half-day-after),
+  editable by the office.
+  - **To confirm**: the same times for everyone, or **per person / per designation** (the lead: "kis kis ka kya kya
+    time hai")? E.g. guards and Aapa may keep other hours than teachers.
+- R7-12. In after the In time (+ grace) = **Late**. Out before the Out time = **Early left** (new; shown on the day,
+  the monthly sheet and the staff member's page).
+- R7-13. **In but no Out**: the day closes at midnight; the attendance counts (present / late), and the day shows
+  "**In, no Out**". The next day is worked out on its own.
+- R7-14. **Out but no In** (only a punch near or after the Out time): the attendance counts, and the day shows
+  "**Out, no In**" (today such a punch would be read as a late In).
 - R7-8. Staff attendance has **two parts**: (1) staff **with a Biometric ID** — attendance comes from the
   machine; (2) staff **without** one — attendance is **entered by hand**. Attendance of **both** parts can be
   **edited** by hand.
