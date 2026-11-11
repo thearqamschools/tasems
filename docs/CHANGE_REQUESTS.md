@@ -527,3 +527,16 @@ relevance rules by city / area / distance, duplicate check by mobile / CNIC, vac
 → demo lesson → selected → joined, and "Create staff record" from the hired candidate. Automatic reading of CV photos
 needs an online service (Claude API: internet, a paid API key and the lead's approval; CVs are sent to Anthropic) —
 not to be bought or switched on without approval.
+
+### Round 8 — decided by the lead (11 Nov 2026)
+- R8-10. **No paid service and no AI** now: CVs are entered with the quick form (option A). Option C (AI reading) only
+  later, after a separate decision. Option B (free OCR) not chosen.
+- R8-11. **Levels**: Early Years, Primary, Middle, Matric, Hifz-e-Quran.
+- R8-12. **Distance**: each campus, a radius of at most **4 km**. TASEMS shows how far the candidate lives from the
+  campus (e.g. "x km from Samanabad"); a person decides relevant / not relevant, because addresses on CVs are often
+  incomplete or wrong.
+- R8-13. **Keeping CVs**: CVs of people not hired stay **2 years**, then move to a **Bin** by themselves; after
+  **30 days** in the Bin they are deleted by themselves. A person can also remove a CV before that.
+- R8-14. **Interview mark sheet**: the school has none; TASEMS is to provide one (headings to agree).
+- Open: other posts than teacher (staff designations list?), subjects list, how the distance is worked out without a
+  paid map service, whether the 2 years count from the last CV received, mark sheet headings.
