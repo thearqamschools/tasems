@@ -415,7 +415,7 @@ with the child and all brothers and sisters, and the children are called with it
     **4370**, DHCP off; platform **ZMM220_TFT**, ZKFinger VX10.0, ZKFace VX7.0, MAC 00:17:61:10:da:4c. **No other
     software** uses the machine.
 
-## Round 7 (6 Nov 2026) — built 6 Nov 2026 (Windows installer v16, CHANGELOG 0.42.0, D-095)
+## Round 7 (6 Nov 2026) — built 6 Nov 2026 (Windows installer v16, CHANGELOG 0.42.0, D-095); **confirmed working by the lead on 11 Nov 2026** (duty times per staff type; machine users matched by name with ticks)
 
 Context: installer v14 connected to the head-office machine (192.168.1.222, TCP): 93 users, 39,979 records,
 0 staff matched (no staff record has a Biometric machine ID yet). After **Get attendance now** the lead reported
