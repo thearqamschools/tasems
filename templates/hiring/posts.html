@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Hiring posts" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<h1>{% trans "Hiring posts" %}</h1>
+<p class="lede">{% trans "Posts people apply for, in the CV bank and vacancies. One list for every branch. A teaching post asks for subjects and level." %}</p>
+{% if can_edit %}<form method="post" class="card filter-inline">{% csrf_token %}<input name="name" required maxlength="80" placeholder="{% trans 'New post, e.g. Librarian' %}" aria-label="{% trans 'Post' %}"><label><input type="checkbox" name="is_teaching"> {% trans "teaching post" %}</label><button class="button" type="submit">{% trans "Add post" %}</button></form>{% endif %}
+<div class="table-wrap"><table><thead><tr><th>{% trans "Post" %}</th><th>{% trans "Teaching post" %}</th><th>{% trans "In use" %}</th>{% if can_edit %}<th></th>{% endif %}</tr></thead>
+<tbody>{% for p in rows %}<tr><td>{{ p.name }}</td><td>{% if p.is_teaching %}{% trans "Yes" %}{% else %}—{% endif %}</td><td>{% if p.is_active %}{% trans "Yes" %}{% else %}<span class="muted">{% trans "No" %}</span>{% endif %}</td>
+{% if can_edit %}<td><form method="post" style="margin:0">{% csrf_token %}<input type="hidden" name="action" value="toggle"><input type="hidden" name="post" value="{{ p.id }}"><button class="button quiet sm" type="submit">{% if p.is_active %}{% trans "Stop using" %}{% else %}{% trans "Use again" %}{% endif %}</button></form></td>{% endif %}</tr>{% endfor %}</tbody></table></div>
+{% endblock %}

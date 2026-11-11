@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Interview mark sheet" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hiring:vacancy' app.vacancy_id %}">‹ {{ app.vacancy }}</a></p>
+<h1>{% trans "Interview mark sheet" %}</h1>
+<p class="lede">{{ app.candidate.full_name }} · {{ app.vacancy }}{% if current %} · <strong>{{ current.total }} / {{ out_of }}</strong>{% endif %}</p>
+<form method="post" class="card" data-busy>{% csrf_token %}{{ form.non_field_errors }}
+  <div class="form-grid">{% include "hiring/_field.html" with f=form.held_on %}{% include "hiring/_field.html" with f=form.interviewers %}</div>
+  <h2>{% blocktrans %}Marks (out of {{ out_of }}){% endblocktrans %}</h2>
+  <div class="form-grid">
+    {% include "hiring/_field.html" with f=form.subject_knowledge %}{% include "hiring/_field.html" with f=form.teaching %}
+    {% include "hiring/_field.html" with f=form.communication %}{% include "hiring/_field.html" with f=form.character %}
+    {% include "hiring/_field.html" with f=form.experience %}{% include "hiring/_field.html" with f=form.impression %}
+  </div>
+  <div class="form-grid">{% include "hiring/_field.html" with f=form.remarks wide=True %}{% include "hiring/_field.html" with f=form.decision chips=True wide=True %}</div>
+  <p class="small muted">{% trans "Select moves the candidate to Selected; Not selected takes them off this vacancy (their CV stays in the CV bank)." %}</p>
+  {% if can_edit %}<button class="button" type="submit">{% trans "Save mark sheet" %}</button>{% endif %}
+</form>
+{% endblock %}

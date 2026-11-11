@@ -35,6 +35,7 @@ urlpatterns = [
     path("hifz/", include("apps.hifz.urls")),
     path("attention/", include("apps.insights.urls")),
     path("staff/", include("apps.hr.urls")),
+    path("hiring/", include("apps.hiring.urls")),
     path("parents/", include("apps.parents.urls")),
     path("admissions/", include("apps.admissions.urls")),
     path("i18n/", include("django.conf.urls.i18n")),

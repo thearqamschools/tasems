@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "apps.events",
     "apps.hifz",
     "apps.insights",
+    "apps.hiring",
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Hiring report" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Hiring report" %}</h1>
+<div class="figures">
+  <div class="figure"><div class="value">{{ bank }}</div><div class="label">{% trans "CVs in the CV bank" %}</div></div>
+  <div class="figure"><div class="value">{{ relevant }}</div><div class="label">{% trans "Marked relevant" %}</div></div>
+  <div class="figure"><div class="value">{{ open|length }}</div><div class="label">{% trans "Open vacancies" %}</div></div>
+  <div class="figure"><div class="value">{{ hired }}</div><div class="label">{% trans "Hired from the CV bank" %}</div></div>
+  <div class="figure"><div class="value">{% if days_to_fill is not None %}{{ days_to_fill }}{% else %}—{% endif %}</div><div class="label">{% trans "Days to fill a post (average)" %}</div></div>
+</div>
+<div class="card"><h2>{% trans "CVs received by month" %}</h2>
+  {% for d, n in month_rows %}<div class="bar-row"><span>{{ d|date:"M Y" }}</span><div><div class="bar-fill" style="width:{% widthratio n most 100 %}%"></div></div><span class="num">{{ n }}</span></div>{% endfor %}
+</div>
+<div class="card"><h2>{% blocktrans with d=since|date:"M Y" %}Where CVs came from (since {{ d }}){% endblocktrans %}</h2>
+  {% if by_channel %}<div class="table-wrap"><table><tbody>{% for name, n in by_channel %}<tr><td>{{ name }}</td><td class="num">{{ n }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="muted">{% trans "No CVs yet." %}</p>{% endif %}
+</div>
+{% if open %}<div class="card"><h2>{% trans "Open vacancies" %}</h2><ul>{% for v in open %}<li><a href="{% url 'hiring:vacancy' v.id %}">{{ v }}</a> · {% trans "opened" %} {{ v.created_at|date:"d M Y" }}</li>{% endfor %}</ul></div>{% endif %}
+{% endblock %}

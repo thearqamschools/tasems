@@ -3,7 +3,8 @@
 {% block content %}
 <p><a href="{% if employee %}{% url 'hr:employee' employee.id %}{% else %}{% url 'hr:index' %}{% endif %}">‹ {% if employee %}{{ employee.full_name }}{% else %}{% trans "Staff" %}{% endif %}</a></p>
 <h1>{% if employee %}{{ employee.full_name }}{% else %}{% trans "Add staff member" %}{% endif %}</h1>
-<form method="post" enctype="multipart/form-data" data-busy>{% csrf_token %}
+{% if candidate %}<p class="callout">{% blocktrans with n=candidate.full_name %}Filled in from the CV of {{ n }} (Hiring). Check the details, give the EMP.code, and save: the candidate is marked hired and their CV and education are kept on the staff record.{% endblocktrans %}</p>{% endif %}
+<form method="post" enctype="multipart/form-data" data-busy>{% csrf_token %}{% if candidate %}<input type="hidden" name="candidate" value="{{ candidate.pk }}">{% endif %}
   <div class="card">
   {{ form.non_field_errors }}
   <div class="form-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>

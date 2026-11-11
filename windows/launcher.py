@@ -182,6 +182,10 @@ def start():
 
     call_command("migrate", interactive=False, verbosity=0)
     call_command("seed_tasems", verbosity=0)
+    try:  # old CVs to the Bin, Bin emptied after 30 days (Hiring)
+        call_command("hiring_cleanup", verbosity=0)
+    except Exception as error:  # never stops TASEMS from starting
+        say(f"  Hiring clean-up skipped: {error}")
     if values["DEMO_MODE"] == "True":
         try:
             call_command("seed_demo", verbosity=0)
@@ -229,10 +233,14 @@ def read_machines_now_and_then(minutes=5):
     from django.core.management import call_command
     from django.db import close_old_connections
 
+    rounds = 0
     while True:
         time.sleep(minutes * 60)
+        rounds += 1
         try:
             close_old_connections()
+            if rounds % 72 == 0:  # about every 6 hours: old CVs to the Bin, Bin emptied after 30 days
+                call_command("hiring_cleanup", verbosity=0)
             call_command("read_machines", verbosity=0)
         except Exception as error:  # a machine that is off must not stop TASEMS
             with open(LOGS / "machines.log", "a", encoding="utf-8") as log:

@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{{ candidate.full_name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hiring:candidate' candidate.id %}">‹ {{ candidate.full_name }}</a></p>
+<h1>{% trans "Change details" %}</h1>
+<form method="post" data-busy>{% csrf_token %}{{ form.non_field_errors }}
+<section class="card"><div class="form-grid">
+  {% include "hiring/_field.html" with f=form.post %}{% include "hiring/_field.html" with f=form.campus %}
+  {% include "hiring/_field.html" with f=form.full_name %}{% include "hiring/_field.html" with f=form.father_name %}
+  {% include "hiring/_field.html" with f=form.gender %}{% include "hiring/_field.html" with f=form.mobile %}
+  {% include "hiring/_field.html" with f=form.cnic %}{% include "hiring/_field.html" with f=form.email %}
+  {% include "hiring/_field.html" with f=form.address wide=True %}
+  {% include "hiring/_field.html" with f=form.qualification %}{% include "hiring/_field.html" with f=form.experience_years %}
+  {% include "hiring/_field.html" with f=form.salary_asked %}
+  {% include "hiring/_field.html" with f=form.subjects chips=True wide=True %}
+  {% include "hiring/_field.html" with f=form.levels chips=True wide=True %}
+  {% include "hiring/_field.html" with f=form.relevance chips=True wide=True %}
+  {% include "hiring/_field.html" with f=form.relevance_note %}{% include "hiring/_field.html" with f=form.notes %}
+</div></section>
+{% trans "Education" as t %}{% trans "Add a row" as a %}{% include "hr/_formset.html" with formset=sets.education title=t add=a %}
+{% trans "Experience" as t %}{% include "hr/_formset.html" with formset=sets.experience title=t add=a %}
+<div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>
+</form>
+{% endblock %}

@@ -339,6 +339,18 @@ HIFZ_VIEW = ["hifz.view_hifzlesson", "hifz.view_paratest"]
 HIFZ_WRITE = HIFZ_VIEW + ["hifz.add_hifzlesson", "hifz.add_paratest"]
 HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.change_paratest"]
 
+# Hiring (R8, 11 Nov 2026): Director and Principal run it all; the Admin enters CVs and sees the CV bank (not
+# interview marks); head office sees every branch's; the posts list is kept by the Director and head office.
+HIRING_VIEW = ["hiring.view_candidate", "hiring.view_candidatecv", "hiring.view_vacancy", "hiring.view_application",
+               "hiring.view_post"]  # fmt: skip
+HIRING_ENTRY = HIRING_VIEW + ["hiring.add_candidate", "hiring.change_candidate", "hiring.add_candidatecv"]
+HIRING_MANAGE = HIRING_ENTRY + [
+    "hiring.delete_candidate", "hiring.add_vacancy", "hiring.change_vacancy", "hiring.add_application",
+    "hiring.change_application", "hiring.view_interviewsheet", "hiring.add_interviewsheet",
+    "hiring.change_interviewsheet",
+]  # fmt: skip
+HIRING_POSTS = ["hiring.add_post", "hiring.change_post"]
+
 # Who does what in a branch (project lead, 23 Oct 2026):
 # - Director (branch owner): everything in the branch, including receiving fees.
 # - Principal: students, attendance, diary, marks, staff, Hifz, notices, needs attention; sees payroll and the
@@ -352,6 +364,8 @@ HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.change_paratest"]
 DELETE_RECORDS = ["core.delete_records"]
 BRANCH_EVERYTHING = (
     DELETE_RECORDS
+    + HIRING_MANAGE
+    + HIRING_POSTS
     + EVENTS_MANAGE
     + EVENTS_SELL
     + EVENTS_REFUND
@@ -371,6 +385,9 @@ BRANCH_EVERYTHING = (
 
 EXTRA_PERMISSIONS = {
     "network_admin": DELETE_RECORDS
+    + HIRING_VIEW
+    + HIRING_POSTS
+    + ["hiring.view_interviewsheet"]
     + EVENTS_VIEW
     + HIFZ_VIEW
     + INVENTORY_VIEW
@@ -386,6 +403,9 @@ EXTRA_PERMISSIONS = {
     + HR_SETUP
     + ADM_VIEW,
     "head_office_admin": DELETE_RECORDS
+    + HIRING_VIEW
+    + HIRING_POSTS
+    + ["hiring.view_interviewsheet"]
     + EVENTS_VIEW
     + HIFZ_VIEW
     + INVENTORY_VIEW
@@ -399,7 +419,8 @@ EXTRA_PERMISSIONS = {
     + EXPENSE_VIEW
     + HR_SETUP
     + ADM_VIEW,
-    "regional_director": EVENTS_VIEW
+    "regional_director": HIRING_VIEW
+    + EVENTS_VIEW
     + HIFZ_VIEW
     + INVENTORY_VIEW
     + PAYROLL_VIEW
@@ -412,7 +433,8 @@ EXTRA_PERMISSIONS = {
     + HR_VIEW
     + ADM_VIEW,
     "branch_owner": BRANCH_EVERYTHING,
-    "principal": EVENTS_MANAGE
+    "principal": HIRING_MANAGE
+    + EVENTS_MANAGE
     + PAYROLL_VIEW
     + DEFAULTERS
     + HIFZ_MANAGE
@@ -430,7 +452,7 @@ EXTRA_PERMISSIONS = {
     + INVENTORY_MANAGE
     + PAYROLL_MANAGE
     + ["hr.view_employee", "hr.view_staffday", "hr.view_leaverequest"],
-    "admissions_officer": EVENTS_SELL + FEE_COLLECT + ADM_WORK,
+    "admissions_officer": HIRING_ENTRY + EVENTS_SELL + FEE_COLLECT + ADM_WORK,
     "class_teacher": ATT_MARK + DIARY_WRITE + EXAM_ENTER,
     "hifz_teacher": HIFZ_WRITE + ATT_MARK + DIARY_WRITE,
     "subject_teacher": ATT_VIEW + DIARY_VIEW + EXAM_VIEW,

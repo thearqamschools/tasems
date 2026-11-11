@@ -126,6 +126,18 @@ def _menu(user, branch):
             getattr(user, "employee", None) is not None and (reverse("hr:mine"), _("My attendance"), "clock"),
         ],
     )
+    hiring = perm("hiring.view_candidate")
+    group(
+        _("Hiring"),
+        [
+            hiring and (reverse("hiring:index"), _("CV bank"), "file-text"),
+            perm("hiring.add_candidate") and (reverse("hiring:add"), _("Add a CV"), "user-plus"),
+            perm("hiring.view_vacancy") and (reverse("hiring:vacancies"), _("Vacancies"), "briefcase"),
+            perm("hiring.view_application") and (reverse("hiring:interviews"), _("Interviews"), "calendar-check"),
+            hiring and (reverse("hiring:report"), _("Hiring report"), "file-spreadsheet"),
+            hiring and (reverse("hiring:bin"), _("Bin"), "x"),
+        ],
+    )
     can_setup = (
         user.is_superuser
         or perm("academics.change_section")

@@ -504,7 +504,7 @@ flagged.
   lists are not showing them. **Found and fixed 6 Nov 2026 (v15, CHANGELOG 0.41.3)**: a second, empty campus with
   the same name made by the seed after the campus code was changed; the top bar showed the empty one.
 
-## Round 8 (11 Nov 2026) — Hiring (CV bank, vacancies) — noted, not built yet; flow proposal sent for the lead's review
+## Round 8 (11 Nov 2026) — Hiring (CV bank, vacancies) — built 11 Nov 2026 (Windows installer v17, CHANGELOG 0.43.0, D-096)
 
 The lead's request (11 Nov 2026):
 - R8-1. A **Hiring** tab in the side menu, after Staff, with its own sub-items.

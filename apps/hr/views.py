@@ -150,11 +150,23 @@ def employee_form(request, employee_id=None):
     branch = _branch(request, S.EDIT_PERM if employee_id else S.ADD_PERM)
     instance = _employee(branch, employee_id) if employee_id else None
     money = request.user.has_branch_perm("payroll.change_employeepay", branch.id)
-    form = EmployeeForm(request.POST or None, request.FILES or None, instance=instance, branch=branch, money=money)
+    candidate = None if instance else _hired_candidate(request, branch)
+    initial = None
+    if candidate is not None:
+        from apps.hiring.services import staff_initial
+
+        initial = staff_initial(candidate)
+    form = EmployeeForm(
+        request.POST or None, request.FILES or None, instance=instance, branch=branch, money=money, initial=initial
+    )
     sets = staff_formsets(request.POST or None, instance)
     if request.method == "POST" and form.is_valid() and all(f.is_valid() for f in sets.values() if f.is_bound):
         with transaction.atomic():
             e = form.save()
+            if candidate is not None:  # made from a hired candidate (Hiring, R8)
+                from apps.hiring.services import mark_hired
+
+                mark_hired(candidate, e, request.user)
             for formset in (f for f in sets.values() if f.is_bound):
                 formset.instance = e
                 for row in formset.save(commit=False):
@@ -166,7 +178,19 @@ def employee_form(request, employee_id=None):
             S.rebuild_days(branch, e.left_on, timezone.localdate(), [e.id])
         messages.success(request, _("Saved."))
         return redirect("hr:employee", employee_id=e.id)
-    return render(request, "hr/employee_form.html", {"form": form, "employee": instance, "sets": sets})
+    return render(
+        request, "hr/employee_form.html", {"form": form, "employee": instance, "sets": sets, "candidate": candidate}
+    )
+
+
+def _hired_candidate(request, branch):
+    """?candidate=<id> (or the same in the form): Add staff filled in from a candidate of the CV bank."""
+    from apps.hiring.models import Candidate
+
+    pk = request.POST.get("candidate") or request.GET.get("candidate")
+    if not str(pk or "").isdigit() or not request.user.has_branch_perm("hiring.view_candidate", branch.id):
+        return None
+    return Candidate.objects.filter(branch=branch, pk=pk, hired_employee__isnull=True).select_related("post").first()
 
 
 @login_required

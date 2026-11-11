@@ -1,0 +1,64 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ c.full_name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hiring:index' %}">‹ {% trans "CV bank" %}</a></p>
+<h1>{{ c.full_name }}</h1>
+<p class="lede">{{ c.post }}{% if c.campus %} · {{ c.campus }}{% endif %} · {% include "hiring/_relevance.html" %}{% if c.status != "available" %} <span class="badge">{{ c.get_status_display }}</span>{% endif %}{% if c.binned_at %} <span class="badge danger">{% trans "In the Bin" %}</span>{% endif %}</p>
+<div class="actions">
+  {% if can.edit %}<a class="button" href="{% url 'hiring:edit' c.id %}">{% trans "Change details" %}</a>{% endif %}
+  {% if can.staff and c.status != "hired" %}<a class="button secondary" href="{% url 'hr:employee_new' %}?candidate={{ c.id }}">{% trans "Create staff record" %}</a>{% endif %}
+  {% if c.hired_employee %}<a class="button secondary" href="{% url 'hr:employee' c.hired_employee.id %}">{% trans "Staff record" %}</a>{% endif %}
+  {% if can.bin and c.status != "hired" %}<span class="actions-end"><form method="post" style="margin:0"{% if not c.binned_at %} data-confirm="{% trans 'Move to the Bin? It is deleted after 30 days.' %}"{% endif %}>{% csrf_token %}{% if c.binned_at %}<button class="button quiet" name="action" value="restore">{% trans "Take out of the Bin" %}</button>{% else %}<button class="button danger quiet" name="action" value="bin">{% icon "x" %}{% trans "Move to the Bin" %}</button>{% endif %}</form></span>{% endif %}
+</div>
+
+<div class="table-wrap"><table class="details"><tbody>
+  <tr><th>{% trans "Father / husband name" %}</th><td>{{ c.father_name|default:"—" }}</td></tr>
+  <tr><th>{% trans "Mobile" %}</th><td><span class="num">{{ c.mobile|default:"—" }}</span></td></tr>
+  <tr><th>{% trans "CNIC" %}</th><td><span class="num">{{ c.cnic|cnic|default:"—" }}</span></td></tr>
+  {% if c.email %}<tr><th>{% trans "Email" %}</th><td>{{ c.email }}</td></tr>{% endif %}
+  <tr><th>{% trans "Address" %}</th><td>{{ c.address|default:"—" }}</td></tr>
+  <tr><th>{% trans "Highest qualification" %}</th><td>{{ c.qualification|default:"—" }}</td></tr>
+  <tr><th>{% trans "Experience" %}</th><td>{% if c.experience_years %}{{ c.experience_years }} {% trans "years" %}{% else %}—{% endif %}</td></tr>
+  <tr><th>{% trans "Can teach" %}</th><td>{% for s in c.subject_labels %}<span class="badge">{{ s }}</span> {% empty %}—{% endfor %}</td></tr>
+  <tr><th>{% trans "Level" %}</th><td>{% for s in c.level_labels %}<span class="badge">{{ s }}</span> {% empty %}—{% endfor %}</td></tr>
+  {% if c.salary_asked %}<tr><th>{% trans "Salary asked (Rs)" %}</th><td><span class="num">{{ c.salary_asked|rupees }}</span></td></tr>{% endif %}
+  {% if c.relevance_note %}<tr><th>{% trans "Reason" %}</th><td>{{ c.relevance_note }}</td></tr>{% endif %}
+  {% if c.notes %}<tr><th>{% trans "Notes" %}</th><td>{{ c.notes|linebreaksbr }}</td></tr>{% endif %}
+  <tr><th>{% trans "Kept until" %}</th><td>{% if c.status == "hired" %}{% trans "Hired: kept" %}{% else %}{{ keep_until|date:"d M Y" }} <span class="muted small">({% trans "two years after the latest CV; then the Bin" %})</span>{% endif %}</td></tr>
+</tbody></table></div>
+
+{% if can.edit %}<form method="post" class="card">{% csrf_token %}<input type="hidden" name="action" value="relevance">
+  <h2>{% trans "Relevant for us?" %}</h2>
+  <div class="tick-chips">{% for v, l in relevances %}{% if v != "unchecked" %}<label><input type="radio" name="relevance" value="{{ v }}" {% if c.relevance == v %}checked{% endif %}> {{ l }}</label>{% endif %}{% endfor %}</div>
+  <div class="form-grid"><div class="field"><label for="relevance_note">{% trans "Reason" %}</label><input id="relevance_note" name="relevance_note" maxlength="200" value="{{ c.relevance_note }}" placeholder="{% trans 'e.g. lives far away, another city' %}"></div></div>
+  <button class="button quiet" type="submit">{% trans "Save" %}</button>
+</form>{% endif %}
+
+{% if can.move and open_vacancies %}<form method="post" class="card">{% csrf_token %}<input type="hidden" name="action" value="shortlist">
+  <h2>{% trans "Shortlist for a vacancy" %}</h2>
+  <div class="filter-inline"><select name="vacancy" aria-label="{% trans 'Vacancy' %}">{% for v in open_vacancies %}<option value="{{ v.id }}">{{ v }}{% if v.campus %} · {{ v.campus }}{% endif %}</option>{% endfor %}</select><button class="button" type="submit">{% trans "Shortlist" %}</button></div>
+</form>{% endif %}
+
+<h2>{% trans "CVs received" %}</h2>
+{% for cv in cvs %}<div class="card">
+  <h3>{{ cv.received_on|date:"d M Y" }} · {{ cv.get_channel_display }} · {{ cv.post }}</h3>
+  <p class="small muted">{% blocktrans with by=cv.entered_by.get_full_name|default:cv.entered_by.username %}Entered by {{ by }}{% endblocktrans %}{% if cv.note %} · {{ cv.note }}{% endif %}</p>
+  <div class="cv-thumbs">{% for f in cv.files.all %}{% if f.is_image %}<a href="{% url 'hiring:file' f.id %}" target="_blank" rel="noopener"><img src="{% url 'hiring:file' f.id %}" alt="{% trans 'CV page' %} {{ forloop.counter }}" loading="lazy"></a>{% else %}<a class="button quiet" href="{% url 'hiring:file' f.id %}" target="_blank" rel="noopener">{% icon "file-text" %}{{ f.original_name|default:"CV" }}</a>{% endif %}{% empty %}<span class="muted small">{% trans "No file attached." %}</span>{% endfor %}</div>
+</div>{% endfor %}
+{% if can.add %}<details class="card"><summary>{% trans "This person sent another CV" %}</summary>
+<form method="post" enctype="multipart/form-data" data-busy>{% csrf_token %}<input type="hidden" name="action" value="add_cv">
+  <div class="form-grid">{% include "hiring/_field.html" with f=received.received_on %}{% include "hiring/_field.html" with f=received.channel %}{% include "hiring/_field.html" with f=received.note %}{% include "hiring/_field.html" with f=received.files wide=True %}</div>
+  <button class="button" type="submit">{% trans "Add CV" %}</button>
+</form></details>{% endif %}
+
+{% with ed=c.education.all ex=c.experience.all %}
+{% if ed %}<h2>{% trans "Education" %}</h2><div class="table-wrap"><table><thead><tr><th>{% trans "Degree" %}</th><th>{% trans "Institute" %}</th><th class="num">{% trans "Year" %}</th></tr></thead>
+<tbody>{% for e in ed %}<tr><td>{{ e.degree }}</td><td>{{ e.institute|default:"—" }}</td><td class="num">{{ e.year|default:"—" }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% if ex %}<h2>{% trans "Experience" %}</h2><div class="table-wrap"><table><thead><tr><th>{% trans "School / organisation" %}</th><th>{% trans "Post" %}</th><th>{% trans "Level" %}</th><th class="num">{% trans "Years" %}</th></tr></thead>
+<tbody>{% for e in ex %}<tr><td>{{ e.organisation }}</td><td>{{ e.post|default:"—" }}</td><td>{{ e.get_level_display|default:"—" }}</td><td class="num">{{ e.years|default:"—" }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% endwith %}
+
+{% if applications %}<h2>{% trans "Vacancies" %}</h2>
+{% for a in applications %}<div class="card"><h3><a href="{% url 'hiring:vacancy' a.vacancy_id %}">{{ a.vacancy }}</a> · <span class="badge">{{ a.get_stage_display }}</span></h3>
+  <p class="small muted">{% for s in a.steps.all %}{{ s.get_stage_display }} {{ s.created_at|date:"d M" }}{% if not forloop.last %} → {% endif %}{% endfor %}</p></div>{% endfor %}{% endif %}
+{% endblock %}

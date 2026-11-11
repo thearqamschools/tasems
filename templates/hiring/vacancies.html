@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Vacancies" %}{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{% trans "Vacancies" %}</h1>
+<p class="lede">{% trans "When a post falls vacant, open a vacancy: TASEMS lists the matching CVs from the CV bank, latest first." %}</p></div></div>
+{% if can.vacancy %}<details class="card"{% if not rows or form.errors %} open{% endif %}><summary>{% trans "Open a vacancy" %}</summary>
+<form method="post" data-busy>{% csrf_token %}<div class="form-grid">
+  {% include "hiring/_field.html" with f=form.post %}{% include "hiring/_field.html" with f=form.subject %}
+  {% include "hiring/_field.html" with f=form.level %}{% include "hiring/_field.html" with f=form.campus %}
+  {% include "hiring/_field.html" with f=form.openings %}{% include "hiring/_field.html" with f=form.needed_by %}
+  {% include "hiring/_field.html" with f=form.notes wide=True %}
+</div><button class="button" type="submit">{% trans "Open vacancy" %}</button></form></details>{% endif %}
+{% if rows %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Post" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "People needed" %}</th><th>{% trans "Needed by" %}</th><th class="num">{% trans "Candidates" %}</th><th>{% trans "Status" %}</th><th>{% trans "Opened" %}</th></tr></thead>
+  <tbody>{% for v in rows %}<tr data-href="{% url 'hiring:vacancy' v.id %}">
+    <td><a href="{% url 'hiring:vacancy' v.id %}">{{ v }}</a>{% if v.notes %}<br><span class="small muted">{{ v.notes }}</span>{% endif %}</td>
+    <td>{{ v.campus|default:"—" }}</td><td class="num">{{ v.openings }}</td><td>{{ v.needed_by|date:"d M Y"|default:"—" }}</td>
+    <td class="num">{{ v.people }}</td><td>{% if v.status == "open" %}<span class="badge attention">{{ v.get_status_display }}</span>{% elif v.status == "filled" %}<span class="badge ok">{{ v.get_status_display }}</span>{% else %}<span class="badge muted">{{ v.get_status_display }}</span>{% endif %}</td>
+    <td>{{ v.created_at|date:"d M Y" }}</td>
+  </tr>{% endfor %}</tbody></table></div>
+{% else %}<div class="card empty-state">{% icon "briefcase" %}<p>{% trans "No vacancies yet." %}</p></div>{% endif %}
+{% endblock %}

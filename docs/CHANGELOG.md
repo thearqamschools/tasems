@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.43.0 — 2026-11-11 — Round 8: Hiring (CV bank, vacancies, interviews) (installer v17)
+- New side-menu group **Hiring** (after Staff): CV bank, Add a CV, Vacancies, Interviews, Hiring report, Bin.
+- **Add a CV**: date received, how it came (in hand, WhatsApp, email, after an advertisement, online, referred),
+  post applied for, campus, photos of each page or a PDF (private files); name, father / husband name, mobile,
+  CNIC, address as written, highest qualification, years of experience, salary asked; subjects and levels as taps
+  (Early Years, Primary, Middle, Matric, Hifz-e-Quran); education and experience rows; relevant / keep for later /
+  not relevant with a reason. Entered by hand (no AI, no paid service, R8-10). "Save and add next".
+- **One record per person**: a CV with a mobile number or CNIC already in the CV bank asks whether to add it to
+  that person (files chosen are kept) or save a different person. A new CV brings a person back from the Bin.
+- **CV bank**: search (name, mobile, CNIC, degree, institute, address), filters (post, subject, level, campus,
+  relevant, status, received since), latest CV first, sortable headings, Excel and print.
+- **Vacancies**: post, subject, level, campus, people needed, needed by. Matching CVs listed (same post, subject and
+  level; not "not relevant"; not hired), shortlist by ticks, a board Shortlisted → Called → Interview → Demo lesson
+  → Selected → Joined, every move recorded. **Interview mark sheet** (50 marks: subject knowledge 10, teaching /
+  demo 10, communication 10, personality and Islamic values 10, experience and qualification 5, impression 5;
+  interviewers, remarks, decision). **Create staff record** fills Add staff from the candidate; on saving, the
+  candidate is hired, the vacancy filled, the CV file and education copied to the staff record.
+- **Bin**: CVs of people not hired and not in a vacancy go to the Bin two years after their latest CV, and are
+  deleted with their files 30 days later (command `hiring_cleanup`, run by the Windows copy at start and every 6
+  hours). Can be moved to / taken out of the Bin by hand.
+- **Setup → Hiring posts**: staff designations plus Teacher, Designer, Content Creator, Graphic Designer, Typist;
+  more can be added. Roles: Director and Principal everything; Admin adds CVs and sees the CV bank (no interview
+  marks); head office sees all branches; teachers no access.
+- New app `apps/hiring` (row-level security on every table). Tests: tests/test_hiring.py.
+
 ## 0.42.0 — 2026-11-06 — Round 7: staff attendance rules, duty times per staff type, machine names (installer v16)
 - **EMP.code and Machine ID**: the staff list shows EMP.code, Machine ID, Name, Designation, Type, Mobile, Joining
   date (codes centred); the same two columns before the name on Staff attendance and the Monthly sheet (which also

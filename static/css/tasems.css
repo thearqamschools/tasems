@@ -715,3 +715,18 @@ table.payroll-table th, table.payroll-table td { padding-inline: 0.45rem; font-s
 .sign-lines { display: flex; justify-content: space-between; gap: 2rem; margin-block: 3rem 1rem; }
 .sign-lines div { flex: 1; border-block-start: 1px solid var(--ink, #14182b); padding-block-start: 0.3rem; text-align: center; font-size: 0.9em; }
 .checks { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+
+/* Hiring (R8): subjects, levels and relevance chosen as tap-able chips instead of typing. */
+.tick-chips > div, .tick-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tick-chips label { display: inline-flex; align-items: center; gap: 0.35rem; border: 1px solid var(--line); border-radius: 999px; padding: 0.3rem 0.8rem; cursor: pointer; background: var(--surface, #fff); font-size: var(--step--1); min-height: 2.25rem; }
+.tick-chips label:has(input:checked) { background: var(--brand-soft); border-color: var(--brand); font-weight: 600; }
+.tick-chips input { margin: 0; }
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--space-2); align-items: start; }
+.board-col { background: var(--surface-sunk); border-radius: var(--radius-sm); padding: var(--space-2); display: grid; gap: var(--space-2); min-width: 0; }
+.board-col h3 { margin: 0; font-size: var(--step--1); text-transform: uppercase; letter-spacing: .04em; }
+.board-card { background: var(--surface, #fff); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-2); display: grid; gap: 0.25rem; font-size: var(--step--1); min-width: 0; }
+.cv-thumbs { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.cv-thumbs img { max-height: 220px; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.bar-row { display: grid; grid-template-columns: 7rem 1fr 3rem; gap: var(--space-2); align-items: center; }
+.bar-row .bar-fill { height: 0.75rem; background: var(--brand, #3e4095); border-radius: 999px; min-width: 2px; }
+.form-grid .field.span-2 { grid-column: 1 / -1; }

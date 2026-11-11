@@ -121,6 +121,14 @@ def hub(request):
             here("payroll.view_payrollrules"),
         ),
         (
+            "hiring_posts",
+            "hiring:posts",
+            _("Hiring posts"),
+            _("Posts people apply for (Teacher, Designer, Typist …), used in the CV bank and vacancies."),
+            "briefcase",
+            here("hiring.view_post"),
+        ),
+        (
             "duty_times",
             "hr:duty_times",
             _("Staff duty times"),

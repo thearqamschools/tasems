@@ -1,0 +1,51 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Add a CV" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hiring:index' %}">‹ {% trans "CV bank" %}</a></p>
+<h1>{% trans "Add a CV" %}</h1>
+<p class="lede">{% trans "Write what is on the CV; leave empty what is not there. Subjects, levels and relevant or not are taps." %}</p>
+<form method="post" enctype="multipart/form-data" data-busy>{% csrf_token %}
+{% if pending %}<input type="hidden" name="pending" value="{{ pending }}">{% endif %}
+{% if same %}<div class="callout attention" role="alert"><div>
+  <strong>{% blocktrans with n=same.full_name d=same.last_received_on|date:"d M Y" %}{{ n }} is already in the CV bank (latest CV {{ d }}) with the same mobile number or CNIC.{% endblocktrans %}</strong>
+  <p>{% trans "Add this CV to that person's record, or save it as a different person." %} <a href="{% url 'hiring:candidate' same.id %}" target="_blank" rel="noopener">{% trans "Open the record" %}</a>{% if same.binned_at %} · {% trans "in the Bin; adding the CV brings it back" %}{% endif %}</p>
+  <div class="actions" style="margin:0"><button class="button" type="submit" name="same_person" value="attach">{% blocktrans with n=same.full_name %}Add to {{ n }}'s record{% endblocktrans %}</button>
+  <button class="button secondary" type="submit" name="same_person" value="new">{% trans "Different person: save as new" %}</button></div>
+</div></div>{% endif %}
+{{ form.non_field_errors }}
+<section class="card"><h2>{% trans "The CV" %}</h2>
+  <div class="form-grid">
+    {% include "hiring/_field.html" with f=received.received_on %}
+    {% include "hiring/_field.html" with f=received.channel %}
+    {% include "hiring/_field.html" with f=form.post %}
+    {% include "hiring/_field.html" with f=form.campus %}
+    {% include "hiring/_field.html" with f=received.files wide=True %}
+  </div>
+  {% if pending %}<p class="small muted">{% trans "The files chosen before are kept; choose again only to add more." %}</p>{% endif %}
+  <p class="small muted">{% trans "On a phone: take a photo of each page. JPG, PNG or PDF, up to 8 MB each." %}</p>
+</section>
+<section class="card"><h2>{% trans "The person" %}</h2>
+  <div class="form-grid">
+    {% include "hiring/_field.html" with f=form.full_name %}{% include "hiring/_field.html" with f=form.father_name %}
+    {% include "hiring/_field.html" with f=form.gender %}{% include "hiring/_field.html" with f=form.mobile %}
+    {% include "hiring/_field.html" with f=form.cnic %}{% include "hiring/_field.html" with f=form.email %}
+    {% include "hiring/_field.html" with f=form.address wide=True %}
+    {% include "hiring/_field.html" with f=form.qualification %}{% include "hiring/_field.html" with f=form.experience_years %}
+    {% include "hiring/_field.html" with f=form.salary_asked %}
+    {% include "hiring/_field.html" with f=form.subjects chips=True wide=True %}
+    {% include "hiring/_field.html" with f=form.levels chips=True wide=True %}
+  </div>
+</section>
+{% trans "Education" as t %}{% trans "Add a row" as a %}{% include "hr/_formset.html" with formset=sets.education title=t add=a %}
+{% trans "Experience" as t %}{% include "hr/_formset.html" with formset=sets.experience title=t add=a %}
+<section class="card"><h2>{% trans "Relevant for us?" %}</h2>
+  <div class="form-grid">
+    {% include "hiring/_field.html" with f=form.relevance chips=True wide=True %}
+    {% include "hiring/_field.html" with f=form.relevance_note %}
+    {% include "hiring/_field.html" with f=form.notes %}
+  </div>
+</section>
+<div class="actions"><button class="button" type="submit">{% trans "Save CV" %}</button>
+<button class="button secondary" type="submit" name="next" value="add">{% trans "Save and add next" %}</button></div>
+</form>
+{% endblock %}

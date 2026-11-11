@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Bin" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hiring:index' %}">‹ {% trans "CV bank" %}</a></p>
+<h1>{% trans "Bin" %}</h1>
+<p class="lede">{% trans "CVs of people not hired come here two years after their latest CV, or when moved here by hand. Each is deleted 30 days after it came here. A new CV from the same person brings them back." %}</p>
+{% if rows %}<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Applied for" %}</th><th>{% trans "Latest CV" %}</th><th>{% trans "Deleted on" %}</th>{% if can.bin %}<th></th>{% endif %}</tr></thead>
+  <tbody>{% for c in rows %}<tr><td><a href="{% url 'hiring:candidate' c.id %}">{{ c.full_name }}</a></td><td>{{ c.post }}</td><td>{{ c.last_received_on|date:"d M Y" }}</td><td>{{ c.goes_on|date:"d M Y" }}</td>
+    {% if can.bin %}<td><form method="post" class="filter-inline" style="margin:0">{% csrf_token %}<input type="hidden" name="candidate" value="{{ c.id }}"><button class="button quiet sm" name="action" value="restore">{% trans "Take out" %}</button><button class="button danger quiet sm" name="action" value="delete" data-confirm="{% trans 'Delete this CV and its files now? This cannot be undone.' %}">{% trans "Delete now" %}</button></form></td>{% endif %}</tr>{% endfor %}</tbody></table></div>
+{% else %}<div class="card empty-state"><p>{% trans "The Bin is empty." %}</p></div>{% endif %}
+{% endblock %}
