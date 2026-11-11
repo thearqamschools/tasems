@@ -540,3 +540,10 @@ not to be bought or switched on without approval.
 - R8-14. **Interview mark sheet**: the school has none; TASEMS is to provide one (headings to agree).
 - Open: other posts than teacher (staff designations list?), subjects list, how the distance is worked out without a
   paid map service, whether the 2 years count from the last CV received, mark sheet headings.
+- R8-15 (11 Nov 2026). **No distance**: TASEMS does not work out or show any distance (no paid map service). The
+  address is written as on the CV and the office judges relevant / not relevant itself. (Replaces R8-12.)
+- R8-16. The **2 years** count from the date the latest CV of that person was entered in TASEMS. People in an open
+  interview step or hired do not go to the Bin (Claude's proposal, not objected to).
+- R8-17. **Posts**: the staff designations list, plus **Designer, Content creator, Graphic designer, Typist**. More
+  posts will be given by the lead; the list is kept in Setup so the office can add posts.
+- Subjects list and the 50-mark interview sheet as proposed by Claude on 11 Nov 2026, unless the lead changes them.
