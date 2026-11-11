@@ -503,3 +503,27 @@ flagged.
   empty too (it showed before). The dashboard counts straight from the database, so the records are there; the
   lists are not showing them. **Found and fixed 6 Nov 2026 (v15, CHANGELOG 0.41.3)**: a second, empty campus with
   the same name made by the seed after the campus code was changed; the top bar showed the empty one.
+
+## Round 8 (11 Nov 2026) — Hiring (CV bank, vacancies) — noted, not built yet; flow proposal sent for the lead's review
+
+The lead's request (11 Nov 2026):
+- R8-1. A **Hiring** tab in the side menu, after Staff, with its own sub-items.
+- R8-2. CVs arrive from many places: in hand at school, online, after an advertisement, by email, by WhatsApp. Each CV
+  is **uploaded** (photo or PDF) and its **date received** saved, so a record of all CVs builds up.
+- R8-3. Data is **taken out of the CV automatically** where possible, and every field stays **editable**; what could
+  not be read is typed in. Fields: name, father name, phone, address; education (degree, institute, year);
+  experience; the CV file attached.
+- R8-4. Each CV is marked **Relevant / Not relevant**, e.g. lives 8–10 km from the campus, or applies for a
+  Faisalabad post from Islamabad.
+- R8-5. Category (post: teacher or other), **subjects** the person can teach (Science, Biology, Physics, Chemistry,
+  English, Urdu …) and **level** (Primary, Middle, High) of their experience.
+- R8-6. Filling a CV must be **quick**: most things filled by themselves, the rest fast to choose.
+- R8-7. **Search**: "an English teacher for this level" lists the matching CVs, **latest received first**.
+- R8-8. A CV can be marked **Hired**.
+- R8-9. The lead asked for a professional flow including steps not mentioned, shown before building.
+
+Proposal (to confirm with the lead): see the Hiring flow page sent 11 Nov 2026 — CV bank, quick review screen,
+relevance rules by city / area / distance, duplicate check by mobile / CNIC, vacancies with matching CVs, interview
+→ demo lesson → selected → joined, and "Create staff record" from the hired candidate. Automatic reading of CV photos
+needs an online service (Claude API: internet, a paid API key and the lead's approval; CVs are sent to Anthropic) —
+not to be bought or switched on without approval.
