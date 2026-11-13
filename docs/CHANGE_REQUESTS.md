@@ -557,3 +557,13 @@ not to be bought or switched on without approval.
 - R9-4. No AI integration in TASEMS. Instead: CV bank import from Excel; a template the office gives to Claude
   together with the scanned CVs (100–200 at present), or an "agent" in Claude, which returns a file with the data
   filled in; that file (with the CVs) is uploaded to TASEMS, so CV + data come in without typing.
+
+## Round 10 (13 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R10-1. **CV number**: like the EMP.code and the admission no., every CV in the CV bank gets a number of its own,
+  running 1, 2, 3 … per branch, given by TASEMS when the CV is saved (typed in, or imported from Excel / ZIP).
+  - The office writes it on the paper CV, and names the WhatsApp CV with it (e.g. "CV No. 41").
+  - **CV bank list**: a "CV No." column first, before the latest CV date. Also shown on the candidate's page, in
+    search (typing 41 finds CV No. 41), on the vacancy board, and in the Excel download.
+  - Proposed by Claude, to confirm: a person who sends a second CV gets a new number for that CV (each paper has its
+    own number); the list shows the person's latest CV number. Existing CVs are numbered in the order they were
+    received.
