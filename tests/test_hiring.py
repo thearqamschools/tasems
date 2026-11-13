@@ -155,3 +155,98 @@ def test_roles_menu_and_posts(hiring, login_as):
     assert Post.objects.filter(name="Librarian").exists()
     names = set(Post.objects.values_list("name", flat=True))
     assert {"Designer", "Content Creator", "Graphic Designer", "Typist", "Teacher", "Guard"} <= names
+
+
+def test_calls_and_move_page(hiring, login_as):
+    client = login_as(hiring["director"])
+    post = hiring["teacher_post"]
+    client.post("/hiring/add/", cv_data(post))
+    c = Candidate.objects.get()
+    v = Vacancy.objects.create(branch=hiring["branch"], post=post, created_by=hiring["director"])
+    S.shortlist(v, [c], hiring["director"])
+    app = Application.objects.get()
+    for _i in range(2):
+        client.post(f"/hiring/application/{app.id}/", {"action": "call", "result": "no_answer"})
+    app.refresh_from_db()
+    assert app.stage == "shortlisted" and c.unanswered_calls() == 2
+    board = client.get(f"/hiring/vacancies/{v.id}/").content.decode()
+    assert "Did not pick up 2 times" in board and f"/hiring/application/{app.id}/" in board
+    client.post(f"/hiring/application/{app.id}/", {"action": "call", "result": "picked", "note": "Coming Monday"})
+    app.refresh_from_db()
+    assert app.stage == "called" and c.unanswered_calls() == 0 and c.calls.count() == 3
+    step = {"action": "move", "stage": "interview", "interview_at": "2026-11-16T10:00", "joining_on": "2026-12-01"}
+    client.post(f"/hiring/application/{app.id}/", step)
+    app.refresh_from_db()
+    assert app.stage == "interview" and app.interview_at and app.joining_on is None  # joining date only when selected
+    client.post(f"/hiring/application/{app.id}/", {"action": "move", "stage": "selected", "salary_offered": "30000",
+                                                   "joining_on": "2026-12-01"})  # fmt: skip
+    app.refresh_from_db()
+    assert app.stage == "selected" and app.joining_on == dt.date(2026, 12, 1) and app.salary_offered == 30000
+    page = client.get(f"/hiring/application/{app.id}/").content.decode()
+    assert "Picked up" in page and "Coming Monday" in page and "Create staff record" in page
+
+
+def _filled_template(rows):
+    import io
+
+    from openpyxl import load_workbook
+
+    from apps.hiring import importer
+
+    wb = load_workbook(io.BytesIO(importer.template_workbook()))
+    ws = wb["CVs"]
+    for row in rows:
+        ws.append(row)
+    out = io.BytesIO()
+    wb.save(out)
+    return out.getvalue()
+
+
+def test_import_cvs_from_a_zip_made_with_claude(hiring, login_as):
+    import io
+    import zipfile
+
+    client = login_as(hiring["director"])
+    client.post("/hiring/add/", cv_data(hiring["teacher_post"], mobile="0300-7654321", full_name="Already Here"))
+    excel = _filled_template([
+        ["CV-001-1.jpg, CV-001-2.jpg", "12/11/2026", "WhatsApp", "Teacher", "", "Sana Iqbal", "Muhammad Iqbal",
+         "Female", "0300-1112223", "33100-1234567-1", "", "Samanabad, Faisalabad", "M.A English", "4", "",
+         "English, Urdu, Cooking", "Middle, Matric", "M.A English | Punjab University | 2018; B.Ed | AIOU | 2020",
+         "City School | Teacher | Middle | 4", "", "", ""],
+        ["CV-002.pdf", "", "Email", "Teacher", "", "Already Here Again", "", "", "+92 300 7654321", "", "", "", "",
+         "", "", "Science", "", "", "", "", "", ""],
+        ["", "", "", "Pilot", "", "Wrong Post", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+    ])  # fmt: skip
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as z:
+        z.writestr("TASEMS-CVs.xlsx", excel)
+        z.writestr("CV-001-1.jpg", b"\xff\xd8 page one")
+        z.writestr("CV-001-2.jpg", b"\xff\xd8 page two")
+        z.writestr("CV-002.pdf", b"%PDF-1.4 cv")
+    upload = SimpleUploadedFile("cvs.zip", buffer.getvalue(), content_type="application/zip")
+    page = client.post("/hiring/import/", {"file": upload}).content.decode()
+    assert "Import 2 CVs" in page and "Add CV to Already Here" in page and "Pilot" in page and "Cooking" in page
+    assert Candidate.objects.count() == 1  # nothing saved before Import
+    token = page.split('name="token" value="')[1].split('"')[0]
+    client.post("/hiring/import/", {"token": token})
+    sana = Candidate.objects.get(full_name="Sana Iqbal")
+    assert sana.subjects == ["english", "urdu"] and sana.levels == ["middle", "matric"] and sana.cnic == "3310012345671"
+    assert sana.last_received_on == dt.date(2026, 11, 12) and sana.education.count() == 2
+    assert sana.experience.get().organisation == "City School"
+    assert CVFile.objects.filter(cv__candidate=sana).count() == 2
+    again = Candidate.objects.get(full_name="Already Here")
+    assert again.cvs.count() == 2 and CVFile.objects.filter(cv__candidate=again).count() == 1
+    assert not Candidate.objects.filter(full_name="Wrong Post").exists()
+
+
+def test_template_and_claude_skill_downloads(hiring, login_as):
+    import io
+    import zipfile
+
+    client = login_as(hiring["admin"])
+    assert client.get("/hiring/import/template.xlsx")["Content-Type"].startswith("application/vnd.openxmlformats")
+    skill = zipfile.ZipFile(io.BytesIO(client.get("/hiring/import/claude-skill.zip").content))
+    assert {"tasems-cv-reader/SKILL.md", "tasems-cv-reader/CV-template.xlsx"} <= set(skill.namelist())
+    assert skill.read("tasems-cv-reader/SKILL.md").startswith(b"---\nname: tasems-cv-reader")
+    page = client.get("/hiring/import/").content.decode()
+    assert "Download Claude skill" in page and "ONE ROW PER CV" in page

@@ -132,6 +132,7 @@ def _menu(user, branch):
         [
             hiring and (reverse("hiring:index"), _("CV bank"), "file-text"),
             perm("hiring.add_candidate") and (reverse("hiring:add"), _("Add a CV"), "user-plus"),
+            perm("hiring.add_candidate") and (reverse("hiring:import"), _("Import CVs"), "file-spreadsheet"),
             perm("hiring.view_vacancy") and (reverse("hiring:vacancies"), _("Vacancies"), "briefcase"),
             perm("hiring.view_application") and (reverse("hiring:interviews"), _("Interviews"), "calendar-check"),
             hiring and (reverse("hiring:report"), _("Hiring report"), "file-spreadsheet"),

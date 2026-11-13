@@ -7,7 +7,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 
-from .models import BIN_DAYS, KEEP_DAYS, Application, ApplicationStep, Candidate, Vacancy
+from .models import BIN_DAYS, KEEP_DAYS, Application, ApplicationStep, Candidate, CandidateCall, Vacancy
 
 VIEW_PERM = "hiring.view_candidate"
 ADD_PERM = "hiring.add_candidate"
@@ -129,6 +129,22 @@ def move(application, stage, user, note="", **details):
     )
     refresh_status(application.candidate)
     return application
+
+
+@transaction.atomic
+def log_call(candidate, result, user, note="", application=None):
+    """Records a call. Picked up moves a shortlisted person to Called; Not interested takes them off the vacancy
+    (as "Not available"). Calls not picked up stay on record and show as "did not pick up ×N"."""
+    call = CandidateCall.objects.create(
+        branch_id=candidate.branch_id, candidate=candidate, application=application, result=result, note=note[:200],
+        by=user,
+    )  # fmt: skip
+    if application is not None and application.is_open:
+        if result == CandidateCall.Result.PICKED and application.stage == Application.Stage.SHORTLISTED:
+            move(application, Application.Stage.CALLED, user, note)
+        elif result == CandidateCall.Result.NOT_INTERESTED:
+            move(application, Application.Stage.WITHDREW, user, note or str(CandidateCall.Result.NOT_INTERESTED.label))
+    return call
 
 
 @transaction.atomic

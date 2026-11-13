@@ -547,3 +547,13 @@ not to be bought or switched on without approval.
 - R8-17. **Posts**: the staff designations list, plus **Designer, Content creator, Graphic designer, Typist**. More
   posts will be given by the lead; the list is kept in Setup so the office can add posts.
 - Subjects list and the 50-mark interview sheet as proposed by Claude on 11 Nov 2026, unless the lead changes them.
+
+## Round 9 (13 Nov 2026) — Hiring: calls, move screen, CV import — built 13 Nov 2026 (installer v18, CHANGELOG 0.44.0, D-097)
+- R9-1. Vacancy board: the panel under "Move" was cramped (columns spilling out); make it clean, and make Move a
+  clear, full-width button.
+- R9-2. Joining date belongs to Selected only.
+- R9-3. Calls: record each call — picked up or not — with the date; several calls; so the office sees a candidate
+  who does not pick up and does not shortlist them again.
+- R9-4. No AI integration in TASEMS. Instead: CV bank import from Excel; a template the office gives to Claude
+  together with the scanned CVs (100–200 at present), or an "agent" in Claude, which returns a file with the data
+  filled in; that file (with the CVs) is uploaded to TASEMS, so CV + data come in without typing.

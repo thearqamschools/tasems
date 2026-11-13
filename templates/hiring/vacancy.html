@@ -17,16 +17,8 @@
     {% if a.salary_offered %}<span>{% trans "Salary offered" %}: <span class="num">{{ a.salary_offered|rupees }}</span></span>{% endif %}
     {% if a.note %}<span class="muted">{{ a.note }}</span>{% endif %}
     {% if a.stage == "selected" and can.staff %}<a class="button sm" href="{% url 'hr:employee_new' %}?candidate={{ a.candidate_id }}">{% trans "Create staff record" %}</a>{% endif %}
-    {% if can.move and a.is_open %}<details><summary>{% trans "Move" %}</summary>
-      <form method="post" class="stack" style="margin-top:.5rem">{% csrf_token %}<input type="hidden" name="action" value="move"><input type="hidden" name="application" value="{{ a.id }}">
-        <label>{% trans "To" %} <select name="stage">{% for s, l in stages %}<option value="{{ s }}" {% if s == a.stage %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
-        <label>{% trans "Interview / demo on" %} <input type="datetime-local" name="interview_at" value="{{ a.interview_at|date:'Y-m-d\TH:i' }}"></label>
-        <label>{% trans "Demo lesson: class and topic" %} <input name="demo_class" maxlength="150" value="{{ a.demo_class }}"></label>
-        <label>{% trans "Salary offered (Rs)" %} <input name="salary_offered" inputmode="numeric" value="{{ a.salary_offered|default:'' }}"></label>
-        <label>{% trans "Joining date" %} <input type="date" name="joining_on" value="{{ a.joining_on|date:'Y-m-d' }}"></label>
-        <label>{% trans "Note" %} <input name="note" maxlength="250"></label>
-        <button class="button sm" type="submit">{% trans "Save" %}</button>
-      </form></details>{% endif %}
+    {% if a.unanswered %}<span class="badge danger">{% blocktrans count n=a.unanswered %}Did not pick up {{ n }} time{% plural %}Did not pick up {{ n }} times{% endblocktrans %}</span>{% endif %}
+    {% if a.is_open %}<a class="button secondary sm block" href="{% url 'hiring:application' a.id %}">{% if can.move %}{% trans "Call / move" %} ›{% else %}{% trans "Open" %} ›{% endif %}</a>{% endif %}
   </div>{% empty %}<span class="muted small">—</span>{% endfor %}
 </div>{% endfor %}</div>
 {% if out %}<p class="small muted">{% trans "Not going ahead" %}: {% for a in out %}<a href="{% url 'hiring:candidate' a.candidate_id %}">{{ a.candidate.full_name }}</a> ({{ a.get_stage_display }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
@@ -40,7 +32,7 @@
     {% if can.move %}<td><input type="checkbox" name="candidate" value="{{ c.id }}" aria-label="{% trans 'Shortlist' %} {{ c.full_name }}"></td>{% endif %}
     <td style="white-space:nowrap">{{ c.last_received_on|date:"d M Y" }}</td><td><a href="{% url 'hiring:candidate' c.id %}">{{ c.full_name }}</a></td>
     <td>{{ c.subject_labels|join:", "|default:"—" }}</td><td>{{ c.level_labels|join:", "|default:"—" }}</td><td>{{ c.qualification|default:"—" }}</td>
-    <td class="num">{{ c.experience_years|default:"" }}</td><td>{{ c.address|default:"—"|truncatechars:40 }}</td><td>{% include "hiring/_relevance.html" %}</td>
+    <td class="num">{{ c.experience_years|default:"" }}</td><td>{{ c.address|default:"—"|truncatechars:40 }}</td><td>{% include "hiring/_relevance.html" %}{% if c.unanswered %} <span class="badge danger">{% blocktrans count n=c.unanswered %}Did not pick up {{ n }} time{% plural %}Did not pick up {{ n }} times{% endblocktrans %}</span>{% endif %}</td>
   </tr>{% endfor %}</tbody></table></div>
 {% if can.move %}<button class="button" type="submit">{% trans "Shortlist the ticked CVs" %}</button>{% endif %}</form>
 {% else %}<div class="card empty-state"><p>{% trans "No matching CVs in the CV bank yet." %}</p></div>{% endif %}{% endif %}

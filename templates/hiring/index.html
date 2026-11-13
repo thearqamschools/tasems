@@ -4,7 +4,7 @@
 <div class="page-header">
   <div><h1>{% trans "CV bank" %}</h1>
   <p class="lede">{% blocktrans count n=total %}{{ n }} candidate{% plural %}{{ n }} candidates{% endblocktrans %} · {% trans "Latest CV first. CVs of people not hired go to the Bin two years after their latest CV." %}</p></div>
-  <div class="actions">{% if can.add %}<a class="button" href="{% url 'hiring:add' %}">{% icon "user-plus" %}{% trans "Add a CV" %}</a>{% endif %}
+  <div class="actions">{% if can.add %}<a class="button" href="{% url 'hiring:add' %}">{% icon "user-plus" %}{% trans "Add a CV" %}</a><a class="button secondary" href="{% url 'hiring:import' %}">{% trans "Import CVs" %}</a>{% endif %}
   <a class="button quiet" href="{% url 'hiring:vacancies' %}">{% trans "Vacancies" %}</a>{% if binned %}<a class="button quiet" href="{% url 'hiring:bin' %}">{% trans "Bin" %} ({{ binned }})</a>{% endif %}</div>
 </div>
 <form method="get" class="card">

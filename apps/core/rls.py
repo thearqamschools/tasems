@@ -81,6 +81,7 @@ RLS_TABLES = [
     "hiring_application",
     "hiring_applicationstep",
     "hiring_interviewsheet",
+    "hiring_candidatecall",
     "admissions_inquiry",
     "admissions_followup",
 ]

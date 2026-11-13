@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.44.0 — 2026-11-13 — Hiring: step page, call record, import CVs made with Claude (installer v18)
+- **Call / move** (lead, 13 Nov 2026): each candidate in a vacancy opens a clear page instead of the cramped panel
+  on the board. The board card has a full-width "Call / move ›" button.
+  - **Calls**: one press records what happened — Picked up, Did not pick up, Phone off, Busy / call back, Wrong
+    number, Not interested — with date, time, who called and a note. Picked up moves a shortlisted person to
+    Called; Not interested takes them off the vacancy. "Did not pick up N times" shows on the board, in matching
+    CVs and on the candidate's page.
+  - **Move to a step** shows only the details that step needs: interview / demo date and time, demo class and topic,
+    and **salary offered and joining date only for Selected**.
+- **Import CVs** (Hiring → Import CVs): upload the filled CV template (.xlsx) or a ZIP with it and the CV files.
+  TASEMS shows every row (new candidate, CV added to someone already in the CV bank by mobile / CNIC, rows left out
+  with the reason, notes such as subjects not in the list) and saves only on Import; CV files are attached by the
+  "CV File" column. Downloads: the **CV template** (drop-downs and a Lists sheet) and a **Claude skill**
+  (`tasems-cv-reader`: SKILL.md + template) to add once in Claude; or copy the ready instructions into a Claude chat.
+  TASEMS itself sends nothing anywhere: the office gives the CVs to Claude with its own account (lead's choice).
+- Tests: tests/test_hiring.py (calls, move page, ZIP import, downloads).
+
 ## 0.43.0 — 2026-11-11 — Round 8: Hiring (CV bank, vacancies, interviews) (installer v17)
 - New side-menu group **Hiring** (after Staff): CV bank, Add a CV, Vacancies, Interviews, Hiring report, Bin.
 - **Add a CV**: date received, how it came (in hand, WhatsApp, email, after an advertisement, online, referred),

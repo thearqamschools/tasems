@@ -3,7 +3,7 @@
 {% block content %}
 <p><a href="{% url 'hiring:index' %}">‹ {% trans "CV bank" %}</a></p>
 <h1>{{ c.full_name }}</h1>
-<p class="lede">{{ c.post }}{% if c.campus %} · {{ c.campus }}{% endif %} · {% include "hiring/_relevance.html" %}{% if c.status != "available" %} <span class="badge">{{ c.get_status_display }}</span>{% endif %}{% if c.binned_at %} <span class="badge danger">{% trans "In the Bin" %}</span>{% endif %}</p>
+<p class="lede">{{ c.post }}{% if c.campus %} · {{ c.campus }}{% endif %} · {% include "hiring/_relevance.html" %}{% if c.status != "available" %} <span class="badge">{{ c.get_status_display }}</span>{% endif %}{% if c.binned_at %} <span class="badge danger">{% trans "In the Bin" %}</span>{% endif %}{% if unanswered %} <span class="badge danger">{% blocktrans count n=unanswered %}Did not pick up {{ n }} time{% plural %}Did not pick up {{ n }} times{% endblocktrans %}</span>{% endif %}</p>
 <div class="actions">
   {% if can.edit %}<a class="button" href="{% url 'hiring:edit' c.id %}">{% trans "Change details" %}</a>{% endif %}
   {% if can.staff and c.status != "hired" %}<a class="button secondary" href="{% url 'hr:employee_new' %}?candidate={{ c.id }}">{% trans "Create staff record" %}</a>{% endif %}
@@ -58,7 +58,8 @@
 <tbody>{% for e in ex %}<tr><td>{{ e.organisation }}</td><td>{{ e.post|default:"—" }}</td><td>{{ e.get_level_display|default:"—" }}</td><td class="num">{{ e.years|default:"—" }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
 {% endwith %}
 
+{% with calls=c.calls.all %}{% if calls %}<h2>{% trans "Calls" %}</h2><ul class="small">{% for k in calls %}<li>{{ k.created_at|date:"d M Y, h:i A" }} · {{ k.get_result_display }}{% if k.note %} · {{ k.note }}{% endif %}</li>{% endfor %}</ul>{% endif %}{% endwith %}
 {% if applications %}<h2>{% trans "Vacancies" %}</h2>
-{% for a in applications %}<div class="card"><h3><a href="{% url 'hiring:vacancy' a.vacancy_id %}">{{ a.vacancy }}</a> · <span class="badge">{{ a.get_stage_display }}</span></h3>
+{% for a in applications %}<div class="card"><h3><a href="{% url 'hiring:application' a.id %}">{{ a.vacancy }}</a> · <span class="badge">{{ a.get_stage_display }}</span></h3>
   <p class="small muted">{% for s in a.steps.all %}{{ s.get_stage_display }} {{ s.created_at|date:"d M" }}{% if not forloop.last %} → {% endif %}{% endfor %}</p></div>{% endfor %}{% endif %}
 {% endblock %}

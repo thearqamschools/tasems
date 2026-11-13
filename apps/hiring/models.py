@@ -128,6 +128,15 @@ class Candidate(BranchOwnedModel):
         names = dict(LEVELS)
         return [str(names.get(s, s)) for s in self.levels or []]
 
+    def unanswered_calls(self):
+        """Calls not picked up since the last one that was (0 when the last call was picked up)."""
+        count = 0
+        for result in self.calls.values_list("result", flat=True):
+            if result not in ("no_answer", "off", "busy"):
+                break
+            count += 1
+        return count
+
 
 class CandidateCV(BranchOwnedModel):
     """One time a person sent a CV: when, how, for which post; the photos or PDF of it."""
@@ -312,3 +321,27 @@ class InterviewSheet(BranchOwnedModel):
     @property
     def total(self):
         return sum(getattr(self, f) or 0 for f, _h, _m in MARKS)
+
+
+class CandidateCall(BranchOwnedModel):
+    """A call to a candidate and what happened (project lead, 13 Nov 2026): calls that are not picked up are kept,
+    so the office sees "did not pick up 3 times" before shortlisting the person again."""
+
+    class Result(models.TextChoices):
+        PICKED = "picked", _("Picked up — spoke")
+        NO_ANSWER = "no_answer", _("Did not pick up")
+        OFF = "off", _("Phone off / not reachable")
+        BUSY = "busy", _("Busy — call back later")
+        WRONG = "wrong", _("Wrong number")
+        NOT_INTERESTED = "not_interested", _("Not interested")
+
+    NOT_REACHED = ["no_answer", "off", "busy"]
+
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name="calls")
+    application = models.ForeignKey(Application, on_delete=models.SET_NULL, null=True, blank=True, related_name="calls")
+    result = models.CharField(_("result"), max_length=16, choices=Result.choices)
+    note = models.CharField(_("note"), max_length=200, blank=True)
+    by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        ordering = ["-created_at", "-id"]

@@ -730,3 +730,7 @@ table.payroll-table th, table.payroll-table td { padding-inline: 0.45rem; font-s
 .bar-row { display: grid; grid-template-columns: 7rem 1fr 3rem; gap: var(--space-2); align-items: center; }
 .bar-row .bar-fill { height: 0.75rem; background: var(--brand, #3e4095); border-radius: 999px; min-width: 2px; }
 .form-grid .field.span-2 { grid-column: 1 / -1; }
+.split-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--space-4); align-items: start; }
+.split-2 > * { min-width: 0; margin: 0; }
+.call-buttons { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.board-card .button.block { display: flex; justify-content: center; width: 100%; }

@@ -2,6 +2,7 @@
 week's interviews, hiring report, the Bin, and Setup → Hiring posts."""
 
 import datetime as dt
+import io
 import secrets
 from collections import Counter
 from pathlib import Path
@@ -38,6 +39,7 @@ from .models import (
     SUBJECTS,
     Application,
     Candidate,
+    CandidateCall,
     CandidateCV,
     CVFile,
     InterviewSheet,
@@ -46,6 +48,12 @@ from .models import (
 )
 
 PAGE_SIZE = 50
+STAGE_FIELDS = {  # which details each step asks for (joining date only when selected, lead 13 Nov 2026)
+    "called": ["interview_at"],
+    "interview": ["interview_at"],
+    "demo": ["interview_at", "demo_class"],
+    "selected": ["salary_offered", "joining_on"],
+}
 
 
 def _branch(request, perm=S.VIEW_PERM):
@@ -320,6 +328,7 @@ def candidate(request, pk):
             "relevances": Candidate.Relevance.choices,
             "can": can,
             "keep_until": c.last_received_on + dt.timedelta(days=730),
+            "unanswered": c.unanswered_calls(),
         },
     )
 
@@ -373,15 +382,13 @@ def vacancy(request, pk):
             messages.success(request, _("%(n)s shortlisted.") % {"n": added}) if added else messages.error(
                 request, _("Tick the CVs to shortlist.")
             )
-        elif action == "move":
+        elif action == "move":  # older pages; the step page (hiring:application) is the one used now
             app = get_object_or_404(Application, vacancy=v, pk=request.POST.get("application") or 0)
-            step = StepForm(request.POST, instance=app)
+            step = StepForm(request.POST)
             stage = request.POST.get("stage", "")
             if step.is_valid() and stage in Application.Stage.values and stage != Application.Stage.JOINED:
-                d = step.cleaned_data
-                S.move(app, stage, request.user, d.get("note") or "", interview_at=d.get("interview_at"),
-                       demo_class=d.get("demo_class") or "", salary_offered=d.get("salary_offered"),
-                       joining_on=d.get("joining_on"))  # fmt: skip
+                details = {f: step.cleaned_data.get(f) for f in STAGE_FIELDS.get(stage, [])}
+                S.move(app, stage, request.user, step.cleaned_data.get("note") or "", **details)
                 messages.success(request, _("%(n)s: %(s)s.") % {"n": app.candidate, "s": app.get_stage_display()})
             else:
                 messages.error(request, _("Check the date and time."))
@@ -391,6 +398,7 @@ def vacancy(request, pk):
         return redirect("hiring:vacancy", v.pk)
     apps = list(v.applications.select_related("candidate").prefetch_related("steps"))
     for a in apps:
+        a.unanswered = a.candidate.unanswered_calls()
         a.sheet_or_none = InterviewSheet.objects.filter(application=a).first() if can["sheet_view"] else None
     board = [(value, label, [a for a in apps if a.stage == value]) for value, label in Application.Stage.choices
              if value in Application.BOARD]  # fmt: skip
@@ -402,11 +410,68 @@ def vacancy(request, pk):
             "v": v,
             "board": board,
             "out": out,
-            "matching": list(S.matching(v)[:100]) if v.status == Vacancy.Status.OPEN else [],
+            "matching": _with_calls(list(S.matching(v)[:100])) if v.status == Vacancy.Status.OPEN else [],
             "stages": [(s, label) for s, label in Application.Stage.choices if s != Application.Stage.JOINED],
             "can": can,
         },
     )
+
+
+@login_required
+def application(request, application_id):
+    """One candidate in one vacancy: calls made (picked up or not, as often as needed) and moving to the next step."""
+    branch = _branch(request, "hiring.view_application")
+    app = get_object_or_404(
+        Application.objects.select_related("candidate", "vacancy__post", "vacancy__campus"), branch=branch,
+        pk=application_id,
+    )  # fmt: skip
+    can = _can(request, branch)
+    can["call"] = request.user.has_branch_perm("hiring.add_candidatecall", branch.id)
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "call" and can["call"]:
+            result = request.POST.get("result", "")
+            if result in CandidateCall.Result.values:
+                S.log_call(app.candidate, result, request.user, request.POST.get("note", ""), application=app)
+                messages.success(request, _("Call saved: %(r)s.") % {"r": CandidateCall.Result(result).label})
+            else:
+                messages.error(request, _("Choose what happened on the call."))
+        elif action == "move" and can["move"]:
+            stage = request.POST.get("stage", "")
+            step = StepForm(request.POST)  # not bound to the application: only the step's own details are kept
+            if stage in Application.Stage.values and stage != Application.Stage.JOINED and step.is_valid():
+                wanted = STAGE_FIELDS.get(stage, [])
+                details = {f: step.cleaned_data.get(f) for f in wanted}
+                S.move(app, stage, request.user, step.cleaned_data.get("note") or "", **details)
+                messages.success(request, _("%(n)s: %(s)s.") % {"n": app.candidate, "s": app.get_stage_display()})
+                return redirect("hiring:vacancy", app.vacancy_id)
+            messages.error(request, _("Choose the step and check the date and time."))
+        else:
+            raise PermissionDenied
+        return redirect("hiring:application", app.pk)
+    app.refresh_from_db()
+    return render(
+        request,
+        "hiring/application.html",
+        {
+            "app": app,
+            "c": app.candidate,
+            "steps": app.steps.select_related("by"),
+            "calls": app.candidate.calls.select_related("by", "application__vacancy__post"),
+            "unanswered": app.candidate.unanswered_calls(),
+            "results": CandidateCall.Result.choices,
+            "stages": [(v, label) for v, label in Application.Stage.choices if v != Application.Stage.JOINED],
+            "stage_fields": STAGE_FIELDS,
+            "sheet": InterviewSheet.objects.filter(application=app).first() if can["sheet_view"] else None,
+            "can": can,
+        },
+    )
+
+
+def _with_calls(candidates):
+    for c in candidates:
+        c.unanswered = c.unanswered_calls()
+    return candidates
 
 
 @login_required
@@ -533,3 +598,97 @@ def posts(request):
 
 def staff_link(candidate):
     return f"{reverse('hr:employee_new')}?candidate={candidate.pk}"
+
+
+# --- Import CVs (Excel or ZIP made with Claude from TASEMS's template; lead, 13 Nov 2026) ---------------
+IMPORT_KEY = "hiring_import"
+
+
+def _import_context(branch):
+    from django.template.loader import render_to_string
+
+    posts = [p.name for p in Post.objects.filter(is_active=True)]
+    prompt = render_to_string(
+        "hiring/claude_prompt.txt",
+        {"today": timezone.localdate().strftime("%d/%m/%Y"), "posts": posts,
+         "subjects": [str(label) for _c, label in SUBJECTS], "levels": [str(label) for _c, label in LEVELS]},
+    )  # fmt: skip
+    return {"branch": branch, "prompt": prompt.strip()}
+
+
+@login_required
+def import_cvs(request):
+    """Upload a filled CV template (or a ZIP of it with the CV files); check; then import."""
+    from . import importer
+
+    branch = _branch(request, S.ADD_PERM)
+    context = _import_context(branch)
+    if request.method == "POST" and request.POST.get("token"):
+        saved = request.session.get(IMPORT_KEY, {}).get(request.POST["token"])
+        if not saved or not default_storage.exists(saved["path"]):
+            messages.error(request, _("The upload is no longer there. Choose the file again."))
+            return redirect("hiring:import")
+        with default_storage.open(saved["path"], "rb") as handle:
+            content = handle.read()
+        result, files = importer.check(saved["name"], content, branch=branch)
+        new, added = importer.run_import(result, files, branch=branch, user=request.user)
+        default_storage.delete(saved["path"])
+        messages.success(
+            request,
+            _("Imported: %(n)s new candidates, %(a)s CVs added to people already in the CV bank.")
+            % {"n": new, "a": added},
+        )
+        return redirect("hiring:index")
+    if request.method == "POST":
+        upload = request.FILES.get("file")
+        if upload is None or not upload.name.lower().endswith((".xlsx", ".zip")):
+            messages.error(request, _("Choose the filled template (.xlsx) or a ZIP of it with the CV files."))
+            return redirect("hiring:import")
+        if upload.size > 200 * 1024 * 1024:
+            messages.error(request, _("The file is larger than 200 MB. Import the CVs in smaller groups."))
+            return redirect("hiring:import")
+        content = upload.read()
+        result, files = importer.check(upload.name, content, branch=branch)
+        token = secrets.token_hex(8)
+        path = default_storage.save(f"private/hiring-pending/import-{token}{Path(upload.name).suffix.lower()}",
+                                    File(io.BytesIO(content), name=upload.name))  # fmt: skip
+        pending = request.session.get(IMPORT_KEY, {})
+        pending[token] = {"path": path, "name": upload.name}
+        request.session[IMPORT_KEY] = pending
+        context.update(result=result, token=token, filename=upload.name, file_count=len(files))
+    return render(request, "hiring/import.html", context)
+
+
+@login_required
+def import_template(request):
+    from django.http import HttpResponse
+
+    from . import importer
+
+    _branch(request, S.ADD_PERM)
+    response = HttpResponse(
+        importer.template_workbook(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = 'attachment; filename="CV-template.xlsx"'
+    return response
+
+
+@login_required
+def import_skill(request):
+    """The Claude skill: SKILL.md and the CV template in one ZIP (Claude → Settings → Capabilities → Skills)."""
+    import zipfile
+
+    from django.http import HttpResponse
+
+    from . import importer
+
+    _branch(request, S.ADD_PERM)
+    folder = Path(__file__).resolve().parent / "skill"
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as z:
+        z.write(folder / "SKILL.md", "tasems-cv-reader/SKILL.md")
+        z.writestr("tasems-cv-reader/CV-template.xlsx", importer.template_workbook())
+    response = HttpResponse(buffer.getvalue(), content_type="application/zip")
+    response["Content-Disposition"] = 'attachment; filename="tasems-cv-reader.zip"'
+    return response

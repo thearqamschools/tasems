@@ -343,7 +343,10 @@ HIFZ_MANAGE = HIFZ_WRITE + ["hifz.change_hifzlesson", "hifz.change_paratest"]
 # interview marks); head office sees every branch's; the posts list is kept by the Director and head office.
 HIRING_VIEW = ["hiring.view_candidate", "hiring.view_candidatecv", "hiring.view_vacancy", "hiring.view_application",
                "hiring.view_post"]  # fmt: skip
-HIRING_ENTRY = HIRING_VIEW + ["hiring.add_candidate", "hiring.change_candidate", "hiring.add_candidatecv"]
+HIRING_ENTRY = HIRING_VIEW + [
+    "hiring.add_candidate", "hiring.change_candidate", "hiring.add_candidatecv", "hiring.view_candidatecall",
+    "hiring.add_candidatecall",
+]  # fmt: skip
 HIRING_MANAGE = HIRING_ENTRY + [
     "hiring.delete_candidate", "hiring.add_vacancy", "hiring.change_vacancy", "hiring.add_application",
     "hiring.change_application", "hiring.view_interviewsheet", "hiring.add_interviewsheet",
