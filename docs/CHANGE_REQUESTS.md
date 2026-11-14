@@ -602,3 +602,6 @@ not to be bought or switched on without approval.
   The list narrows as each letter is typed; clearing the box shows everyone again. (Claude's note: on long lists —
   e.g. 1,215 students over several pages — the page asks TASEMS for the matching rows a moment after typing stops,
   so the whole list is searched, not only the page on screen.)
+- R11-4. **Back link** ("‹ Staff", as on other pages) at the top of the pages opened from the buttons on the Staff
+  page — **Today's staff attendance**, **Import machine file**, **Monthly sheet**, **Leave** — taking the user back
+  to the Staff page.
