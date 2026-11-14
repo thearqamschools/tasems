@@ -53,9 +53,27 @@ def search(qs, q):
     match = Q(full_name__icontains=q) | Q(father_name__icontains=q) | Q(qualification__icontains=q)
     match |= Q(address__icontains=q) | Q(education__institute__icontains=q) | Q(education__degree__icontains=q)
     d = digits(q)
+    if d and d == q.replace(" ", "").lstrip("#").removeprefix("CV").removeprefix("cv") and len(d) <= 6:
+        match |= Q(cvs__number=int(d))  # CV No. (R10-1): typing 41 finds CV No. 41
     if len(d) >= 4:
         match |= Q(mobile__contains=d[-7:]) | Q(cnic__contains=d)
     return qs.filter(match).distinct()
+
+
+def with_cv_numbers(candidates):
+    """Sets each candidate's latest CV No. in one query (for lists)."""
+    from .models import CandidateCV
+
+    ids = [c.id for c in candidates]
+    latest = {}
+    for cid, number in (
+        CandidateCV.objects.filter(candidate_id__in=ids).exclude(number=None).order_by("received_on", "number")
+        .values_list("candidate_id", "number")
+    ):  # fmt: skip
+        latest[cid] = number
+    for c in candidates:
+        c._cv_no = latest.get(c.id)
+    return candidates
 
 
 def filter_bank(qs, post="", subject="", level="", campus="", relevance="", status=""):

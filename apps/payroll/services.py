@@ -155,16 +155,19 @@ def compute(branch, month):
     for r in sheet:
         e = r["employee"]
         m = manual.get(e.id)
+        days_in_month = len(dates)
+        employed = sum(1 for d in dates if e.employed_on(d))
         if m:
-            days_in_month, working, employed = m.days_in_month, m.working_days, m.days_employed
-            absent, half = m.absent_days + m.leave_days, m.half_days
+            # Typed in by hand (R10-4): working days and half days; absent is what is left of the days on staff.
+            half = m.half_days
+            absent = max(Decimal(employed) - Decimal(m.working_days) - Decimal(half) / 2, ZERO)
         else:
             totals = r["totals"]
-            days_in_month, working = len(dates), 0
-            employed = sum(1 for d in dates if e.employed_on(d))
             # Every absence is unpaid; days of unpaid leave count as absent (project lead, 31 Oct 2026).
-            absent = max(totals.get("unpaid", 0), totals.get("absent", 0))
+            absent = Decimal(max(totals.get("unpaid", 0), totals.get("absent", 0)))
             half = totals.get("half_day", 0)
+        # Working days = days on staff − absent − half days × ½ (R10-3: 31 − 2 − 0.5 = 28.5).
+        working = max(Decimal(employed) - absent - Decimal(half) / 2, ZERO)
         pay = pays.get(e.id)
         row = {"employee": e, "pay": pay, "days_in_month": days_in_month, "working_days": working,
                "days_employed": employed, "absent": absent, "leave": 0, "half": half, "missing": pay is None,
@@ -177,6 +180,8 @@ def compute(branch, month):
             deduction = min(_rupees(rate * (absent + Decimal(half) / 2)), gross)
             full_month = employed == days_in_month
             bonus_days = rules.bonus_days if (bonus_applies(rules, e) and full_month and not absent and not half) else 0
+            if m and m.bonus_days is not None:  # changed by hand on Enter manually (R10-4)
+                bonus_days = m.bonus_days
             bonus = _rupees(rate * bonus_days)
             x = extras.get(e.id)
             gp, eobi = (x.gp_fund, x.eobi) if x else (ZERO, ZERO)

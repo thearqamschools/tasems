@@ -9,7 +9,7 @@
 </div>
 <form method="get" class="card">
   <div class="form-grid">
-    <div class="field"><label for="q">{% trans "Search" %}</label><input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name, mobile, CNIC, degree, institute, address' %}"></div>
+    <div class="field"><label for="q">{% trans "Search" %}</label><input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'CV No., name, mobile, CNIC, degree, institute, address' %}"></div>
     <div class="field"><label for="post">{% trans "Applied for" %}</label><select id="post" name="post"><option value="">{% trans "All posts" %}</option>{% for p in posts %}<option value="{{ p.id }}" {% if f.post == p.id|stringformat:"s" %}selected{% endif %}>{{ p }}</option>{% endfor %}</select></div>
     <div class="field"><label for="subject">{% trans "Can teach" %}</label><select id="subject" name="subject"><option value="">{% trans "Any subject" %}</option>{% for v, l in subjects %}<option value="{{ v }}" {% if f.subject == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
     <div class="field"><label for="level">{% trans "Level" %}</label><select id="level" name="level"><option value="">{% trans "Any level" %}</option>{% for v, l in levels %}<option value="{{ v }}" {% if f.level == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
@@ -23,8 +23,9 @@
 {% if page.object_list %}
 {% include "includes_list_tools.html" %}
 <div class="table-wrap"><table>
-  <thead><tr>{% trans "Latest CV" as h %}{% sort_th "received" h %}{% trans "Name" as h %}{% sort_th "name" h %}<th>{% trans "Mobile" %}</th>{% trans "Applied for" as h %}{% sort_th "post" h %}<th>{% trans "Can teach" %}</th><th>{% trans "Level" %}</th>{% trans "Qualification" as h %}{% sort_th "qualification" h %}{% trans "Experience" as h %}{% sort_th "experience" h "num" %}<th>{% trans "Address" %}</th>{% trans "Relevant?" as h %}{% sort_th "relevance" h %}</tr></thead>
+  <thead><tr>{% trans "CV No." as h %}{% sort_th "cvno" h "center" %}{% trans "Latest CV" as h %}{% sort_th "received" h %}{% trans "Name" as h %}{% sort_th "name" h %}<th>{% trans "Mobile" %}</th>{% trans "Applied for" as h %}{% sort_th "post" h %}<th>{% trans "Can teach" %}</th><th>{% trans "Level" %}</th>{% trans "Qualification" as h %}{% sort_th "qualification" h %}{% trans "Experience" as h %}{% sort_th "experience" h "num" %}<th>{% trans "Address" %}</th>{% trans "Relevant?" as h %}{% sort_th "relevance" h %}</tr></thead>
   <tbody>{% for c in page.object_list %}<tr data-href="{% url 'hiring:candidate' c.id %}">
+    <td class="num center"><strong>{{ c.cv_no|default:"—" }}</strong></td>
     <td style="white-space:nowrap">{{ c.last_received_on|date:"d M Y" }}</td>
     <td><a href="{% url 'hiring:candidate' c.id %}">{{ c.full_name }}</a>{% if c.status != "available" %} <span class="badge{% if c.status == 'hired' %} muted{% endif %}">{{ c.get_status_display }}</span>{% endif %}</td>
     <td class="num">{{ c.mobile|default:"—" }}</td><td>{{ c.post }}</td>

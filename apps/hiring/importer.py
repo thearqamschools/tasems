@@ -290,13 +290,14 @@ def check(name, content, *, branch):
 
 
 def run_import(result, files, *, branch, user):
-    """Saves the good rows. Returns (new people, CVs added to people already in the CV bank)."""
+    """Saves the good rows. Returns (new people, CVs added to people already in the CV bank, CV numbers given)."""
     from django.core.files.base import ContentFile
     from django.db import transaction
 
     from .models import CVFile, Education, Experience
 
     new = added = 0
+    numbers = []
     by_mobile = {}
     with transaction.atomic():
         for row in result.good:
@@ -335,11 +336,12 @@ def run_import(result, files, *, branch, user):
                 branch=branch, candidate=person, received_on=d["received_on"], channel=d["channel"], post=d["post"],
                 entered_by=user, note=f"Imported from Excel (row {row.number})",
             )  # fmt: skip
+            numbers.append(cv.number)
             for name in row.files:
                 if name in files:
                     f = CVFile(branch=branch, cv=cv, original_name=name[:150])
                     f.file.save(name, ContentFile(files[name]), save=True)
-    return new, added
+    return new, added, numbers
 
 
 def template_workbook():

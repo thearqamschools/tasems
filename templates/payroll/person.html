@@ -12,8 +12,8 @@
 {% if row and not row.missing %}
 <div class="table-wrap"><table><tbody>
   <tr><th>{% trans "Monthly salary (Rs)" %}</th><td class="money">{{ row.salary|rupees }}</td></tr>
-  <tr><th>{% trans "Days on staff" %}</th><td>{{ row.days_employed }} / {{ row.days_in_month }}{% if row.working_days %} · {% trans "Working days" %}: {{ row.working_days }}{% endif %}{% if row.manual %} <span class="badge muted">{% trans "Entered manually" %}</span>{% endif %}</td></tr>
-  <tr><th>{% trans "Absent" %}</th><td>{{ row.absent }}</td></tr>
+  <tr><th>{% trans "Days on staff" %}</th><td>{{ row.days_employed }} / {{ row.days_in_month }}{% if row.working_days %} · {% trans "Working days" %}: {{ row.working_days|days }}{% endif %}{% if row.manual %} <span class="badge muted">{% trans "Entered manually" %}</span>{% endif %}</td></tr>
+  <tr><th>{% trans "Absent" %}</th><td>{{ row.absent|days }}</td></tr>
   <tr><th>{% trans "Half days" %}</th><td>{{ row.half }}</td></tr>
   <tr><th>{% trans "Absence cut (Rs)" %}</th><td class="money">{{ row.deduction|rupees }}</td></tr>
   <tr><th>{% trans "Bonus" %}</th><td class="money">{% if row.bonus %}+{{ row.bonus|rupees }} ({% blocktrans count n=row.bonus_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktrans %}){% else %}—{% endif %}</td></tr>
@@ -72,7 +72,7 @@
   <thead><tr><th>{% trans "Month" %}</th><th class="num">{% trans "Monthly salary (Rs)" %}</th><th class="num">{% trans "Absent" %}</th><th class="num">{% trans "Half days" %}</th><th class="num">{% trans "Bonus" %}</th><th class="num">{% trans "Advance" %}</th><th class="num">{% trans "Security" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th><th>{% trans "Paid" %}</th></tr></thead>
   <tbody>{% for p in history %}<tr>
     <td><a href="?month={{ p.run.month|date:'Y-m' }}">{{ p.run.month|date:"F Y" }}</a></td><td class="num money">{{ p.monthly_salary|rupees }}</td>
-    <td class="num">{{ p.absent_days|add:p.leave_days }}</td><td class="num">{{ p.half_days }}</td>
+    <td class="num">{{ p.unpaid_days|days }}</td><td class="num">{{ p.half_days }}</td>
     <td class="num money">{{ p.bonus|rupees }}</td><td class="num money">{{ p.advance|rupees }}</td><td class="num money">{{ p.security|rupees }}</td><td class="num money">{{ p.net_pay|rupees }}</td>
     <td>{% if p.payment %}{{ p.payment.paid_on|date:"d M Y" }} · {{ p.payment.get_method_display }}{% else %}<span class="badge attention">{% trans "Not paid" %}</span>{% endif %}</td>
   </tr>{% endfor %}</tbody>

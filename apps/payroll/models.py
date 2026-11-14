@@ -73,10 +73,10 @@ class Payslip(BranchOwnedModel):
     monthly_salary = models.DecimalField(**MONEY)
     days_in_month = models.PositiveSmallIntegerField()
     days_employed = models.PositiveSmallIntegerField(help_text=_("Days of the month the person was on the staff"))
-    absent_days = models.PositiveSmallIntegerField(default=0)
+    absent_days = models.DecimalField(max_digits=4, decimal_places=1, default=0)
     leave_days = models.PositiveSmallIntegerField(default=0, help_text=_("Days of unpaid leave"))
     half_days = models.PositiveSmallIntegerField(default=0, help_text=_("Half days: half a day's pay is cut"))
-    working_days = models.PositiveSmallIntegerField(default=0)
+    working_days = models.DecimalField(max_digits=4, decimal_places=1, default=0)
     is_manual = models.BooleanField(default=False)
     # Round 6 (31 Oct 2026): attendance bonus, GP Fund, EOBI, advance and security cuts, other deduction / addition.
     bonus_days = models.PositiveSmallIntegerField(default=0)
@@ -137,11 +137,14 @@ class ManualDays(BranchOwnedModel):
     employee = models.ForeignKey("hr.Employee", on_delete=models.CASCADE, related_name="manual_days")
     month = models.DateField()
     days_in_month = models.PositiveSmallIntegerField()
-    working_days = models.PositiveSmallIntegerField(default=0)
+    # Round 10 (project lead, 14 Nov 2026): the office types working days (halves allowed), half days and bonus
+    # days; absent is worked out: days on staff − working days − half days × ½.
+    working_days = models.DecimalField(max_digits=4, decimal_places=1, default=0)
     days_employed = models.PositiveSmallIntegerField()
-    absent_days = models.PositiveSmallIntegerField(default=0)
+    absent_days = models.DecimalField(max_digits=4, decimal_places=1, default=0)
     leave_days = models.PositiveSmallIntegerField(default=0)
     half_days = models.PositiveSmallIntegerField(default=0)
+    bonus_days = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Empty: as the payroll rules give")
     entered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
 
     class Meta:

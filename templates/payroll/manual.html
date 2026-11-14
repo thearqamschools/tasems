@@ -3,21 +3,43 @@
 {% block content %}
 <p><a href="{% url 'payroll:index' %}?month={{ month|date:'Y-m' }}">‹ {% trans "Payroll" %}</a></p>
 <h1>{% trans "Enter manually" %} · {{ month|date:"F Y" }}</h1>
-<p class="lede">{% trans "For when the attendance machine was out of order or its sheet is wrong. Tick the people whose days you type in; their figures replace the machine's for this month. Pay is worked out the same way: salary ÷ days in the month for each day absent, half that for a half day." %}</p>
+<p class="lede">{% blocktrans with d=days_in_month %}Working days and bonus days come from the attendance by themselves. Tick a person only to change them: type their working days (halves allowed, e.g. 28.5), half days and bonus days. Absent is worked out: {{ d }} days − working days − half days × ½.{% endblocktrans %}</p>
 <form method="post" data-busy>{% csrf_token %}
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Use" %}</th><th>{% trans "Name" %}</th><th>{% trans "Days in month" %}</th><th>{% trans "Working days" %}</th><th>{% trans "Days on staff" %}</th><th>{% trans "Absent" %}</th><th>{% trans "Half days" %}</th><th class="num">{% trans "Net pay now (Rs)" %}</th></tr></thead>
-  <tbody>{% for r in rows %}{% with id=r.employee.id %}<tr>
-    <td><input type="checkbox" name="use_{{ id }}" value="1"{% if r.manual %} checked{% endif %} aria-label="{% blocktrans with n=r.employee.full_name %}Type in the days of {{ n }}{% endblocktrans %}"></td>
-    <td>{{ r.employee.full_name }}<br><span class="muted small">{{ r.employee.designation }}</span>{% if r.manual %} <span class="badge muted">{% trans "Manual" %}</span>{% endif %}</td>
-    <td><input name="days_in_month_{{ id }}" value="{{ r.days_in_month }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
-    <td><input name="working_days_{{ id }}" value="{{ r.working_days|default:'' }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
-    <td><input name="days_employed_{{ id }}" value="{{ r.days_employed }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
-    <td><input name="absent_days_{{ id }}" value="{{ r.absent }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
-    <td><input name="half_days_{{ id }}" value="{{ r.half }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem"></td>
+<div class="filter-inline"><label for="manual-search" class="visually-hidden">{% trans "Search" %}</label>
+  <input type="search" id="manual-search" placeholder="{% trans 'Search by name, EMP.code or designation' %}" autocomplete="off" style="min-inline-size:min(100%,22rem)">
+  <span class="muted small" data-search-count></span></div>
+<div class="table-wrap"><table class="payroll-table">
+  <thead><tr><th class="center">{% trans "Use" %}</th><th class="center">{% trans "EMP.code" %}</th><th>{% trans "Name" %}</th><th class="center">{% trans "Working days" %}</th><th class="center">{% trans "Half days" %}</th><th class="center">{% trans "Bonus days" %}</th><th class="num">{% trans "Net pay now (Rs)" %}</th></tr></thead>
+  <tbody>{% for r in rows %}{% with id=r.employee.id %}<tr data-search="{{ r.employee.full_name|lower }} {{ r.employee.code|lower }} {{ r.employee.designation|lower }}">
+    <td class="center"><input type="checkbox" name="use_{{ id }}" value="1"{% if r.manual %} checked{% endif %} aria-label="{% blocktrans with n=r.employee.full_name %}Type in the days of {{ n }}{% endblocktrans %}"></td>
+    <td class="num center">{{ r.employee.code }}</td>
+    <td>{{ r.employee.full_name }}<br><span class="muted small">{{ r.employee.designation }}{% if r.days_employed != r.days_in_month %} · {% blocktrans with n=r.days_employed %}{{ n }} days on staff{% endblocktrans %}{% endif %}</span>{% if r.manual %} <span class="badge muted">{% trans "Manual" %}</span>{% endif %}</td>
+    <td class="center"><input name="working_days_{{ id }}" value="{{ r.working_days|days }}" inputmode="decimal" size="4" style="max-inline-size:5rem;text-align:center" aria-label="{% trans 'Working days' %}"></td>
+    <td class="center"><input name="half_days_{{ id }}" value="{{ r.half }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem;text-align:center" aria-label="{% trans 'Half days' %}"></td>
+    <td class="center"><input name="bonus_days_{{ id }}" value="{{ r.bonus_days|default:0 }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem;text-align:center" aria-label="{% trans 'Bonus days' %}"></td>
     <td class="num money">{% if r.missing %}<span class="badge attention">{% trans "Salary not set" %}</span>{% else %}{{ r.net|rupees }}{% endif %}</td>
   </tr>{% endwith %}{% endfor %}</tbody>
 </table></div>
 <div class="actions"><button class="button" type="submit">{% trans "Save and work out the pay" %}</button></div>
 </form>
+<script>
+// Narrows the list while typing (no Enter); clearing shows everyone again. Hidden rows keep their ticks and values.
+(function () {
+  var box = document.getElementById("manual-search");
+  var rows = Array.prototype.slice.call(document.querySelectorAll("tr[data-search]"));
+  var count = document.querySelector("[data-search-count]");
+  function filter() {
+    var words = box.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    var shown = 0;
+    rows.forEach(function (row) {
+      var hit = words.every(function (w) { return row.dataset.search.indexOf(w) >= 0; });
+      row.hidden = !hit;
+      if (hit) shown++;
+    });
+    count.textContent = words.length ? shown + " / " + rows.length : "";
+  }
+  box.addEventListener("input", filter);
+  box.addEventListener("keydown", function (event) { if (event.key === "Enter") event.preventDefault(); });
+})();
+</script>
 {% endblock %}

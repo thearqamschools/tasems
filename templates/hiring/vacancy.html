@@ -9,7 +9,7 @@
 <h2>{% trans "Candidates" %}</h2>
 <div class="board">{% for value, label, items in board %}<div class="board-col"><h3>{{ label }} · {{ items|length }}</h3>
   {% for a in items %}<div class="board-card">
-    <strong><a href="{% url 'hiring:candidate' a.candidate_id %}">{{ a.candidate.full_name }}</a></strong>
+    <strong><a href="{% url 'hiring:candidate' a.candidate_id %}">{{ a.candidate.full_name }}</a></strong>{% if a.candidate.cv_no %}<span class="muted">{% trans "CV No." %} {{ a.candidate.cv_no }}</span>{% endif %}
     <span class="muted">{{ a.candidate.mobile }}</span>
     {% if a.interview_at %}<span>{% trans "On" %} {{ a.interview_at|date:"d M, h:i A" }}</span>{% endif %}
     {% if a.demo_class %}<span>{% trans "Demo" %}: {{ a.demo_class }}</span>{% endif %}
@@ -27,10 +27,10 @@
 <p class="small muted">{% trans "Same post, subject and level (when the vacancy names them), not marked not relevant, not hired; latest CV first." %}</p>
 {% if matching %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="shortlist">
 <div class="table-wrap"><table>
-  <thead><tr>{% if can.move %}<th>{% trans "Shortlist" %}</th>{% endif %}<th>{% trans "Latest CV" %}</th><th>{% trans "Name" %}</th><th>{% trans "Can teach" %}</th><th>{% trans "Level" %}</th><th>{% trans "Qualification" %}</th><th class="num">{% trans "Experience" %}</th><th>{% trans "Address" %}</th><th>{% trans "Relevant?" %}</th></tr></thead>
+  <thead><tr>{% if can.move %}<th>{% trans "Shortlist" %}</th>{% endif %}<th class="center">{% trans "CV No." %}</th><th>{% trans "Latest CV" %}</th><th>{% trans "Name" %}</th><th>{% trans "Can teach" %}</th><th>{% trans "Level" %}</th><th>{% trans "Qualification" %}</th><th class="num">{% trans "Experience" %}</th><th>{% trans "Address" %}</th><th>{% trans "Relevant?" %}</th></tr></thead>
   <tbody>{% for c in matching %}<tr>
     {% if can.move %}<td><input type="checkbox" name="candidate" value="{{ c.id }}" aria-label="{% trans 'Shortlist' %} {{ c.full_name }}"></td>{% endif %}
-    <td style="white-space:nowrap">{{ c.last_received_on|date:"d M Y" }}</td><td><a href="{% url 'hiring:candidate' c.id %}">{{ c.full_name }}</a></td>
+    <td class="num center">{{ c.cv_no|default:"—" }}</td><td style="white-space:nowrap">{{ c.last_received_on|date:"d M Y" }}</td><td><a href="{% url 'hiring:candidate' c.id %}">{{ c.full_name }}</a></td>
     <td>{{ c.subject_labels|join:", "|default:"—" }}</td><td>{{ c.level_labels|join:", "|default:"—" }}</td><td>{{ c.qualification|default:"—" }}</td>
     <td class="num">{{ c.experience_years|default:"" }}</td><td>{{ c.address|default:"—"|truncatechars:40 }}</td><td>{% include "hiring/_relevance.html" %}{% if c.unanswered %} <span class="badge danger">{% blocktrans count n=c.unanswered %}Did not pick up {{ n }} time{% plural %}Did not pick up {{ n }} times{% endblocktrans %}</span>{% endif %}</td>
   </tr>{% endfor %}</tbody></table></div>

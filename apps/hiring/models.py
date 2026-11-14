@@ -128,6 +128,14 @@ class Candidate(BranchOwnedModel):
         names = dict(LEVELS)
         return [str(names.get(s, s)) for s in self.levels or []]
 
+    @property
+    def cv_no(self):
+        """The number of this person's latest CV."""
+        if hasattr(self, "_cv_no"):
+            return self._cv_no
+        latest = self.cvs.exclude(number=None).order_by("-received_on", "-number").first()
+        return latest.number if latest else None
+
     def unanswered_calls(self):
         """Calls not picked up since the last one that was (0 when the last call was picked up)."""
         count = 0
@@ -151,6 +159,9 @@ class CandidateCV(BranchOwnedModel):
         OTHER = "other", _("Other")
 
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name="cvs")
+    # CV No. (R10-1, project lead 13 Nov 2026): 1, 2, 3 … per branch, written on the paper CV and used as the name of
+    # a WhatsApp CV ("CV No. 41"). Given when the CV is saved; a second CV of the same person gets its own number.
+    number = models.PositiveIntegerField(_("CV No."), null=True, editable=False)
     received_on = models.DateField(_("CV received on"))
     channel = models.CharField(_("came by"), max_length=10, choices=Channel.choices, default=Channel.IN_HAND)
     post = models.ForeignKey(Post, verbose_name=_("applied for"), on_delete=models.PROTECT, related_name="+")
@@ -159,6 +170,21 @@ class CandidateCV(BranchOwnedModel):
 
     class Meta:
         ordering = ["-received_on", "-id"]
+        constraints = [models.UniqueConstraint(fields=["branch", "number"], name="one_cv_number_per_branch")]
+
+    def save(self, *args, **kwargs):
+        if self.number is None:
+            from django.db import transaction
+            from django.db.models import Max
+
+            from apps.organisation.models import Branch
+
+            with transaction.atomic():
+                Branch.objects.select_for_update().filter(pk=self.branch_id).first()  # one number at a time
+                last = CandidateCV.objects.filter(branch_id=self.branch_id).aggregate(n=Max("number"))["n"] or 0
+                self.number = last + 1
+                return super().save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
 
 class CVFile(BranchOwnedModel):

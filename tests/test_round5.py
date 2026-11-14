@@ -149,14 +149,15 @@ def test_manual_days_replace_the_machine(payroll, login_as):
     client = login_as(payroll["accountant"])
     t = payroll["teacher"]
     page = client.get(f"/payroll/manual/?month={OCT}").content.decode()
-    assert f'name="absent_days_{t.id}"' in page
-    figures = {"days_in_month": "31", "working_days": "26", "days_employed": "31", "absent_days": "3",
-               "leave_days": "0", "half_days": "2"}  # fmt: skip
+    assert f'name="working_days_{t.id}"' in page and f'name="absent_days_{t.id}"' not in page  # absent worked out
+    # Round 10: working days (halves allowed) and half days typed in; 31 − 27 − 2 × ½ = 3 days absent.
+    figures = {"working_days": "27", "half_days": "2", "bonus_days": "0"}
     client.post(f"/payroll/manual/?month={OCT}", {f"use_{t.id}": "1", **{f"{k}_{t.id}": v for k, v in figures.items()}})
     rows, _totals = P.compute(payroll["branch"], dt.date(2026, 10, 1))
     row = next(r for r in rows if r["employee"] == t)
     assert row["manual"] and row["absent"] == 3 and row["deduction"] == D(4000)  # 1000 a day × (3 + 2 halves)
-    bad = {f"use_{t.id}": "1", **{f"{k}_{t.id}": v for k, v in figures.items()}, f"absent_days_{t.id}": "40"}
+    assert row["working_days"] == 27
+    bad = {f"use_{t.id}": "1", **{f"{k}_{t.id}": v for k, v in figures.items()}, f"working_days_{t.id}": "40"}
     assert "Check the days of" in client.post(f"/payroll/manual/?month={OCT}", bad, follow=True).content.decode()
 
 

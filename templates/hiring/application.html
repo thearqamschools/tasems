@@ -2,7 +2,7 @@
 {% block title %}{{ c.full_name }} · {{ app.vacancy }}{% endblock %}
 {% block content %}
 <p><a href="{% url 'hiring:vacancy' app.vacancy_id %}">‹ {{ app.vacancy }}</a></p>
-<h1>{{ c.full_name }}</h1>
+<h1>{{ c.full_name }}{% if c.cv_no %} <span class="badge" style="font-size:var(--step-0)">{% trans "CV No." %} {{ c.cv_no }}</span>{% endif %}</h1>
 <p class="lede">{{ app.vacancy }}{% if app.vacancy.campus %} · {{ app.vacancy.campus }}{% endif %} · <span class="badge">{{ app.get_stage_display }}</span>
   · {% trans "Mobile" %} <span class="num" dir="ltr">{{ c.mobile|default:"—" }}</span>
   {% if unanswered %} · <span class="badge danger">{% blocktrans count n=unanswered %}Did not pick up {{ n }} time{% plural %}Did not pick up {{ n }} times{% endblocktrans %}</span>{% endif %}</p>

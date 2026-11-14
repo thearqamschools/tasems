@@ -2,7 +2,7 @@
 {% block title %}{{ c.full_name }}{% endblock %}
 {% block content %}
 <p><a href="{% url 'hiring:index' %}">‹ {% trans "CV bank" %}</a></p>
-<h1>{{ c.full_name }}</h1>
+<h1>{{ c.full_name }}{% if c.cv_no %} <span class="badge" style="font-size:var(--step-0)">{% trans "CV No." %} {{ c.cv_no }}</span>{% endif %}</h1>
 <p class="lede">{{ c.post }}{% if c.campus %} · {{ c.campus }}{% endif %} · {% include "hiring/_relevance.html" %}{% if c.status != "available" %} <span class="badge">{{ c.get_status_display }}</span>{% endif %}{% if c.binned_at %} <span class="badge danger">{% trans "In the Bin" %}</span>{% endif %}{% if unanswered %} <span class="badge danger">{% blocktrans count n=unanswered %}Did not pick up {{ n }} time{% plural %}Did not pick up {{ n }} times{% endblocktrans %}</span>{% endif %}</p>
 <div class="actions">
   {% if can.edit %}<a class="button" href="{% url 'hiring:edit' c.id %}">{% trans "Change details" %}</a>{% endif %}
@@ -41,7 +41,7 @@
 
 <h2>{% trans "CVs received" %}</h2>
 {% for cv in cvs %}<div class="card">
-  <h3>{{ cv.received_on|date:"d M Y" }} · {{ cv.get_channel_display }} · {{ cv.post }}</h3>
+  <h3>{% if cv.number %}{% trans "CV No." %} {{ cv.number }} · {% endif %}{{ cv.received_on|date:"d M Y" }} · {{ cv.get_channel_display }} · {{ cv.post }}</h3>
   <p class="small muted">{% blocktrans with by=cv.entered_by.get_full_name|default:cv.entered_by.username %}Entered by {{ by }}{% endblocktrans %}{% if cv.note %} · {{ cv.note }}{% endif %}</p>
   <div class="cv-thumbs">{% for f in cv.files.all %}{% if f.is_image %}<a href="{% url 'hiring:file' f.id %}" target="_blank" rel="noopener"><img src="{% url 'hiring:file' f.id %}" alt="{% trans 'CV page' %} {{ forloop.counter }}" loading="lazy"></a>{% else %}<a class="button quiet" href="{% url 'hiring:file' f.id %}" target="_blank" rel="noopener">{% icon "file-text" %}{{ f.original_name|default:"CV" }}</a>{% endif %}{% empty %}<span class="muted small">{% trans "No file attached." %}</span>{% endfor %}</div>
 </div>{% endfor %}

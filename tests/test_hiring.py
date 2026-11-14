@@ -250,3 +250,22 @@ def test_template_and_claude_skill_downloads(hiring, login_as):
     assert skill.read("tasems-cv-reader/SKILL.md").startswith(b"---\nname: tasems-cv-reader")
     page = client.get("/hiring/import/").content.decode()
     assert "Download Claude skill" in page and "ONE ROW PER CV" in page
+
+
+def test_cv_numbers(hiring, login_as):
+    """R10-1: every CV gets a number 1, 2, 3 … per branch; a second CV of the same person gets its own number."""
+    client = login_as(hiring["director"])
+    post = hiring["teacher_post"]
+    first = client.post("/hiring/add/", cv_data(post), follow=True).content.decode()
+    assert "CV No. 1 saved for Ayesha Noreen" in first
+    client.post("/hiring/add/", cv_data(post, full_name="Bushra", mobile="03005555555"))
+    again = cv_data(post, received_on="2026-11-11", same_person="attach")
+    assert "CV No. 3 added to Ayesha Noreen" in client.post("/hiring/add/", again, follow=True).content.decode()
+    ayesha = Candidate.objects.get(full_name="Ayesha Noreen")
+    assert sorted(ayesha.cvs.values_list("number", flat=True)) == [1, 3] and ayesha.cv_no == 3
+    page = client.get("/hiring/").content.decode()
+    table = page[page.index("<thead>") :]
+    assert table.index("CV No.") < table.index("Latest CV")
+    found = client.get("/hiring/?q=2").content.decode()
+    found = found[found.index("<tbody>") :]
+    assert "Bushra" in found and "Ayesha" not in found  # typing a CV No. finds that CV

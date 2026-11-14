@@ -92,6 +92,7 @@ def _natural_sort(request, items, keys, default="-received"):
 
 
 SORTS = {
+    "cvno": lambda c: c.cv_no or 0,
     "received": lambda c: (c.last_received_on, c.id),
     "name": lambda c: c.full_name.lower(),
     "post": lambda c: str(c.post).lower(),
@@ -114,16 +115,17 @@ def index(request):
             qs = qs.filter(last_received_on__gte=dt.date.fromisoformat(received_from))
         except ValueError:
             pass
-    rows = _natural_sort(request, list(qs[:2000]), SORTS)
+    rows = _natural_sort(request, S.with_cv_numbers(list(qs[:2000])), SORTS)
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("CV bank"),
-            [_("Latest CV"), _("Name"), _("Father / husband name"), _("Mobile"), _("Applied for"), _("Can teach"),
-             _("Level"), _("Qualification"), _("Experience (years)"), _("Address"), _("Relevant?"), _("Status")],
+            [_("CV No."), _("Latest CV"), _("Name"), _("Father / husband name"), _("Mobile"), _("Applied for"),
+             _("Can teach"), _("Level"), _("Qualification"), _("Experience (years)"), _("Address"), _("Relevant?"),
+             _("Status")],
             (
-                [c.last_received_on, c.full_name, c.father_name, c.mobile, str(c.post), ", ".join(c.subject_labels()),
-                 ", ".join(c.level_labels()), c.qualification, c.experience_years, c.address,
-                 c.get_relevance_display(), c.get_status_display()]
+                [c.cv_no, c.last_received_on, c.full_name, c.father_name, c.mobile, str(c.post),
+                 ", ".join(c.subject_labels()), ", ".join(c.level_labels()), c.qualification, c.experience_years,
+                 c.address, c.get_relevance_display(), c.get_status_display()]
                 for c in rows
             ),
             branch=branch,
@@ -230,8 +232,12 @@ def add(request):
         with transaction.atomic():
             if same and choice == "attach":
                 candidate = same
-                _add_cv(candidate, received, request.user, uploads, kept, post=form.cleaned_data["post"])
-                messages.success(request, _("CV added to %(n)s's record.") % {"n": candidate.full_name})
+                cv = _add_cv(candidate, received, request.user, uploads, kept, post=form.cleaned_data["post"])
+                messages.success(
+                    request,
+                    _("CV No. %(no)s added to %(n)s's record. Write the number on the CV.")
+                    % {"no": cv.number, "n": candidate.full_name},
+                )
             else:
                 candidate = form.save(commit=False)
                 candidate.branch, candidate.created_by = branch, request.user
@@ -244,8 +250,12 @@ def add(request):
                         item.save()
                     for item in s.deleted_objects:
                         item.delete()
-                _add_cv(candidate, received, request.user, uploads, kept)
-                messages.success(request, _("CV of %(n)s saved.") % {"n": candidate.full_name})
+                cv = _add_cv(candidate, received, request.user, uploads, kept)
+                messages.success(
+                    request,
+                    _("CV No. %(no)s saved for %(n)s. Write the number on the CV.")
+                    % {"no": cv.number, "n": candidate.full_name},
+                )
         if request.POST.get("next") == "add":
             return redirect("hiring:add")
         return redirect("hiring:candidate", candidate.pk)
@@ -292,8 +302,8 @@ def candidate(request, pk):
                 messages.success(request, _("Marked %(r)s.") % {"r": c.get_relevance_display()})
         elif action == "add_cv" and can["add"]:
             if received.is_valid():
-                _add_cv(c, received, request.user, received.cleaned_data["files"], [])
-                messages.success(request, _("CV added."))
+                cv = _add_cv(c, received, request.user, received.cleaned_data["files"], [])
+                messages.success(request, _("CV No. %(no)s added. Write the number on the CV.") % {"no": cv.number})
             else:
                 messages.error(request, _("Check the date and the files."))
         elif action == "bin" and can["bin"] and c.status != Candidate.Status.HIRED:
@@ -397,6 +407,7 @@ def vacancy(request, pk):
             v.save(update_fields=["status", "updated_at"])
         return redirect("hiring:vacancy", v.pk)
     apps = list(v.applications.select_related("candidate").prefetch_related("steps"))
+    S.with_cv_numbers([a.candidate for a in apps])
     for a in apps:
         a.unanswered = a.candidate.unanswered_calls()
         a.sheet_or_none = InterviewSheet.objects.filter(application=a).first() if can["sheet_view"] else None
@@ -410,7 +421,9 @@ def vacancy(request, pk):
             "v": v,
             "board": board,
             "out": out,
-            "matching": _with_calls(list(S.matching(v)[:100])) if v.status == Vacancy.Status.OPEN else [],
+            "matching": S.with_cv_numbers(_with_calls(list(S.matching(v)[:100])))
+            if v.status == Vacancy.Status.OPEN
+            else [],
             "stages": [(s, label) for s, label in Application.Stage.choices if s != Application.Stage.JOINED],
             "can": can,
         },
@@ -631,12 +644,15 @@ def import_cvs(request):
         with default_storage.open(saved["path"], "rb") as handle:
             content = handle.read()
         result, files = importer.check(saved["name"], content, branch=branch)
-        new, added = importer.run_import(result, files, branch=branch, user=request.user)
+        new, added, numbers = importer.run_import(result, files, branch=branch, user=request.user)
         default_storage.delete(saved["path"])
         messages.success(
             request,
-            _("Imported: %(n)s new candidates, %(a)s CVs added to people already in the CV bank.")
-            % {"n": new, "a": added},
+            _(
+                "Imported: %(n)s new candidates, %(a)s CVs added to people already in the CV bank. "
+                "CV numbers %(f)s to %(t)s."
+            )
+            % {"n": new, "a": added, "f": min(numbers, default="—"), "t": max(numbers, default="—")},
         )
         return redirect("hiring:index")
     if request.method == "POST":

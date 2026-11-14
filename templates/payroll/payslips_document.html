@@ -35,7 +35,7 @@
   <table>
     <tr><th>Monthly salary</th><td class="amt">Rs {{ p.monthly_salary|rupees }}</td></tr>
     <tr><th>Days in the month / days on the staff</th><td class="amt">{{ p.days_in_month }} / {{ p.days_employed }}</td></tr>
-    <tr><th>Absent days · half days</th><td class="amt">{{ p.absent_days|add:p.leave_days }} · {{ p.half_days }}</td></tr>
+    <tr><th>Absent days · half days</th><td class="amt">{{ p.unpaid_days|days }} · {{ p.half_days }}</td></tr>
     <tr><th>Absence cut (salary ÷ {{ p.days_in_month }} per day)</th><td class="amt">− Rs {{ p.deduction|rupees }}</td></tr>
     {% if p.bonus %}<tr><th>Attendance bonus ({{ p.bonus_days }} day{{ p.bonus_days|pluralize }})</th><td class="amt">+ Rs {{ p.bonus|rupees }}</td></tr>{% endif %}
     {% if p.other_addition %}<tr><th>Other addition{% if p.other_addition_reason %} ({{ p.other_addition_reason }}){% endif %}</th><td class="amt">+ Rs {{ p.other_addition|rupees }}</td></tr>{% endif %}

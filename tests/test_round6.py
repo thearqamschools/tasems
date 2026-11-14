@@ -53,8 +53,8 @@ def row_of(branch, month, employee):
 def manual(branch, employee, month, absent=0, half=0, user=None):
     ManualDays.objects.update_or_create(
         branch=branch, employee=employee, month=month,
-        defaults={"days_in_month": 31, "working_days": 26, "days_employed": 31, "absent_days": absent,
-                  "leave_days": 0, "half_days": half, "entered_by": user},
+        defaults={"days_in_month": 31, "working_days": D(31) - absent - D(half) / 2, "days_employed": 31,
+                  "absent_days": absent, "leave_days": 0, "half_days": half, "entered_by": user},
     )  # fmt: skip
 
 
@@ -74,8 +74,8 @@ def test_payroll_page_columns_and_amounts_by_hand(staff, login_as):
     client = login_as(staff["accountant"])
     page = client.get("/payroll/?month=2026-10").content.decode()
     page = page[page.index("payroll-table") : page.index("</thead>")]
-    heads = ["Code", "Name", "Designation", "Monthly salary", "Absent", "Half days", "Bonus", "GP Fund", "EOBI",
-             "Advance", "Security", "Net pay"]  # fmt: skip
+    heads = ["EMP.code", "Name", "Designation", "Monthly salary", "Days in month", "Absent", "Half days",
+             "Working days", "Bonus days", "GP Fund", "EOBI", "Advance", "Security", "Net pay"]  # fmt: skip
     positions = [page.index(f">{h}") for h in heads]
     assert positions == sorted(positions) and ">Unpaid leave<" not in page
     t = staff["teacher"]
@@ -322,3 +322,20 @@ def test_sell_tickets_once_and_search_box_empty(org, make_user, login_as):
     page = client.get(f"/events/{event.id}/sell/?q=1398").content.decode()
     assert "Has a ticket" in page and "Sell again" not in page
     assert PayrollRun.objects.count() == 0
+
+
+def test_working_days_and_bonus_by_hand(staff, login_as):
+    """R10-3/4: working days = days on staff − absent − half days × ½; typed working days (halves allowed) and bonus
+    days replace the attendance's; the payroll page shows Days in month, Absent, Half days, Working days."""
+    b, guard = staff["branch"], staff["guard"]
+    client = login_as(staff["accountant"])
+    page = client.get("/payroll/manual/?month=2026-10").content.decode()
+    assert f'name="bonus_days_{guard.id}" value="1"' in page  # bonus filled in by itself for a full month
+    client.post("/payroll/manual/?month=2026-10",
+                {f"use_{guard.id}": "1", f"working_days_{guard.id}": "28.5", f"half_days_{guard.id}": "1",
+                 f"bonus_days_{guard.id}": "0"})  # fmt: skip
+    r = row_of(b, OCT, guard)
+    assert (r["working_days"], r["absent"], r["half"], r["bonus_days"]) == (D("28.5"), D(2), 1, 0)
+    assert r["deduction"] == D(2500)  # 1,000 a day × (2 + ½)
+    table = client.get("/payroll/?month=2026-10").content.decode()
+    assert ">28.5<" in table

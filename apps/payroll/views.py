@@ -112,20 +112,25 @@ def index(request):
     )
 
 
-MANUAL_FIELDS = ("days_in_month", "working_days", "days_employed", "absent_days", "half_days")
-
-
-def _number(raw, low=0, high=31):
-    try:
-        value = int(str(raw).strip() or 0)
-    except ValueError:
+def _days(raw, high=31, step_half=False):
+    """A typed number of days: whole days, or halves when allowed; None when not a number in range."""
+    text = str(raw or "").strip().replace(",", ".")
+    if text == "":
         return None
-    return value if low <= value <= high else None
+    try:
+        value = Decimal(text)
+    except (InvalidOperation, ValueError):
+        return None
+    if value < 0 or value > high or (value * 2) % 1 or (not step_half and value % 1):
+        return None
+    return value
 
 
 @login_required
 def manual(request):
-    """Type a month's days in by hand for everyone (machine out of order, wrong sheet)."""
+    """Enter manually (R10-4, project lead 14 Nov 2026): for the people ticked, working days (halves allowed), half
+    days and bonus days replace what the attendance gives. Days in the month and days on staff are TASEMS's own;
+    absent is worked out: days on staff − working days − half days × ½."""
     branch = _branch(request, S.MANUAL_PERM)
     month = _month(request)
     if S.final_run(branch, month):
@@ -139,16 +144,18 @@ def manual(request):
             e = r["employee"]
             if request.POST.get(f"use_{e.id}") != "1":
                 continue
-            fields = {name: _number(request.POST.get(f"{name}_{e.id}")) for name in MANUAL_FIELDS}
-            if None in fields.values() or not fields["days_in_month"] or fields["days_in_month"] < 28:
+            working = _days(request.POST.get(f"working_days_{e.id}"), step_half=True)
+            half = _days(request.POST.get(f"half_days_{e.id}") or "0")
+            bonus = _days(request.POST.get(f"bonus_days_{e.id}") or "0", high=5)
+            employed = r["days_employed"]
+            if working is None or half is None or bonus is None or working + half / 2 > employed:
                 errors.append(e.full_name)
                 continue
-            fields["leave_days"] = 0  # every absence is unpaid: one "Absent" figure (project lead, 31 Oct 2026)
-            lost = fields["absent_days"] + fields["half_days"]
-            if fields["days_employed"] > fields["days_in_month"] or lost > fields["days_employed"]:
-                errors.append(e.full_name)
-                continue
-            S.save_manual(branch, month, e, fields, request.user)
+            S.save_manual(branch, month, e, {
+                "days_in_month": r["days_in_month"], "days_employed": employed, "working_days": working,
+                "half_days": int(half), "absent_days": max(Decimal(employed) - working - half / 2, Decimal(0)),
+                "leave_days": 0, "bonus_days": int(bonus),
+            }, request.user)  # fmt: skip
             saved += 1
         if errors:
             messages.error(request, _("Check the days of: %(n)s") % {"n": ", ".join(errors)})
@@ -157,7 +164,11 @@ def manual(request):
         if not errors:
             return redirect(f"/payroll/?month={month:%Y-%m}")
         rows, _totals = S.compute(branch, month)
-    return render(request, "payroll/manual.html", {"branch": branch, "month": month, "rows": rows})
+    return render(
+        request,
+        "payroll/manual.html",
+        {"branch": branch, "month": month, "rows": rows, "days_in_month": rows[0]["days_in_month"] if rows else 0},
+    )
 
 
 @login_required

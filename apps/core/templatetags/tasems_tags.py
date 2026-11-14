@@ -154,3 +154,15 @@ def sort_th(context, key, label, css=""):
         label,
         arrow,
     )
+
+
+@register.filter
+def days(value):
+    """28.5 → 28.5 ; 31.0 → 31 ; empty → 0 (days may be halves since round 10)."""
+    if value in (None, ""):
+        return 0
+    try:
+        number = Decimal(str(value))
+    except (InvalidOperation, ValueError):
+        return value
+    return int(number) if number == number.to_integral_value() else number.normalize()

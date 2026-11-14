@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 11:34+0500\n"
+"POT-Creation-Date: 2026-11-14 12:57+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -880,7 +880,7 @@ msgstr "میری حاضری"
 msgid "Hiring"
 msgstr "بھرتی"
 
-#: apps/accounts/context_processors.py:133 apps/hiring/views.py:120
+#: apps/accounts/context_processors.py:133 apps/hiring/views.py:121
 #: templates/hiring/add.html:4 templates/hiring/bin.html:4
 #: templates/hiring/candidate.html:4 templates/hiring/import.html:4
 #: templates/hiring/index.html:2 templates/hiring/index.html:5
@@ -889,7 +889,7 @@ msgstr "سی وی بینک"
 
 #: apps/accounts/context_processors.py:134 templates/hiring/add.html:2
 #: templates/hiring/add.html:5 templates/hiring/index.html:7
-#: templates/hiring/index.html:42
+#: templates/hiring/index.html:43
 msgid "Add a CV"
 msgstr "سی وی شامل کریں"
 
@@ -1120,7 +1120,7 @@ msgstr "خود تشریف لائے"
 msgid "Phone call"
 msgstr "فون کال"
 
-#: apps/admissions/models.py:21 apps/hiring/models.py:146
+#: apps/admissions/models.py:21 apps/hiring/models.py:154
 #: templates/admissions/detail.html:9 templates/notices/compose.html:32
 msgid "WhatsApp"
 msgstr "واٹس ایپ"
@@ -1147,7 +1147,7 @@ msgstr "سکول کی تقریب"
 
 #: apps/admissions/models.py:27 apps/admissions/models.py:49
 #: apps/events/models.py:30 apps/events/models.py:120 apps/fees/models.py:183
-#: apps/hiring/models.py:151 apps/hr/models.py:387 apps/inventory/models.py:25
+#: apps/hiring/models.py:159 apps/hr/models.py:387 apps/inventory/models.py:25
 #: apps/people/models.py:125 templates/people/_student_fields.html:31
 msgid "Other"
 msgstr "دیگر"
@@ -1267,8 +1267,8 @@ msgstr "حیثیت میں تبدیلی"
 msgid "Inquiry saved for %(n)s."
 msgstr "%(n)s کی انکوائری محفوظ ہو گئی۔"
 
-#: apps/admissions/views.py:129 apps/hiring/views.py:274 apps/hr/views.py:179
-#: apps/payroll/views.py:604
+#: apps/admissions/views.py:129 apps/hiring/views.py:284 apps/hr/views.py:179
+#: apps/payroll/views.py:615
 msgid "Saved."
 msgstr "محفوظ ہو گیا۔"
 
@@ -1294,8 +1294,7 @@ msgstr "حاضر"
 #: templates/core/design_system.html:86 templates/core/home.html:113
 #: templates/hifz/report.html:14 templates/hr/day.html:14
 #: templates/parents/child.html:19 templates/payroll/index.html:45
-#: templates/payroll/manual.html:9 templates/payroll/person.html:16
-#: templates/payroll/person.html:72
+#: templates/payroll/person.html:16 templates/payroll/person.html:72
 msgid "Absent"
 msgstr "غیر حاضر"
 
@@ -1313,7 +1312,7 @@ msgstr ""
 "%(section)s کی حاضری محفوظ ہو گئی: %(present)s حاضر، %(absent)s غیر حاضر۔"
 
 #: apps/attendance/views.py:186 apps/fees/views.py:263 apps/hifz/views.py:152
-#: apps/hiring/views.py:122 apps/hr/views.py:117 apps/inventory/views.py:319
+#: apps/hiring/views.py:124 apps/hr/views.py:117 apps/inventory/views.py:319
 #: apps/people/forms.py:108 apps/people/views.py:88 apps/reports/views.py:114
 #: templates/admissions/index.html:33 templates/admissions/index.html:41
 #: templates/core/design_system.html:56 templates/fees/concessions.html:23
@@ -1348,7 +1347,7 @@ msgid "Admission no."
 msgstr "داخلہ نمبر"
 
 #: apps/attendance/views.py:186 apps/exams/views.py:419 apps/hifz/views.py:214
-#: apps/hiring/views.py:121 apps/hr/views.py:116 apps/insights/views.py:46
+#: apps/hiring/views.py:122 apps/hr/views.py:116 apps/insights/views.py:46
 #: apps/payroll/views.py:76 apps/payroll/views.py:83 apps/people/views.py:87
 #: apps/reports/views.py:113 apps/setup/forms.py:21 apps/setup/forms.py:232
 #: templates/exams/award_list.html:15 templates/hifz/report.html:14
@@ -1359,7 +1358,7 @@ msgstr "داخلہ نمبر"
 #: templates/hr/leaves.html:8 templates/hr/leaves.html:22
 #: templates/hr/month.html:9 templates/notices/templates.html:10
 #: templates/payroll/advances.html:10 templates/payroll/index.html:45
-#: templates/payroll/manual.html:9 templates/payroll/salaries.html:14
+#: templates/payroll/manual.html:12 templates/payroll/salaries.html:14
 #: templates/people/student_detail.html:42
 #: templates/people/student_detail.html:54
 #: templates/people/student_list.html:44
@@ -1438,7 +1437,7 @@ msgstr "ریجن"
 msgid "academic session"
 msgstr "تعلیمی سیشن"
 
-#: apps/core/deletion.py:42 apps/hiring/models.py:94 apps/hiring/models.py:213
+#: apps/core/deletion.py:42 apps/hiring/models.py:94 apps/hiring/models.py:239
 msgid "campus"
 msgstr "کیمپس"
 
@@ -1682,12 +1681,12 @@ msgstr "سالانہ تقریب"
 msgid "name"
 msgstr "نام"
 
-#: apps/events/models.py:33 apps/payroll/models.py:224
+#: apps/events/models.py:33 apps/payroll/models.py:227
 msgid "type"
 msgstr "قسم"
 
 #: apps/events/models.py:34 apps/events/models.py:127 apps/hifz/models.py:72
-#: apps/hiring/models.py:303
+#: apps/hiring/models.py:329
 msgid "date"
 msgstr "تاریخ"
 
@@ -1703,7 +1702,7 @@ msgstr "اضافی ٹکٹ (روپے)"
 msgid "For parents or guests who come with the student. 0: no extra tickets."
 msgstr "طالب علم کے ساتھ آنے والے والدین یا مہمانوں کے لیے۔ 0: کوئی اضافی ٹکٹ نہیں۔"
 
-#: apps/events/models.py:43 apps/hiring/models.py:107 apps/hiring/models.py:218
+#: apps/events/models.py:43 apps/hiring/models.py:107 apps/hiring/models.py:244
 msgid "notes"
 msgstr "نوٹ"
 
@@ -1735,16 +1734,16 @@ msgid "extra tickets"
 msgstr "اضافی ٹکٹ"
 
 #: apps/events/models.py:81 apps/events/models.py:125
-#: apps/payroll/models.py:225
+#: apps/payroll/models.py:228
 msgid "amount (Rs)"
 msgstr "رقم (روپے)"
 
-#: apps/events/models.py:82 apps/payroll/models.py:158
-#: apps/payroll/models.py:229
+#: apps/events/models.py:82 apps/payroll/models.py:161
+#: apps/payroll/models.py:232
 msgid "paid by"
 msgstr "ادائیگی"
 
-#: apps/events/models.py:86 apps/payroll/models.py:159
+#: apps/events/models.py:86 apps/payroll/models.py:162
 msgid "reference"
 msgstr "حوالہ"
 
@@ -2941,7 +2940,7 @@ msgstr "منزل کی غلطیاں"
 msgid "grade"
 msgstr "گریڈ"
 
-#: apps/hifz/models.py:46 apps/hifz/models.py:78 apps/hiring/models.py:315
+#: apps/hifz/models.py:46 apps/hifz/models.py:78 apps/hiring/models.py:341
 msgid "remarks"
 msgstr "تبصرہ"
 
@@ -2954,7 +2953,7 @@ msgstr "پاس"
 msgid "To repeat"
 msgstr "دوبارہ"
 
-#: apps/hifz/models.py:73 apps/hiring/models.py:342
+#: apps/hifz/models.py:73 apps/hiring/models.py:368
 msgid "result"
 msgstr "نتیجہ"
 
@@ -3092,7 +3091,7 @@ msgstr "مثلاً دور رہتا ہے، دوسرا شہر"
 msgid "CV photos or PDF"
 msgstr "سی وی کی تصاویر یا PDF"
 
-#: apps/hiring/forms.py:99 apps/payroll/views.py:188
+#: apps/hiring/forms.py:99 apps/payroll/views.py:199
 msgid "The date cannot be in the future."
 msgstr "تاریخ آنے والے دنوں کی نہیں ہو سکتی۔"
 
@@ -3164,7 +3163,7 @@ msgstr "عربی"
 msgid "Drawing / Art"
 msgstr "ڈرائنگ / آرٹ"
 
-#: apps/hiring/models.py:58 apps/hiring/models.py:192 apps/hiring/models.py:209
+#: apps/hiring/models.py:58 apps/hiring/models.py:218 apps/hiring/models.py:235
 msgid "post"
 msgstr "پوسٹ"
 
@@ -3238,7 +3237,7 @@ msgstr "ای میل"
 msgid "address"
 msgstr "پتا"
 
-#: apps/hiring/models.py:92 apps/hiring/models.py:156
+#: apps/hiring/models.py:92 apps/hiring/models.py:167
 msgid "applied for"
 msgstr "کس پوسٹ کے لیے"
 
@@ -3246,7 +3245,7 @@ msgstr "کس پوسٹ کے لیے"
 msgid "can teach"
 msgstr "کیا پڑھا سکتا ہے"
 
-#: apps/hiring/models.py:98 apps/hiring/models.py:193 apps/hiring/models.py:211
+#: apps/hiring/models.py:98 apps/hiring/models.py:219 apps/hiring/models.py:237
 #: apps/hr/models.py:390
 msgid "level"
 msgstr "درجہ"
@@ -3275,65 +3274,72 @@ msgstr "وجہ"
 msgid "latest CV received"
 msgstr "آخری سی وی موصول"
 
-#: apps/hiring/models.py:145
+#: apps/hiring/models.py:153
 msgid "In hand at school"
 msgstr "اسکول میں ہاتھ سے"
 
-#: apps/hiring/models.py:147 apps/people/forms.py:102 apps/setup/forms.py:371
+#: apps/hiring/models.py:155 apps/people/forms.py:102 apps/setup/forms.py:371
 #: templates/hiring/candidate.html:18 templates/people/student_detail.html:33
 msgid "Email"
 msgstr "ای میل"
 
-#: apps/hiring/models.py:148
+#: apps/hiring/models.py:156
 msgid "After an advertisement"
 msgstr "اشتہار کے بعد"
 
-#: apps/hiring/models.py:149
+#: apps/hiring/models.py:157
 msgid "Online"
 msgstr "آن لائن"
 
-#: apps/hiring/models.py:150
+#: apps/hiring/models.py:158
 msgid "Referred by someone"
 msgstr "کسی کے حوالے سے"
 
-#: apps/hiring/models.py:154
+#: apps/hiring/models.py:164 apps/hiring/views.py:122
+#: templates/hiring/application.html:5 templates/hiring/candidate.html:5
+#: templates/hiring/candidate.html:44 templates/hiring/index.html:26
+#: templates/hiring/vacancy.html:12 templates/hiring/vacancy.html:30
+msgid "CV No."
+msgstr "سی وی نمبر"
+
+#: apps/hiring/models.py:165
 msgid "CV received on"
 msgstr "سی وی موصول ہونے کی تاریخ"
 
-#: apps/hiring/models.py:155
+#: apps/hiring/models.py:166
 msgid "came by"
 msgstr "کیسے آئی"
 
-#: apps/hiring/models.py:157 apps/hiring/models.py:259
-#: apps/hiring/models.py:343
+#: apps/hiring/models.py:168 apps/hiring/models.py:285
+#: apps/hiring/models.py:369
 msgid "note"
 msgstr "نوٹ"
 
-#: apps/hiring/models.py:179
+#: apps/hiring/models.py:205
 msgid "degree"
 msgstr "ڈگری"
 
-#: apps/hiring/models.py:179
+#: apps/hiring/models.py:205
 msgid "e.g. M.Sc Chemistry, B.Ed"
 msgstr "مثلاً M.Sc کیمسٹری، B.Ed"
 
-#: apps/hiring/models.py:180 apps/hr/models.py:405
+#: apps/hiring/models.py:206 apps/hr/models.py:405
 msgid "institute"
 msgstr "ادارہ"
 
-#: apps/hiring/models.py:182 apps/hr/models.py:406
+#: apps/hiring/models.py:208 apps/hr/models.py:406
 msgid "year"
 msgstr "سال"
 
-#: apps/hiring/models.py:191
+#: apps/hiring/models.py:217
 msgid "school / organisation"
 msgstr "اسکول / ادارہ"
 
-#: apps/hiring/models.py:195 templates/hiring/candidate.html:21
+#: apps/hiring/models.py:221 templates/hiring/candidate.html:21
 msgid "years"
 msgstr "سال"
 
-#: apps/hiring/models.py:205 templates/admissions/index.html:24
+#: apps/hiring/models.py:231 templates/admissions/index.html:24
 #: templates/core/design_system.html:58 templates/core/design_system.html:59
 #: templates/core/design_system.html:60 templates/hiring/vacancy.html:21
 #: templates/people/promotion.html:21 templates/setup/branches.html:13
@@ -3341,156 +3347,156 @@ msgstr "سال"
 msgid "Open"
 msgstr "زیرِ عمل"
 
-#: apps/hiring/models.py:206
+#: apps/hiring/models.py:232
 msgid "Filled"
 msgstr "پُر ہو گئی"
 
-#: apps/hiring/models.py:207 templates/events/detail.html:6
+#: apps/hiring/models.py:233 templates/events/detail.html:6
 #: templates/events/index.html:17 templates/setup/branches.html:13
 #: templates/setup/branches.html:21 templates/setup/branches.html:34
 #: templates/setup/sections.html:16 templates/setup/sections.html:32
 msgid "Closed"
 msgstr "بند"
 
-#: apps/hiring/models.py:210
+#: apps/hiring/models.py:236
 msgid "subject"
 msgstr "مضمون"
 
-#: apps/hiring/models.py:216
+#: apps/hiring/models.py:242
 msgid "people needed"
 msgstr "کتنے افراد چاہئیں"
 
-#: apps/hiring/models.py:217 templates/hiring/vacancy.html:6
+#: apps/hiring/models.py:243 templates/hiring/vacancy.html:6
 msgid "needed by"
 msgstr "کب تک چاہیے"
 
-#: apps/hiring/models.py:218
+#: apps/hiring/models.py:244
 msgid "e.g. replaces Ms. Sana, Class 6"
 msgstr "مثلاً مس ثناء کی جگہ، جماعت ششم"
 
-#: apps/hiring/models.py:240
+#: apps/hiring/models.py:266
 msgid "Shortlisted"
 msgstr "شارٹ لسٹ"
 
-#: apps/hiring/models.py:241
+#: apps/hiring/models.py:267
 msgid "Called"
 msgstr "بلایا گیا"
 
-#: apps/hiring/models.py:242
+#: apps/hiring/models.py:268
 msgid "Interview"
 msgstr "انٹرویو"
 
-#: apps/hiring/models.py:243 templates/hiring/interviews.html:7
+#: apps/hiring/models.py:269 templates/hiring/interviews.html:7
 msgid "Demo lesson"
 msgstr "ڈیمو سبق"
 
-#: apps/hiring/models.py:244
+#: apps/hiring/models.py:270
 msgid "Selected"
 msgstr "منتخب"
 
-#: apps/hiring/models.py:245 templates/payroll/settlement.html:6
+#: apps/hiring/models.py:271 templates/payroll/settlement.html:6
 msgid "Joined"
 msgstr "شمولیت"
 
-#: apps/hiring/models.py:246 apps/hiring/models.py:300
+#: apps/hiring/models.py:272 apps/hiring/models.py:326
 msgid "Not selected"
 msgstr "منتخب نہیں"
 
-#: apps/hiring/models.py:247
+#: apps/hiring/models.py:273
 msgid "Not available"
 msgstr "دستیاب نہیں"
 
-#: apps/hiring/models.py:255
+#: apps/hiring/models.py:281
 msgid "interview / demo on"
 msgstr "انٹرویو / ڈیمو کب"
 
-#: apps/hiring/models.py:256
+#: apps/hiring/models.py:282
 msgid "demo lesson: class and topic"
 msgstr "ڈیمو سبق: جماعت اور موضوع"
 
-#: apps/hiring/models.py:257
+#: apps/hiring/models.py:283
 msgid "salary offered (Rs)"
 msgstr "پیش کردہ تنخواہ (روپے)"
 
-#: apps/hiring/models.py:258 apps/hr/models.py:106
+#: apps/hiring/models.py:284 apps/hr/models.py:106
 msgid "joining date"
 msgstr "تاریخِ تقرری"
 
-#: apps/hiring/models.py:285 apps/hiring/models.py:305
+#: apps/hiring/models.py:311 apps/hiring/models.py:331
 msgid "Subject knowledge"
 msgstr "مضمون کا علم"
 
-#: apps/hiring/models.py:286 apps/hiring/models.py:306
+#: apps/hiring/models.py:312 apps/hiring/models.py:332
 msgid "Teaching method / demo lesson"
 msgstr "طریقۂ تدریس / ڈیمو سبق"
 
-#: apps/hiring/models.py:287 apps/hiring/models.py:308
+#: apps/hiring/models.py:313 apps/hiring/models.py:334
 msgid "Communication (Urdu / English)"
 msgstr "بات چیت (اردو / انگریزی)"
 
-#: apps/hiring/models.py:288 apps/hiring/models.py:311
+#: apps/hiring/models.py:314 apps/hiring/models.py:337
 msgid "Personality, manners, Islamic values"
 msgstr "شخصیت، آداب، اسلامی اقدار"
 
-#: apps/hiring/models.py:289 apps/hiring/models.py:313
+#: apps/hiring/models.py:315 apps/hiring/models.py:339
 msgid "Experience and qualification"
 msgstr "تجربہ اور تعلیم"
 
-#: apps/hiring/models.py:290 apps/hiring/models.py:314
+#: apps/hiring/models.py:316 apps/hiring/models.py:340
 msgid "Overall impression"
 msgstr "مجموعی تاثر"
 
-#: apps/hiring/models.py:298
+#: apps/hiring/models.py:324
 msgid "Select"
 msgstr "منتخب کریں"
 
-#: apps/hiring/models.py:299
+#: apps/hiring/models.py:325
 msgid "Waiting list"
 msgstr "انتظار کی فہرست"
 
-#: apps/hiring/models.py:304
+#: apps/hiring/models.py:330
 msgid "interviewed by"
 msgstr "انٹرویو لینے والے"
 
-#: apps/hiring/models.py:316
+#: apps/hiring/models.py:342
 msgid "decision"
 msgstr "فیصلہ"
 
-#: apps/hiring/models.py:331
+#: apps/hiring/models.py:357
 msgid "Picked up — spoke"
 msgstr "کال اٹھائی — بات ہوئی"
 
-#: apps/hiring/models.py:332
+#: apps/hiring/models.py:358
 msgid "Did not pick up"
 msgstr "کال نہیں اٹھائی"
 
-#: apps/hiring/models.py:333
+#: apps/hiring/models.py:359
 msgid "Phone off / not reachable"
 msgstr "فون بند / رابطہ نہیں"
 
-#: apps/hiring/models.py:334
+#: apps/hiring/models.py:360
 msgid "Busy — call back later"
 msgstr "مصروف — بعد میں کال کریں"
 
-#: apps/hiring/models.py:335
+#: apps/hiring/models.py:361
 msgid "Wrong number"
 msgstr "غلط نمبر"
 
-#: apps/hiring/models.py:336
+#: apps/hiring/models.py:362
 msgid "Not interested"
 msgstr "دلچسپی نہیں"
 
-#: apps/hiring/views.py:121 templates/hiring/bin.html:8
+#: apps/hiring/views.py:122 templates/hiring/bin.html:8
 #: templates/hiring/index.html:26 templates/hiring/vacancy.html:30
 msgid "Latest CV"
 msgstr "آخری سی وی"
 
-#: apps/hiring/views.py:121 apps/hr/views.py:116
+#: apps/hiring/views.py:122 apps/hr/views.py:116
 #: templates/hiring/candidate.html:15
 msgid "Father / husband name"
 msgstr "والد / شوہر کا نام"
 
-#: apps/hiring/views.py:121 apps/hr/views.py:117 apps/notices/views.py:151
+#: apps/hiring/views.py:122 apps/hr/views.py:117 apps/notices/views.py:151
 #: apps/setup/forms.py:370 templates/admissions/index.html:41
 #: templates/hiring/application.html:7 templates/hiring/candidate.html:16
 #: templates/hiring/import.html:15 templates/hiring/index.html:26
@@ -3500,160 +3506,161 @@ msgstr "والد / شوہر کا نام"
 msgid "Mobile"
 msgstr "موبائل"
 
-#: apps/hiring/views.py:121 templates/hiring/bin.html:8
+#: apps/hiring/views.py:122 templates/hiring/bin.html:8
 #: templates/hiring/import.html:15 templates/hiring/index.html:13
 #: templates/hiring/index.html:26
 msgid "Applied for"
 msgstr "کس پوسٹ کے لیے"
 
-#: apps/hiring/views.py:121 templates/hiring/candidate.html:22
+#: apps/hiring/views.py:123 templates/hiring/candidate.html:22
 #: templates/hiring/import.html:15 templates/hiring/index.html:14
 #: templates/hiring/index.html:26 templates/hiring/vacancy.html:30
 msgid "Can teach"
 msgstr "کیا پڑھا سکتا ہے"
 
-#: apps/hiring/views.py:122 templates/hiring/candidate.html:23
+#: apps/hiring/views.py:123 templates/hiring/candidate.html:23
 #: templates/hiring/candidate.html:57 templates/hiring/index.html:15
 #: templates/hiring/index.html:26 templates/hiring/vacancy.html:30
 #: templates/hr/employee.html:30
 msgid "Level"
 msgstr "درجہ"
 
-#: apps/hiring/views.py:122 apps/hr/views.py:117 templates/hiring/index.html:26
+#: apps/hiring/views.py:123 apps/hr/views.py:117 templates/hiring/index.html:26
 #: templates/hiring/vacancy.html:30
 msgid "Qualification"
 msgstr "تعلیمی قابلیت"
 
-#: apps/hiring/views.py:122
+#: apps/hiring/views.py:123
 msgid "Experience (years)"
 msgstr "تجربہ (سال)"
 
-#: apps/hiring/views.py:122 apps/setup/forms.py:27
+#: apps/hiring/views.py:123 apps/setup/forms.py:27
 #: templates/hiring/candidate.html:19 templates/hiring/index.html:26
 #: templates/hiring/vacancy.html:30 templates/setup/printer.html:13
 #: templates/setup/sections.html:31
 msgid "Address"
 msgstr "پتہ"
 
-#: apps/hiring/views.py:122 templates/hiring/index.html:17
+#: apps/hiring/views.py:123 templates/hiring/index.html:17
 #: templates/hiring/index.html:26 templates/hiring/vacancy.html:30
 msgid "Relevant?"
 msgstr "متعلقہ؟"
 
-#: apps/hiring/views.py:234
+#: apps/hiring/views.py:238
 #, python-format
-msgid "CV added to %(n)s's record."
-msgstr "سی وی %(n)s کے ریکارڈ میں شامل ہو گئی۔"
+msgid "CV No. %(no)s added to %(n)s's record. Write the number on the CV."
+msgstr "سی وی نمبر %(no)s، %(n)s کے ریکارڈ میں شامل ہو گئی۔ یہ نمبر سی وی پر لکھ دیں۔"
 
-#: apps/hiring/views.py:248
+#: apps/hiring/views.py:256
 #, python-format
-msgid "CV of %(n)s saved."
-msgstr "%(n)s کی سی وی محفوظ ہو گئی۔"
+msgid "CV No. %(no)s saved for %(n)s. Write the number on the CV."
+msgstr "%(n)s کی سی وی نمبر %(no)s محفوظ ہو گئی۔ یہ نمبر سی وی پر لکھ دیں۔"
 
-#: apps/hiring/views.py:292
+#: apps/hiring/views.py:302
 #, python-format
 msgid "Marked %(r)s."
 msgstr "%(r)s قرار دیا گیا۔"
 
-#: apps/hiring/views.py:296
-msgid "CV added."
-msgstr "سی وی شامل ہو گئی۔"
+#: apps/hiring/views.py:306
+#, python-format
+msgid "CV No. %(no)s added. Write the number on the CV."
+msgstr "سی وی نمبر %(no)s شامل ہو گئی۔ یہ نمبر سی وی پر لکھ دیں۔"
 
-#: apps/hiring/views.py:298
+#: apps/hiring/views.py:308
 msgid "Check the date and the files."
 msgstr "تاریخ اور فائلیں دیکھیں۔"
 
-#: apps/hiring/views.py:302
+#: apps/hiring/views.py:312
 #, python-format
 msgid "%(n)s moved to the Bin. It is deleted after 30 days."
 msgstr "%(n)s بِن میں چلا گیا۔ 30 دن بعد حذف ہو جائے گا۔"
 
-#: apps/hiring/views.py:307
+#: apps/hiring/views.py:317
 msgid "Taken out of the Bin."
 msgstr "بِن سے نکال لیا گیا۔"
 
-#: apps/hiring/views.py:312
+#: apps/hiring/views.py:322
 #, python-format
 msgid "Shortlisted for %(v)s."
 msgstr "%(v)s کے لیے شارٹ لسٹ۔"
 
-#: apps/hiring/views.py:359
+#: apps/hiring/views.py:369
 msgid "Vacancy opened. Matching CVs are listed below."
 msgstr "خالی آسامی کھل گئی۔ ملتی جلتی سی ویز نیچے ہیں۔"
 
-#: apps/hiring/views.py:382
+#: apps/hiring/views.py:392
 #, python-format
 msgid "%(n)s shortlisted."
 msgstr "%(n)s شارٹ لسٹ ہوئے۔"
 
-#: apps/hiring/views.py:383
+#: apps/hiring/views.py:393
 msgid "Tick the CVs to shortlist."
 msgstr "شارٹ لسٹ کرنے والی سی ویز پر نشان لگائیں۔"
 
-#: apps/hiring/views.py:392 apps/hiring/views.py:446
+#: apps/hiring/views.py:402 apps/hiring/views.py:459
 #, python-format
 msgid "%(n)s: %(s)s."
 msgstr "%(n)s: %(s)s۔"
 
-#: apps/hiring/views.py:394
+#: apps/hiring/views.py:404
 msgid "Check the date and time."
 msgstr "تاریخ اور وقت دیکھیں۔"
 
-#: apps/hiring/views.py:436
+#: apps/hiring/views.py:449
 #, python-format
 msgid "Call saved: %(r)s."
 msgstr "کال محفوظ: %(r)s۔"
 
-#: apps/hiring/views.py:438
+#: apps/hiring/views.py:451
 msgid "Choose what happened on the call."
 msgstr "کال پر کیا ہوا، منتخب کریں۔"
 
-#: apps/hiring/views.py:448
+#: apps/hiring/views.py:461
 msgid "Choose the step and check the date and time."
 msgstr "مرحلہ منتخب کریں اور تاریخ اور وقت دیکھیں۔"
 
-#: apps/hiring/views.py:495
+#: apps/hiring/views.py:508
 #, python-format
 msgid "Interview: %(t)s / %(o)s"
 msgstr "انٹرویو: %(t)s / %(o)s"
 
-#: apps/hiring/views.py:496
+#: apps/hiring/views.py:509
 #, python-format
 msgid "Mark sheet saved: %(t)s / %(o)s."
 msgstr "مارک شیٹ محفوظ: %(t)s / %(o)s۔"
 
-#: apps/hiring/views.py:563
+#: apps/hiring/views.py:576
 #, python-format
 msgid "%(n)s taken out of the Bin."
 msgstr "%(n)s بِن سے نکال لیا گیا۔"
 
-#: apps/hiring/views.py:567
+#: apps/hiring/views.py:580
 #, python-format
 msgid "%(n)s deleted."
 msgstr "%(n)s حذف ہو گیا۔"
 
-#: apps/hiring/views.py:592
+#: apps/hiring/views.py:605
 msgid "Post added."
 msgstr "پوسٹ شامل ہو گئی۔"
 
-#: apps/hiring/views.py:594
+#: apps/hiring/views.py:607
 msgid "Give the post a name that is not in the list yet."
 msgstr "پوسٹ کا ایسا نام دیں جو فہرست میں پہلے سے نہ ہو۔"
 
-#: apps/hiring/views.py:629
+#: apps/hiring/views.py:642
 msgid "The upload is no longer there. Choose the file again."
 msgstr "اپ لوڈ اب موجود نہیں۔ فائل دوبارہ منتخب کریں۔"
 
-#: apps/hiring/views.py:638
+#: apps/hiring/views.py:652
 #, python-format
-msgid "Imported: %(n)s new candidates, %(a)s CVs added to people already in the CV bank."
-msgstr "امپورٹ ہو گیا: %(n)s نئے امیدوار، %(a)s سی ویز پہلے سے موجود افراد میں شامل۔"
+msgid "Imported: %(n)s new candidates, %(a)s CVs added to people already in the CV bank. CV numbers %(f)s to %(t)s."
+msgstr "امپورٹ ہو گیا: %(n)s نئے امیدوار، %(a)s سی ویز پہلے سے موجود افراد میں شامل۔ سی وی نمبر %(f)s سے %(t)s تک۔"
 
-#: apps/hiring/views.py:645
+#: apps/hiring/views.py:661
 msgid "Choose the filled template (.xlsx) or a ZIP of it with the CV files."
 msgstr "بھرا ہوا ٹیمپلیٹ (.xlsx) یا سی وی فائلوں کے ساتھ اس کی ZIP منتخب کریں۔"
 
-#: apps/hiring/views.py:648
+#: apps/hiring/views.py:664
 msgid "The file is larger than 200 MB. Import the CVs in smaller groups."
 msgstr "فائل 200 MB سے بڑی ہے۔ سی ویز چھوٹے حصوں میں امپورٹ کریں۔"
 
@@ -3914,6 +3921,7 @@ msgstr "ریٹائرڈ"
 #: apps/hr/models.py:75 apps/hr/views.py:116 templates/hr/day.html:24
 #: templates/hr/day.html:40 templates/hr/employee.html:6
 #: templates/hr/index.html:39 templates/hr/month.html:9
+#: templates/payroll/index.html:45 templates/payroll/manual.html:12
 msgid "EMP.code"
 msgstr "EMP.code"
 
@@ -5055,83 +5063,83 @@ msgstr "پہلے کی تنخواہ (روپے)"
 msgid "new salary (Rs)"
 msgstr "نئی تنخواہ (روپے)"
 
-#: apps/payroll/models.py:121 apps/payroll/models.py:230
+#: apps/payroll/models.py:121 apps/payroll/models.py:233
 msgid "approved by"
 msgstr "منظور کنندہ"
 
-#: apps/payroll/models.py:157
+#: apps/payroll/models.py:160
 msgid "paid on"
 msgstr "ادائیگی کی تاریخ"
 
-#: apps/payroll/models.py:178
+#: apps/payroll/models.py:181
 msgid "attendance bonus"
 msgstr "حاضری بونس"
 
-#: apps/payroll/models.py:179
+#: apps/payroll/models.py:182
 msgid "bonus (days of salary)"
 msgstr "بونس (تنخواہ کے دن)"
 
-#: apps/payroll/models.py:180
+#: apps/payroll/models.py:183
 msgid "bonus for"
 msgstr "بونس کن کو"
 
-#: apps/payroll/models.py:196 templates/payroll/person.html:44
+#: apps/payroll/models.py:199 templates/payroll/person.html:44
 msgid "GP Fund (Rs)"
 msgstr "جی پی فنڈ (روپے)"
 
-#: apps/payroll/models.py:197 templates/payroll/person.html:45
+#: apps/payroll/models.py:200 templates/payroll/person.html:45
 msgid "EOBI (Rs)"
 msgstr "ای او بی آئی (روپے)"
 
-#: apps/payroll/models.py:220
+#: apps/payroll/models.py:223
 msgid "From one month's salary"
 msgstr "ایک ماہ کی تنخواہ سے"
 
-#: apps/payroll/models.py:221
+#: apps/payroll/models.py:224
 msgid "In monthly instalments"
 msgstr "ماہانہ قسطوں میں"
 
-#: apps/payroll/models.py:226
+#: apps/payroll/models.py:229
 msgid "given on"
 msgstr "دینے کی تاریخ"
 
-#: apps/payroll/models.py:227
+#: apps/payroll/models.py:230
 msgid "cut from month"
 msgstr "کٹوتی کس ماہ سے"
 
-#: apps/payroll/models.py:228
+#: apps/payroll/models.py:231
 msgid "cut every month (Rs)"
 msgstr "ہر ماہ کٹوتی (روپے)"
 
-#: apps/payroll/models.py:231
+#: apps/payroll/models.py:234
 msgid "reason / application"
 msgstr "وجہ / درخواست"
 
-#: apps/payroll/models.py:232
+#: apps/payroll/models.py:235
 msgid "application (photo or PDF)"
 msgstr "درخواست (تصویر یا پی ڈی ایف)"
 
-#: apps/payroll/models.py:261
+#: apps/payroll/models.py:264
 msgid "Cut from salary"
 msgstr "تنخواہ سے کٹوتی"
 
-#: apps/payroll/models.py:262
+#: apps/payroll/models.py:265
 msgid "Taken from the security"
 msgstr "سیکیورٹی سے لیا گیا"
 
-#: apps/payroll/models.py:263
+#: apps/payroll/models.py:266
 msgid "Paid back after leaving"
 msgstr "چھوڑنے کے بعد واپس کیا"
 
-#: apps/payroll/models.py:264 templates/payroll/settlement.html:41
+#: apps/payroll/models.py:267 templates/payroll/settlement.html:41
 msgid "Written off by management"
 msgstr "انتظامیہ نے معاف کیا"
 
-#: apps/payroll/models.py:280
+#: apps/payroll/models.py:283
 msgid "Returned (left with notice)"
 msgstr "واپس (نوٹس دے کر چھوڑا)"
 
-#: apps/payroll/models.py:281
+#: apps/payroll/models.py:284
 msgid "Not returned (left without notice)"
 msgstr "واپس نہیں (بغیر نوٹس چھوڑا)"
 
@@ -5140,8 +5148,7 @@ msgid "Salary bank sheet"
 msgstr "تنخواہ بینک شیٹ"
 
 #: apps/payroll/views.py:76 apps/payroll/views.py:83 apps/setup/forms.py:43
-#: templates/payroll/advances.html:10 templates/payroll/index.html:45
-#: templates/setup/branches.html:19
+#: templates/payroll/advances.html:10 templates/setup/branches.html:19
 msgid "Code"
 msgstr "کوڈ"
 
@@ -5167,12 +5174,11 @@ msgstr "خالص تنخواہ (روپے)"
 msgid "Monthly salary (Rs)"
 msgstr "ماہانہ تنخواہ (روپے)"
 
-#: apps/payroll/views.py:83 templates/payroll/manual.html:9
+#: apps/payroll/views.py:83 templates/payroll/index.html:45
 msgid "Days in month"
 msgstr "مہینے کے دن"
 
-#: apps/payroll/views.py:83 templates/payroll/manual.html:9
-#: templates/payroll/person.html:15
+#: apps/payroll/views.py:83 templates/payroll/person.html:15
 msgid "Days on staff"
 msgstr "ملازمت کے دن"
 
@@ -5185,8 +5191,8 @@ msgid "Unpaid leave days"
 msgstr "بلا تنخواہ رخصت کے دن"
 
 #: apps/payroll/views.py:84 templates/payroll/index.html:45
-#: templates/payroll/manual.html:9 templates/payroll/person.html:17
-#: templates/payroll/person.html:72
+#: templates/payroll/manual.html:12 templates/payroll/manual.html:18
+#: templates/payroll/person.html:17 templates/payroll/person.html:72
 msgid "Half days"
 msgstr "آدھے دن"
 
@@ -5199,133 +5205,133 @@ msgid "Paid on"
 msgstr "ادائیگی کی تاریخ"
 
 #: apps/payroll/views.py:88 templates/payroll/index.html:49
-#: templates/payroll/manual.html:18 templates/payroll/person.html:7
+#: templates/payroll/manual.html:20 templates/payroll/person.html:7
 msgid "Salary not set"
 msgstr "تنخواہ مقرر نہیں"
 
-#: apps/payroll/views.py:132
+#: apps/payroll/views.py:137
 msgid "This month is finalised. Reopen it first to change the figures."
 msgstr "یہ مہینہ فائنل ہو چکا ہے۔ اعداد بدلنے کے لیے پہلے اسے دوبارہ کھولیں۔"
 
-#: apps/payroll/views.py:154
+#: apps/payroll/views.py:161
 #, python-format
 msgid "Check the days of: %(n)s"
 msgstr "ان کے دن چیک کریں: %(n)s"
 
-#: apps/payroll/views.py:156
+#: apps/payroll/views.py:163
 #, python-format
 msgid "Days entered by hand for %(n)s staff members."
 msgstr "%(n)s ملازمین کے دن ہاتھ سے درج ہو گئے۔"
 
-#: apps/payroll/views.py:186
+#: apps/payroll/views.py:197
 msgid "Give the date and how the salary was paid."
 msgstr "تاریخ اور ادائیگی کا طریقہ درج کریں۔"
 
-#: apps/payroll/views.py:194
+#: apps/payroll/views.py:205
 #, python-format
 msgid "Salary of %(m)s paid to %(n)s: Rs %(a)s."
 msgstr "%(m)s کی تنخواہ %(n)s کو ادا ہو گئی: %(a)s روپے۔"
 
-#: apps/payroll/views.py:198
+#: apps/payroll/views.py:209
 msgid "This salary is already paid."
 msgstr "یہ تنخواہ پہلے ہی ادا ہو چکی ہے۔"
 
-#: apps/payroll/views.py:210
+#: apps/payroll/views.py:221
 msgid "Amounts must be numbers of 0 or more."
 msgstr "رقم 0 یا اس سے زیادہ ہونی چاہیے۔"
 
-#: apps/payroll/views.py:217
+#: apps/payroll/views.py:228
 #, python-format
 msgid "Amounts for %(m)s saved."
 msgstr "%(m)s کی رقوم محفوظ ہو گئیں۔"
 
-#: apps/payroll/views.py:227
+#: apps/payroll/views.py:238
 msgid "Give the amount to cut this month (0 to skip)."
 msgstr "اس ماہ کی کٹوتی لکھیں (چھوڑنے کے لیے 0)۔"
 
-#: apps/payroll/views.py:232
+#: apps/payroll/views.py:243
 #, python-format
 msgid "This month's instalment set to Rs %(a)s."
 msgstr "اس ماہ کی قسط %(a)s روپے کر دی گئی۔"
 
-#: apps/payroll/views.py:242
+#: apps/payroll/views.py:253
 msgid "Give the month and the new monthly salary."
 msgstr "مہینہ اور نئی ماہانہ تنخواہ درج کریں۔"
 
-#: apps/payroll/views.py:250
+#: apps/payroll/views.py:261
 #, python-format
 msgid "New salary Rs %(a)s from %(m)s saved."
 msgstr "%(m)s سے نئی تنخواہ %(a)s روپے محفوظ ہو گئی۔"
 
-#: apps/payroll/views.py:325
+#: apps/payroll/views.py:336
 msgid "A month can be finalised once it is over."
 msgstr "مہینہ ختم ہونے کے بعد ہی حتمی کیا جا سکتا ہے۔"
 
-#: apps/payroll/views.py:330
+#: apps/payroll/views.py:341
 msgid "This month is already finalised."
 msgstr "یہ مہینہ پہلے ہی حتمی ہو چکا ہے۔"
 
-#: apps/payroll/views.py:334
+#: apps/payroll/views.py:345
 #, python-format
 msgid "Payroll for %(m)s finalised: %(n)s payslips."
 msgstr "%(m)s کی تنخواہیں حتمی ہو گئیں: %(n)s تنخواہ پرچیاں۔"
 
-#: apps/payroll/views.py:348
+#: apps/payroll/views.py:359
 msgid "Salaries of this month are already paid to some staff; it cannot be reopened."
 msgstr "اس مہینے کی تنخواہ کچھ ملازمین کو ادا ہو چکی ہے؛ اسے دوبارہ نہیں کھولا جا سکتا۔"
 
-#: apps/payroll/views.py:350
+#: apps/payroll/views.py:361
 msgid "Give a reason for reopening the month."
 msgstr "مہینہ دوبارہ کھولنے کی وجہ لکھیں۔"
 
-#: apps/payroll/views.py:353
+#: apps/payroll/views.py:364
 msgid "The month is open again; its payslips are kept as cancelled."
 msgstr "مہینہ دوبارہ کھل گیا؛ اس کی تنخواہ پرچیاں منسوخ کے طور پر محفوظ ہیں۔"
 
-#: apps/payroll/views.py:436
+#: apps/payroll/views.py:447
 msgid "Changed on the Salaries page"
 msgstr "تنخواہوں کے صفحے پر تبدیل کی گئی"
 
-#: apps/payroll/views.py:450
+#: apps/payroll/views.py:461
 #, python-format
 msgid "Not a valid amount for: %(n)s"
 msgstr "درست رقم نہیں: %(n)s"
 
-#: apps/payroll/views.py:451
+#: apps/payroll/views.py:462
 #, python-format
 msgid "%(n)s salaries saved."
 msgstr "%(n)s تنخواہیں محفوظ ہو گئیں۔"
 
-#: apps/payroll/views.py:486
+#: apps/payroll/views.py:497
 msgid "Payroll rules saved."
 msgstr "پے رول کے قواعد محفوظ ہو گئے۔"
 
-#: apps/payroll/views.py:518
+#: apps/payroll/views.py:529
 msgid "Choose the staff member and give the amount, dates and (for instalments) the monthly cut."
 msgstr "ملازم چنیں اور رقم، تاریخیں اور (قسطوں کے لیے) ماہانہ کٹوتی لکھیں۔"
 
-#: apps/payroll/views.py:525
+#: apps/payroll/views.py:536
 msgid "The application must be a JPG, PNG or PDF of up to 5 MB."
 msgstr "درخواست JPG، PNG یا PDF ہو اور 5 MB تک۔"
 
-#: apps/payroll/views.py:535
+#: apps/payroll/views.py:546
 #, python-format
 msgid "Advance of Rs %(a)s to %(n)s saved."
 msgstr "%(n)s کو %(a)s روپے کا ایڈوانس محفوظ ہو گیا۔"
 
-#: apps/payroll/views.py:587
+#: apps/payroll/views.py:598
 msgid "Choose return or not; give the reason when it is not returned."
 msgstr "واپسی یا نہیں چنیں؛ واپس نہ کرنے پر وجہ لکھیں۔"
 
-#: apps/payroll/views.py:593
+#: apps/payroll/views.py:604
 msgid "Security decision saved."
 msgstr "سیکیورٹی کا فیصلہ محفوظ ہو گیا۔"
 
-#: apps/payroll/views.py:595
+#: apps/payroll/views.py:606
 msgid "The security decision is already made."
 msgstr "سیکیورٹی کا فیصلہ پہلے ہو چکا ہے۔"
 
-#: apps/payroll/views.py:606
+#: apps/payroll/views.py:617
 msgid "Give the amount and a note (who decided, how it was paid)."
 msgstr "رقم اور نوٹ لکھیں (کس نے فیصلہ کیا، کیسے ادا ہوا)۔"
 
@@ -7216,8 +7222,9 @@ msgstr "سب"
 #: templates/events/sell.html:9 templates/hiring/index.html:12
 #: templates/hr/index.html:28 templates/inventory/index.html:21
 #: templates/inventory/sales.html:12 templates/payroll/index.html:16
-#: templates/payroll/salaries.html:8 templates/people/student_list.html:13
-#: templates/setup/branches.html:11 templates/setup/users.html:11
+#: templates/payroll/manual.html:8 templates/payroll/salaries.html:8
+#: templates/people/student_list.html:13 templates/setup/branches.html:11
+#: templates/setup/users.html:11
 msgid "Search"
 msgstr "تلاش"
 
@@ -7234,14 +7241,14 @@ msgid "Child"
 msgstr "بچہ"
 
 #: templates/admissions/index.html:51 templates/core/design_system.html:101
-#: templates/fees/vouchers.html:37 templates/hiring/index.html:38
+#: templates/fees/vouchers.html:37 templates/hiring/index.html:39
 #: templates/inventory/_pages.html:1 templates/people/student_list.html:63
 #: templates/setup/branches.html:26 templates/setup/users.html:27
 msgid "Previous"
 msgstr "پچھلا"
 
 #: templates/admissions/index.html:51 templates/core/design_system.html:101
-#: templates/fees/vouchers.html:37 templates/hiring/index.html:40
+#: templates/fees/vouchers.html:37 templates/hiring/index.html:41
 #: templates/inventory/_pages.html:1 templates/people/student_list.html:65
 #: templates/setup/branches.html:26 templates/setup/users.html:27
 msgid "Next"
@@ -7721,7 +7728,7 @@ msgstr ""
 msgid "Diary"
 msgstr "ڈائری"
 
-#: templates/core/design_system.html:101 templates/hiring/index.html:37
+#: templates/core/design_system.html:101 templates/hiring/index.html:38
 #: templates/people/student_list.html:62
 msgid "Pages"
 msgstr "صفحات"
@@ -9745,8 +9752,8 @@ msgid "Latest CV first. CVs of people not hired go to the Bin two years after th
 msgstr "تازہ ترین سی وی پہلے۔ جو بھرتی نہیں ہوئے ان کی سی ویز آخری سی وی کے دو سال بعد بِن میں چلی جاتی ہیں۔"
 
 #: templates/hiring/index.html:12
-msgid "Name, mobile, CNIC, degree, institute, address"
-msgstr "نام، موبائل، شناختی کارڈ، ڈگری، ادارہ، پتا"
+msgid "CV No., name, mobile, CNIC, degree, institute, address"
+msgstr "سی وی نمبر، نام، موبائل، شناختی کارڈ، ڈگری، ادارہ، پتا"
 
 #: templates/hiring/index.html:13
 msgid "All posts"
@@ -9768,17 +9775,17 @@ msgstr "سی وی موصول، اس تاریخ سے"
 msgid "Show CVs"
 msgstr "سی ویز دکھائیں"
 
-#: templates/hiring/index.html:32
+#: templates/hiring/index.html:33
 msgid "yrs"
 msgstr "سال"
 
-#: templates/hiring/index.html:39 templates/people/student_list.html:64
+#: templates/hiring/index.html:40 templates/people/student_list.html:64
 #: templates/setup/branches.html:26 templates/setup/users.html:27
 #, python-format
 msgid "Page %(a)s of %(b)s"
 msgstr "صفحہ %(a)s از %(b)s"
 
-#: templates/hiring/index.html:42
+#: templates/hiring/index.html:43
 msgid "No CVs found. Add each CV as it comes: in hand, WhatsApp, email or after an advertisement."
 msgstr "کوئی سی وی نہیں ملی۔ ہر سی وی آتے ہی شامل کریں: ہاتھ سے، واٹس ایپ، ای میل یا اشتہار کے بعد۔"
 
@@ -10290,7 +10297,6 @@ msgid "Dates"
 msgstr "تاریخیں"
 
 #: templates/hr/leaves.html:8 templates/hr/leaves.html:22
-#: templates/payroll/index.html:45
 msgid "Days"
 msgstr "دن"
 
@@ -11372,7 +11378,13 @@ msgstr "بینک ٹرانسفر شیٹ (ایکسل)"
 msgid "Monthly salary"
 msgstr "ماہانہ تنخواہ"
 
-#: templates/payroll/index.html:45
+#: templates/payroll/index.html:45 templates/payroll/manual.html:12
+#: templates/payroll/manual.html:17 templates/payroll/person.html:15
+msgid "Working days"
+msgstr "کام کے دن"
+
+#: templates/payroll/index.html:45 templates/payroll/manual.html:12
+#: templates/payroll/manual.html:19
 msgid "Bonus days"
 msgstr "بونس کے دن"
 
@@ -11406,9 +11418,14 @@ msgstr "دیگر ±"
 msgid "Absence cut"
 msgstr "غیر حاضری کی کٹوتی"
 
-#: templates/payroll/index.html:48 templates/payroll/manual.html:12
+#: templates/payroll/index.html:48 templates/payroll/manual.html:16
 msgid "Manual"
 msgstr "دستی"
+
+#: templates/payroll/index.html:50
+#, python-format
+msgid "%(n)s on staff"
+msgstr "%(n)s دن عملے میں"
 
 #: templates/payroll/index.html:60
 msgid "Nobody matches."
@@ -11444,27 +11461,33 @@ msgid "Finalise this month"
 msgstr "یہ مہینہ حتمی کریں"
 
 #: templates/payroll/manual.html:6
-msgid "For when the attendance machine was out of order or its sheet is wrong. Tick the people whose days you type in; their figures replace the machine's for this month. Pay is worked out the same way: salary ÷ days in the month for each day absent, half that for a half day."
-msgstr "جب حاضری کی مشین خراب ہو یا اس کی شیٹ غلط ہو۔ جن کے دن آپ لکھ رہے ہیں ان پر نشان لگائیں؛ اس مہینے کے لیے ان کے اعداد مشین کی جگہ لیں گے۔ حساب وہی رہے گا: ہر غیر حاضری پر تنخواہ ÷ مہینے کے دن، آدھے دن پر اس کا آدھا۔"
+#, python-format
+msgid "Working days and bonus days come from the attendance by themselves. Tick a person only to change them: type their working days (halves allowed, e.g. 28.5), half days and bonus days. Absent is worked out: %(d)s days − working days − half days × ½."
+msgstr "کام کے دن اور بونس کے دن حاضری سے خود آتے ہیں۔ بدلنے ہوں تو ہی کسی شخص پر نشان لگائیں: اس کے کام کے دن (آدھا دن بھی، مثلاً 28.5)، آدھے دن اور بونس کے دن لکھیں۔ غیر حاضری خود نکلتی ہے: %(d)s دن − کام کے دن − آدھے دن × ½۔"
 
 #: templates/payroll/manual.html:9
+msgid "Search by name, EMP.code or designation"
+msgstr "نام، EMP.code یا عہدے سے تلاش کریں"
+
+#: templates/payroll/manual.html:12
 msgid "Use"
 msgstr "استعمال"
 
-#: templates/payroll/manual.html:9 templates/payroll/person.html:15
-msgid "Working days"
-msgstr "کام کے دن"
-
-#: templates/payroll/manual.html:9
+#: templates/payroll/manual.html:12
 msgid "Net pay now (Rs)"
 msgstr "موجودہ خالص تنخواہ (روپے)"
 
-#: templates/payroll/manual.html:11
+#: templates/payroll/manual.html:14
 #, python-format
 msgid "Type in the days of %(n)s"
 msgstr "%(n)s کے دن درج کریں"
 
-#: templates/payroll/manual.html:21
+#: templates/payroll/manual.html:16
+#, python-format
+msgid "%(n)s days on staff"
+msgstr "%(n)s دن عملے میں"
+
+#: templates/payroll/manual.html:23
 msgid "Save and work out the pay"
 msgstr "محفوظ کریں اور تنخواہ نکالیں"
 
@@ -12447,6 +12470,27 @@ msgstr "کھلا"
 #: templates/setup/users.html:28
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
+
+#, python-format
+#~ msgid "CV added to %(n)s's record."
+#~ msgstr "سی وی %(n)s کے ریکارڈ میں شامل ہو گئی۔"
+
+#, python-format
+#~ msgid "CV of %(n)s saved."
+#~ msgstr "%(n)s کی سی وی محفوظ ہو گئی۔"
+
+#~ msgid "CV added."
+#~ msgstr "سی وی شامل ہو گئی۔"
+
+#~ msgid ""
+#~ "For when the attendance machine was out of order or its sheet is wrong. "
+#~ "Tick the people whose days you type in; their figures replace the "
+#~ "machine's for this month. Pay is worked out the same way: salary ÷ days "
+#~ "in the month for each day absent, half that for a half day."
+#~ msgstr ""
+#~ "جب حاضری کی مشین خراب ہو یا اس کی شیٹ غلط ہو۔ جن کے دن آپ لکھ رہے ہیں ان "
+#~ "پر نشان لگائیں؛ اس مہینے کے لیے ان کے اعداد مشین کی جگہ لیں گے۔ حساب وہی "
+#~ "رہے گا: ہر غیر حاضری پر تنخواہ ÷ مہینے کے دن، آدھے دن پر اس کا آدھا۔"
 
 #~ msgid "Move"
 #~ msgstr "آگے بڑھائیں"

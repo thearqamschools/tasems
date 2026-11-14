@@ -40,7 +40,7 @@
     <thead><tr><th>#</th><th>Code</th><th>Name</th><th>Designation</th><th class="n">Salary</th><th class="n">Absent</th><th class="n">Half</th><th class="n">Bonus</th><th class="n">GP Fund</th><th class="n">EOBI</th><th class="n">Advance</th><th class="n">Security</th><th class="n">Other ±</th><th class="n">Absence cut</th><th class="n">Net pay (Rs)</th><th>Payment received by</th><th>Payment received</th><th>Signature</th></tr></thead>
     <tbody>{% for r in g.rows %}<tr>
       <td class="sr">{{ forloop.counter }}</td><td>{{ r.employee.code }}</td><td>{{ r.employee.full_name }}</td><td>{{ r.employee.designation }}</td>
-      <td class="n">{{ r.salary|rupees }}</td><td class="n">{{ r.absent }}</td><td class="n">{{ r.half }}</td>
+      <td class="n">{{ r.salary|rupees }}</td><td class="n">{{ r.absent|days }}</td><td class="n">{{ r.half }}</td>
       <td class="n">{{ r.bonus|rupees }}</td><td class="n">{{ r.gp_fund|rupees }}</td><td class="n">{{ r.eobi|rupees }}</td>
       <td class="n">{{ r.advance|rupees }}</td><td class="n">{{ r.security|rupees }}</td>
       <td class="n">{% if r.other_addition %}+{{ r.other_addition|rupees }}{% endif %}{% if r.other_deduction %} −{{ r.other_deduction|rupees }}{% endif %}</td>

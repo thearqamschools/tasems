@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.45.0 — 2026-11-14 — Round 10: CV number, payroll days and Enter manually (installer v19)
+- **CV No.** (R10-1): every CV gets a number 1, 2, 3 … per branch when it is saved (typed in or imported); a second
+  CV of the same person gets its own number. Shown first in the CV bank (sortable, in the Excel download), on the
+  candidate's page and each of their CVs, on the vacancy board and matching CVs; the message after saving says
+  "Write the number on the CV"; typing the number in the search finds it. CVs already saved were numbered in the
+  order received.
+- **Payroll page** (R10-2, R10-3): EMP.code and all numbers centred; the figures at the top fit in their boxes.
+  Days columns: **Days in month, Absent, Half days, Working days** (working days = days on staff − absent − half
+  days × ½, e.g. 31 − 2 − 0.5 = 28.5), then Bonus days. A person who joined or left in the month shows their days
+  on staff under the days in month.
+- **Enter manually** (R10-4): columns Use, EMP.code, Name, Working days (halves allowed), Half days, Bonus days;
+  working days and bonus days filled in from the attendance; absent worked out; bonus days can be changed (e.g. 0);
+  a search box narrows the list while typing (no Enter); "Save and work out the pay" updates the payroll page.
+  Payslips and the acknowledgement sheet show half days of absence correctly (e.g. 2.5).
+- Migrations: hiring 0005 (CV numbers), payroll 0008 (working / absent days with halves, bonus days by hand).
+
 ## 0.44.0 — 2026-11-13 — Hiring: step page, call record, import CVs made with Claude (installer v18)
 - **Call / move** (lead, 13 Nov 2026): each candidate in a vacancy opens a clear page instead of the cramped panel
   on the board. The board card has a full-width "Call / move ›" button.
