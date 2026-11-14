@@ -605,3 +605,14 @@ not to be bought or switched on without approval.
 - R11-4. **Back link** ("‹ Staff", as on other pages) at the top of the pages opened from the buttons on the Staff
   page — **Today's staff attendance**, **Import machine file**, **Monthly sheet**, **Leave** — taking the user back
   to the Staff page.
+- R11-5. **Staff leaving** (lead, 14 Nov 2026: "there is no option for a staff member who leaves"). Today it exists
+  only at the bottom of **Edit** (Status: Resigned / Services ended / Retired + Leaving date), which is hard to find.
+  To add:
+  - A clear **"Staff member is leaving"** button on the staff member's page (beside Record leave; not next to Delete):
+    **last working day**, **reason** (Resigned, Services ended, Retired, Other), a note.
+  - From the day after the last working day: no attendance is marked (machine or by hand), no "absent", no salary
+    for the days after; the person stays in all records and reports up to that day (already how TASEMS works once a
+    leaving date is set).
+  - The page shows **"Left on <date> — <reason>"**; the Staff list has a **"Left"** filter (the record is never
+    deleted); a link to the payroll **Final settlement** (last salary, advance, security).
+  - Taking it back (left by mistake) by the Director.
