@@ -567,3 +567,22 @@ not to be bought or switched on without approval.
   - Proposed by Claude, to confirm: a person who sends a second CV gets a new number for that CV (each paper has its
     own number); the list shows the person's latest CV number. Existing CVs are numbered in the order they were
     received.
+
+### Payroll (14 Nov 2026)
+- R10-2. **Payroll page look**: EMP.code and every number (salary, days, amounts) **centred** in their columns.
+  The figures at the top (Staff, Salaries, Net pay, To pay …) spill out of their boxes: fit them inside, aligned.
+- R10-3. **Days columns on the payroll page**, in this order: **Days in month**, **Absent**, **Half days**,
+  **Working days**, then Bonus days … (today one "Days" column shows "31/31", which is not clear).
+  - Working days = days in month − absent − half days × ½. E.g. 31 days, 2 absent, 1 half day → 31 − 2 − 0.5 =
+    **28.5 working days**; no bonus (absence / half day), and the salary follows these days.
+- R10-4. **Enter manually** page (Payroll → Enter manually):
+  - Columns: Use, **EMP.code**, Name, **Working days**, **Half days**, **Bonus days** — no "Days in month" (taken by
+    itself), no "Days on staff", no "Absent" (worked out: days in month − working days − half days × ½).
+  - **Working days filled in by itself** from the attendance; changed only when it must differ.
+  - **Bonus days filled in by itself**: 1 (or as set in Payroll rules) when the person has no absence and no half
+    day and the rules give them the bonus; can be changed, e.g. to 0 when a person is not to get it.
+  - A **search box** that filters the list while typing (no Enter): "a" shows names with "a", "aa" narrows further;
+    clearing it shows everyone again. Ticked rows stay ticked while searching.
+  - **Save and work out** updates the payroll page with these figures.
+- To confirm with the lead: for a person who joined (or left) during the month, "days in month" for their pay means
+  the days they were on staff, as today; working days count from those days.
