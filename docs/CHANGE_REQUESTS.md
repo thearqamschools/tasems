@@ -616,3 +616,5 @@ not to be bought or switched on without approval.
   - The page shows **"Left on <date> — <reason>"**; the Staff list has a **"Left"** filter (the record is never
     deleted); a link to the payroll **Final settlement** (last salary, advance, security).
   - Taking it back (left by mistake) by the Director.
+- R11-6. **Payroll → Salaries and bank details**: an **EMP.code** column first, before Name (centred, like the other
+  payroll pages), instead of the code written small after the name.
