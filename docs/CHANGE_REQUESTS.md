@@ -618,3 +618,6 @@ not to be bought or switched on without approval.
   - Taking it back (left by mistake) by the Director.
 - R11-6. **Payroll → Salaries and bank details**: an **EMP.code** column first, before Name (centred, like the other
   payroll pages), instead of the code written small after the name.
+- R11-7. **Setup → Attendance machine**: the box "machine users not given to any staff member" (Name on the machine
+  / staff member TASEMS suggests) leaves an empty strip on the left and squeezes the table to the right. Make the
+  heading sit on top and the table use the **full width** of the page.
