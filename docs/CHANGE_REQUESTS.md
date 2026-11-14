@@ -586,3 +586,12 @@ not to be bought or switched on without approval.
   - **Save and work out** updates the payroll page with these figures.
 - To confirm with the lead: for a person who joined (or left) during the month, "days in month" for their pay means
   the days they were on staff, as today; working days count from those days.
+
+## Round 11 (14 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R11-1. **Payroll → Enter manually** columns, in this order: Use, EMP.code, Name, **Monthly salary** (new, after the
+  name), Working days, Half days, Bonus days, Net pay now.
+- R11-2. **Net pay now changes while typing**: as working days, half days or bonus days are changed, the person's
+  net pay is worked out again on the page at once, without saving. "Save and work out the pay" still saves.
+  - Worked out the same way as payroll: day's pay = monthly salary ÷ days in the month; cut for absent days and
+    half a day's pay per half day; plus bonus days; GP Fund, EOBI, advance, security and other amounts as already
+    set for that month (Claude's note: the page shows the figure; the saved payroll stays the one that counts).
