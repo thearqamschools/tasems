@@ -595,3 +595,10 @@ not to be bought or switched on without approval.
   - Worked out the same way as payroll: day's pay = monthly salary ÷ days in the month; cut for absent days and
     half a day's pay per half day; plus bonus days; GP Fund, EOBI, advance, security and other amounts as already
     set for that month (Claude's note: the page shows the figure; the saved payroll stays the one that counts).
+- R11-3. **Search while typing** (no Enter, no "Show" button), as on Payroll → Enter manually, also on:
+  - the **Payroll** page (name or EMP.code);
+  - the **Staff** list (name, EMP.code, mobile, designation);
+  - the **Students** list (name, admission no., father name, mobile, CNIC).
+  The list narrows as each letter is typed; clearing the box shows everyone again. (Claude's note: on long lists —
+  e.g. 1,215 students over several pages — the page asks TASEMS for the matching rows a moment after typing stops,
+  so the whole list is searched, not only the page on screen.)
