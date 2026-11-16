@@ -4,10 +4,14 @@
 <p><a href="{% url 'hr:index' %}">‹ {% trans "Staff" %}</a></p>
 <h1>{{ employee.full_name }}</h1>
 <p class="lede">{{ employee.designation }} · {{ employee.get_staff_type_display }} · {% trans "EMP.code" %} <span class="num">{{ employee.code }}</span> · {% trans "MAC.ID" %} {% if employee.machine_id %}<span class="num">{{ employee.machine_id }}</span>{% else %}<span class="badge attention">{% trans "Biometric ID not set" %}</span>{% endif %}{% if employee.status != "active" %} · {{ employee.get_status_display }}{% endif %}</p>
+{% if employee.status != "active" %}<div class="callout attention">{% icon "info" %}<div><strong>{% if employee.left_on %}{% blocktrans with d=employee.left_on|date:"d M Y" r=employee.get_status_display %}Left on {{ d }} — {{ r }}{% endblocktrans %}{% else %}{{ employee.get_status_display }}{% endif %}</strong>{% if employee.leaving_note %} · {{ employee.leaving_note }}{% endif %}<br><span class="small">{% trans "No attendance and no salary after the last working day; the record stays." %}</span>
+  <div class="actions" style="margin:.5rem 0 0">{% if can_settle %}<a class="button sm secondary" href="{% url 'payroll:settlement' employee.id %}">{% trans "Final settlement" %}</a>{% endif %}
+  {% if can_undo_leaving %}<form method="post" action="{% url 'hr:leaving' employee.id %}" style="margin:0" data-confirm="{% trans 'Take the leaving back? The person becomes Working again.' %}">{% csrf_token %}<button class="button sm quiet" name="action" value="undo">{% trans "Take leaving back (by mistake)" %}</button></form>{% endif %}</div></div></div>{% endif %}
 {# Delete on the far right, away from Edit, so it is not pressed by mistake (project lead, 6 Nov 2026). #}
 <div class="actions">
   {% if can_edit %}<a class="button" href="{% url 'hr:employee_edit' employee.id %}">{% trans "Edit" %}</a>{% endif %}
   {% if can_leave %}<a class="button secondary" href="{% url 'hr:leave_new' employee.id %}">{% trans "Record leave" %}</a>{% endif %}
+  {% if can_edit and employee.status == "active" %}<a class="button quiet" href="{% url 'hr:leaving' employee.id %}">{% trans "Staff member is leaving" %}</a>{% endif %}
   {% if employee.cv %}<a class="button quiet" href="{% url 'hr:employee_cv' employee.id %}">{% icon "file-text" %}{% trans "Open CV" %}</a>{% endif %}
   <span class="actions-end">{% delete_button "employee" employee %}</span>
 </div>

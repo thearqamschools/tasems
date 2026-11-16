@@ -8,7 +8,7 @@
   <a class="button secondary" href="{% url 'people:student_import' %}">{% trans "Import from Excel" %}</a></div>{% endif %}
 </div>
 
-<form method="get" class="card">
+<form method="get" class="card" data-live-search="#live-results">
   <div class="form-grid">
     <div class="field"><label for="q">{% trans "Search" %}</label>
       <input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Admission no., name, father name, any mobile or CNIC' %}"></div>
@@ -37,6 +37,7 @@
   </div>
 </form>
 
+<div id="live-results">
 {% if page.object_list %}
 {% include "includes_list_tools.html" %}
 <div class="table-wrap"><table>
@@ -72,4 +73,5 @@
   {% if can_add and not q %}<div class="actions"><a class="button" href="{% url 'people:student_import' %}">{% trans "Import from Excel" %}</a><a class="button secondary" href="{% url 'people:student_create' %}">{% trans "Add a student" %}</a></div>{% endif %}
 </div>
 {% endif %}
+</div>
 {% endblock %}

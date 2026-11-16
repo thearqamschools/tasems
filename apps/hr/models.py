@@ -71,6 +71,7 @@ class Employee(BranchOwnedModel):
         RESIGNED = "resigned", _("Resigned")
         TERMINATED = "terminated", _("Services ended")
         RETIRED = "retired", _("Retired")
+        LEFT = "left", _("Left (other reason)")
 
     code = models.CharField(_("EMP.code"), max_length=20, help_text=_("Our own employee code, for records."))
     machine_id = models.CharField(
@@ -104,7 +105,8 @@ class Employee(BranchOwnedModel):
     campus = models.ForeignKey("organisation.Campus", on_delete=models.PROTECT, null=True, blank=True, related_name="+")
     qualification = models.CharField(_("last qualification"), max_length=150, blank=True)
     joined_on = models.DateField(_("joining date"))
-    left_on = models.DateField(_("leaving date"), null=True, blank=True)
+    left_on = models.DateField(_("leaving date"), null=True, blank=True, help_text=_("Last working day"))
+    leaving_note = models.CharField(_("leaving note"), max_length=250, blank=True)
     status = models.CharField(max_length=12, choices=Status.choices, default=Status.ACTIVE, db_index=True)
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,

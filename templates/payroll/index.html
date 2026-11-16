@@ -11,13 +11,14 @@
     <a class="button quiet" href="{% url 'payroll:rules' %}">{% trans "Payroll rules" %}</a>
   </div>
 </div>
-<form method="get" class="filter-inline">
+<form method="get" class="filter-inline" data-live-search="#live-results">
   <label for="month">{% trans "Month" %}</label><input type="month" id="month" name="month" value="{{ month|date:'Y-m' }}">
-  <label for="q">{% trans "Search" %}</label><input id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name or code' %}">
+  <label for="q">{% trans "Search" %}</label><input type="search" id="q" name="q" value="{{ q }}" placeholder="{% trans 'Name or code' %}" autocomplete="off">
   <select name="designation" aria-label="{% trans 'Designation' %}"><option value="">{% trans "All designations" %}</option>{% for d in designations %}<option value="{{ d }}"{% if d == designation %} selected{% endif %}>{{ d }}</option>{% endfor %}</select>
   <button class="button quiet" type="submit">{% trans "Show" %}</button>
 </form>
 
+<div id="live-results">
 {% if run %}
 <div class="callout ok">{% icon "circle-check" %}<div>{% blocktrans with d=run.created_at|date:"d M Y" who=run.finalised_by.get_full_name|default:run.finalised_by.username %}Finalised on {{ d }} by {{ who }}. These figures are locked; later changes to attendance or salaries do not change them.{% endblocktrans %}{% if can_pay %} {% trans "Open a person to pay their salary." %}{% endif %}</div></div>
 {% else %}
@@ -70,4 +71,5 @@
   <button class="button" type="submit">{% trans "Finalise this month" %}</button></form>
 {% endif %}
 {% endif %}
+</div>
 {% endblock %}

@@ -189,19 +189,23 @@ def compute(branch, month):
             available = max(gross - deduction + bonus + other_plus - gp - eobi - other_minus, ZERO)
             left_now = bool(e.left_on and e.left_on <= last_day)
             parts = []
-            for adv, due in _advance_plan(advances.get(e.id, []), month, left_now):
+            plan = _advance_plan(advances.get(e.id, []), month, left_now)
+            security_due = _security_due(e, pay, emp_changes, month, security_collected(e))
+            for adv, due in plan:
                 take = min(due, available)
                 if take > 0:
                     parts.append((adv, take))
                     available -= take
             advance = sum((t for _a, t in parts), ZERO)
-            security = min(_security_due(e, pay, emp_changes, month, security_collected(e)), available)
+            security = min(security_due, available)
             row.update(
                 salary=salary, gross=gross, deduction=deduction, bonus_days=bonus_days, bonus=bonus, gp_fund=gp,
                 eobi=eobi, other_deduction=other_minus, other_addition=other_plus,
                 other_deduction_reason=x.other_deduction_reason if x else "",
                 other_addition_reason=x.other_addition_reason if x else "", advance=advance, advance_parts=parts,
                 security=security, net=available - security,
+                # For working the net pay out again on the page while typing (Enter manually, R11-2).
+                rate=rate, advance_due=sum((d for _a, d in plan), ZERO), security_due=security_due,
             )  # fmt: skip
         rows.append(row)
     return rows, _totals(rows)

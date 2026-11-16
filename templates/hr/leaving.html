@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n %}
+{% block title %}{% trans "Staff member is leaving" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'hr:employee' employee.id %}">‹ {{ employee.full_name }}</a></p>
+<h1>{% trans "Staff member is leaving" %}</h1>
+<p class="lede">{{ employee.full_name }} · {{ employee.designation }} · {% trans "EMP.code" %} <span class="num">{{ employee.code }}</span></p>
+<form method="post" class="card" data-busy>{% csrf_token %}
+  <div class="form-grid">
+    <div class="field"><label for="left_on">{% trans "Last working day" %}</label><input type="date" id="left_on" name="left_on" required value="{{ today|date:'Y-m-d' }}" min="{{ employee.joined_on|date:'Y-m-d' }}"></div>
+    <div class="field span-2"><span class="label">{% trans "Reason" %}</span><div class="tick-chips">{% for v, l in reasons %}<label><input type="radio" name="reason" value="{{ v }}" required{% if forloop.first %} checked{% endif %}> {{ l }}</label>{% endfor %}</div></div>
+    <div class="field span-2"><label for="note">{% trans "Note (optional)" %}</label><input id="note" name="note" maxlength="250" placeholder="{% trans 'e.g. moving to another city' %}"></div>
+  </div>
+  <p class="small muted">{% trans "From the day after the last working day, TASEMS marks no attendance and works out no salary for this person. Everything up to that day stays in the records; the record is never deleted. Then see Payroll → Final settlement for the last salary, advance and security." %}</p>
+  <button class="button" type="submit">{% trans "Save leaving" %}</button>
+</form>
+{% endblock %}

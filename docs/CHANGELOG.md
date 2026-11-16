@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.46.0 — 2026-11-16 — Round 11: live net pay, search while typing, staff leaving (installer v20)
+- **Payroll → Enter manually** (R11-1, R11-2): columns Use, EMP.code, Name, **Monthly salary**, Working days, Half
+  days, Bonus days, Net pay now. **Net pay now changes while typing** working, half or bonus days (same rules as the
+  payroll: a day = salary ÷ days in month, absence and half days cut, bonus added, GP Fund / EOBI / other amounts,
+  advance and security as set); a changed row is ticked by itself; "Save and work out the pay" saves.
+- **Search while typing** (R11-3) on the Staff list, the Payroll page and the Students list: a moment after typing
+  stops, the list shows the matches from the whole list (all pages), no Enter or Show needed; changing a filter
+  drop-down also updates at once. Staff search finds part of an EMP.code.
+- **"‹ Staff" back link** (R11-4) on Today's staff attendance, Import machine file, Monthly sheet and Leave.
+- **Staff member is leaving** (R11-5): a button on the staff member's page (beside Record leave): last working day,
+  reason (Resigned, Services ended, Retired, Other reason), note. From the next day no attendance (machine or by
+  hand) and no salary; the record stays. The page shows "Left on <date> — <reason>" with a link to the Final
+  settlement; the Staff list has a "Left (all reasons)" filter; the Director can take a leaving back.
+- **Salaries and bank details** (R11-6): EMP.code column first.
+- **Setup → Attendance machine** (R11-7): the list of machine users not given to anyone uses the full width.
+- Migration hr 0013 (leaving note, "Left (other reason)"). Tests: tests/test_round11.py.
+
 ## 0.45.0 — 2026-11-14 — Round 10: CV number, payroll days and Enter manually (installer v19)
 - **CV No.** (R10-1): every CV gets a number 1, 2, 3 … per branch when it is saved (typed in or imported); a second
   CV of the same person gets its own number. Shown first in the CV bank (sortable, in the Excel download), on the

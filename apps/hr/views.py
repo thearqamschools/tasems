@@ -102,13 +102,15 @@ def index(request):
     status = request.GET.get("status", "active")
     if status in Employee.Status.values:
         qs = qs.filter(status=status)
+    elif status == "gone":  # everyone who left, whatever the reason (R11-5)
+        qs = qs.exclude(status=Employee.Status.ACTIVE)
     staff_type = request.GET.get("type")
     if staff_type in Employee.StaffType.values:
         qs = qs.filter(staff_type=staff_type)
     q = request.GET.get("q", "").strip()
     if q:
         qs = qs.filter(
-            Q(full_name__icontains=q) | Q(code__iexact=q) | Q(phone__icontains=q) | Q(designation__icontains=q)
+            Q(full_name__icontains=q) | Q(code__icontains=q) | Q(phone__icontains=q) | Q(designation__icontains=q)
         )
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
@@ -203,6 +205,59 @@ def employee_cv(request, employee_id):
     return FileResponse(e.cv.open("rb"), filename=f"CV - {e.full_name}{Path(e.cv.name).suffix}")
 
 
+LEAVING_REASONS = [
+    (Employee.Status.RESIGNED, _("Resigned")),
+    (Employee.Status.TERMINATED, _("Services ended")),
+    (Employee.Status.RETIRED, _("Retired")),
+    (Employee.Status.LEFT, _("Other reason")),
+]
+
+
+@login_required
+def leaving(request, employee_id):
+    """A staff member leaves (R11-5, project lead 14 Nov 2026): last working day and reason. From the next day no
+    attendance is marked and no salary is worked out; the record stays. The Director can take it back."""
+    branch = _branch(request, S.EDIT_PERM)
+    e = _employee(branch, employee_id)
+    today = timezone.localdate()
+    if request.method == "POST":
+        if request.POST.get("action") == "undo":
+            if not request.user.has_branch_perm("core.delete_records", branch.id):
+                raise PermissionDenied
+            was = e.left_on
+            e.status, e.left_on, e.leaving_note = Employee.Status.ACTIVE, None, ""
+            e.save(update_fields=["status", "left_on", "leaving_note", "updated_at"])
+            if was:
+                S.rebuild_days(branch, was, today, [e.id])
+            messages.success(request, _("%(n)s is working again (leaving taken back).") % {"n": e.full_name})
+            return redirect("hr:employee", employee_id=e.id)
+        reason = request.POST.get("reason", "")
+        try:
+            last_day = dt.date.fromisoformat(request.POST.get("left_on", ""))
+        except ValueError:
+            last_day = None
+        if reason not in dict(LEAVING_REASONS) or last_day is None:
+            messages.error(request, _("Give the last working day and the reason."))
+        elif last_day < e.joined_on:
+            messages.error(request, _("The last working day is before the joining date."))
+        else:
+            e.status, e.left_on = reason, last_day
+            e.leaving_note = request.POST.get("note", "").strip()[:250]
+            e.save(update_fields=["status", "left_on", "leaving_note", "updated_at"])
+            S.rebuild_days(branch, last_day, max(last_day, today), [e.id])
+            messages.success(
+                request,
+                _("%(n)s left on %(d)s. No attendance or salary after that day; the record stays.")
+                % {"n": e.full_name, "d": last_day.strftime("%d %b %Y")},
+            )
+            return redirect("hr:employee", employee_id=e.id)
+    return render(
+        request,
+        "hr/leaving.html",
+        {"employee": e, "reasons": LEAVING_REASONS, "today": today},
+    )
+
+
 @login_required
 def employee(request, employee_id):
     branch = _branch(request)
@@ -221,6 +276,8 @@ def employee(request, employee_id):
             "leaves": e.leave_requests.select_related("leave_type").order_by("-starts_on")[:20],
             "can_edit": request.user.has_branch_perm(S.EDIT_PERM, branch.id),
             "can_leave": request.user.has_branch_perm(S.LEAVE_PERM, branch.id),
+            "can_undo_leaving": request.user.has_branch_perm("core.delete_records", branch.id),
+            "can_settle": request.user.has_branch_perm("payroll.view_payrollrun", branch.id),
         },
     )
 

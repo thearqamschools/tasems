@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n tasems_tags %}
+{% extends "base.html" %}{% load i18n l10n tasems_tags %}
 {% block title %}{% trans "Enter manually" %} · {{ month|date:"F Y" }}{% endblock %}
 {% block content %}
 <p><a href="{% url 'payroll:index' %}?month={{ month|date:'Y-m' }}">‹ {% trans "Payroll" %}</a></p>
@@ -9,15 +9,16 @@
   <input type="search" id="manual-search" placeholder="{% trans 'Search by name, EMP.code or designation' %}" autocomplete="off" style="min-inline-size:min(100%,22rem)">
   <span class="muted small" data-search-count></span></div>
 <div class="table-wrap"><table class="payroll-table">
-  <thead><tr><th class="center">{% trans "Use" %}</th><th class="center">{% trans "EMP.code" %}</th><th>{% trans "Name" %}</th><th class="center">{% trans "Working days" %}</th><th class="center">{% trans "Half days" %}</th><th class="center">{% trans "Bonus days" %}</th><th class="num">{% trans "Net pay now (Rs)" %}</th></tr></thead>
-  <tbody>{% for r in rows %}{% with id=r.employee.id %}<tr data-search="{{ r.employee.full_name|lower }} {{ r.employee.code|lower }} {{ r.employee.designation|lower }}">
+  <thead><tr><th class="center">{% trans "Use" %}</th><th class="center">{% trans "EMP.code" %}</th><th>{% trans "Name" %}</th><th class="num">{% trans "Monthly salary" %}</th><th class="center">{% trans "Working days" %}</th><th class="center">{% trans "Half days" %}</th><th class="center">{% trans "Bonus days" %}</th><th class="num">{% trans "Net pay now (Rs)" %}</th></tr></thead>
+  <tbody>{% for r in rows %}{% with id=r.employee.id %}<tr data-search="{{ r.employee.full_name|lower }} {{ r.employee.code|lower }} {{ r.employee.designation|lower }}"{% if not r.missing %} data-pay data-rate="{{ r.rate|unlocalize }}" data-employed="{{ r.days_employed|unlocalize }}" data-plus="{{ r.other_addition|unlocalize }}" data-minus="{{ r.minus|unlocalize }}" data-advance="{{ r.advance_due|unlocalize }}" data-security="{{ r.security_due|unlocalize }}"{% endif %}>
     <td class="center"><input type="checkbox" name="use_{{ id }}" value="1"{% if r.manual %} checked{% endif %} aria-label="{% blocktrans with n=r.employee.full_name %}Type in the days of {{ n }}{% endblocktrans %}"></td>
     <td class="num center">{{ r.employee.code }}</td>
     <td>{{ r.employee.full_name }}<br><span class="muted small">{{ r.employee.designation }}{% if r.days_employed != r.days_in_month %} · {% blocktrans with n=r.days_employed %}{{ n }} days on staff{% endblocktrans %}{% endif %}</span>{% if r.manual %} <span class="badge muted">{% trans "Manual" %}</span>{% endif %}</td>
+    <td class="num money">{% if r.missing %}—{% else %}{{ r.salary|rupees }}{% endif %}</td>
     <td class="center"><input name="working_days_{{ id }}" value="{{ r.working_days|days }}" inputmode="decimal" size="4" style="max-inline-size:5rem;text-align:center" aria-label="{% trans 'Working days' %}"></td>
     <td class="center"><input name="half_days_{{ id }}" value="{{ r.half }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem;text-align:center" aria-label="{% trans 'Half days' %}"></td>
     <td class="center"><input name="bonus_days_{{ id }}" value="{{ r.bonus_days|default:0 }}" inputmode="numeric" size="3" style="max-inline-size:4.5rem;text-align:center" aria-label="{% trans 'Bonus days' %}"></td>
-    <td class="num money">{% if r.missing %}<span class="badge attention">{% trans "Salary not set" %}</span>{% else %}{{ r.net|rupees }}{% endif %}</td>
+    <td class="num money">{% if r.missing %}<span class="badge attention">{% trans "Salary not set" %}</span>{% else %}<span data-net aria-live="polite">{{ r.net|rupees }}</span>{% endif %}</td>
   </tr>{% endwith %}{% endfor %}</tbody>
 </table></div>
 <div class="actions"><button class="button" type="submit">{% trans "Save and work out the pay" %}</button></div>
@@ -40,6 +41,32 @@
   }
   box.addEventListener("input", filter);
   box.addEventListener("keydown", function (event) { if (event.key === "Enter") event.preventDefault(); });
+})();
+// Net pay worked out again while typing, the same way as the payroll (R11-2); saving still decides.
+(function () {
+  function number(row, name) { var v = parseFloat(row.dataset[name]); return isNaN(v) ? 0 : v; }
+  function typed(row, name) { var v = parseFloat((row.querySelector("input[name^='" + name + "_']").value || "0").replace(",", ".")); return isNaN(v) ? 0 : v; }
+  function work(row) {
+    var rate = number(row, "rate"), employed = number(row, "employed");
+    var working = typed(row, "working_days"), half = typed(row, "half_days"), bonusDays = typed(row, "bonus_days");
+    var absent = Math.max(employed - working - half / 2, 0);
+    var gross = Math.round(rate * employed);
+    var cut = Math.min(Math.round(rate * (absent + half / 2)), gross);
+    var bonus = Math.round(rate * bonusDays);
+    var available = Math.max(gross - cut + bonus + number(row, "plus") - number(row, "minus"), 0);
+    available -= Math.min(number(row, "advance"), available);
+    available -= Math.min(number(row, "security"), available);
+    row.querySelector("[data-net]").textContent = Math.round(available).toLocaleString("en-US");
+  }
+  document.querySelectorAll("tr[data-pay]").forEach(function (row) {
+    row.addEventListener("input", function (event) {
+      if (event.target.matches("input[name^='working_days_'], input[name^='half_days_'], input[name^='bonus_days_']")) {
+        var use = row.querySelector("input[name^='use_']");
+        if (use) use.checked = true;  // a changed row is one to save
+        work(row);
+      }
+    });
+  });
 })();
 </script>
 {% endblock %}

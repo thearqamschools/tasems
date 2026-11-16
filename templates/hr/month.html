@@ -1,6 +1,7 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Monthly staff attendance" %}{% endblock %}
 {% block content %}
+<p><a href="{% url 'hr:index' %}">‹ {% trans "Staff" %}</a></p>
 <h1>{% trans "Monthly staff attendance" %} · {{ month|date:"F Y" }}</h1>
 <form method="get" class="filter-inline"><input type="month" name="month" value="{{ month|date:'Y-m' }}"><button class="button quiet" type="submit">{% trans "Show" %}</button></form>
 {% include "includes_list_tools.html" %}

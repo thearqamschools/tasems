@@ -164,6 +164,9 @@ def manual(request):
         if not errors:
             return redirect(f"/payroll/?month={month:%Y-%m}")
         rows, _totals = S.compute(branch, month)
+    for r in rows:  # what the page needs to work the net pay out again while typing (R11-2)
+        if not r["missing"]:
+            r["minus"] = r["gp_fund"] + r["eobi"] + r["other_deduction"]
     return render(
         request,
         "payroll/manual.html",

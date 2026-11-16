@@ -1,6 +1,7 @@
 {% extends "base.html" %}{% load i18n %}
 {% block title %}{% trans "Import machine file" %}{% endblock %}
 {% block content %}
+<p><a href="{% url 'hr:index' %}">‹ {% trans "Staff" %}</a></p>
 <h1>{% trans "Import attendance machine file" %}</h1>
 <p class="lede">{% trans "Export the attendance log from the face-recognition machine (Excel, CSV or the machine's .dat/.txt log) and check it here. People are matched by their machine ID. Importing the same file again adds nothing twice." %}</p>
 {% if check %}

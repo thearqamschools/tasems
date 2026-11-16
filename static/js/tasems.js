@@ -317,6 +317,35 @@
       .catch(function () { slipNote(form.dataset.failed, false); })
       .then(function () { if (button) button.disabled = false; });
   });
+  // ---------- Search while typing (R11-3): <form data-live-search="#results"> with a search box ----------
+  // A moment after typing stops, the page asks TASEMS for the matching rows (the whole list, not only this page)
+  // and puts them in place of #results; clearing the box shows everyone again. Enter still works without scripts.
+  document.querySelectorAll("form[data-live-search]").forEach(function (form) {
+    var target = document.querySelector(form.dataset.liveSearch);
+    var box = form.querySelector("input[type=search]");
+    if (!target || !box) return;
+    var timer = null, asked = 0;
+    function run() {
+      var params = new URLSearchParams(new FormData(form));
+      params.delete("page");
+      var url = (form.getAttribute("action") || window.location.pathname) + "?" + params.toString();
+      var mine = ++asked;
+      target.setAttribute("aria-busy", "true");
+      fetch(url, { headers: { "X-Requested-With": "live-search" }, credentials: "same-origin" })
+        .then(function (response) { return response.text(); })
+        .then(function (html) {
+          if (mine !== asked) return;  // a newer search is on its way
+          var found = new DOMParser().parseFromString(html, "text/html").querySelector(form.dataset.liveSearch);
+          if (found) target.innerHTML = found.innerHTML;
+          window.history.replaceState(null, "", url);
+        })
+        .catch(function () {})
+        .then(function () { if (mine === asked) target.removeAttribute("aria-busy"); });
+    }
+    box.addEventListener("input", function () { clearTimeout(timer); timer = setTimeout(run, 300); });
+    form.querySelectorAll("select").forEach(function (select) { select.addEventListener("change", run); });
+  });
+
   if (document.body.hasAttribute("data-autoprint")) {
     window.addEventListener("load", function () { window.print(); });
   }

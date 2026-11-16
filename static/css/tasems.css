@@ -740,3 +740,5 @@ table.payroll-table th, table.payroll-table td { padding-inline: 0.45rem; font-s
 .figure .value { overflow-wrap: anywhere; }
 .figures.money-figures { grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); }
 .figures.money-figures .value { font-size: var(--step-2); }
+details.callout { display: block; }
+details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; cursor: pointer; }

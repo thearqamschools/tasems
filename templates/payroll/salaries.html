@@ -11,9 +11,9 @@
 </form>
 <form method="post">{% csrf_token %}
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Monthly salary (Rs)" %}</th><th>{% trans "Paid by" %}</th><th>{% trans "Bank" %}</th><th>{% trans "Account title" %}</th><th>{% trans "Account number / IBAN" %}</th></tr></thead>
+  <thead><tr><th class="center">{% trans "EMP.code" %}</th><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Monthly salary (Rs)" %}</th><th>{% trans "Paid by" %}</th><th>{% trans "Bank" %}</th><th>{% trans "Account title" %}</th><th>{% trans "Account number / IBAN" %}</th></tr></thead>
   <tbody>{% for e, pay in rows %}<tr>
-    <td><a href="{% url 'payroll:person' e.id %}">{{ e.full_name }}</a> <span class="muted small num">{{ e.code }}</span></td><td>{{ e.designation }}</td>
+    <td class="num center">{{ e.code }}</td><td><a href="{% url 'payroll:person' e.id %}">{{ e.full_name }}</a></td><td>{{ e.designation }}</td>
     {% if can_edit %}
     <td><input name="salary_{{ e.id }}" value="{{ pay.monthly_salary|default_if_none:''|floatformat:'-2' }}" inputmode="decimal" dir="ltr" aria-label="{% trans 'Monthly salary (Rs)' %}" style="max-inline-size:9rem"></td>
     <td><select name="method_{{ e.id }}" aria-label="{% trans 'Paid by' %}">{% for v, l in methods %}<option value="{{ v }}"{% if pay.method == v %} selected{% endif %}>{{ l }}</option>{% endfor %}</select></td>
@@ -23,7 +23,7 @@
     {% else %}
     <td class="num money">{% if pay %}{{ pay.monthly_salary|rupees }}{% else %}—{% endif %}</td><td>{{ pay.get_method_display|default:"—" }}</td><td>{{ pay.bank_name|default:"—" }}</td><td>{{ pay.account_title|default:"" }}</td><td class="num">{{ pay.account_number|default:"" }}</td>
     {% endif %}
-  </tr>{% empty %}<tr><td colspan="7" class="muted">{% trans "No staff records yet." %}</td></tr>{% endfor %}</tbody>
+  </tr>{% empty %}<tr><td colspan="8" class="muted">{% trans "No staff records yet." %}</td></tr>{% endfor %}</tbody>
 </table></div>
 {% if can_edit and rows %}<div class="actions"><button class="button" type="submit">{% trans "Save salaries" %}</button></div>{% endif %}
 </form>
