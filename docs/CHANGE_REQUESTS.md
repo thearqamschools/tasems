@@ -654,3 +654,6 @@ not to be bought or switched on without approval.
     those buttons and "Change"; and the note at the bottom of the page ("On the machine: M/OK → …").
   - The same even spacing between text, tables and buttons on this page first; the other pages to be checked for
     the same in a later round.
+- R12-7. **Staff → Monthly sheet, first columns** (EMP.code, MAC.ID, Name, Designation): sensible widths — narrow
+  for EMP.code and MAC.ID, wider for Name and Designation — so the gaps are even; and the **heading row centred**
+  (every heading of the sheet centred over its column).
