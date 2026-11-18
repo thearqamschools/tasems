@@ -437,7 +437,12 @@ class AttendanceMachine(BranchOwnedModel):
     comm_key = models.PositiveIntegerField(
         _("comm key (password)"), default=0, help_text=_("0 when the machine has none")
     )
-    auto_read = models.BooleanField(_("read every few minutes"), default=True)
+    # How often TASEMS reads by itself (R12-2, project lead 18 Nov 2026): never (only "Get attendance now"), every
+    # 15, 30 or 60 minutes. No 5-minute option: reading ~40,000 records that often can make the machine stop answering.
+    READ_EVERY = [(0, _("Never — only when “Get attendance now” is pressed")), (15, _("Every 15 minutes")),
+                  (30, _("Every 30 minutes")), (60, _("Every hour"))]  # fmt: skip
+    read_every = models.PositiveSmallIntegerField(_("read by itself"), choices=READ_EVERY, default=0)
+    paused_until = models.DateTimeField(null=True, blank=True, help_text="No reading by itself before this time.")
     is_active = models.BooleanField(_("in use"), default=True)
     added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
     last_read_at = models.DateTimeField(null=True, blank=True)
@@ -451,3 +456,15 @@ class AttendanceMachine(BranchOwnedModel):
 
     def __str__(self):
         return f"{self.name} ({self.host})"
+
+    @property
+    def auto_read(self):
+        return bool(self.read_every)
+
+    def is_due(self, now):
+        """Read by itself now? Only when set to, the time has come, and not waiting after the machine did not answer."""
+        if not self.is_active or not self.read_every:
+            return False
+        if self.paused_until and self.paused_until > now:
+            return False
+        return self.last_read_at is None or (now - self.last_read_at).total_seconds() >= self.read_every * 60 - 30

@@ -4,29 +4,34 @@
 <p><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
 <h1>{% trans "Attendance machine" %}</h1>
 <p class="lede">{{ branch.name }} · {% trans "TASEMS reads the staff punches straight from the ZKTeco machine on the office network, and works out the staff attendance. Staff are matched by the Biometric machine ID on their staff record. Nothing on the machine is changed." %}</p>
-{% for m in machines %}<div class="card">
+<div class="stack machine-page">
+{% for m in machines %}<section class="card stack">
   <h2>{{ m.name }} <span class="muted small num" dir="ltr">{{ m.host }}:{{ m.port }}</span>{% if not m.is_active %} <span class="badge muted">{% trans "Not in use" %}</span>{% endif %}</h2>
   <p>{% if m.last_read_at %}{% if m.last_ok %}<span class="badge">{% trans "Read" %}</span>{% else %}<span class="badge danger">{% trans "Did not answer" %}</span>{% endif %} {{ m.last_read_at|date:"d M Y, h:i A" }} · <span class="small">{{ m.last_result }}</span>{% else %}<span class="muted">{% trans "Not read yet." %}</span>{% endif %}
-  {% if m.auto_read %}<br><span class="small muted">{% trans "Read by itself every few minutes while TASEMS is running on this computer." %}</span>{% endif %}</p>
+  <br><span class="small muted">{% if m.read_every %}{% blocktrans with n=m.read_every %}Read by itself every {{ n }} minutes while TASEMS is running on this computer.{% endblocktrans %}{% if m.paused_until and m.paused_until > now %} {% blocktrans with t=m.paused_until|time:"h:i A" %}It did not answer, so it is not read by itself until {{ t }}. If it worked before, switch the machine off for 30 seconds and on again.{% endblocktrans %}{% endif %}{% else %}{% trans "Read only when “Get attendance now” is pressed (change under Change → Read by itself)." %}{% endif %}</span></p>
   {% if m.other_network %}<p class="callout attention">{% blocktrans with host=m.host %}This machine ({{ host }}) is not on this computer's network, so TASEMS cannot reach it. Give the machine an IP address on this computer's network (on the machine: M/OK → Comm → Ethernet), or connect this computer to the machine's network.{% endblocktrans %}</p>{% endif %}
-  {% if m.match %}<details class="callout attention"{% if can_match %} open{% endif %}><summary>{% blocktrans count n=m.match|length %}{{ n }} machine user is not given to any staff member{% plural %}{{ n }} machine users are not given to any staff member{% endblocktrans %}</summary>
-    <p class="small">{% trans "Name on the machine and the staff member TASEMS suggests. Nothing is saved until you tick a row and press Save. When two people have the same name, choose by hand. Staff with no Biometric ID are never marked from the machine; their attendance is entered by hand." %}</p>
-    {% if can_match %}<form method="post">{% csrf_token %}<input type="hidden" name="machine" value="{{ m.id }}">{% endif %}
-    <div class="table-wrap"><table>
-      <thead><tr>{% if can_match %}<th>{% trans "Save" %}</th>{% endif %}<th class="center">{% trans "MAC.ID" %}</th><th>{% trans "Name on the machine" %}</th><th class="num">{% trans "Punches (45 days)" %}</th><th>{% trans "Staff member" %}</th></tr></thead>
-      <tbody>{% for r in m.match %}<tr>
-        {% if can_match %}<td><input type="checkbox" name="use" value="{{ r.number }}" aria-label="{% trans 'Save this row' %}"></td>{% endif %}
-        <td class="center num">{{ r.number }}</td><td>{{ r.name|default:"—" }}</td><td class="num">{{ r.punches|default:"" }}</td>
-        <td>{% if can_match %}<select name="staff_{{ r.number }}"><option value="">—</option>{% for e in m.free_staff %}<option value="{{ e.id }}"{% if r.suggested and r.suggested.id == e.id %} selected{% endif %}>{{ e.full_name }} · {{ e.code }}</option>{% endfor %}</select>{% elif r.suggested %}{{ r.suggested.full_name }}{% endif %}
-          {% if r.suggested %} <span class="badge">{% trans "name matches" %}</span>{% elif r.same_name %} <span class="badge attention">{% trans "same name, choose by hand" %}</span>{% endif %}</td>
-      </tr>{% endfor %}</tbody></table></div>
-    {% if can_match %}<button class="button" type="submit" name="action" value="match">{% trans "Save the ticked rows" %}</button></form>{% endif %}
-  </details>{% endif %}
-  {% if can_edit %}<form method="post" class="actions" style="margin:0">{% csrf_token %}<input type="hidden" name="machine" value="{{ m.id }}">
+  {% if can_edit %}<form method="post" class="actions">{% csrf_token %}<input type="hidden" name="machine" value="{{ m.id }}">
     <button class="button" name="action" value="read" type="submit">{% trans "Get attendance now" %}</button>
-    <button class="button secondary" name="action" value="test" type="submit">{% trans "Test connection" %}</button></form>
-  <details><summary>{% trans "Change" %}</summary>{% include "hr/_machine_form.html" with m=m %}</details>{% endif %}
-</div>{% empty %}<div class="card empty-state"><p>{% trans "No machine added yet." %}</p></div>{% endfor %}
+    <button class="button secondary" name="action" value="test" type="submit">{% trans "Test connection" %}</button></form>{% endif %}
+  {% if m.match %}<details class="match-box"{% if can_match %} open{% endif %}><summary>{% blocktrans count n=m.match|length %}{{ n }} machine user is not given to any staff member{% plural %}{{ n }} machine users are not given to any staff member{% endblocktrans %}</summary>
+    <div class="stack">
+    <p class="small muted">{% trans "Name on the machine and the staff member TASEMS suggests. Nothing is saved until you tick a row and press Save. When two people have the same name, choose by hand. Staff with no Biometric ID are never marked from the machine; their attendance is entered by hand." %}</p>
+    {% if can_match %}<form method="post" class="stack">{% csrf_token %}<input type="hidden" name="machine" value="{{ m.id }}">{% endif %}
+    <div class="table-wrap"><table class="match-table">
+      <colgroup>{% if can_match %}<col class="w-tick">{% endif %}<col class="w-id"><col><col class="w-punches"><col class="w-staff"></colgroup>
+      <thead><tr>{% if can_match %}<th class="center">{% trans "Save" %}</th>{% endif %}<th class="center">{% trans "MAC.ID" %}</th><th>{% trans "Name on the machine" %}</th><th class="center">{% trans "Punches (45 days)" %}</th><th>{% trans "Staff member" %}</th></tr></thead>
+      <tbody>{% for r in m.match %}<tr>
+        {% if can_match %}<td class="center"><input type="checkbox" name="use" value="{{ r.number }}" aria-label="{% trans 'Save this row' %}"></td>{% endif %}
+        <td class="center num">{{ r.number }}</td><td>{{ r.name|default:"—" }}</td><td class="center num">{{ r.punches|default:"—" }}</td>
+        <td>{% if can_match %}<select name="staff_{{ r.number }}" aria-label="{% trans 'Staff member' %} {{ r.number }}"><option value="">—</option>{% for e in m.free_staff %}<option value="{{ e.id }}"{% if r.suggested and r.suggested.id == e.id %} selected{% endif %}>{{ e.full_name }} · {{ e.code }}</option>{% endfor %}</select>{% elif r.suggested %}{{ r.suggested.full_name }}{% endif %}
+          {% if r.suggested %}<span class="badge">{% trans "name matches" %}</span>{% elif r.same_name %}<span class="badge attention">{% trans "same name, choose by hand" %}</span>{% endif %}</td>
+      </tr>{% endfor %}</tbody></table></div>
+    {% if can_match %}<div class="actions"><button class="button" type="submit" name="action" value="match">{% trans "Save the ticked rows" %}</button></div></form>{% endif %}
+    </div>
+  </details>{% endif %}
+  {% if can_edit %}<details><summary>{% trans "Change" %}</summary>{% include "hr/_machine_form.html" with m=m %}</details>{% endif %}
+</section>{% empty %}<div class="card empty-state"><p>{% trans "No machine added yet." %}</p></div>{% endfor %}
 {% if can_edit %}<details class="card"{% if not machines %} open{% endif %}><summary>{% trans "Add a machine" %}</summary>{% include "hr/_machine_form.html" with m=None %}</details>{% endif %}
 <p class="small muted">{% trans "On the machine: M/OK → Comm → Ethernet shows its IP address; the comm key is under Comm → Comm. Key (0 if none). This computer and the machine must be on the same network." %}{% if here %} {% trans "This computer is on network:" %} <span class="num" dir="ltr">{{ here|join:", " }}</span>{% endif %}</p>
+</div>
 {% endblock %}

@@ -4,7 +4,7 @@
     <div class="field"><label>{% trans "IP address" %}</label><input name="host" value="{{ m.host|default:'' }}" required dir="ltr" placeholder="192.168.1.201"></div>
     <div class="field"><label>{% trans "Port" %}</label><input name="port" value="{{ m.port|default:4370 }}" inputmode="numeric" dir="ltr"></div>
     <div class="field"><label>{% trans "Comm key (password)" %}</label><input name="comm_key" value="{{ m.comm_key|default:0 }}" inputmode="numeric" dir="ltr"></div>
-    <div class="field"><label><input type="checkbox" name="auto_read"{% if not m or m.auto_read %} checked{% endif %}> {% trans "Read every few minutes" %}</label></div>
+    <div class="field"><label for="read_every_{{ m.id|default:'new' }}">{% trans "Read by itself" %}</label><select id="read_every_{{ m.id|default:'new' }}" name="read_every">{% for v, l in read_every %}<option value="{{ v }}"{% if m and m.read_every == v %} selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
     <div class="field"><label><input type="checkbox" name="is_active"{% if not m or m.is_active %} checked{% endif %}> {% trans "In use" %}</label></div>
   </div>
   <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>

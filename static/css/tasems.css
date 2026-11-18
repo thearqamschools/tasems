@@ -742,3 +742,31 @@ table.payroll-table th, table.payroll-table td { padding-inline: 0.45rem; font-s
 .figures.money-figures .value { font-size: var(--step-2); }
 details.callout { display: block; }
 details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; cursor: pointer; }
+/* Setup → Attendance machine (R12-5, R12-6): even spacing; the users list is a plain box, not a warning. */
+.machine-page, .machine-page .stack { display: flex; flex-direction: column; gap: var(--space-4); }
+.machine-page > *, .machine-page .stack > *, .machine-page .stack > * + * { margin-block: 0; }
+.match-box { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); background: var(--surface-sunk); }
+.match-table { table-layout: fixed; inline-size: 100%; }
+.match-table .w-tick { inline-size: 4.5rem; }
+.match-table .w-id { inline-size: 6rem; }
+.match-table .w-punches { inline-size: 9rem; }
+.match-table .w-staff { inline-size: 40%; }
+.match-table td { vertical-align: middle; overflow-wrap: anywhere; }
+.match-table select { inline-size: 100%; }
+.match-table .badge { margin-block-start: var(--space-1); }
+/* Staff → Monthly sheet (R12-4, R12-7): headings centred, narrow code columns, every day and total on one page. */
+.month-sheet { font-size: 0.78rem; }
+.month-sheet th { text-align: center; }
+.month-sheet td.num, .month-sheet th.num { text-align: center; }
+.month-sheet td.name { white-space: nowrap; }
+.month-sheet td.day, .month-sheet th.day { padding: 0.3rem 0.2rem; min-inline-size: 1.6rem; }
+.month-sheet th a.sort { justify-content: center; }
+@media print {
+  .month-sheet { inline-size: 100%; font-size: 6.4pt; table-layout: auto; }
+  .month-sheet th, .month-sheet td { padding: 1.2pt 1.5pt !important; letter-spacing: 0; }
+  .month-sheet th { text-transform: none; font-size: 6.4pt; }
+  .month-sheet td.day, .month-sheet th.day { min-inline-size: 0; }
+  .month-sheet td.name { white-space: normal; }
+  main { max-width: none !important; margin: 0 !important; }
+}
+.month-sheet th { vertical-align: middle; }

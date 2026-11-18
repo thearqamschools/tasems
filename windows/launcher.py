@@ -227,7 +227,8 @@ def start():
 
 
 def read_machines_now_and_then(minutes=5):
-    """Staff punches from the attendance machines on the office network, every few minutes."""
+    """Every few minutes: the attendance machines that are due (each machine's "Read by itself" setting; "Never" is
+    never read here) and, every 6 hours, the hiring clean-up."""
     import time
 
     from django.core.management import call_command

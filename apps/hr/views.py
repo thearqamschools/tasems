@@ -671,7 +671,11 @@ def machines(request):
             machine = machine or AttendanceMachine(branch=branch, added_by=request.user)
             machine.name = request.POST.get("name", "").strip()[:80] or _("Attendance machine")
             machine.host, machine.port, machine.comm_key = host[:60], port, key
-            machine.auto_read = request.POST.get("auto_read") == "on"
+            try:
+                every = int(request.POST.get("read_every") or 0)
+            except ValueError:
+                every = 0
+            machine.read_every = every if every in dict(AttendanceMachine.READ_EVERY) else 0
             machine.is_active = request.POST.get("is_active", "on") == "on"
             machine.save()
             messages.success(request, _("Machine saved."))
@@ -727,7 +731,15 @@ def machines(request):
     return render(
         request,
         "hr/machines.html",
-        {"branch": branch, "machines": rows, "can_edit": can_edit, "can_match": can_match, "here": here},
+        {
+            "branch": branch,
+            "machines": rows,
+            "can_edit": can_edit,
+            "can_match": can_match,
+            "here": here,
+            "read_every": AttendanceMachine.READ_EVERY,
+            "now": timezone.now(),
+        },  # fmt: skip
     )
 
 

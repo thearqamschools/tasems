@@ -622,7 +622,7 @@ not to be bought or switched on without approval.
   / staff member TASEMS suggests) leaves an empty strip on the left and squeezes the table to the right. Make the
   heading sit on top and the table use the **full width** of the page.
 
-## Round 12 (18 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 12 (18 Nov 2026) — built 18 Nov 2026 (installer v21, CHANGELOG 0.47.0)
 - Context: on 18 Nov the machine (192.168.1.222) answered a ping but took no connection on port 4370 (TCP or UDP);
   **restarting the machine fixed it** (lead, 18 Nov 2026). Likely cause: TASEMS reads all ~40,000 records every
   5 minutes, and a "Get attendance now" at the same moment opens a second connection.

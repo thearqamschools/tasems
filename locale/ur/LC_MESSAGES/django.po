@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-16 12:22+0500\n"
+"POT-Creation-Date: 2026-11-18 14:32+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -846,7 +846,7 @@ msgstr "تقریبات اور ٹکٹ"
 #: templates/academics/holidays.html:24 templates/hr/day.html:4
 #: templates/hr/employee.html:4 templates/hr/employee_form.html:4
 #: templates/hr/index.html:2 templates/hr/index.html:5
-#: templates/hr/leaves.html:4 templates/hr/month.html:4
+#: templates/hr/leaves.html:4 templates/hr/month.html:5
 #: templates/hr/punches_import.html:4 templates/payroll/index.html:29
 msgid "Staff"
 msgstr "عملہ"
@@ -1364,7 +1364,7 @@ msgstr "داخلہ نمبر"
 #: templates/hiring/vacancy.html:30 templates/hr/_machine_form.html:3
 #: templates/hr/day.html:25 templates/hr/day.html:41 templates/hr/index.html:40
 #: templates/hr/leaves.html:9 templates/hr/leaves.html:23
-#: templates/hr/month.html:10 templates/notices/templates.html:10
+#: templates/hr/month.html:11 templates/notices/templates.html:10
 #: templates/payroll/advances.html:10 templates/payroll/index.html:46
 #: templates/payroll/manual.html:12 templates/payroll/salaries.html:14
 #: templates/people/student_detail.html:42
@@ -3210,7 +3210,7 @@ msgstr "تدریسی پوسٹ"
 msgid "Subjects and level apply"
 msgstr "مضامین اور لیول لاگو ہوتے ہیں"
 
-#: apps/hiring/models.py:61 apps/hr/models.py:441 apps/inventory/models.py:44
+#: apps/hiring/models.py:61 apps/hr/models.py:446 apps/inventory/models.py:44
 msgid "in use"
 msgstr "زیرِ استعمال"
 
@@ -3753,7 +3753,7 @@ msgstr ""
 
 #: apps/hr/forms.py:94 apps/hr/views.py:118 apps/payroll/views.py:83
 #: templates/hr/day.html:25 templates/hr/day.html:41 templates/hr/index.html:40
-#: templates/hr/month.html:10 templates/payroll/index.html:17
+#: templates/hr/month.html:11 templates/payroll/index.html:17
 #: templates/payroll/index.html:46 templates/payroll/salaries.html:9
 #: templates/payroll/salaries.html:14
 msgid "Designation"
@@ -3968,7 +3968,7 @@ msgstr "چھوڑ گیا (کوئی اور وجہ)"
 #: apps/hr/models.py:76 apps/hr/views.py:118 templates/hr/day.html:25
 #: templates/hr/day.html:41 templates/hr/employee.html:6
 #: templates/hr/index.html:40 templates/hr/leaving.html:6
-#: templates/hr/month.html:10 templates/payroll/index.html:46
+#: templates/hr/month.html:11 templates/payroll/index.html:46
 #: templates/payroll/manual.html:12 templates/payroll/salaries.html:14
 msgid "EMP.code"
 msgstr "EMP.code"
@@ -4281,9 +4281,25 @@ msgstr "کام کی (پاس ورڈ)"
 msgid "0 when the machine has none"
 msgstr "اگر مشین میں نہ ہو تو 0"
 
-#: apps/hr/models.py:440
-msgid "read every few minutes"
-msgstr "ہر چند منٹ بعد پڑھیں"
+#: apps/hr/models.py:442
+msgid "Never — only when “Get attendance now” is pressed"
+msgstr "کبھی نہیں — صرف “Get attendance now” دبانے پر"
+
+#: apps/hr/models.py:442
+msgid "Every 15 minutes"
+msgstr "ہر 15 منٹ"
+
+#: apps/hr/models.py:443
+msgid "Every 30 minutes"
+msgstr "ہر 30 منٹ"
+
+#: apps/hr/models.py:443
+msgid "Every hour"
+msgstr "ہر گھنٹے"
+
+#: apps/hr/models.py:444
+msgid "read by itself"
+msgstr "خود بخود پڑھے"
 
 #: apps/hr/services.py:192
 msgid "Worked on an off day"
@@ -4322,12 +4338,12 @@ msgid ""
 "No punches found. Export the attendance log from the machine and try again."
 msgstr "کوئی اندراج نہیں ملا۔ مشین سے حاضری لاگ نکال کر دوبارہ کوشش کریں۔"
 
-#: apps/hr/services.py:710
+#: apps/hr/services.py:713
 #, python-format
 msgid "%(n)s is already given to another staff member."
 msgstr "%(n)s پہلے ہی کسی اور ملازم کو دیا جا چکا ہے۔"
 
-#: apps/hr/services.py:713
+#: apps/hr/services.py:716
 #, python-format
 msgid "%(e)s already has Biometric ID %(n)s."
 msgstr "%(e)s کی بائیومیٹرک آئی ڈی پہلے سے %(n)s ہے۔"
@@ -4448,21 +4464,21 @@ msgstr "مشین کا IP ایڈریس، پورٹ اور کام کی (نمبر) �
 msgid "Attendance machine"
 msgstr "حاضری مشین"
 
-#: apps/hr/views.py:677
+#: apps/hr/views.py:681
 msgid "Machine saved."
 msgstr "مشین محفوظ ہو گئی۔"
 
-#: apps/hr/views.py:684
+#: apps/hr/views.py:688
 #, python-format
 msgid "Connected (%(t)s). Machine clock %(c)s · %(u)s users · %(r)s records."
 msgstr "رابطہ ہو گیا (%(t)s)۔ مشین کا وقت %(c)s · %(u)s صارفین · %(r)s ریکارڈ۔"
 
-#: apps/hr/views.py:688
+#: apps/hr/views.py:692
 #, python-format
 msgid "The machine did not answer: %(e)s"
 msgstr "مشین نے جواب نہیں دیا: %(e)s"
 
-#: apps/hr/views.py:705
+#: apps/hr/views.py:709
 #, python-format
 msgid ""
 "Biometric ID given to %(n)s staff: %(names)s. Their punches come in at the "
@@ -4471,16 +4487,16 @@ msgstr ""
 "%(n)s ملازمین کو بائیومیٹرک آئی ڈی دی گئی: %(names)s۔ ان کی حاضری اگلی بار "
 "مشین پڑھنے پر آ جائے گی۔"
 
-#: apps/hr/views.py:711
+#: apps/hr/views.py:715
 msgid "Tick the rows to save and choose the staff member in each."
 msgstr "محفوظ کرنے والی قطاروں پر نشان لگائیں اور ہر ایک میں ملازم منتخب کریں۔"
 
-#: apps/hr/views.py:750
+#: apps/hr/views.py:762
 #, python-format
 msgid "Times from %(d)s removed."
 msgstr "%(d)s سے اوقات ہٹا دیے گئے۔"
 
-#: apps/hr/views.py:770
+#: apps/hr/views.py:782
 #, python-format
 msgid ""
 "Give the date the times start from, and an In time before the Out time for: "
@@ -4489,11 +4505,11 @@ msgstr ""
 "اوقات شروع ہونے کی تاریخ دیں، اور آنے کا وقت جانے کے وقت سے پہلے رکھیں: "
 "%(t)s۔"
 
-#: apps/hr/views.py:771
+#: apps/hr/views.py:783
 msgid "at least one staff type"
 msgstr "کم از کم ایک قسم کا عملہ"
 
-#: apps/hr/views.py:783
+#: apps/hr/views.py:795
 #, python-format
 msgid "Staff duty times saved, from %(d)s."
 msgstr "عملے کے ڈیوٹی اوقات %(d)s سے محفوظ ہو گئے۔"
@@ -6459,7 +6475,7 @@ msgstr "یہ موبائل نمبر کسی دوسرے لاگ اِن میں است
 #: templates/events/expense_form.html:10 templates/events/form.html:12
 #: templates/exams/ratings.html:23 templates/hiring/candidate.html:34
 #: templates/hiring/edit.html:22 templates/hr/_machine_form.html:10
-#: templates/hr/employee_form.html:15 templates/hr/machines.html:16
+#: templates/hr/employee_form.html:15 templates/hr/machines.html:22
 #: templates/inventory/stock_form.html:10 templates/payroll/person.html:51
 #: templates/payroll/rules.html:15
 msgid "Save"
@@ -7055,7 +7071,7 @@ msgstr "حسابات"
 #: templates/fees/vouchers.html:16 templates/hifz/index.html:11
 #: templates/hifz/report.html:11 templates/hr/day.html:8
 #: templates/hr/employee.html:49 templates/hr/index.html:32
-#: templates/hr/mine.html:12 templates/hr/month.html:6
+#: templates/hr/mine.html:12 templates/hr/month.html:7
 #: templates/insights/attention.html:15 templates/inventory/index.html:25
 #: templates/inventory/sales.html:13 templates/payroll/advances.html:8
 #: templates/payroll/index.html:18 templates/payroll/person.html:8
@@ -7936,7 +7952,7 @@ msgstr ""
 msgid "Part paid"
 msgstr ""
 
-#: templates/core/design_system.html:60 templates/hr/month.html:10
+#: templates/core/design_system.html:60 templates/hr/month.html:11
 msgid "Unpaid"
 msgstr "بلا تنخواہ"
 
@@ -10433,8 +10449,8 @@ msgstr "درستی محفوظ کریں"
 msgid "Remove correction"
 msgstr "درستی ختم کریں"
 
-#: templates/hr/_day_status.html:1 templates/hr/month.html:10
-#: templates/hr/month.html:12
+#: templates/hr/_day_status.html:1 templates/hr/month.html:11
+#: templates/hr/month.html:13
 msgid "Early left"
 msgstr "جلدی روانگی"
 
@@ -10485,8 +10501,8 @@ msgid "Comm key (password)"
 msgstr "کام کی (پاس ورڈ)"
 
 #: templates/hr/_machine_form.html:7
-msgid "Read every few minutes"
-msgstr "ہر چند منٹ بعد پڑھیں"
+msgid "Read by itself"
+msgstr "خود بخود پڑھے"
 
 #: templates/hr/day.html:10
 msgid "Work out again"
@@ -10496,7 +10512,7 @@ msgstr "دوبارہ حساب کریں"
 msgid "Nothing recorded"
 msgstr "کوئی اندراج نہیں"
 
-#: templates/hr/day.html:19 templates/hr/month.html:14
+#: templates/hr/day.html:19 templates/hr/month.html:15
 #: templates/payroll/salaries.html:26
 msgid "No staff records yet."
 msgstr "ابھی عملے کا کوئی ریکارڈ نہیں۔"
@@ -10506,8 +10522,8 @@ msgid "From the attendance machine"
 msgstr "حاضری مشین سے"
 
 #: templates/hr/day.html:25 templates/hr/day.html:41
-#: templates/hr/employee.html:6 templates/hr/machines.html:16
-#: templates/hr/month.html:10
+#: templates/hr/employee.html:6 templates/hr/machines.html:22
+#: templates/hr/month.html:11
 msgid "MAC.ID"
 msgstr "MAC.ID"
 
@@ -10871,29 +10887,48 @@ msgstr ""
 "حاضری بناتا ہے۔ ملازم کی پہچان اس کے ریکارڈ میں بایومیٹرک مشین آئی ڈی سے "
 "ہوتی ہے۔ مشین پر کچھ تبدیل نہیں ہوتا۔"
 
-#: templates/hr/machines.html:8 templates/inventory/index.html:30
+#: templates/hr/machines.html:9 templates/inventory/index.html:30
 #: templates/inventory/item.html:6
 msgid "Not in use"
 msgstr "زیرِ استعمال نہیں"
 
-#: templates/hr/machines.html:9
+#: templates/hr/machines.html:10
 msgid "Read"
 msgstr "پڑھی گئی"
 
-#: templates/hr/machines.html:9
+#: templates/hr/machines.html:10
 msgid "Did not answer"
 msgstr "جواب نہیں دیا"
 
-#: templates/hr/machines.html:9
+#: templates/hr/machines.html:10
 msgid "Not read yet."
 msgstr "ابھی نہیں پڑھی گئی۔"
 
-#: templates/hr/machines.html:10
+#: templates/hr/machines.html:11
+#, python-format
 msgid ""
-"Read by itself every few minutes while TASEMS is running on this computer."
-msgstr "جب تک اس کمپیوٹر پر TASEMS چل رہا ہے، ہر چند منٹ بعد خود پڑھی جاتی ہے۔"
+"Read by itself every %(n)s minutes while TASEMS is running on this computer."
+msgstr ""
+"جب تک اس کمپیوٹر پر TASEMS چل رہا ہے، ہر %(n)s منٹ بعد خود بخود پڑھا جاتا ہے۔"
 
 #: templates/hr/machines.html:11
+#, python-format
+msgid ""
+"It did not answer, so it is not read by itself until %(t)s. If it worked "
+"before, switch the machine off for 30 seconds and on again."
+msgstr ""
+"مشین نے جواب نہیں دیا، اس لیے %(t)s تک خود بخود نہیں پڑھی جائے گی۔ اگر پہلے "
+"چل رہی تھی تو مشین 30 سیکنڈ کے لیے بند کر کے دوبارہ چلائیں۔"
+
+#: templates/hr/machines.html:11
+msgid ""
+"Read only when “Get attendance now” is pressed (change under Change → Read "
+"by itself)."
+msgstr ""
+"صرف “Get attendance now” دبانے پر پڑھی جاتی ہے (بدلنے کے لیے: Change ← Read "
+"by itself)۔"
+
+#: templates/hr/machines.html:12
 #, python-format
 msgid ""
 "This machine (%(host)s) is not on this computer's network, so TASEMS cannot "
@@ -10905,14 +10940,22 @@ msgstr ""
 "نہیں پہنچ سکتا۔ مشین کو اس کمپیوٹر کے نیٹ ورک کا IP ایڈریس دیں (مشین پر: M/"
 "OK ← Comm ← Ethernet)، یا اس کمپیوٹر کو مشین کے نیٹ ورک سے جوڑیں۔"
 
-#: templates/hr/machines.html:12
+#: templates/hr/machines.html:14
+msgid "Get attendance now"
+msgstr "ابھی حاضری لیں"
+
+#: templates/hr/machines.html:15
+msgid "Test connection"
+msgstr "رابطہ چیک کریں"
+
+#: templates/hr/machines.html:16
 #, python-format
 msgid "%(n)s machine user is not given to any staff member"
 msgid_plural "%(n)s machine users are not given to any staff member"
 msgstr[0] "مشین کا %(n)s صارف کسی ملازم کو نہیں دیا گیا"
 msgstr[1] "مشین کے %(n)s صارفین کسی ملازم کو نہیں دیے گئے"
 
-#: templates/hr/machines.html:13
+#: templates/hr/machines.html:18
 msgid ""
 "Name on the machine and the staff member TASEMS suggests. Nothing is saved "
 "until you tick a row and press Save. When two people have the same name, "
@@ -10924,56 +10967,48 @@ msgstr ""
 "کریں۔ جن ملازمین کی بائیومیٹرک آئی ڈی نہیں، مشین ان کی حاضری کبھی نہیں "
 "لگاتی؛ ان کی حاضری ہاتھ سے لگتی ہے۔"
 
-#: templates/hr/machines.html:16
+#: templates/hr/machines.html:22
 msgid "Name on the machine"
 msgstr "مشین پر نام"
 
-#: templates/hr/machines.html:16
+#: templates/hr/machines.html:22
 msgid "Punches (45 days)"
 msgstr "پنچ (45 دن)"
 
-#: templates/hr/machines.html:16 templates/payroll/advances.html:22
-#: templates/payroll/settlement.html:44
+#: templates/hr/machines.html:22 templates/hr/machines.html:26
+#: templates/payroll/advances.html:22 templates/payroll/settlement.html:44
 msgid "Staff member"
 msgstr "ملازم"
 
-#: templates/hr/machines.html:18
+#: templates/hr/machines.html:24
 msgid "Save this row"
 msgstr "یہ قطار محفوظ کریں"
 
-#: templates/hr/machines.html:21
+#: templates/hr/machines.html:27
 msgid "name matches"
 msgstr "نام ملتا ہے"
 
-#: templates/hr/machines.html:21
+#: templates/hr/machines.html:27
 msgid "same name, choose by hand"
 msgstr "ایک جیسا نام، خود منتخب کریں"
 
-#: templates/hr/machines.html:23
+#: templates/hr/machines.html:29
 msgid "Save the ticked rows"
 msgstr "نشان زدہ قطاریں محفوظ کریں"
 
-#: templates/hr/machines.html:26
-msgid "Get attendance now"
-msgstr "ابھی حاضری لیں"
-
-#: templates/hr/machines.html:27
-msgid "Test connection"
-msgstr "رابطہ چیک کریں"
-
-#: templates/hr/machines.html:28
+#: templates/hr/machines.html:32
 msgid "Change"
 msgstr "تبدیل کریں"
 
-#: templates/hr/machines.html:29
+#: templates/hr/machines.html:33
 msgid "No machine added yet."
 msgstr "ابھی کوئی مشین شامل نہیں۔"
 
-#: templates/hr/machines.html:30
+#: templates/hr/machines.html:34
 msgid "Add a machine"
 msgstr "مشین شامل کریں"
 
-#: templates/hr/machines.html:31
+#: templates/hr/machines.html:35
 msgid ""
 "On the machine: M/OK → Comm → Ethernet shows its IP address; the comm key is "
 "under Comm → Comm. Key (0 if none). This computer and the machine must be on "
@@ -10982,7 +11017,7 @@ msgstr ""
 "مشین پر: M/OK ← Comm ← Ethernet میں IP ایڈریس ہوتا ہے؛ کام کی Comm ← Comm. "
 "Key میں (نہ ہو تو 0)۔ یہ کمپیوٹر اور مشین ایک ہی نیٹ ورک پر ہوں۔"
 
-#: templates/hr/machines.html:31
+#: templates/hr/machines.html:35
 msgid "This computer is on network:"
 msgstr "یہ کمپیوٹر اس نیٹ ورک پر ہے:"
 
@@ -11002,36 +11037,36 @@ msgstr "آپ کی رخصت کی درخواست واپس لے لی جائے گی�
 msgid "Withdraw"
 msgstr "واپس لیں"
 
-#: templates/hr/month.html:2 templates/hr/month.html:5
+#: templates/hr/month.html:2 templates/hr/month.html:6
 msgid "Monthly staff attendance"
 msgstr "عملے کی ماہانہ حاضری"
 
-#: templates/hr/month.html:8
+#: templates/hr/month.html:9
 msgid ""
 "P present · L late · H half day · A absent · LV leave · HD holiday · – off "
 "day"
 msgstr ""
 "P حاضر · L دیر · H آدھا دن · A غیر حاضر · LV رخصت · HD چھٹی · – ہفتہ وار چھٹی"
 
-#: templates/hr/month.html:8
+#: templates/hr/month.html:9
 msgid ""
 "e early left · ! In with no Out, or Out with no In (the day still counts)"
 msgstr ""
 "e جلدی روانگی · ! آمد بغیر روانگی، یا روانگی بغیر آمد (دن پھر بھی شمار ہوتا "
 "ہے)"
 
-#: templates/hr/month.html:8
+#: templates/hr/month.html:9
 msgid ""
 "Unpaid = absent days + days of unpaid leave; salary is deducted for these."
 msgstr ""
 "بلا تنخواہ = غیر حاضری کے دن + بلا تنخواہ رخصت کے دن؛ ان دنوں کی تنخواہ کٹتی "
 "ہے۔"
 
-#: templates/hr/month.html:10
+#: templates/hr/month.html:11
 msgid "In with no Out, or Out with no In"
 msgstr "آمد بغیر روانگی، یا روانگی بغیر آمد"
 
-#: templates/hr/month.html:10
+#: templates/hr/month.html:11
 msgid "Absent + unpaid leave"
 msgstr "غیر حاضری + بلا تنخواہ رخصت"
 
@@ -13314,6 +13349,9 @@ msgstr "کھلا"
 #: templates/setup/users.html:28
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
+
+#~ msgid "Read every few minutes"
+#~ msgstr "ہر چند منٹ بعد پڑھیں"
 
 #, python-format
 #~ msgid "CV added to %(n)s's record."

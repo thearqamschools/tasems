@@ -8,6 +8,7 @@ Project lead, 31 Oct 2026 (ZKTeco face + fingerprint terminal on LAN)."""
 import datetime as dt
 import ipaddress
 import socket
+import threading
 from dataclasses import dataclass, field
 from struct import pack, unpack
 
@@ -312,7 +313,28 @@ def _read_with(transport, host, port, password, with_punches, timeout):
         return reading
 
 
-def read(host, port=DEFAULT_PORT, password=0, with_punches=True, timeout=6):
+_locks = {}
+_locks_guard = threading.Lock()
+
+
+def _lock_for(host, port):
+    with _locks_guard:
+        return _locks.setdefault((host, int(port or DEFAULT_PORT)), threading.Lock())
+
+
+def read(host, port=DEFAULT_PORT, password=0, with_punches=True, timeout=6, wait=90):
+    """One connection to a machine at a time (R12-1): a reading already in progress (e.g. the one TASEMS makes by
+    itself) is waited for, up to `wait` seconds, instead of opening a second connection."""
+    lock = _lock_for(host, port)
+    if not lock.acquire(timeout=wait):
+        raise MachineError("the machine is busy with another reading; try again in a minute")
+    try:
+        return _read_once(host, port, password, with_punches, timeout)
+    finally:
+        lock.release()
+
+
+def _read_once(host, port, password, with_punches, timeout):
     """Clock, counts and (optionally) every punch on the machine. Tries TCP, then UDP; when neither answers the
     error says why in plain words (see `explain`)."""
     errors = {}
@@ -360,8 +382,9 @@ def explain(host, port, errors=None):
         )
     seen = "answers a ping but " if pinged else ""
     return (
-        f"{host} {seen}gives no answer on port {port} (tried TCP and UDP; this computer is on {here}). Check the "
-        f"port on the machine (Comm → Ethernet), and that Windows Firewall or antivirus is not blocking TASEMS."
+        f"{host} {seen}gives no answer on port {port} (tried TCP and UDP; this computer is on {here}). If it worked "
+        f"before, switch the machine off for 30 seconds and on again, then press Test connection. Otherwise check "
+        f"the port on the machine (Comm → Ethernet) and that Windows Firewall or antivirus is not blocking TASEMS."
     )
 
 

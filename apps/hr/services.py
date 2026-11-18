@@ -634,8 +634,10 @@ def read_machine(machine, user=None, since_days=45):
     try:
         reading = zk.read(machine.host, machine.port, machine.comm_key)
     except (zk.MachineError, OSError) as error:
+        # Not answering: no reading by itself for 30 minutes (R12-3); "Get attendance now" still tries at once.
         machine.last_ok, machine.last_result = False, str(error)[:300]
-        machine.save(update_fields=["last_read_at", "last_ok", "last_result"])
+        machine.paused_until = timezone.now() + dt.timedelta(minutes=30)
+        machine.save(update_fields=["last_read_at", "last_ok", "last_result", "paused_until"])
         return machine.last_result
     cutoff = timezone.localtime().replace(tzinfo=None) - dt.timedelta(days=since_days)
     recent = [(uid, at) for uid, at in reading.punches if at >= cutoff]
@@ -652,7 +654,8 @@ def read_machine(machine, user=None, since_days=45):
         f"OK ({reading.transport.upper()}) · machine clock {clock} · {reading.users} users · {reading.records} records"
         f" · {new} new punches"
     )[:300]
-    machine.save(update_fields=["last_read_at", "last_ok", "last_result", "unknown_ids", "users"])
+    machine.paused_until = None
+    machine.save(update_fields=["last_read_at", "last_ok", "last_result", "unknown_ids", "users", "paused_until"])
     return machine.last_result
 
 

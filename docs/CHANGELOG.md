@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.47.0 — 2026-11-18 — Round 12: machine safeguards, read-by-itself setting, monthly sheet print (installer v21)
+- **One connection to a machine at a time** (R12-1): "Get attendance now" waits (up to 90 seconds) for a reading in
+  progress instead of opening a second connection; if still busy it says "the machine is busy… try again in a minute".
+- **Read by itself** setting per machine (R12-2, Setup → Attendance machine → Change): Never (only when "Get
+  attendance now" is pressed), every 15 minutes, every 30 minutes, every hour. Starting value **Never**; the old
+  every-5-minutes reading is gone.
+- **Pause after no answer** (R12-3): after a machine does not answer, it is not read by itself for 30 minutes; the page
+  says so and suggests switching the machine off for 30 seconds and on. Test connection and Get attendance now still
+  work at any time.
+- **Monthly sheet print** (R12-4, R12-7): A4 landscape, starts at the margin, every day of the month and the totals fit
+  the page width with the browser's default margins; the back link stays off the paper. Headings centred; EMP.code and
+  MAC.ID narrow, Name and Designation wider.
+- **Setup → Attendance machine layout** (R12-5, R12-6): machine users table with even column widths (Save, MAC.ID and
+  Punches narrow and centred); the users box is a plain box without the side line; even spacing between the box, the
+  buttons, Change and the bottom note; Get attendance now / Test connection come before the users list.
+
 ## 0.46.0 — 2026-11-16 — Round 11: live net pay, search while typing, staff leaving (installer v20)
 - **Payroll → Enter manually** (R11-1, R11-2): columns Use, EMP.code, Name, **Monthly salary**, Working days, Half
   days, Bonus days, Net pay now. **Net pay now changes while typing** working, half or bonus days (same rules as the
