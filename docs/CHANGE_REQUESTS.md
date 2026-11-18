@@ -621,3 +621,13 @@ not to be bought or switched on without approval.
 - R11-7. **Setup → Attendance machine**: the box "machine users not given to any staff member" (Name on the machine
   / staff member TASEMS suggests) leaves an empty strip on the left and squeezes the table to the right. Make the
   heading sit on top and the table use the **full width** of the page.
+
+## Round 12 (18 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- Context: on 18 Nov the machine (192.168.1.222) answered a ping but took no connection on port 4370 (TCP or UDP);
+  **restarting the machine fixed it** (lead, 18 Nov 2026). Likely cause: TASEMS reads all ~40,000 records every
+  5 minutes, and a "Get attendance now" at the same moment opens a second connection.
+- R12-1. (Proposed by Claude) Only **one connection** to a machine at a time: "Get attendance now" waits for an
+  automatic reading in progress instead of opening a second connection.
+- R12-2. (Proposed) Automatic reading **every 15 minutes** instead of 5.
+- R12-3. (Proposed) After a machine does not answer, TASEMS waits **30 minutes** before trying again by itself (the
+  page says so; "Test connection" still works at any time), and suggests restarting the machine.
