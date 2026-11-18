@@ -645,3 +645,12 @@ not to be bought or switched on without approval.
   machine, Punches, Staff member): spacing is uneven — a wide gap between Save and MAC.ID, MAC.ID too close to the
   name, a very wide gap after Punches. Even column widths: Save and MAC.ID narrow and **centred**, Punches narrow
   and centred, the name and the staff member choice taking the rest; a cleaner layout overall.
+- R12-6. **Setup → Attendance machine — spacing and the side line** (lead, 18 Nov 2026):
+  - The box with the machine users has a dark line down its side. (Claude: that line is TASEMS's "needs attention"
+    note style — a yellow box with a bar on one side, used for warnings. This box is a working list, not a warning,
+    so it becomes a plain box like the others, without the side line. The real warning above it — machine not on
+    this computer's network — keeps it.)
+  - Even space between: the table and "Save the ticked rows"; the box and "Get attendance now / Test connection";
+    those buttons and "Change"; and the note at the bottom of the page ("On the machine: M/OK → …").
+  - The same even spacing between text, tables and buttons on this page first; the other pages to be checked for
+    the same in a later round.
