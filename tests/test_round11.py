@@ -39,7 +39,7 @@ def test_back_links_on_staff_pages(staff, login_as):  # noqa: F811
     client = login_as(staff["director"])
     for url in ("/staff/attendance/", "/staff/attendance/import/", "/staff/attendance/month/", "/staff/leave/"):
         page = client.get(url).content.decode()
-        assert '<p><a href="/staff/">‹ Staff</a></p>' in page, url
+        assert '<a href="/staff/">‹ Staff</a></p>' in page, url
 
 
 def test_staff_member_leaving_and_taking_it_back(staff, login_as, org, make_user):  # noqa: F811
