@@ -628,6 +628,9 @@ not to be bought or switched on without approval.
   5 minutes, and a "Get attendance now" at the same moment opens a second connection.
 - R12-1. (Proposed by Claude) Only **one connection** to a machine at a time: "Get attendance now" waits for an
   automatic reading in progress instead of opening a second connection.
-- R12-2. (Proposed) Automatic reading **every 15 minutes** instead of 5.
+- R12-2. **Decided by the lead (18 Nov 2026)**: a setting on Setup → Attendance machine for **how often TASEMS reads
+  by itself**: **Never (only when "Get attendance now" is pressed)**, every 15 minutes, every 30 minutes, every
+  hour. No 5-minute option. Starting value: **Never** — the office presses "Get attendance now" when it wants the
+  latest attendance.
 - R12-3. (Proposed) After a machine does not answer, TASEMS waits **30 minutes** before trying again by itself (the
   page says so; "Test connection" still works at any time), and suggests restarting the machine.
