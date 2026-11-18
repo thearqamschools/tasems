@@ -634,3 +634,7 @@ not to be bought or switched on without approval.
   latest attendance.
 - R12-3. (Proposed) After a machine does not answer, TASEMS waits **30 minutes** before trying again by itself (the
   page says so; "Test connection" still works at any time), and suggests restarting the machine.
+- R12-4. **Monthly sheet print** (lead's print preview, 18 Nov 2026, A4 landscape): the sheet does not fit the paper
+  width — days 28 to 30/31 and the totals (P, L, H, A, LV, EL, !, Unpaid) are cut off. To do: a print layout that
+  fits every day of the month and the totals on the page width (smaller type and narrower day columns on paper,
+  landscape), headings repeated on each page, and the "‹ Staff" link and buttons left off the paper.
