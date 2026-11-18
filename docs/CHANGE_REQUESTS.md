@@ -638,3 +638,6 @@ not to be bought or switched on without approval.
   width — days 28 to 30/31 and the totals (P, L, H, A, LV, EL, !, Unpaid) are cut off. To do: a print layout that
   fits every day of the month and the totals on the page width (smaller type and narrower day columns on paper,
   landscape), headings repeated on each page, and the "‹ Staff" link and buttons left off the paper.
+  - Lead, 18 Nov 2026: **no empty space on the left** of the printed / PDF sheet (the page starts at the margin), and
+    the **whole sheet from EMP.code to Unpaid** fits one page width **with the browser's normal (default) margins**;
+    type may be smaller to fit.
