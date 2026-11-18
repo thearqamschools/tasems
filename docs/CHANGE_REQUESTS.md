@@ -641,3 +641,7 @@ not to be bought or switched on without approval.
   - Lead, 18 Nov 2026: **no empty space on the left** of the printed / PDF sheet (the page starts at the margin), and
     the **whole sheet from EMP.code to Unpaid** fits one page width **with the browser's normal (default) margins**;
     type may be smaller to fit.
+- R12-5. **Setup → Attendance machine**, table of machine users not given to anyone (Save, MAC.ID, Name on the
+  machine, Punches, Staff member): spacing is uneven — a wide gap between Save and MAC.ID, MAC.ID too close to the
+  name, a very wide gap after Punches. Even column widths: Save and MAC.ID narrow and **centred**, Punches narrow
+  and centred, the name and the staff member choice taking the rest; a cleaner layout overall.
