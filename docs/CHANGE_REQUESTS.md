@@ -727,3 +727,24 @@ not to be bought or switched on without approval.
     5. Delivery charges, discounts, part payments, cancelled or changed orders, returns?
     6. Is this the same stock as Finance → Shop & stock, or a separate books stock?
     To be settled with the lead's reference.)
+  - **Decided by the lead (19 Nov 2026)** on the points above:
+    1. Hosting: the school has its own domain and hosting (the website already runs, with its admin panel).
+       **Not live now** — the features are built and tested first; going live (on that website, e.g. a "Login"
+       button leading to TASEMS) is a later step, with the lead's approval. (Domain name as heard:
+       "theyearcomesschools.com" — exact spelling to be confirmed.)
+    3. **Stock is taken off when the payment is recorded.**
+    4. **Every buyer is simply a customer** — a branch, a book shop or anyone; no branch role. A customer = **name,
+       mobile number, address** (mobile number the main key).
+    5. **No delivery charges.** **Discount**: none on the customer's form; the office may type a discount by hand
+       when recording the payment (not shown to the customer). **Part payments allowed**: recorded against the
+       order with the discount, on the payment page.
+       **Orders can be edited by the customer before payment**: on the link, after the mobile number, the customer
+       sees their **order history** and can change an unpaid order; every change is kept on record ("edited").
+       **Returns allowed**, also part of an order (e.g. 2 of 10 books) — how a part return works to be proposed by
+       Claude.
+    6. **Books is a separate system** — its own stock and its own accounts, apart from Finance → Shop & stock and
+       the other Finance books; it works in a similar way but its process and accounting stay separate.
+  - (Claude, still to confirm: with part payments, is the stock taken off at the **first** payment or when the
+    order is **fully paid**? Proposal for part returns: a **return note** against the order — pick the order, type
+    how many of each book come back (not more than were taken), the stock goes back up, and the amount is either
+    paid back or kept as credit for the customer's next order; the order shows what was returned.)
