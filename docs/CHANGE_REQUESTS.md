@@ -696,8 +696,11 @@ not to be bought or switched on without approval.
 - R13-8. **Side menu — a new group "School Fee"** (lead, 19 Nov 2026): the fee items move out of Finance into a new
   group **School Fee**, placed above Finance: Barcode, Fees, Generate vouchers, Vouchers, Family vouchers,
   Defaulters, Daily collection, Discounts. **Finance keeps**: Expenses, Cash & bank book, Profit & loss, Shop & stock,
-  Sell, Royalty. Order in the menu: … School Fee, Finance, **Books** (R13-9), …
-- R13-9. **Books — a new section for selling books** (lead, 19 Nov 2026; the lead will send a reference of the
+  Sell, Royalty. Order in the menu: … School Fee, Finance, …
+- R13-9. **NOT IN TASEMS — moved to the school website (lead, 19 Nov 2026)**: the Books ordering feature will be
+  built on the website and its admin panel, not in TASEMS. The prompt for the website's Claude is in
+  `docs/BOOKS_WEBSITE_PROMPT.md`. The notes below are kept for the record only.
+  **Books — a new section for selling books** (lead, 19 Nov 2026; the lead will send a reference of the
   present online system). Menu group **Books**, below Finance. Today books are sold through a separate online
   system; it is to come into TASEMS.
   - **Book inventory**: every book with its name, class (e.g. Play Group), stock in hand, **purchase price** and
