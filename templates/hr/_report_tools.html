@@ -1,0 +1,6 @@
+{% load i18n tasems_tags %}{# Excel, PDF and Print for a staff attendance report (R13-5, R13-7). #}
+<div class="list-tools no-print report-tools">
+  <a class="button quiet sm" href="{% list_url format='xlsx' %}">{% icon "file-spreadsheet" %}{% trans "Excel" %}</a>
+  <a class="button quiet sm" href="{% list_url format='pdf' %}">{% icon "file-text" %}{% trans "PDF" %}</a>
+  <a class="button quiet sm" href="{% list_url print='1' %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Print" %}</a>
+</div>

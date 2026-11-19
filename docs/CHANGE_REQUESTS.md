@@ -658,7 +658,7 @@ not to be bought or switched on without approval.
   for EMP.code and MAC.ID, wider for Name and Designation — so the gaps are even; and the **heading row centred**
   (every heading of the sheet centred over its column).
 
-## Round 13 (19 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 13 (19 Nov 2026) — built 19 Nov 2026 (installer v22, CHANGELOG 0.48.0; R13-9 moved to the website)
 - R13-1. **Side menu — one group open at a time** (lead, 19 Nov 2026): the menu groups (Overview, Students,
   Academics, Finance, Events, Staff, Hiring, Settings) open when clicked, but an open group stays open when another
   is clicked, so several are open together. To do: opening a group closes the others by itself, so only **one
@@ -751,3 +751,5 @@ not to be bought or switched on without approval.
     order is **fully paid**? Proposal for part returns: a **return note** against the order — pick the order, type
     how many of each book come back (not more than were taken), the stock goes back up, and the amount is either
     paid back or kept as credit for the customer's next order; the order shows what was returned.)
+- **Lead, 19 Nov 2026**: early left stays a small **"e"** on the sheet and in the key ("e = Early Left"); in the menu,
+  small joining words (of, and, by, from, a …) stay small, every other word starts with a capital.

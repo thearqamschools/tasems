@@ -225,10 +225,10 @@
     });
   });
 
-  // ---------- Side menu groups open and close; the choice is remembered on this computer ----------
-  var NAV_KEY = "tasems-nav-open";
-  var navState = {};
-  try { navState = JSON.parse(localStorage.getItem(NAV_KEY) || "{}"); } catch (e) { navState = {}; }
+  // ---------- Side menu groups: one open at a time; the open one is remembered on this computer ----------
+  var NAV_KEY = "tasems-nav-open-one";
+  var navOpen = null;
+  try { navOpen = localStorage.getItem(NAV_KEY); } catch (e) { navOpen = null; }
   function setGroup(group, open) {
     var button = group.querySelector(".nav-group-label");
     var list = group.querySelector("ul");
@@ -236,19 +236,24 @@
     button.setAttribute("aria-expanded", open ? "true" : "false");
     list.hidden = !open;
   }
-  document.querySelectorAll("[data-nav-group]").forEach(function (group) {
-    var key = group.querySelector(".nav-group-label") ? group.querySelector(".nav-group-label").textContent.trim() : "";
-    if (group.hasAttribute("data-current")) setGroup(group, true); // the page you are on stays visible
-    else if (key in navState) setGroup(group, navState[key]);
+  function groupKey(group) {
+    var b = group.querySelector(".nav-group-label");
+    return b ? b.textContent.trim() : "";
+  }
+  var navGroups = Array.prototype.slice.call(document.querySelectorAll("[data-nav-group]"));
+  var current = navGroups.filter(function (g) { return g.hasAttribute("data-current"); })[0];
+  navGroups.forEach(function (group) {
+    // The group of the page you are on is the open one; otherwise the one opened last.
+    setGroup(group, current ? group === current : groupKey(group) === navOpen);
   });
   document.addEventListener("click", function (event) {
     var button = event.target.closest(".nav-group-label");
     if (!button) return;
     var group = button.closest("[data-nav-group]");
     var open = button.getAttribute("aria-expanded") !== "true";
-    setGroup(group, open);
-    navState[button.textContent.trim()] = open;
-    try { localStorage.setItem(NAV_KEY, JSON.stringify(navState)); } catch (e) { /* not kept: fine */ }
+    navGroups.forEach(function (g) { setGroup(g, open && g === group); });
+    navOpen = open ? groupKey(group) : "";
+    try { localStorage.setItem(NAV_KEY, navOpen); } catch (e) { /* not kept: fine */ }
   });
 
   // ---------- Form rows that can be added: <section data-formset="prefix"> with a <template> row and [data-add-row] ----

@@ -1,0 +1,48 @@
+{% load tasems_tags %}<!doctype html>
+{# Staff attendance report for paper: the PDF (WeasyPrint) and the Print view use this same page (R13-5, R13-7). English, as printed documents are. #}
+<html lang="en"><head><meta charset="utf-8"><title>{{ title }}</title>
+<style>
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
+  @page { size: A4 {% if landscape %}landscape{% else %}portrait{% endif %}; margin: 9mm 9mm 11mm; @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 7pt "PSans"; color: #3b4157; } }
+  html, body { background: #fff; }
+  body { margin: 0; font-family: "PSans", sans-serif; color: #14182b; font-size: {{ font_size|default:"8pt" }}; }
+  .head { display: flex; align-items: center; gap: 3mm; border-bottom: 1mm solid #ed3237; padding-bottom: 2mm; }
+  .head img { width: 12mm; height: 12mm; }
+  .school { font-weight: 700; font-size: 13pt; color: #3e4095; }
+  .branch { font-size: 8pt; color: #3b4157; }
+  .title { margin-left: auto; text-align: right; font-size: 8pt; color: #3b4157; }
+  .title b { display: block; font-size: 11pt; letter-spacing: .03em; color: #14182b; }
+  table.summary { margin: 3mm 0 2mm; table-layout: fixed; }
+  table.summary td { padding: 1.5mm 1mm; font-size: 7.6pt; color: #3b4157; }
+  table.summary b { display: block; font-size: 11pt; color: #14182b; }
+  .key { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1mm 4mm; margin: 2mm 0; font-size: 7.4pt; color: #3b4157; }
+  h2 { font-size: 9.5pt; margin: 3mm 0 1.5mm; }
+  table { width: 100%; border-collapse: collapse; }
+  thead { display: table-header-group; }
+  tr { page-break-inside: avoid; }
+  th, td { border: .4pt solid #9aa0b8; padding: {{ cell_pad|default:"1.3mm 1.2mm" }}; text-align: center; vertical-align: middle; }
+  th { background: #eef0f8; font-weight: 700; }
+  td.l { text-align: left; }
+  td.bad { color: #b3261e; font-weight: 700; }
+  td.warn { color: #8a5a00; }
+  .printed { margin-top: 3mm; font-size: 7pt; color: #3b4157; }
+  @media screen { body { max-width: 290mm; margin: 6mm auto; } }
+</style></head>
+<body>
+  <div class="head"><img src="{% official_logo layout media_base font_base %}" alt="">
+    <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}</div></div>
+    <div class="title"><b>{{ title }}</b>{{ subtitle }}</div></div>
+  {% if summary %}<table class="summary"><tr>{% for label, value in summary %}<td><b>{{ value }}</b>{{ label }}</td>{% endfor %}</tr></table>{% endif %}
+  {% if key %}<div class="key">{% for k in key %}<span>{{ k }}</span>{% endfor %}</div>{% endif %}
+  {% for s in sections %}
+  {% if s.heading %}<h2>{{ s.heading }} ({{ s.rows|length }})</h2>{% endif %}
+  <table>
+    <thead><tr>{% for h in s.headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for row in s.rows %}<tr>{% for c in row %}<td{% if c.cls %} class="{{ c.cls }}"{% endif %}>{{ c.text }}</td>{% endfor %}</tr>{% empty %}<tr><td colspan="{{ s.headers|length }}">No staff records.</td></tr>{% endfor %}</tbody>
+  </table>
+  {% endfor %}
+  {% if notes %}<div class="key">{% for n in notes %}<span>{{ n }}</span>{% endfor %}</div>{% endif %}
+  <p class="printed">Printed {{ printed|date:"d M Y, H:i" }}</p>
+  {% if auto_print %}<script>window.addEventListener("load", function () { window.print(); });</script>{% endif %}
+</body></html>

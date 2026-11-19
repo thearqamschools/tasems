@@ -20,7 +20,7 @@
 {% trans "Entered by hand" as hand_note %}
 
 {% if machine_rows %}
-<h2>{% trans "From the attendance machine" %} <span class="muted small">({{ machine_rows|length }})</span></h2>
+<div class="heading-tools"><h2>{% trans "From the attendance machine" %} <span class="muted small">({{ machine_rows|length }})</span></h2>{% include "hr/_report_tools.html" %}</div>
 <div class="table-wrap"><table>
   <thead><tr>{% trans "EMP.code" as h %}{% sort_th "code" h "center" %}{% trans "MAC.ID" as h %}{% sort_th "machine" h "center" %}{% trans "Name" as h %}{% sort_th "name" h %}{% trans "Designation" as h %}{% sort_th "designation" h %}{% trans "Status" as h %}{% sort_th "status" h %}{% trans "In" as h %}{% sort_th "in" h "num" %}{% trans "Out" as h %}{% sort_th "out" h "num" %}<th>{% trans "Note" %}</th>{% if can_correct %}<th></th>{% endif %}</tr></thead>
   <tbody>{% for e, d in machine_rows %}<tr>
@@ -34,7 +34,7 @@
 {% endif %}
 
 {% if hand_rows %}
-<h2>{% trans "Entered by hand — no Biometric ID" %} <span class="muted small">({{ hand_rows|length }})</span></h2>
+<div class="heading-tools"><h2>{% trans "Entered by hand — no Biometric ID" %} <span class="muted small">({{ hand_rows|length }})</span></h2>{% if not machine_rows %}{% include "hr/_report_tools.html" %}{% endif %}</div>
 <p class="small muted">{% trans "These staff are not on the attendance machine (no Biometric machine ID on their record), so the machine never marks them. Choose each person's status and press Save. Give them their machine ID on their staff record (or Setup → Attendance machine) once they are enrolled on the machine." %}</p>
 {% if can_correct %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="hand">{% endif %}
 <div class="table-wrap"><table>

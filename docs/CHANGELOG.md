@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.48.0 — 2026-11-19 — Round 13: side menu, monthly sheet key and downloads, day report (installer v22)
+- **Side menu** (R13-1, R13-6, R13-8): only **one group open at a time** — opening a group closes the others (the
+  group of the page you are on opens by itself). Every word in the menu starts with a capital (Needs Attention,
+  Staff Attendance, Admission Inquiries …), small joining words stay small (Import from Excel, Add a CV). New group
+  **School Fee** above Finance: Barcode, Fees, Generate Vouchers, Vouchers, Family Vouchers, Defaulters, Daily
+  Collection, Discounts; Finance keeps Expenses, Cash & Bank Book, Profit & Loss, Shop & Stock, Sell, Royalty.
+- **Staff → Monthly Sheet** (R13-2 to R13-5): the key at the top, across the full width, well spaced —
+  P = Present · L = Late · H = Half Day · A = Absent · LV = Leave · HD = Holiday · – = Off Day · e = Early Left, with
+  the ! and Unpaid notes below; the **Excel, PDF and Print** buttons under the key; every cell of the rows centred.
+  The **PDF** (A4 landscape, the whole month and the totals on one page width) and **Print** use the same report.
+- **Staff → Staff Attendance — day report** (R13-7): **Excel, PDF and Print** on the right of "From the attendance
+  machine". The report has the day's summary (In, Present, Late, Half Day, Absent, On Leave, Nothing Recorded) and
+  every staff member with status, In, Out and note — staff with no record yet show "Nothing recorded" (absent is not
+  marked during the day; unchanged).
+- Books ordering (R13-9) is not in TASEMS: it goes on the school website; the prompt for it is
+  `docs/BOOKS_WEBSITE_PROMPT.md`.
+
 ## 0.47.0 — 2026-11-18 — Round 12: machine safeguards, read-by-itself setting, monthly sheet print (installer v21)
 - **One connection to a machine at a time** (R12-1): "Get attendance now" waits (up to 90 seconds) for a reading in
   progress instead of opening a second connection; if still busy it says "the machine is busy… try again in a minute".

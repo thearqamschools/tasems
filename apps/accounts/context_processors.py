@@ -88,7 +88,7 @@ def _menu(user, branch):
     )
     fees = perm("fees.view_voucher")
     group(
-        _("Finance"),
+        _("School Fee"),
         [
             perm("fees.add_payment") and (reverse("fees:quick"), _("Barcode"), "scan-barcode"),
             fees and (reverse("fees:index"), _("Fees"), "wallet"),
@@ -98,6 +98,11 @@ def _menu(user, branch):
             perm("fees.view_defaulters") and (reverse("fees:defaulters"), _("Defaulters"), "triangle-alert"),
             fees and (reverse("fees:collections"), _("Daily collection"), "coins"),
             fees and (reverse("fees:concessions"), _("Discounts"), "badge-percent"),
+        ],
+    )
+    group(
+        _("Finance"),
+        [
             perm("accounting.view_expense") and (reverse("accounting:index"), _("Expenses"), "receipt"),
             perm("accounting.view_expense") and (reverse("accounting:book"), _("Cash & bank book"), "landmark"),
             perm("accounting.view_expense")
@@ -157,6 +162,21 @@ def _menu(user, branch):
     return groups
 
 
+SMALL_WORDS = {"a", "an", "and", "as", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to", "with"}
+
+
+def title_case(text):
+    """Menu labels: every word starts with a capital, except small joining words (of, and, by …) after the
+    first. Letters after the first are kept, so "CV bank" stays "CV Bank"; Urdu text is unchanged."""
+    words = str(text).split(" ")
+    out = []
+    for i, w in enumerate(words):
+        if w and (i == 0 or w.lower() not in SMALL_WORDS):
+            w = w[0].upper() + w[1:]
+        out.append(w)
+    return " ".join(out)
+
+
 def navigation(request):
     user = getattr(request, "user", None)
     if user is None or not user.is_authenticated:
@@ -173,8 +193,8 @@ def navigation(request):
 
     nav_groups = []
     for label, items in groups:
-        entries = [{"url": u, "label": text, "icon": ic, "active": u == active} for u, text, ic in items]
-        nav_groups.append({"label": label, "items": entries, "open": any(e["active"] for e in entries)})
+        entries = [{"url": u, "label": title_case(text), "icon": ic, "active": u == active} for u, text, ic in items]
+        nav_groups.append({"label": title_case(label), "items": entries, "open": any(e["active"] for e in entries)})
 
     switchable = list(
         accessible_branches(user)

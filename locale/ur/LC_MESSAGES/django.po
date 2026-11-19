@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 14:32+0500\n"
+"POT-Creation-Date: 2026-11-19 10:03+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -436,7 +436,7 @@ msgstr "نقد رقم کے لیے خالی چھوڑیں"
 msgid "The balance at the start of this day"
 msgstr "اس دن کے آغاز پر بیلنس"
 
-#: apps/accounting/views.py:59 apps/accounts/context_processors.py:101
+#: apps/accounting/views.py:59 apps/accounts/context_processors.py:106
 #: apps/reports/catalogue.py:270 templates/accounting/_tabs.html:2
 #: templates/accounting/form.html:4 templates/accounting/index.html:2
 #: templates/accounting/index.html:5 templates/accounting/profit_loss.html:31
@@ -746,8 +746,8 @@ msgid "My timetable"
 msgstr "میرا ٹائم ٹیبل"
 
 #: apps/accounts/context_processors.py:91
-msgid "Finance"
-msgstr "مالیات"
+msgid "School Fee"
+msgstr "اسکول فیس"
 
 #: apps/accounts/context_processors.py:93 apps/inventory/forms.py:20
 #: apps/inventory/views.py:55 templates/fees/index.html:18
@@ -797,20 +797,24 @@ msgstr "روزانہ وصولی"
 msgid "Discounts"
 msgstr "رعایتیں"
 
-#: apps/accounts/context_processors.py:102 apps/reports/catalogue.py:280
+#: apps/accounts/context_processors.py:104
+msgid "Finance"
+msgstr "مالیات"
+
+#: apps/accounts/context_processors.py:107 apps/reports/catalogue.py:280
 #: templates/accounting/_tabs.html:4 templates/accounting/book.html:2
 #: templates/accounting/book.html:5
 msgid "Cash & bank book"
 msgstr "کیش اور بینک بک"
 
-#: apps/accounts/context_processors.py:104 apps/reports/catalogue.py:281
+#: apps/accounts/context_processors.py:109 apps/reports/catalogue.py:281
 #: templates/accounting/_tabs.html:5 templates/accounting/branches.html:4
 #: templates/accounting/profit_loss.html:2
 #: templates/accounting/profit_loss.html:5
 msgid "Profit & loss"
 msgstr "نفع و نقصان"
 
-#: apps/accounts/context_processors.py:105 apps/reports/catalogue.py:295
+#: apps/accounts/context_processors.py:110 apps/reports/catalogue.py:295
 #: templates/inventory/index.html:2 templates/inventory/index.html:5
 #: templates/inventory/item.html:4 templates/inventory/item_form.html:4
 #: templates/inventory/sales.html:4 templates/inventory/sell.html:4
@@ -818,30 +822,30 @@ msgstr "نفع و نقصان"
 msgid "Shop & stock"
 msgstr "دکان اور اسٹاک"
 
-#: apps/accounts/context_processors.py:106 templates/events/sell.html:19
+#: apps/accounts/context_processors.py:111 templates/events/sell.html:19
 #: templates/inventory/index.html:7 templates/inventory/sales.html:7
 #: templates/inventory/sell.html:2 templates/inventory/sell.html:6
 msgid "Sell"
 msgstr "فروخت"
 
-#: apps/accounts/context_processors.py:108 apps/fees/views.py:1001
+#: apps/accounts/context_processors.py:113 apps/fees/views.py:1001
 #: templates/fees/index.html:24 templates/fees/royalty.html:2
 #: templates/fees/royalty_branch.html:2
 msgid "Royalty"
 msgstr "رائلٹی"
 
-#: apps/accounts/context_processors.py:112
+#: apps/accounts/context_processors.py:117
 msgid "Events"
 msgstr "تقریبات"
 
-#: apps/accounts/context_processors.py:114 templates/events/detail.html:4
+#: apps/accounts/context_processors.py:119 templates/events/detail.html:4
 #: templates/events/form.html:4 templates/events/index.html:2
 #: templates/events/index.html:5
 msgid "Events & Tickets"
 msgstr "تقریبات اور ٹکٹ"
 
-#: apps/accounts/context_processors.py:119
-#: apps/accounts/context_processors.py:121 apps/hr/views.py:117
+#: apps/accounts/context_processors.py:124
+#: apps/accounts/context_processors.py:126 apps/hr/views.py:117
 #: apps/notices/models.py:40 apps/reports/catalogue.py:238
 #: templates/academics/holidays.html:24 templates/hr/day.html:4
 #: templates/hr/employee.html:4 templates/hr/employee_form.html:4
@@ -851,17 +855,17 @@ msgstr "تقریبات اور ٹکٹ"
 msgid "Staff"
 msgstr "عملہ"
 
-#: apps/accounts/context_processors.py:122 templates/hr/day.html:2
+#: apps/accounts/context_processors.py:127 templates/hr/day.html:2
 #: templates/hr/day.html:5
 msgid "Staff attendance"
 msgstr "عملے کی حاضری"
 
-#: apps/accounts/context_processors.py:123 apps/reports/catalogue.py:249
+#: apps/accounts/context_processors.py:128 apps/reports/catalogue.py:249
 #: templates/hr/index.html:22
 msgid "Monthly sheet"
 msgstr "ماہانہ شیٹ"
 
-#: apps/accounts/context_processors.py:124 apps/attendance/models.py:20
+#: apps/accounts/context_processors.py:129 apps/attendance/models.py:20
 #: apps/reports/catalogue.py:250 apps/reports/views.py:136
 #: templates/attendance/today.html:41 templates/hr/_leave_balance.html:3
 #: templates/hr/index.html:23 templates/hr/leaves.html:2
@@ -870,7 +874,7 @@ msgstr "ماہانہ شیٹ"
 msgid "Leave"
 msgstr "چھٹی"
 
-#: apps/accounts/context_processors.py:125 apps/payroll/views.py:82
+#: apps/accounts/context_processors.py:130 apps/payroll/views.py:82
 #: apps/reports/catalogue.py:251 templates/payroll/advances.html:4
 #: templates/payroll/index.html:2 templates/payroll/index.html:5
 #: templates/payroll/manual.html:4 templates/payroll/person.html:2
@@ -879,58 +883,58 @@ msgstr "چھٹی"
 msgid "Payroll"
 msgstr "تنخواہیں"
 
-#: apps/accounts/context_processors.py:126 apps/core/views.py:114
+#: apps/accounts/context_processors.py:131 apps/core/views.py:114
 #: templates/hr/mine.html:2 templates/hr/mine.html:4
 msgid "My attendance"
 msgstr "میری حاضری"
 
-#: apps/accounts/context_processors.py:131
+#: apps/accounts/context_processors.py:136
 msgid "Hiring"
 msgstr "بھرتی"
 
-#: apps/accounts/context_processors.py:133 apps/hiring/views.py:121
+#: apps/accounts/context_processors.py:138 apps/hiring/views.py:121
 #: templates/hiring/add.html:4 templates/hiring/bin.html:4
 #: templates/hiring/candidate.html:4 templates/hiring/import.html:4
 #: templates/hiring/index.html:2 templates/hiring/index.html:5
 msgid "CV bank"
 msgstr "سی وی بینک"
 
-#: apps/accounts/context_processors.py:134 templates/hiring/add.html:2
+#: apps/accounts/context_processors.py:139 templates/hiring/add.html:2
 #: templates/hiring/add.html:5 templates/hiring/index.html:7
 #: templates/hiring/index.html:43
 msgid "Add a CV"
 msgstr "سی وی شامل کریں"
 
-#: apps/accounts/context_processors.py:135 templates/hiring/import.html:2
+#: apps/accounts/context_processors.py:140 templates/hiring/import.html:2
 #: templates/hiring/import.html:5 templates/hiring/index.html:7
 msgid "Import CVs"
 msgstr "سی ویز امپورٹ کریں"
 
-#: apps/accounts/context_processors.py:136 templates/hiring/candidate.html:62
+#: apps/accounts/context_processors.py:141 templates/hiring/candidate.html:62
 #: templates/hiring/index.html:8 templates/hiring/vacancies.html:2
 #: templates/hiring/vacancies.html:4 templates/hiring/vacancy.html:4
 msgid "Vacancies"
 msgstr "خالی آسامیاں"
 
-#: apps/accounts/context_processors.py:137 templates/hiring/interviews.html:2
+#: apps/accounts/context_processors.py:142 templates/hiring/interviews.html:2
 msgid "Interviews"
 msgstr "انٹرویو"
 
-#: apps/accounts/context_processors.py:138 templates/hiring/report.html:2
+#: apps/accounts/context_processors.py:143 templates/hiring/report.html:2
 #: templates/hiring/report.html:4
 msgid "Hiring report"
 msgstr "بھرتی رپورٹ"
 
-#: apps/accounts/context_processors.py:139 templates/hiring/bin.html:2
+#: apps/accounts/context_processors.py:144 templates/hiring/bin.html:2
 #: templates/hiring/bin.html:5 templates/hiring/index.html:8
 msgid "Bin"
 msgstr "بِن"
 
-#: apps/accounts/context_processors.py:150
+#: apps/accounts/context_processors.py:155
 msgid "Settings"
 msgstr "ترتیبات"
 
-#: apps/accounts/context_processors.py:152 templates/hiring/posts.html:4
+#: apps/accounts/context_processors.py:157 templates/hiring/posts.html:4
 #: templates/hr/duty_times.html:4 templates/hr/machines.html:4
 #: templates/setup/branches.html:4 templates/setup/fees.html:4
 #: templates/setup/hub.html:2 templates/setup/hub.html:4
@@ -939,11 +943,11 @@ msgstr "ترتیبات"
 msgid "Setup"
 msgstr "سیٹ اپ"
 
-#: apps/accounts/context_processors.py:153 templates/setup/hub.html:11
+#: apps/accounts/context_processors.py:158 templates/setup/hub.html:11
 msgid "Advanced setup"
 msgstr "اعلیٰ سیٹ اپ"
 
-#: apps/accounts/context_processors.py:154 templates/core/design_system.html:2
+#: apps/accounts/context_processors.py:159 templates/core/design_system.html:2
 #: templates/core/design_system.html:6
 msgid "Design system"
 msgstr "ڈیزائن سسٹم"
@@ -2729,7 +2733,7 @@ msgstr ""
 msgid "Someone else must approve a discount you asked for."
 msgstr "آپ کی مانگی ہوئی رعایت کوئی دوسرا منظور کرے گا۔"
 
-#: apps/fees/views.py:712 apps/hr/views.py:564
+#: apps/fees/views.py:712 apps/hr/views.py:754
 msgid "Decision saved."
 msgstr "فیصلہ محفوظ ہو گیا۔"
 
@@ -4131,7 +4135,7 @@ msgstr "اس مدت کے کام کے دن"
 msgid "Attendance machine file"
 msgstr "حاضری مشین کی فائل"
 
-#: apps/hr/models.py:301 apps/hr/views.py:481 templates/hr/day.html:20
+#: apps/hr/models.py:301 apps/hr/views.py:485 templates/hr/day.html:20
 msgid "Entered by hand"
 msgstr "ہاتھ سے درج"
 
@@ -4447,38 +4451,38 @@ msgstr "%(n)s کی حاضری درست کر دی گئی۔"
 msgid "Choose a status and write the reason."
 msgstr "حیثیت چنیں اور وجہ لکھیں۔"
 
-#: apps/hr/views.py:588
+#: apps/hr/views.py:778
 msgid "Leave request saved. It counts once the principal approves it."
 msgstr "رخصت کی درخواست محفوظ ہو گئی۔ پرنسپل کی منظوری کے بعد شمار ہو گی۔"
 
-#: apps/hr/views.py:643
+#: apps/hr/views.py:833
 msgid "Leave request withdrawn."
 msgstr "رخصت کی درخواست واپس لے لی گئی۔"
 
-#: apps/hr/views.py:669
+#: apps/hr/views.py:859
 msgid "Give the machine's IP address, port and comm key (numbers)."
 msgstr "مشین کا IP ایڈریس، پورٹ اور کام کی (نمبر) لکھیں۔"
 
-#: apps/hr/views.py:672 apps/setup/views.py:142 templates/hr/machines.html:2
+#: apps/hr/views.py:862 apps/setup/views.py:142 templates/hr/machines.html:2
 #: templates/hr/machines.html:5
 msgid "Attendance machine"
 msgstr "حاضری مشین"
 
-#: apps/hr/views.py:681
+#: apps/hr/views.py:871
 msgid "Machine saved."
 msgstr "مشین محفوظ ہو گئی۔"
 
-#: apps/hr/views.py:688
+#: apps/hr/views.py:878
 #, python-format
 msgid "Connected (%(t)s). Machine clock %(c)s · %(u)s users · %(r)s records."
 msgstr "رابطہ ہو گیا (%(t)s)۔ مشین کا وقت %(c)s · %(u)s صارفین · %(r)s ریکارڈ۔"
 
-#: apps/hr/views.py:692
+#: apps/hr/views.py:882
 #, python-format
 msgid "The machine did not answer: %(e)s"
 msgstr "مشین نے جواب نہیں دیا: %(e)s"
 
-#: apps/hr/views.py:709
+#: apps/hr/views.py:899
 #, python-format
 msgid ""
 "Biometric ID given to %(n)s staff: %(names)s. Their punches come in at the "
@@ -4487,16 +4491,16 @@ msgstr ""
 "%(n)s ملازمین کو بائیومیٹرک آئی ڈی دی گئی: %(names)s۔ ان کی حاضری اگلی بار "
 "مشین پڑھنے پر آ جائے گی۔"
 
-#: apps/hr/views.py:715
+#: apps/hr/views.py:905
 msgid "Tick the rows to save and choose the staff member in each."
 msgstr "محفوظ کرنے والی قطاروں پر نشان لگائیں اور ہر ایک میں ملازم منتخب کریں۔"
 
-#: apps/hr/views.py:762
+#: apps/hr/views.py:952
 #, python-format
 msgid "Times from %(d)s removed."
 msgstr "%(d)s سے اوقات ہٹا دیے گئے۔"
 
-#: apps/hr/views.py:782
+#: apps/hr/views.py:972
 #, python-format
 msgid ""
 "Give the date the times start from, and an In time before the Out time for: "
@@ -4505,11 +4509,11 @@ msgstr ""
 "اوقات شروع ہونے کی تاریخ دیں، اور آنے کا وقت جانے کے وقت سے پہلے رکھیں: "
 "%(t)s۔"
 
-#: apps/hr/views.py:783
+#: apps/hr/views.py:973
 msgid "at least one staff type"
 msgstr "کم از کم ایک قسم کا عملہ"
 
-#: apps/hr/views.py:795
+#: apps/hr/views.py:985
 #, python-format
 msgid "Staff duty times saved, from %(d)s."
 msgstr "عملے کے ڈیوٹی اوقات %(d)s سے محفوظ ہو گئے۔"
@@ -6845,9 +6849,10 @@ msgstr ""
 #: templates/accounts/recovery_codes.html:9 templates/admissions/report.html:9
 #: templates/exams/date_sheet.html:9 templates/fees/family_vouchers.html:28
 #: templates/fees/receipt.html:21 templates/fees/student.html:43
-#: templates/fees/vouchers.html:34 templates/includes_list_tools.html:4
-#: templates/notices/detail.html:8 templates/parents/slips.html:18
-#: templates/payroll/settlement.html:7 templates/people/student_detail.html:73
+#: templates/fees/vouchers.html:34 templates/hr/_report_tools.html:5
+#: templates/includes_list_tools.html:4 templates/notices/detail.html:8
+#: templates/parents/slips.html:18 templates/payroll/settlement.html:7
+#: templates/people/student_detail.html:73
 msgid "Print"
 msgstr "پرنٹ"
 
@@ -8531,8 +8536,8 @@ msgid "No expenses yet."
 msgstr "ابھی کوئی خرچ نہیں۔"
 
 #: templates/events/detail.html:51 templates/fees/vouchers.html:21
-#: templates/includes_list_tools.html:3 templates/inventory/sales.html:22
-#: templates/payroll/index.html:42
+#: templates/hr/_report_tools.html:3 templates/includes_list_tools.html:3
+#: templates/inventory/sales.html:22 templates/payroll/index.html:42
 msgid "Excel"
 msgstr "ایکسل"
 
@@ -10504,6 +10509,10 @@ msgstr "کام کی (پاس ورڈ)"
 msgid "Read by itself"
 msgstr "خود بخود پڑھے"
 
+#: templates/hr/_report_tools.html:4
+msgid "PDF"
+msgstr "PDF"
+
 #: templates/hr/day.html:10
 msgid "Work out again"
 msgstr "دوبارہ حساب کریں"
@@ -11040,27 +11049,6 @@ msgstr "واپس لیں"
 #: templates/hr/month.html:2 templates/hr/month.html:6
 msgid "Monthly staff attendance"
 msgstr "عملے کی ماہانہ حاضری"
-
-#: templates/hr/month.html:9
-msgid ""
-"P present · L late · H half day · A absent · LV leave · HD holiday · – off "
-"day"
-msgstr ""
-"P حاضر · L دیر · H آدھا دن · A غیر حاضر · LV رخصت · HD چھٹی · – ہفتہ وار چھٹی"
-
-#: templates/hr/month.html:9
-msgid ""
-"e early left · ! In with no Out, or Out with no In (the day still counts)"
-msgstr ""
-"e جلدی روانگی · ! آمد بغیر روانگی، یا روانگی بغیر آمد (دن پھر بھی شمار ہوتا "
-"ہے)"
-
-#: templates/hr/month.html:9
-msgid ""
-"Unpaid = absent days + days of unpaid leave; salary is deducted for these."
-msgstr ""
-"بلا تنخواہ = غیر حاضری کے دن + بلا تنخواہ رخصت کے دن؛ ان دنوں کی تنخواہ کٹتی "
-"ہے۔"
 
 #: templates/hr/month.html:11
 msgid "In with no Out, or Out with no In"
@@ -13349,6 +13337,25 @@ msgstr "کھلا"
 #: templates/setup/users.html:28
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
+
+#~ msgid ""
+#~ "P present · L late · H half day · A absent · LV leave · HD holiday · – "
+#~ "off day"
+#~ msgstr ""
+#~ "P حاضر · L دیر · H آدھا دن · A غیر حاضر · LV رخصت · HD چھٹی · – ہفتہ وار "
+#~ "چھٹی"
+
+#~ msgid ""
+#~ "e early left · ! In with no Out, or Out with no In (the day still counts)"
+#~ msgstr ""
+#~ "e جلدی روانگی · ! آمد بغیر روانگی، یا روانگی بغیر آمد (دن پھر بھی شمار "
+#~ "ہوتا ہے)"
+
+#~ msgid ""
+#~ "Unpaid = absent days + days of unpaid leave; salary is deducted for these."
+#~ msgstr ""
+#~ "بلا تنخواہ = غیر حاضری کے دن + بلا تنخواہ رخصت کے دن؛ ان دنوں کی تنخواہ "
+#~ "کٹتی ہے۔"
 
 #~ msgid "Read every few minutes"
 #~ msgstr "ہر چند منٹ بعد پڑھیں"

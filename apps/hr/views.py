@@ -443,6 +443,10 @@ def day(request):
         S.rebuild_days(branch, date, date)
     rows, counts = S.day_summary(branch, date)
     rows = sort_by_heading(request, rows, DAY_SORTS, default="code")
+    if request.GET.get("format") == "xlsx":
+        return _day_xlsx(branch, date, rows, counts)
+    if request.GET.get("format") == "pdf" or request.GET.get("print"):
+        return _report(request, _day_report(branch, date, rows, counts), f"Staff-attendance-{date:%Y-%m-%d}")
     return render(
         request,
         "hr/day.html",
@@ -491,7 +495,188 @@ def month(request):
     rows = sort_by_heading(request, rows, STAFF_SORTS, person=lambda r: r["employee"])
     if request.GET.get("format") == "xlsx":
         return _month_xlsx(branch, first, dates, rows)
-    return render(request, "hr/month.html", {"month": first, "dates": dates, "rows": rows})
+    if request.GET.get("format") == "pdf" or request.GET.get("print"):
+        return _report(request, _month_report(branch, first, dates, rows), f"Staff-attendance-{first:%Y-%m}")
+    return render(request, "hr/month.html", {"month": first, "dates": dates, "rows": rows, "key": MONTH_KEY})
+
+
+# The key to the marks (R13-4, project lead 19 Nov 2026): "P = Present | L = Late | …", early left stays a small "e".
+MONTH_KEY = [
+    "P = Present",
+    "L = Late",
+    "H = Half Day",
+    "A = Absent",
+    "LV = Leave",
+    "HD = Holiday",
+    "– = Off Day",
+    "e = Early Left",
+    "! = In with no Out, or Out with no In (the day still counts)",
+    "Unpaid = Absent days + days of Unpaid Leave (salary is deducted for these)",
+]
+
+
+def _report(request, context, filename):
+    """The paper report (R13-5, R13-7): ?format=pdf downloads it as PDF, ?print=1 opens it to print."""
+    from django.conf import settings
+    from django.template.loader import render_to_string
+
+    from apps.diary.models import DiaryLayout
+
+    as_pdf = request.GET.get("format") == "pdf"
+    context = {
+        **context,
+        "layout": DiaryLayout.current(),
+        "font_base": f"file://{settings.BASE_DIR}/static/fonts/" if as_pdf else f"{settings.STATIC_URL}fonts/",
+        "media_base": f"file://{settings.MEDIA_ROOT}/" if as_pdf else settings.MEDIA_URL,
+        "printed": timezone.localtime(),
+        "auto_print": not as_pdf,
+    }
+    html = render_to_string("hr/report_document.html", context)
+    if not as_pdf:
+        return HttpResponse(html)
+    from weasyprint import HTML
+
+    response = HttpResponse(
+        HTML(string=html, base_url=str(settings.BASE_DIR)).write_pdf(), content_type="application/pdf"
+    )
+    response["Content-Disposition"] = f'attachment; filename="{filename}.pdf"'
+    return response
+
+
+def _cell(text, cls=""):
+    return {"text": "" if text is None else text, "cls": cls}
+
+
+def _month_report(branch, first, dates, rows):
+    headers = ["EMP.code", "MAC.ID", "Name", "Designation"] + [d.day for d in dates]
+    headers += ["P", "L", "H", "A", "LV", "EL", "!", "Unpaid"]
+    body = []
+    for r in rows:
+        e = r["employee"]
+        line = [_cell(e.code), _cell(e.machine_id or "—"), _cell(e.full_name), _cell(e.designation)]
+        for c in r["cells"]:
+            cls = "bad" if c and c.status == "absent" else "warn" if c and c.status in ("late", "half_day") else ""
+            line.append(_cell(c.mark if c else "", cls))
+        t = r["totals"]
+        for k in ("present", "late", "half_day", "absent", "leave", "early_left", "missing", "unpaid"):
+            line.append(_cell(t.get(k, 0)))
+        body.append(line)
+    return {
+        "branch": branch,
+        "title": "MONTHLY STAFF ATTENDANCE",
+        "subtitle": f"{first:%B %Y}",
+        "landscape": True,
+        "font_size": "6.3pt",
+        "cell_pad": "0.9mm 0.5mm",
+        "key": MONTH_KEY[:8],
+        "notes": MONTH_KEY[8:],
+        "sections": [{"headers": headers, "rows": body}],
+    }
+
+
+DAY_HEADERS = ["EMP.code", "MAC.ID", "Name", "Designation", "Status", "In", "Out", "Note"]
+
+
+def _day_summary_items(counts):
+    return [
+        ("In", counts.get("in", 0)),
+        ("Present", counts.get("present", 0)),
+        ("Late", counts.get("late", 0)),
+        ("Half Day", counts.get("half_day", 0)),
+        ("Absent", counts.get("absent", 0)),
+        ("On Leave", counts.get("leave", 0)),
+        ("Nothing Recorded", counts.get("none", 0)),
+    ]
+
+
+def _day_status_text(d):
+    """The day's status in words for the report; no record yet = "Nothing recorded" (absent is not marked
+    during the day, R13-7)."""
+    if d is None:
+        return "Nothing recorded"
+    parts = [str(d.get_status_display())]
+    if d.early_left:
+        parts.append("Early left")
+    if d.missing:
+        parts.append(str(d.get_missing_display()))
+    return " · ".join(parts)
+
+
+def _day_lines(rows):
+    for e, d in rows:
+        yield (
+            e,
+            d,
+            [
+                e.code,
+                e.machine_id or "not set",
+                e.full_name,
+                e.designation,
+                _day_status_text(d),
+                d.first_in.strftime("%H:%M") if d and d.first_in else "—",
+                d.last_out.strftime("%H:%M") if d and d.last_out else "—",
+                (d.note if d else "") or "",
+            ],
+        )
+
+
+def _day_report(branch, date, rows, counts):
+    machine, hand = [], []
+    for e, d, values in _day_lines(rows):
+        cls = "" if d is None else "bad" if d.status == "absent" else "warn" if d.status in ("late", "half_day") else ""
+        line = [_cell(v) for v in values]
+        line[4] = _cell(values[4], cls)
+        line[7] = _cell(values[7], "l")
+        (machine if e.machine_id else hand).append(line)
+    sections = []
+    if machine:
+        sections.append({"heading": "From the attendance machine", "headers": DAY_HEADERS, "rows": machine})
+    if hand:
+        sections.append({"heading": "Entered by hand — no Biometric ID", "headers": DAY_HEADERS, "rows": hand})
+    if not sections:
+        sections.append({"headers": DAY_HEADERS, "rows": []})
+    return {
+        "branch": branch,
+        "title": "STAFF ATTENDANCE",
+        "subtitle": f"{date:%A %d %B %Y}",
+        "landscape": False,
+        "summary": _day_summary_items(counts),
+        "sections": sections,
+    }
+
+
+def _day_xlsx(branch, date, rows, counts):
+    from openpyxl import Workbook
+    from openpyxl.styles import Alignment, Font, PatternFill
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = f"{date:%d %b %Y}"
+    ws.append([f"{branch.name} — staff attendance {date:%A %d %B %Y}"])
+    ws.append([])
+    summary = _day_summary_items(counts)
+    ws.append([label for label, _v in summary])
+    ws.append([value for _l, value in summary])
+    ws.append([])
+    ws.append(DAY_HEADERS)
+    for cell in ws[6]:
+        cell.font = Font(bold=True)
+        cell.fill = PatternFill("solid", fgColor="E3EFEB")
+    for _e, _d, values in _day_lines(rows):
+        ws.append(values)
+    for row in ws.iter_rows(min_row=3):
+        for cell in row:
+            cell.alignment = Alignment(horizontal="center")
+    for col, width in zip("ABCDEFGH", (11, 9, 26, 18, 24, 8, 8, 30), strict=True):
+        ws.column_dimensions[col].width = width
+    ws.freeze_panes = "A7"
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    response = HttpResponse(
+        buffer.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = f'attachment; filename="Staff-attendance-{date:%Y-%m-%d}.xlsx"'
+    return response
 
 
 TOTAL_COLUMNS = [
@@ -526,9 +711,14 @@ def _month_xlsx(branch, first, dates, rows):
             + [r["totals"].get(s, 0) for s, _c in TOTAL_COLUMNS]
         )
     ws.append([])
-    ws.append(["P = present, L = late, H = half day, A = absent, LV = leave, HD = holiday, – = off day"])
-    ws.append(["e = early left; ! = In with no Out, or Out with no In (the day still counts)."])
-    ws.append(["Unpaid days = absent days + days of unpaid leave (salary is deducted for these)."])
+    ws.append(["   |   ".join(MONTH_KEY[:8])])
+    for line in MONTH_KEY[8:]:
+        ws.append([line])
+    from openpyxl.styles import Alignment
+
+    for row in ws.iter_rows(min_row=2, max_row=2 + len(rows)):
+        for cell in row:
+            cell.alignment = Alignment(horizontal="center")
     ws.column_dimensions["C"].width = 24
     ws.column_dimensions["D"].width = 18
     ws.freeze_panes = "E3"

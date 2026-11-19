@@ -770,3 +770,13 @@ details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; 
   main { max-width: none !important; margin: 0 !important; }
 }
 .month-sheet th { vertical-align: middle; }
+
+/* Monthly sheet key and report buttons (R13-2 to R13-5, R13-7) */
+.mark-key { list-style: none; padding: var(--space-3) var(--space-4); margin: var(--space-3) 0 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2) var(--space-4); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: var(--step--1); color: var(--ink-soft); }
+.mark-key li { white-space: nowrap; }
+.mark-key li:nth-child(n+9) { white-space: normal; flex-basis: 100%; }
+.month-sheet td, .month-sheet td.name { text-align: center; vertical-align: middle; }
+.heading-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); margin-block-start: var(--space-5); }
+.heading-tools h2 { margin: 0; }
+.heading-tools .list-tools { margin: 0; }
+@media print { .mark-key { font-size: 6.6pt; padding: 1pt 0; border: 0; gap: 1pt 6pt; } }
