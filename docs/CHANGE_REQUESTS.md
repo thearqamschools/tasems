@@ -657,3 +657,9 @@ not to be bought or switched on without approval.
 - R12-7. **Staff → Monthly sheet, first columns** (EMP.code, MAC.ID, Name, Designation): sensible widths — narrow
   for EMP.code and MAC.ID, wider for Name and Designation — so the gaps are even; and the **heading row centred**
   (every heading of the sheet centred over its column).
+
+## Round 13 (19 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R13-1. **Side menu — one group open at a time** (lead, 19 Nov 2026): the menu groups (Overview, Students,
+  Academics, Finance, Events, Staff, Hiring, Settings) open when clicked, but an open group stays open when another
+  is clicked, so several are open together. To do: opening a group closes the others by itself, so only **one
+  drop-down is open at a time** (e.g. Settings → Setup open, then clicking Staff or Hiring closes Settings).
