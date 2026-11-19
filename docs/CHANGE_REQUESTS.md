@@ -679,3 +679,17 @@ not to be bought or switched on without approval.
 - R13-5. **Staff → Monthly sheet, Print, Excel and PDF** (lead, 19 Nov 2026): options to **print**, download as
   **Excel** and download as **PDF** on this page. (Claude: Print and Excel buttons already appear on the page; to
   check that Excel downloads the monthly sheet itself, and add a **PDF** download.)
+- R13-6. **Side menu — capital first letter of every word** (lead, 19 Nov 2026): every item in the menu groups with
+  each word starting with a capital, e.g. "Needs attention" → **Needs Attention**, "Admission enquiries" →
+  **Admission Enquiries**, "Admission report" → **Admission Report**, "Staff attendance" → **Staff Attendance** —
+  the whole menu the same way (group names and the items under them). (Claude: small joining words such as "of",
+  "and", "by" to stay small, as usual in titles — to be confirmed if the lead wants those capital too.)
+- R13-7. **Staff → Staff attendance (today's page) — a report for the day** (lead, 19 Nov 2026):
+  - **Print, Excel and PDF** buttons for the day's attendance, placed on the **right side, on the same line as the
+    "From the attendance machine" heading**, just above the table.
+  - The report is for the date shown on the page (today or the day chosen): the **summary** (present, late, half day,
+    on leave, nothing recorded, …) and the list of staff with their In / Out times and marks, **including the staff
+    who have not marked attendance yet** ("Nothing recorded").
+  - **Absent is not marked during the day**: e.g. school starts at 8:30; a person who has not come by 9:30 is
+    **not** marked absent on the day — they stay "Nothing recorded" (as now; "Nothing recorded 25" is fine as it
+    is), and absent is counted from the next day. Nothing to change in that rule; only the report is added.
