@@ -663,3 +663,19 @@ not to be bought or switched on without approval.
   Academics, Finance, Events, Staff, Hiring, Settings) open when clicked, but an open group stays open when another
   is clicked, so several are open together. To do: opening a group closes the others by itself, so only **one
   drop-down is open at a time** (e.g. Settings → Setup open, then clicking Staff or Hiring closes Settings).
+- R13-2. **Staff → Monthly sheet, the rows** (lead, 19 Nov 2026): the headings are centred (R12-7); now **everything
+  in the rows below centred too** (EMP.code, MAC.ID, Name, Designation, the day marks and the totals), with cleaner
+  alignment overall.
+- R13-3. **Staff → Monthly sheet, the sheet fills the page width** (lead, 19 Nov 2026): the table now takes less than
+  half of the page and leaves empty space on the right; it should **stretch across the full width**.
+- R13-4. **Staff → Monthly sheet, the key to the marks** (lead, 19 Nov 2026):
+  - The key text goes **at the top**, the buttons **below it** (now the buttons come first).
+  - Written as **P = Present | L = Late | H = Half day | A = Absent | LV = Leave | HD = Holiday | – = Off day |
+    E = Early left** (and the other marks the same way: ! = In with no Out, or Out with no In; Unpaid = absent days +
+    days of unpaid leave), with the first letter of each word in capitals, separated by "|" (or commas), **well
+    spaced** so it is easy to read.
+  - (Claude: the sheet shows early left as a small "e" next to the mark; the key will match whatever the sheet shows
+    — to be confirmed whether the mark itself also becomes a capital "E".)
+- R13-5. **Staff → Monthly sheet, Print, Excel and PDF** (lead, 19 Nov 2026): options to **print**, download as
+  **Excel** and download as **PDF** on this page. (Claude: Print and Excel buttons already appear on the page; to
+  check that Excel downloads the monthly sheet itself, and add a **PDF** download.)
