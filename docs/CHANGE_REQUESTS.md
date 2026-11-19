@@ -693,3 +693,37 @@ not to be bought or switched on without approval.
   - **Absent is not marked during the day**: e.g. school starts at 8:30; a person who has not come by 9:30 is
     **not** marked absent on the day — they stay "Nothing recorded" (as now; "Nothing recorded 25" is fine as it
     is), and absent is counted from the next day. Nothing to change in that rule; only the report is added.
+- R13-8. **Side menu — a new group "School Fee"** (lead, 19 Nov 2026): the fee items move out of Finance into a new
+  group **School Fee**, placed above Finance: Barcode, Fees, Generate vouchers, Vouchers, Family vouchers,
+  Defaulters, Daily collection, Discounts. **Finance keeps**: Expenses, Cash & bank book, Profit & loss, Shop & stock,
+  Sell, Royalty. Order in the menu: … School Fee, Finance, **Books** (R13-9), …
+- R13-9. **Books — a new section for selling books** (lead, 19 Nov 2026; the lead will send a reference of the
+  present online system). Menu group **Books**, below Finance. Today books are sold through a separate online
+  system; it is to come into TASEMS.
+  - **Book inventory**: every book with its name, class (e.g. Play Group), stock in hand, **purchase price** and
+    **sale price**.
+  - **Customers** (branches, or anyone buying books) are known by their **mobile number** (main key), with name and
+    address.
+  - **Order link**: an open link is sent to the customer; they type their mobile number (no password) and see an
+    order form with **every book in stock, class by class** (class, book, sale price, a quantity box, the line
+    total), and the order total at the bottom. **View / preview** shows a summary of the books chosen (e.g. 8–10
+    items) to check again; they choose **Pick up** (they collect it) or **Delivery**, then **Place order**.
+  - The order reaches TASEMS: whose it is (mobile number, name, address), the books, pick up / delivery. The office
+    checks it, packs it and delivers it (or it is collected).
+  - **Invoice with an order ID and a barcode** (like a fee voucher ID): order status shows whether it is **paid or
+    pending**.
+  - **Recording the payment** (before or after delivery): scan or type the order ID → how it was paid (cash / bank),
+    **received by** = the person signed in (filled by itself), **which account / bank account** it went into,
+    **attach the receipt**, date, a note → Save; the payment is recorded against the order.
+  - (Claude, points to settle before building:
+    1. The open link has to be reachable from the customers' phones over the internet. TASEMS now runs on the
+       office computer (Windows), which phones outside cannot reach. This needs TASEMS (or the order page) on an
+       internet server — a hosting decision, and possibly a paid service, which need the lead's approval first.
+    2. With no password, anyone who knows a mobile number can place an order in that name. Since every order is
+       checked by the office before it is packed, this may be acceptable; or a one-time code by SMS / WhatsApp
+       (paid) could be added later.
+    3. Is the stock taken off when the order is placed, when it is packed / delivered, or when it is paid?
+    4. Are branch orders a sale (with an invoice and payment) like any customer, or a transfer?
+    5. Delivery charges, discounts, part payments, cancelled or changed orders, returns?
+    6. Is this the same stock as Finance → Shop & stock, or a separate books stock?
+    To be settled with the lead's reference.)
