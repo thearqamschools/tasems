@@ -760,8 +760,8 @@ not to be bought or switched on without approval.
   either **Friday only**, or **every day of the week**. (Claude's proposal: on each set of duty times (per staff type,
   summer / winter), a row for each working day Monday–Saturday with In time, Out time and half day after; left blank
   = the normal times of the set. So Friday is filled in today, and any other day can be changed later without a new
-  build. Late, half day and early left on that day are worked out from that day's times. To be confirmed by the
-  lead: Friday only, or every day.)
+  build. Late, half day and early left on that day are worked out from that day's times.)
+  **Decided by the lead (20 Nov 2026): every day of the week** (as proposed; a blank day keeps the normal times).
 - R14-2. **Payroll — "Pay employees" (pay many at once)** (lead, 20 Nov 2026): a button **Pay employees** on the
   Payroll page, before "Acknowledgement sheet (PDF)" (next to Payslips, Bank transfer sheet, Excel). It opens a list
   of the staff not yet paid for the month; tick the ones to pay and press one button — **all the ticked staff are
