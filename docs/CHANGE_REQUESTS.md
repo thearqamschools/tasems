@@ -762,3 +762,11 @@ not to be bought or switched on without approval.
   = the normal times of the set. So Friday is filled in today, and any other day can be changed later without a new
   build. Late, half day and early left on that day are worked out from that day's times. To be confirmed by the
   lead: Friday only, or every day.)
+- R14-2. **Payroll — "Pay employees" (pay many at once)** (lead, 20 Nov 2026): a button **Pay employees** on the
+  Payroll page, before "Acknowledgement sheet (PDF)" (next to Payslips, Bank transfer sheet, Excel). It opens a list
+  of the staff not yet paid for the month; tick the ones to pay and press one button — **all the ticked staff are
+  marked as paid** at once, instead of opening each person and paying one by one. (Claude's proposal: the list shows
+  EMP.code, name, designation, net pay and how they are paid (cash / bank, from their salary record); a "tick all"
+  box; one payment date for all (today to start); each person is paid their full net pay for the month by their own
+  method; only after the month's payroll is finalised; staff already paid are not listed; the total of the ticked
+  rows shows before saving. Paying part of a salary stays on the person's own page.)
