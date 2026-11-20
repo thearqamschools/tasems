@@ -753,3 +753,12 @@ not to be bought or switched on without approval.
     paid back or kept as credit for the customer's next order; the order shows what was returned.)
 - **Lead, 19 Nov 2026**: early left stays a small **"e"** on the sheet and in the key ("e = Early Left"); in the menu,
   small joining words (of, and, by, from, a …) stay small, every other word starts with a capital.
+
+## Round 14 (20 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R14-1. **Setup → Staff duty times — a different time for a day of the week** (lead, 20 Nov 2026): Friday has
+  different In / Out times (Sunday is off), so the duty times need a way to set the times of a day separately —
+  either **Friday only**, or **every day of the week**. (Claude's proposal: on each set of duty times (per staff type,
+  summer / winter), a row for each working day Monday–Saturday with In time, Out time and half day after; left blank
+  = the normal times of the set. So Friday is filled in today, and any other day can be changed later without a new
+  build. Late, half day and early left on that day are worked out from that day's times. To be confirmed by the
+  lead: Friday only, or every day.)
