@@ -897,3 +897,16 @@ not to be bought or switched on without approval.
   - (Claude: Poppins is free to use and can ship with TASEMS. Helvetica Inserat is a paid (licensed) font: TASEMS can
     use it only if the school has the font file with a licence for it — the lead to send it; otherwise a free font
     that looks very close is used, e.g. Anton. To be confirmed by the lead.)
+- R15-10. **Result reports** (lead, 24 Nov 2026): after the marks are saved, reports to see **how a class / section
+  did overall** in an exam, and **each student's progress**. (Claude's proposal, for the lead to confirm:
+  1. **Section / class result** (per exam; print, PDF, Excel): number of students, how many sat, class average %,
+     highest and lowest %, **subject-wise average** and highest in each subject, the students ranked by percentage
+     (top three marked), and students below a chosen percentage listed for attention; a class report adds the
+     sections side by side.
+  2. **Student progress report** (print / PDF): one student's percentage in every exam of the session (and earlier
+     sessions), subject by subject, with the change from the exam before — the "Exam results by year" table made
+     printable with subjects.
+  To confirm: is a pass / fail line wanted (e.g. 33%), and should positions (1st, 2nd, 3rd) show?)
+- R15-11. **"All sections" table — columns** (lead, 24 Nov 2026): **Class**, then **Section**, then the exams
+  (Periodic Assessment – I, Mid-Term, Periodic Assessment – II, Final) — not the class and section run together in
+  one column. (Lead also suggested arranging this part exam-wise; with R15-7's filter.)
