@@ -1016,3 +1016,10 @@ not to be bought or switched on without approval.
   - the Attentive / Punctual / Neatness / Participation block: equal space above (from the table) and below (to
     Remarks).
   (Claude: one even gap used between every block, so the card looks balanced.)
+- R17-4. **Result card — the border box evenly placed on the page** (lead, 24 Nov 2026): the box around the card has
+  the **same margin from the page edge on all four sides** (left, right, top, bottom). Now the address line at the
+  foot is far below the box's bottom line; the address sits just under the box, with the same spacing as the rest.
+- R17-5. **Result card and date sheet — finished like a designer would** (lead, 24 Nov 2026): look at both as a
+  graphic / UI-UX designer and make them neat and beautiful: everything aligned on clear lines, e.g. the
+  EXCELLENT / GOOD / FAIR headings **centred over their boxes** (FAIR is not centred now), the rating boxes evenly
+  spaced, consistent type sizes and weights, even gaps (R17-1, R17-3).
