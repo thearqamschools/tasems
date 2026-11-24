@@ -1047,3 +1047,9 @@ not to be bought or switched on without approval.
   makes one for them by itself (username = their EMP.code, a first password to change, role Class teacher), linked to
   their staff record; or (B) keep as now: give each teacher a login under Setup → Users and roles first, then they
   appear.)
+  - **Decided by the lead (24 Nov 2026)**: **show every teacher (staff record) in both lists without a login**, so they
+    can be assigned as class teacher and subject teacher now; the login is made later, and once made it is tied to
+    the same person, so their class / subjects follow them (no assigning again). No login is made by itself.
+    (Claude: the class teacher and subject teacher are kept against the staff record; when that record gets a login
+    (Setup → Users and roles, or on the staff member's page), the class teacher's rights — marks, attendance, diary of
+    their own section — work through it. Until then the name shows on timetables, result cards' lists etc.)
