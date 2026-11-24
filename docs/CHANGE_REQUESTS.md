@@ -928,3 +928,7 @@ not to be bought or switched on without approval.
   at the top of the date sheet. (Claude: on the test build it shows in the PDF; to check on Windows whether the
   banner file is found when the PDF is made there, and whether the lead means the Date sheet *page* on the screen —
   which has no logo — or the PDF.)
+- R16-3. **Exam → Edit — "Exams start on / end on" once, at the top** (lead, 24 Nov 2026): the two dates are the same
+  for every class, so they should not sit inside each class's box. Put them **once, right under the exam's name**
+  (e.g. "Periodic Assessment – I") at the top of the page — above the class buttons (Play Group, Nursery, Prep …) and
+  above / beside "Date sheet" and "Generate date sheet (PDF)" — and saved on their own, not with a class.
