@@ -795,5 +795,33 @@ not to be bought or switched on without approval.
   - Then the grid as in the sample: a row per date, a column per class (Playgroup, Nursery, Prep, One … Seven,
     Pre-Ninth …), the paper of each class on each date, "–" where a class has no paper.
   - **No times anywhere** on any date sheet — dates only.
-- R14-6. **Papers** (lead, 24 Nov 2026 — to be continued): after the date sheet come the papers; papers are to be
-  **uploaded** into TASEMS (details to follow).
+- R14-6. **Question papers kept on record** (lead, 24 Nov 2026): for every exam, the **question paper of each
+  subject of each class is uploaded** and kept in TASEMS (only the question paper — not the checked answer
+  papers), so it is known later what, e.g., Class 7 English's paper was last year and what the students' results
+  were.
+- R14-7. **Entering the marks — two ways** (lead, 24 Nov 2026; as quick and simple as possible):
+  1. **On the screen, a whole section at once**: open the exam → the section → one table with the **students down
+     the left** and the **subjects across the top**; type every student's marks in every subject on that one table.
+     The **Attentive / Punctual / Neatness / Participation** ratings (Excellent / Good / Fair) are marked by a **tick
+     / one click** for each student — on the same table or right next to it, whichever is quicker (Claude to
+     propose).
+  2. **On paper / Excel**: TASEMS gives a **sheet** (Excel, and a printable sheet) with every student of the class /
+     section and the subjects; the marks are filled in (typed in Excel, or written by hand) and brought back into
+     TASEMS. The lead asked that a **photo or scan of the hand-written sheet is read by itself**.
+     (Claude: reading hand-writing from a photo needs an AI reading service. The lead decided on 13 Nov 2026 (D-097)
+     that TASEMS has no AI or paid integration and sends nothing out; CVs are read by the office in its own Claude
+     with the TASEMS skill and brought in as TASEMS's Excel template. Proposal: the same for marks — the office gives
+     the photo / scan to Claude with a TASEMS "marks reader" skill, which fills TASEMS's marks Excel; the Excel is
+     imported, checked on screen and saved. To be confirmed by the lead.)
+- R14-8. **Summer Vacation Work in the Mid-Term** (lead, 24 Nov 2026): in the Mid-Term, every class / section has
+  **Summer Vacation Work as a subject** of its own, with its own total marks (typed first) and marks like any
+  subject. **Periodic Assessment marks are not added into the Mid-Term** (or into any other exam).
+- R14-9. **Result cards** (lead, 24 Nov 2026): **one card per student, for every one of the four exams**, exactly
+  like the sample "Result of Periodic Assessment – II" — **black and white**:
+  - Logo and THE ARQAM SCHOOLS, "RESULT OF <exam name>"; Name, Class, **Code = the admission code**, Section.
+  - The subjects with total and obtained marks, total marks, percentage.
+  - Attentive / Punctual / Neatness / Participation with Excellent / Good / Fair boxes (the chosen one ticked).
+  - **Remarks** — written by hand on the printed card (left empty by TASEMS); Teacher and Head / Principal lines.
+  - The address line at the bottom: The Arqam Schools, Sanora Colony, Samanabad, Faisalabad (as on the sample).
+  - Cards can be **exported** (PDF) one student at a time or the whole section.
+  - Every exam's marks stay on record, so each student's **progress across the exams and the years** is kept.
