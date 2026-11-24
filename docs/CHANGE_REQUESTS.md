@@ -882,3 +882,18 @@ not to be bought or switched on without approval.
   (Claude: TASEMS already keeps a branch's address, phone 1–2 and mobile 1–2 under Setup → Branches, entered by head
   office. To do: a "Branch details" page the branch's own principal / owner can fill, the mobiles marked as WhatsApp,
   and a **website** field added.)
+- R15-7. **Exams & Results — "All sections" list** (lead, 24 Nov 2026): fine as it is, but better with a **filter at
+  the top** (Claude: choose a class, or type a section, to see only those rows).
+- R15-8. **Marks & cards — the marks table** (lead, 24 Nov 2026):
+  - **No roll number**: the student's **admission number (ADM.NO.)** shows instead; the Roll column is removed.
+  - Better alignment, spacing and ease of use of the table (subjects, Total, %, Attentive, Punctual, Neatness,
+    Participation, Card); the **Card** link made proper (a clear button).
+- R15-9. **Result card — fonts and layout like the school's own card** (lead, 24 Nov 2026):
+  - "THE ARQAM SCHOOLS" beside the logo in **Helvetica Inserat** (the font of the school's card); **everything
+    else in Poppins** (e.g. "RESULT OF PERIODIC ASSESSMENT – II"). The **date sheet uses the same fonts** (R15-5).
+  - **Name, ADM.NO., Class, Section**: the line runs **beside** each label (the value written on the line), not
+    under it; "Code" becomes **ADM.NO.**
+  - The whole card aligned properly, as on the sample.
+  - (Claude: Poppins is free to use and can ship with TASEMS. Helvetica Inserat is a paid (licensed) font: TASEMS can
+    use it only if the school has the font file with a licence for it — the lead to send it; otherwise a free font
+    that looks very close is used, e.g. Anton. To be confirmed by the lead.)
