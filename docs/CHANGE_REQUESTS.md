@@ -952,7 +952,9 @@ not to be bought or switched on without approval.
   folder path.)
 - R16-7. **Result card — type and lines** (lead, 24 Nov 2026, same photo):
   - **Bold**: "RESULT OF PERIODIC ASSESSMENT – II"; the four labels **Name, ADM.NO., Class, Section**; the table
-    headings **SUBJECT, TOTAL MARKS, OBTAINED MARKS** (and 1–2 points larger); **every subject name**; **PERCENTAGE**;
+    headings **SUBJECT, TOTAL MARKS, OBTAINED MARKS** (and 1–2 points larger); the rows **TOTAL MARKS** and
+    **PERCENTAGE** (lead, same day: the subject names — English, Mathematics, E.V.S, Kids Book, Urdu … — stay
+    **not bold**);
     **ATTENTIVE, PUNCTUAL, NEATNESS, PARTICIPATION**; **Remarks**.
   - Name / ADM.NO. / Class / Section lines: **shorter**, and **raised** so the line sits right under the written
     value (now it falls well below it); **Class and Section moved further to the right**.
