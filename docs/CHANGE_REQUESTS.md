@@ -966,3 +966,9 @@ not to be bought or switched on without approval.
 - R16-8. **Result card — the line at the foot** (lead, 24 Nov 2026): it shows "The Arqam Schools" twice (the name
   plus an address that itself starts with the school's name). The foot shows **only the branch's address exactly as
   written in Setup → Branch details**, nothing added before it — the same as the date sheet.
+- R16-9. **"Admission number" is called "Computer code"** (lead, 24 Nov 2026): everywhere in TASEMS a student's
+  admission number (Admission no., Admission number, ADM.NO.) is renamed **Computer code**, and in short
+  **COMP.code** (like EMP.code for staff) — student list and record, forms, imports and Excel sheets, exams (marks
+  table, marks Excel, sheet to fill by hand, result cards, result reports, progress report), slips, ID cards,
+  certificates, vouchers and every other place. Only the name changes: the numbers themselves stay the same.
+  (Claude: about 65 places; the Urdu wording changes too, and the marks reader skill's instructions.)
