@@ -3,6 +3,7 @@ and total marks of each class (copied from an earlier exam), question papers kep
 grid (PDF, no times), the marks of a whole section on one table (or Excel in and out), and black-and-white result
 cards for every exam."""
 
+import datetime as dt
 import io
 import zipfile
 from pathlib import Path
@@ -20,7 +21,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from apps.academics.models import ClassLevel, Subject
+from apps.academics.models import ClassLevel, Section, Subject
 from apps.diary.models import DiaryLayout
 from apps.organisation.models import AcademicSession
 
@@ -123,7 +124,16 @@ def papers(request, exam_id):
             return redirect(here)
         existing = {p.subject_id: p for p in exam.papers.filter(class_level=level)}
         problems = []
-        for subject in _subjects(exam):
+        try:  # the exam's first and last day, on the same page (R15-4)
+            first, last = request.POST.get("starts_on", "").strip(), request.POST.get("ends_on", "").strip()
+            exam.starts_on = dt.date.fromisoformat(first) if first else None
+            exam.ends_on = dt.date.fromisoformat(last) if last else None
+            if exam.starts_on and exam.ends_on and exam.ends_on < exam.starts_on:
+                exam.starts_on, exam.ends_on = exam.ends_on, exam.starts_on
+            exam.save(update_fields=["starts_on", "ends_on", "updated_at"])
+        except ValueError:
+            problems.append(_("The first or last day could not be read."))
+        for subject in _subjects(exam, level):
             raw = request.POST.get(f"total_{subject.id}", "").strip()
             paper = existing.get(subject.id)
             upload = request.FILES.get(f"qp_{subject.id}")
@@ -139,6 +149,12 @@ def papers(request, exam_id):
             if paper is None:
                 paper = Paper(exam=exam, class_level=level, subject=subject)
             paper.total_marks = int(raw)
+            day = request.POST.get(f"date_{subject.id}", "").strip()
+            try:
+                paper.date = dt.date.fromisoformat(day) if day else None
+            except ValueError:
+                problems.append(_("%(s)s: the date could not be read.") % {"s": subject.name})
+            paper.starts_at = paper.ends_at = None
             if upload is not None:
                 if not upload.name.lower().endswith(QUESTION_PAPER_TYPES) or upload.size > 20 * 1024 * 1024:
                     problems.append(
@@ -160,7 +176,7 @@ def papers(request, exam_id):
             "can_see": existing.get(s.id) is not None
             and documents.can_see_question_paper(request.user, existing[s.id], branch),
         }
-        for s in _subjects(exam)
+        for s in _subjects(exam, level)
     ]
     if not can_edit:
         rows = [r for r in rows if r["paper"]]
@@ -193,12 +209,25 @@ def _paper_counts(exam):
     return exam.papers.values_list("class_level_id").annotate(n=Count("id"))
 
 
-def _subjects(exam):
-    """Every active subject; Summer Vacation Work only in the Mid-Term (R14-8), at the top."""
-    subjects = list(Subject.objects.filter(is_active=True).order_by("name"))
-    summer = [s for s in subjects if s.code == SUMMER_WORK]
-    others = [s for s in subjects if s.code != SUMMER_WORK]
-    return (summer + others) if exam.kind == Exam.Kind.MID else others
+def _subjects(exam, level):
+    """The class's subjects from Setup → Classes & subjects (R15-3; every active subject while none are set for the
+    class); Summer Vacation Work only in the Mid-Term (R14-8), at the top. A subject with a paper already stays."""
+    from apps.academics.models import CurriculumSubject
+
+    mapped = [
+        c.subject
+        for c in CurriculumSubject.objects.filter(class_level=level, subject__is_active=True)
+        .select_related("subject")
+        .order_by("sort_order", "subject__name")
+    ]
+    subjects = mapped or list(Subject.objects.filter(is_active=True).order_by("name"))
+    with_paper = set(exam.papers.filter(class_level=level).values_list("subject_id", flat=True))
+    extra = [s for s in Subject.objects.filter(pk__in=with_paper) if s not in subjects]
+    others = [s for s in subjects + extra if s.code != SUMMER_WORK]
+    if exam.kind == Exam.Kind.MID:
+        summer = Subject.objects.filter(code=SUMMER_WORK).first()
+        return ([summer] if summer else []) + others
+    return others
 
 
 @login_required
@@ -313,12 +342,12 @@ def section_marks(request, exam_id, section_id):
 
 def _blank_sheet(request, exam, section, data):
     """The sheet to fill by hand (R14-7 (2)): the same columns as the Excel, opened to print."""
-    headers = ["Code", "Roll", "Name"] + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
+    headers = ["ADM.NO.", "Name"] + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
     headers += ["Attentive", "Punctual", "Neatness", "Participation"]
     rows = []
     for row in data["rows"]:
         e = row["enrolment"]
-        line = [{"text": e.student.admission_no}, {"text": e.roll_no or ""}, {"text": e.student.full_name, "cls": "l"}]
+        line = [{"text": e.student.admission_no}, {"text": e.student.full_name, "cls": "l"}]
         line += [{"text": grid.cell_text(row["marks"].get(p.id))} for p in data["papers"]]
         line += [{"text": ""} for _a in ExamRating.ASPECTS]
         rows.append(line)
@@ -376,8 +405,8 @@ def cards(request, exam_id, section_id):
             "exam": exam,
             "section": section,
             "cards": cards,
-            "address": _address(section.branch),
-            "logo": _grey_logo(),
+            "address": documents.css_text(_address(section.branch)),
+            "banner": _banner(),
             "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
             "levels": ExamRating.Level.choices,
         },
@@ -392,27 +421,14 @@ def cards(request, exam_id, section_id):
 
 
 def _address(branch):
-    lines = [x.strip() for x in (branch.address or "").splitlines() if x.strip()]
-    if lines:
-        return f"The Arqam Schools, {', '.join(lines)}"
-    return "The Arqam Schools, Sanora Colony, Samanabad, Faisalabad"
+    """The branch's address from Setup → Branch details (R15-6), on one line."""
+    lines = [x.strip() for x in (branch.address or "").replace(",\n", "\n").splitlines() if x.strip()]
+    return f"The Arqam Schools, {', '.join(lines)}" if lines else "The Arqam Schools"
 
 
-def _grey_logo():
-    """The official logo in grey for the black-and-white card (the lead's own card prints it in black); the shape
-    is unchanged. A logo uploaded in Setup is used when there is one."""
-    import base64
-
-    from PIL import Image
-
-    layout = DiaryLayout.current()
-    path = Path(layout.left_logo.path) if layout and getattr(layout, "left_logo", None) else None
-    if path is None or not path.exists():
-        path = Path(settings.BASE_DIR) / "static" / "img" / "arqam-logo-512.png"
-    image = Image.open(path).convert("LA")
-    buffer = io.BytesIO()
-    image.save(buffer, "PNG")
-    return "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode()
+def _banner():
+    """The school's colour logo banner sent by the lead (R15-1), used exactly as sent."""
+    return f"file://{settings.BASE_DIR}/static/img/arqam-banner.png"
 
 
 @login_required
@@ -427,3 +443,205 @@ def marks_skill(request):
     response = HttpResponse(buffer.getvalue(), content_type="application/zip")
     response["Content-Disposition"] = 'attachment; filename="tasems-marks-reader.zip"'
     return response
+
+
+# --- Result reports (R15-10) --------------------------------------------------------------------------------------
+
+
+def _fmt(value, suffix=""):
+    return "—" if value is None else f"{value.normalize() if hasattr(value, 'normalize') else value}{suffix}"
+
+
+def _pct_text(value):
+    return "—" if value is None else f"{value:.2f}%"
+
+
+@login_required
+def report(request, exam_id):
+    """How a class / section did in an exam: pass (33%), positions, subject averages; every class at a glance when no
+    class is chosen. Print, PDF and Excel."""
+    from apps.hr.views import _report as paper_report
+
+    from . import reports
+
+    branch = _branch(request)
+    exam = _exam(request, branch, exam_id)
+    session = exam.session
+    sections = list(
+        Section.objects.filter(branch=branch, session=session, is_active=True)
+        .select_related("class_level")
+        .order_by("class_level__sort_order", "name")
+    )
+    classes = sorted({s.class_level for s in sections}, key=lambda c: c.sort_order)
+    class_id, section_id = request.GET.get("class", ""), request.GET.get("section", "")
+    chosen = [s for s in sections if str(s.class_level_id) == class_id] if class_id.isdigit() else []
+    if section_id.isdigit():
+        chosen = [s for s in chosen if str(s.id) == section_id]
+    context = {"exam": exam, "classes": classes, "class_id": class_id, "section_id": section_id,
+               "class_sections": [s for s in sections if str(s.class_level_id) == class_id],
+               "pass_percent": reports.PASS_PERCENT}  # fmt: skip
+    if chosen:
+        result = reports.class_result(exam, chosen)
+        for s in result["students"]:
+            s["place"] = reports.ordinal(s["position"]) if s["position"] and s["position"] <= 3 else ""
+        context["result"] = result
+        scope = str(chosen[0]) if len(chosen) == 1 else str(chosen[0].class_level)
+        context["scope"] = scope
+    else:
+        context["overview"] = reports.overview(exam, branch, session)
+        scope = "All classes"
+    fmt = request.GET.get("format")
+    if fmt in ("pdf", "xlsx") or request.GET.get("print"):
+        paper = _report_paper(exam, branch, scope, context)
+        if fmt == "xlsx":
+            return _report_xlsx(paper, f"Result {exam.name} {scope}")
+        return paper_report(request, paper, f"Result {exam.name} {scope}")
+    return render(request, "exams/report.html", context)
+
+
+def _report_paper(exam, branch, scope, context):
+    """The report as headings and rows for the paper report (PDF / print / Excel)."""
+    sections = []
+    summary_items = []
+    if "result" in context:
+        r = context["result"]
+        s = r["summary"]
+        summary_items = [("Students", s["students"]), ("Passed", s["passed"]), ("Failed", s["failed"]),
+                         ("Pass rate", _pct_text(s["pass_rate"])), ("Average", _pct_text(s["average"])),
+                         ("Highest", _pct_text(s["highest"])), ("Lowest", _pct_text(s["lowest"]))]  # fmt: skip
+        sections.append({
+            "heading": "Students by percentage",
+            "headers": ["Position", "ADM.NO.", "Name", "Section", "Marks", "%", "Result"],
+            "rows": [[{"text": x["place"], "cls": "warn" if x["place"] else ""},
+                      {"text": x["enrolment"].student.admission_no},
+                      {"text": x["enrolment"].student.full_name, "cls": "l"}, {"text": x["section"].name},
+                      {"text": f"{_fmt(x['obtained'])} / {x['total']}"}, {"text": _pct_text(x["percent"])},
+                      {"text": ("Pass" if x["passed"] else "Fail") if x["percent"] is not None else "Not complete",
+                       "cls": "" if x["passed"] or x["percent"] is None else "bad"}] for x in r["students"]],
+        })  # fmt: skip
+        sections.append({
+            "heading": "Subjects",
+            "headers": ["Subject", "Total marks", "Sat", "Average %", "Highest marks", f"Passed ({PASS_TEXT})"],
+            "rows": [[{"text": x["subject"].name, "cls": "l"}, {"text": x["total"]}, {"text": x["sat"]},
+                      {"text": _pct_text(x["average"])}, {"text": _fmt(x["highest"])}, {"text": x["passed"]}]
+                     for x in r["subjects"]],
+        })  # fmt: skip
+        if len(r["sections"]) > 1:
+            sections.append({
+                "heading": "Sections",
+                "headers": ["Section", "Students", "Passed", "Pass rate", "Average", "Highest"],
+                "rows": [[{"text": x["section"].name}, {"text": x["students"]}, {"text": x["passed"]},
+                          {"text": _pct_text(x["pass_rate"])}, {"text": _pct_text(x["average"])},
+                          {"text": _pct_text(x["highest"])}] for x in r["sections"]],
+            })  # fmt: skip
+    else:
+        sections.append({
+            "heading": "Classes",
+            "headers": ["Class", "Sections", "Students", "Passed", "Failed", "Pass rate", "Average", "Highest"],
+            "rows": [[{"text": str(x["level"]), "cls": "l"}, {"text": x["sections"]}, {"text": x["students"]},
+                      {"text": x["passed"]}, {"text": x["failed"]}, {"text": _pct_text(x["pass_rate"])},
+                      {"text": _pct_text(x["average"])}, {"text": _pct_text(x["highest"])}]
+                     for x in context["overview"]],
+        })  # fmt: skip
+    return {
+        "branch": branch,
+        "title": f"RESULT · {exam.get_kind_display().upper()}",
+        "subtitle": f"{scope} · Session {exam.session.name}",
+        "landscape": False,
+        "summary": summary_items,
+        "key": [f"Pass = {PASS_TEXT} or more of the exam's total marks", "Positions: 1st, 2nd, 3rd by percentage"],
+        "sections": sections,
+    }
+
+
+PASS_TEXT = "33%"
+
+
+def _report_xlsx(paper, filename):
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Result"
+    ws.append([paper["title"], paper["subtitle"]])
+    if paper["summary"]:
+        ws.append([])
+        ws.append([k for k, _v in paper["summary"]])
+        ws.append([v for _k, v in paper["summary"]])
+    for sec in paper["sections"]:
+        ws.append([])
+        ws.append([sec["heading"]])
+        ws.cell(ws.max_row, 1).font = Font(bold=True)
+        ws.append(sec["headers"])
+        for cell in ws[ws.max_row]:
+            cell.font = Font(bold=True)
+        for row in sec["rows"]:
+            ws.append([c["text"] for c in row])
+    ws.column_dimensions["C"].width = 26
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    response = HttpResponse(
+        buffer.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = f'attachment; filename="{filename}.xlsx"'
+    return response
+
+
+@login_required
+def progress_report(request, student_id):
+    """One student's progress (R15-10): every exam of the session — or every year with ?all=1 — subject by subject,
+    the total, percentage, pass / fail and the change from the exam before. Print or PDF."""
+    from apps.hr.views import _report as paper_report
+    from apps.people.models import Student
+
+    from . import reports
+
+    branch = _branch(request)
+    student = Student.objects.filter(pk=student_id, branch=branch).first()
+    if student is None:
+        raise Http404
+    session = None if request.GET.get("all") else AcademicSession.objects.filter(is_current=True).first()
+    data = reports.student_progress(student, session)
+    if not data["exams"]:
+        messages.info(request, _("No exam marks for this student yet."))
+        return redirect("people:student_detail", pk=student.pk)
+    headers = ["Subject"] + [f"{e.get_kind_display()} {e.session.name}" if not session else e.get_kind_display()
+                             for e in data["exams"]]  # fmt: skip
+    rows = []
+    for subject, cells in data["subjects"]:
+        line = [{"text": subject.name, "cls": "l"}]
+        for cell in cells:
+            if cell is None:
+                line.append({"text": "–"})
+            else:
+                p, m = cell
+                got = "Absent" if m.status != "present" else _fmt(m.obtained)
+                line.append({"text": f"{got} / {p.total_marks}", "cls": "bad" if m.status != "present" else ""})
+        rows.append(line)
+    rows.append(
+        [{"text": "Total", "cls": "l"}] + [{"text": f"{_fmt(t['obtained'])} / {t['total']}"} for t in data["totals"]]
+    )
+    rows.append([{"text": "Percentage", "cls": "l"}] + [{"text": _pct_text(t["percent"])} for t in data["totals"]])
+    rows.append([{"text": "Result", "cls": "l"}] + [
+        {"text": ("Pass" if t["passed"] else "Fail") if t["percent"] is not None else "—",
+         "cls": "" if t["passed"] or t["percent"] is None else "bad"} for t in data["totals"]])  # fmt: skip
+    rows.append([{"text": "Change from the exam before", "cls": "l"}] + [
+        {"text": "—" if t["change"] is None else f"{t['change']:+.2f}%",
+         "cls": "bad" if t["change"] and t["change"] < 0 else ""}
+        for t in data["totals"]])  # fmt: skip
+    from apps.people.services import current_enrolment
+
+    enrolment = current_enrolment(student, AcademicSession.objects.filter(is_current=True).first())
+    paper = {
+        "branch": branch,
+        "title": "PROGRESS REPORT",
+        "subtitle": f"{student.full_name} · ADM.NO. {student.admission_no}"
+        + (f" · {enrolment.section}" if enrolment else "")
+        + (f" · Session {session.name}" if session else " · All years"),
+        "landscape": len(data["exams"]) > 5,
+        "summary": [(f"{t['exam'].get_kind_display()}", _pct_text(t["percent"])) for t in data["totals"]][-7:],
+        "key": [f"Pass = {PASS_TEXT} or more of the exam's total marks", "Each exam stands alone"],
+        "sections": [{"headers": headers, "rows": rows}],
+    }
+    return paper_report(request, paper, f"Progress {student.admission_no}")

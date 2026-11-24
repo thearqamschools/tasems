@@ -126,16 +126,16 @@ def workbook(exam, section, data):
     ws.title = "Marks"
     ws.append([f"{exam.name} — {section} — The Arqam Schools"])
     ws.append(
-        ["Code", "Roll no.", "Name"]
+        ["ADM.NO.", "Name"]
         + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
         + [str(label) for _a, label in ExamRating.ASPECTS]
     )
-    ws.append(["student", "", ""] + [f"paper:{p.id}" for p in data["papers"]] + [a for a, _l in ExamRating.ASPECTS])
+    ws.append(["student", ""] + [f"paper:{p.id}" for p in data["papers"]] + [a for a, _l in ExamRating.ASPECTS])
     ws.row_dimensions[KEY_ROW].hidden = True
     for row in data["rows"]:
         e, r = row["enrolment"], row["rating"]
         ws.append(
-            [e.student.admission_no, e.roll_no or "", e.student.full_name]
+            [e.student.admission_no, e.student.full_name]
             + [cell_text(row["marks"].get(p.id)) for p in data["papers"]]
             + [LEVEL_LETTERS[getattr(r, a)] if r else "G" for a, _l in ExamRating.ASPECTS]
         )
@@ -143,7 +143,7 @@ def workbook(exam, section, data):
         cell.font = Font(bold=True)
         cell.fill = PatternFill("solid", fgColor="E3EFEB")
         cell.alignment = Alignment(horizontal="center", wrap_text=True)
-    first_rating = 4 + len(data["papers"])
+    first_rating = 3 + len(data["papers"])
     if data["rows"]:
         from openpyxl.utils import get_column_letter
 
@@ -152,14 +152,14 @@ def workbook(exam, section, data):
         last = KEY_ROW + len(data["rows"])
         dv.add(f"{get_column_letter(first_rating)}{KEY_ROW + 1}:{get_column_letter(first_rating + 3)}{last}")
     ws.column_dimensions["A"].width = 12
-    ws.column_dimensions["C"].width = 26
-    ws.freeze_panes = "D4"
+    ws.column_dimensions["B"].width = 26
+    ws.freeze_panes = "C4"
     notes = wb.create_sheet("How to fill")
     for line in (
         "Type the marks under each subject (whole or half marks, not more than the total in brackets).",
         "A = absent. Leave a cell empty if the marks are not ready yet.",
         "Attentive, Punctual, Neatness, Participation: E = Excellent, G = Good, F = Fair.",
-        "Do not change the Code column, the headings or the order of the columns.",
+        "Do not change the ADM.NO. column, the headings or the order of the columns.",
         "Then: TASEMS → Exams & Results → the exam → the section → Import Excel; check and press Save.",
     ):
         notes.append([line])
@@ -171,7 +171,7 @@ def workbook(exam, section, data):
 
 def read_workbook(file, papers, rows):
     """The Excel back → a dict like a submitted form ({"m_<student>_<paper>": text, "r_<student>_<aspect>": letter})
-    and a list of problems. Rows are matched by Code (admission no.)."""
+    and a list of problems. Rows are matched by ADM.NO. (admission number)."""
     from openpyxl import load_workbook
 
     try:
@@ -200,7 +200,7 @@ def read_workbook(file, papers, rows):
         code = str(values[0] or "").strip().upper()
         sid = by_code.get(code)
         if sid is None:
-            problems.append(f"Row {n}: code {code or '(empty)'} is not a student of this section; left out.")
+            problems.append(f"Row {n}: ADM.NO. {code or '(empty)'} is not a student of this section; left out.")
             continue
         for i, (kind, ref) in columns.items():
             value = values[i] if i < len(values) else None

@@ -66,7 +66,8 @@
 </table></div>
 
 {% if progress %}
-<h2 id="progress">{% trans "Exam results by year" %}</h2>
+<div class="heading-tools"><h2 id="progress">{% trans "Exam results by year" %}</h2>
+  <div class="list-tools no-print"><a class="button quiet sm" href="{% url 'exams:progress' student.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Progress report (this session)" %}</a><a class="button quiet sm" href="{% url 'exams:progress' student.id %}?all=1" target="_blank" rel="noopener">{% icon "printer" %}{% trans "All years" %}</a></div></div>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Exam" %}</th><th class="num">{% trans "Marks" %}</th><th class="num">%</th></tr></thead>
   <tbody>{% for x in progress %}<tr><td>{{ x.exam.session }}</td><td>{{ x.exam.get_kind_display }}</td><td class="num">{{ x.obtained|floatformat:"-1" }} / {{ x.total }}</td><td class="num"><strong>{% if x.percent is not None %}{{ x.percent|floatformat:"-2" }}%{% else %}—{% endif %}</strong></td></tr>{% endfor %}</tbody>

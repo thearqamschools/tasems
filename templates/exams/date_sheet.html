@@ -5,7 +5,7 @@
 <div class="page-header">
   <div><h1>{% trans "Date sheet" %} · {{ exam.get_kind_display }}</h1><p class="lede">{{ exam.name }} · {{ branch.name }}</p></div>
   <div class="actions">
-    {% if can_edit and not editing %}<a class="button quiet" href="?edit=1&class={{ level_id }}">{% trans "Set the dates" %}</a>{% endif %}
+    {% if not editing %}<a class="button quiet" href="{% url 'exams:papers' exam.id %}">{% trans "Edit" %}</a>{% endif %}
     {% if not editing and grid.rows %}<a class="button" href="{% url 'exams:date_sheet_pdf' exam.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Generate date sheet (PDF)" %}</a>{% endif %}
   </div>
 </div>
@@ -31,5 +31,5 @@
   <thead><tr><th>{% trans "Date" %}</th>{% for c in grid.columns %}<th class="center">{{ c }}</th>{% endfor %}</tr></thead>
   <tbody>{% for d, cells in grid.rows %}<tr><td class="nowrap"><strong>{{ d|date:"d-m-y" }}</strong> <span class="muted small">{{ d|date:"D" }}</span></td>{% for c in cells %}<td class="center">{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div>
-{% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "No dates set yet." %}{% if can_edit %} {% trans "Press “Set the dates”." %}{% endif %}</p></div>{% endif %}
+{% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "No dates set yet." %}{% if can_edit %} {% trans "Press Edit and give each paper its day." %}{% endif %}</p></div>{% endif %}
 {% endblock %}

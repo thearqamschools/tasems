@@ -7,30 +7,35 @@
 <div class="heading-tools"><h2>{% trans "Exams this session" %}</h2>
 {% if can_add %}<form method="post" action="{% url 'exams:add_session_exams' %}" style="margin:0">{% csrf_token %}<button class="button sm" type="submit">{% icon "calendar-check" %}{% trans "Add this session's exams" %}</button></form>{% endif %}</div>
 {% if exams %}
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Exam" %}</th><th>{% trans "Dates" %}</th><th>{% trans "Marks due" %}</th><th>{% trans "Results" %}</th><th></th></tr></thead>
-  <tbody>{% for e in exams %}<tr><td><strong>{{ e.get_kind_display }}</strong>{% if e.name != e.get_kind_display %}<br><span class="muted small">{{ e.name }}</span>{% endif %}</td>
-    <td class="nowrap">{% if e.first_day %}{{ e.first_day|date:"d M" }} – {{ e.last_day|date:"d M Y" }}{% else %}—{% endif %}</td>
-    <td>{{ e.marks_due_on|date:"d M Y"|default:"—" }}</td>
-    <td>{% if e.is_published %}<span class="badge">{% trans "Published" %}</span>{% else %}<span class="badge muted">{% trans "Not published" %}</span>{% endif %}</td>
-    <td class="nowrap"><a href="{% url 'exams:papers' e.id %}">{% trans "Papers & question papers" %}</a> · <a href="{% url 'exams:date_sheet' e.id %}">{% trans "Date sheet" %}</a></td></tr>{% endfor %}</tbody>
-</table></div>
+<div class="exam-cards">{% for e in exams %}
+  <section class="card exam-card">
+    <div class="exam-card-head"><span class="exam-step">{{ forloop.counter }}</span><div><h3>{{ e.get_kind_display }}</h3>
+      <p class="muted small">{% if e.first_day %}{{ e.first_day|date:"d M" }} – {{ e.last_day|date:"d M Y" }}{% else %}{% trans "Dates not set" %}{% endif %}{% if e.marks_due_on %} · {% blocktrans with d=e.marks_due_on|date:"d M" %}Marks due {{ d }}{% endblocktrans %}{% endif %}</p></div></div>
+    <div class="exam-card-actions">
+      <a class="button sm" href="{% url 'exams:papers' e.id %}">{% trans "Edit" %}</a>
+      <a class="button quiet sm" href="{% url 'exams:date_sheet' e.id %}">{% icon "calendar-check" %}{% trans "Date sheet" %}</a>
+      <a class="button quiet sm" href="{% url 'exams:report' e.id %}">{% icon "file-spreadsheet" %}{% trans "Results" %}</a>
+    </div>
+  </section>{% endfor %}</div>
 {% else %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No exams set up yet for this session." %}{% if can_add %} {% trans "Press “Add this session's exams”." %}{% endif %}</p></div>{% endif %}
 
 {% if mine %}
 <h2>{% trans "My classes" %}</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Section" %}</th>{% for e in exams %}<th class="center">{{ e.get_kind_display }}</th>{% endfor %}</tr></thead>
-  <tbody>{% for s in mine %}<tr><td>{{ s }}</td>{% for e in exams %}<td class="center"><a href="{% url 'exams:section_marks' e.id s.id %}">{% trans "Marks & cards" %}</a></td>{% endfor %}</tr>{% endfor %}</tbody>
+<div class="table-wrap"><table class="sections-table">
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th>{% for e in exams %}<th class="center">{{ e.get_kind_display }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for s in mine %}<tr><td>{{ s.class_level }}</td><td>{{ s.name }}</td>{% for e in exams %}<td class="center"><a class="button quiet sm" href="{% url 'exams:section_marks' e.id s.id %}">{% trans "Marks & cards" %}</a></td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div>
 {% endif %}
 
-<h2>{% trans "All sections" %}</h2>
+<div class="heading-tools"><h2>{% trans "All sections" %}</h2>
+  <form method="get" class="filter-inline" style="margin:0"><label for="class">{% trans "Class" %}</label>
+    <select id="class" name="class" onchange="this.form.submit()"><option value="">{% trans "All classes" %}</option>{% for c in classes %}<option value="{{ c.id }}" {% if class_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+    <noscript><button class="button quiet sm" type="submit">{% trans "Show" %}</button></noscript></form></div>
 {% if sections %}
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Section" %}</th>{% for e in exams %}<th class="center">{{ e.get_kind_display }}</th>{% endfor %}</tr></thead>
-  <tbody>{% for s in sections %}<tr><td>{{ s }}</td>
-    {% for e in exams %}<td class="center"><a href="{% url 'exams:section_marks' e.id s.id %}">{% trans "Marks & cards" %}</a></td>{% endfor %}</tr>{% endfor %}</tbody>
+<div class="table-wrap"><table class="sections-table">
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th>{% for e in exams %}<th class="center">{{ e.get_kind_display }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for s in sections %}<tr><td>{{ s.class_level }}</td><td>{{ s.name }}</td>
+    {% for e in exams %}<td class="center"><a class="button quiet sm" href="{% url 'exams:section_marks' e.id s.id %}">{% trans "Marks & cards" %}</a></td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<div class="card empty-state">{% icon "inbox" %}<p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
 {% endblock %}

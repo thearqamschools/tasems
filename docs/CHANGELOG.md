@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.50.0 — 2026-11-24 — Round 15: exams made simpler, colour logo, result reports (installer v24)
+- **Exams & Results** (R15-2, R15-7, R15-11): each exam on its own card (1 to 4) with **Edit**, **Date sheet** and
+  **Results** buttons; the sections table has **Class** and **Section** columns and a class filter.
+- **Edit = one page** (R15-4): the classes across the top; for the class, only its subjects with **total marks, the
+  paper's day and the question paper** on one row; the exam's first and last day at the top; Date sheet and
+  Generate date sheet (PDF) at the top; "Copy papers from another exam" kept below.
+- **Setup → Classes & subjects** (R15-3): tick each class's subjects (all its sections share them), or add a new
+  subject; only these show for the class in the exams. Summer Vacation Work stays part of every Mid-Term by itself.
+- **Setup → Branch details** (R15-6): branch name, full address, phones, mobile / WhatsApp numbers and website.
+- **Date sheet PDF** (R15-1, R15-5): the school's colour logo banner; DATE SHEET; the exam in the centre with its dates
+  on the left and the session on the right; even, centred boxes in the logo's colours; the branch's address only at
+  the foot. Poppins throughout.
+- **Result card** (R15-1, R15-9): the colour logo banner; Name, ADM.NO., Class and Section with the line beside each;
+  Poppins throughout.
+- **Marks & cards** (R15-8): ADM.NO. in place of the roll number; neater table; a clear Card button. The marks Excel
+  and the sheet to fill by hand use ADM.NO. too.
+- **Results** (R15-10): per exam — every class at a glance, or a class / section: pass at **33%**, positions **1st,
+  2nd, 3rd** (equal percentages share), pass rate, average, highest, lowest, subject averages, sections side by side;
+  print, PDF and Excel. **Progress report** of a student (this session or all years): every exam subject by subject,
+  total, percentage, pass / fail and the change from the exam before.
+- Fonts: Poppins (OFL) and Helvetica Inserat (sent by the lead) in `static/fonts/`; the lead's logo banner in
+  `static/img/arqam-banner.png`.
+
 ## 0.49.0 — 2026-11-24 — Round 14: Friday duty times, Pay employees, the year's four exams (installer v23)
 - **Setup → Staff Duty Times — a different time on a day of the week** (R14-1): under each staff type, Monday to
   Saturday with their own In time, Out time and half day after; a blank day keeps the normal times. Late, half day and

@@ -796,3 +796,21 @@ details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; 
 .date-sheet-edit .card { margin: 0; }
 .date-sheet-edit .field.inline { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-block: 0.3rem; }
 .date-sheet-edit .field.inline select { inline-size: auto; }
+.subject-ticks { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--space-2) var(--space-4); margin-block: var(--space-3); }
+.subject-ticks .check { display: flex; align-items: center; gap: var(--space-2); }
+.papers-table td { vertical-align: middle; }
+.papers-table input.narrow { inline-size: 6rem; min-inline-size: 0; text-align: center; }
+.papers-table .qp-cell { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.papers-table input[type="file"] { max-inline-size: 15rem; font-size: var(--step--1); }
+.exam-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: var(--space-3); }
+.exam-card { margin: 0 !important; display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-3); }
+.exam-card-head { display: flex; gap: var(--space-3); align-items: flex-start; }
+.exam-card-head h3 { margin: 0; font-size: var(--step-0); }
+.exam-card-head p { margin: 0.2rem 0 0; }
+.exam-step { flex: none; display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; border-radius: 50%; background: var(--primary-soft, #e8e9f6); color: var(--primary, #3e4095); font-weight: 700; }
+.exam-card-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.sections-table td { vertical-align: middle; }
+.marks-grid { font-size: var(--step--1); }
+.marks-grid thead th { white-space: normal; line-height: 1.25; }
+.marks-grid td:first-child, .marks-grid th:first-child { padding-inline-start: 0.8rem; }
+.marks-grid tbody tr:nth-child(even) td { background: var(--surface-sunk); }

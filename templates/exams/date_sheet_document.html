@@ -1,30 +1,43 @@
-{% load tasems_tags %}<!doctype html>
-{# The printed date sheet (R14-5, project lead 24 Nov 2026): logo, school, DATE SHEET, the exam, its dates and the session; a row per date, a column per class; no times. #}
+<!doctype html>
+{# The printed date sheet (R14-5, R15-5): the school's logo banner; DATE SHEET; the exam in the centre with its dates on the left and the session on the right; a row per date, a column per class; no times; the branch's address at the foot. #}
 <html lang="en"><head><meta charset="utf-8"><title>Date sheet</title>
 <style>
-  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
-  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
-  @page { size: A4 landscape; margin: 10mm; }
-  body { margin: 0; font-family: "PSans", sans-serif; color: #14182b; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Medium.ttf"); font-weight: 500; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-SemiBold.ttf"); font-weight: 600; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Bold.ttf"); font-weight: 700; }
+  @page { size: A4 landscape; margin: 9mm 10mm 12mm;
+    @bottom-center { content: "{{ address|safe }}"; font: 8.5pt "Poppins"; color: #3e4095; } }
+  body { margin: 0; font-family: "Poppins", sans-serif; color: #14182b; }
   .top { text-align: center; }
-  .top img { width: 20mm; height: 20mm; }
-  .school { font-size: 18pt; font-weight: 700; color: #3e4095; margin-top: 1mm; }
-  .band { background: #14182b; color: #fff; border-radius: 3mm; padding: 2mm 0 2.5mm; margin: 3mm 0 4mm; text-align: center; }
-  .band b { display: block; font-size: 24pt; letter-spacing: .08em; }
-  .band span { display: block; font-size: 12pt; }
-  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  th, td { border: .6pt solid #14182b; text-align: center; vertical-align: middle; padding: 2.2mm 1mm; font-size: {{ font|default:"10pt" }}; }
-  th { background: #e6e8f2; font-weight: 700; }
-  td.date { font-weight: 700; white-space: nowrap; }
-  td.date small { display: block; font-weight: 400; font-size: 7.5pt; color: #3b4157; }
-  .foot { margin-top: 3mm; font-size: 8pt; color: #3b4157; text-align: center; }
+  .top img { height: 22mm; width: auto; }
+  .band { margin: 3mm 0 0; background: #3e4095; color: #fff; border-radius: 2.5mm; text-align: center; padding: 1.6mm 0 2mm;
+    border-bottom: 1.4mm solid #ed3237; }
+  .band b { font-size: 22pt; font-weight: 700; letter-spacing: .14em; }
+  table.meta { width: 100%; border-collapse: collapse; margin: 2.5mm 0 3.5mm; }
+  table.meta td { width: 33.33%; font-size: 10.5pt; padding: 0; vertical-align: middle; }
+  table.meta td.l { text-align: left; color: #3b4157; }
+  table.meta td.c { text-align: center; font-weight: 700; font-size: 13pt; color: #3e4095; }
+  table.meta td.r { text-align: right; color: #3b4157; }
+  table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.grid th, table.grid td { border: .7pt solid #9aa0c8; text-align: center; vertical-align: middle;
+    padding: 2.4mm 1mm; font-size: {{ font|default:"9.5pt" }}; line-height: 1.25; word-wrap: break-word; }
+  table.grid th { background: #3e4095; color: #fff; font-weight: 600; border-color: #3e4095; }
+  table.grid th.date { width: 25mm; }
+  table.grid tbody tr:nth-child(even) td { background: #f1f2fa; }
+  table.grid td.date { font-weight: 600; white-space: nowrap; color: #14182b; }
+  table.grid td.date small { display: block; font-weight: 400; font-size: 7.5pt; color: #5b6080; }
+  table.grid td.none { color: #9aa0c8; }
 </style></head>
 <body>
-  <div class="top"><img src="{% official_logo layout media_base font_base %}" alt=""><div class="school">The Arqam Schools</div><div style="font-size:9pt;color:#3b4157">{{ branch.name }}</div></div>
-  <div class="band"><b>DATE SHEET</b><span>{{ exam.get_kind_display }}{% if sheet.first %} · {{ sheet.first|date:"j F" }} – {{ sheet.last|date:"j F Y" }}{% endif %} · Session {{ exam.session.name }}</span></div>
-  <table>
-    <thead><tr><th style="width:24mm">Date</th>{% for c in sheet.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
-    <tbody>{% for d, cells in sheet.rows %}<tr><td class="date">{{ d|date:"d-m-y" }}<small>{{ d|date:"l" }}</small></td>{% for c in cells %}<td>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+  <div class="top"><img src="{{ banner }}" alt="The Arqam Schools"></div>
+  <div class="band"><b>DATE SHEET</b></div>
+  <table class="meta"><tr>
+    <td class="l">{% if sheet.first %}{{ sheet.first|date:"j F" }} – {{ sheet.last|date:"j F Y" }}{% endif %}</td>
+    <td class="c">{{ exam.get_kind_display }}</td>
+    <td class="r">Session {{ exam.session.name }}</td></tr></table>
+  <table class="grid">
+    <thead><tr><th class="date">Date</th>{% for c in sheet.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for d, cells in sheet.rows %}<tr><td class="date">{{ d|date:"d-m-y" }}<small>{{ d|date:"l" }}</small></td>{% for c in cells %}<td{% if c == "–" %} class="none"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
   </table>
-  <p class="foot">The Arqam Schools · www.thearqam.com</p>
 </body></html>

@@ -849,7 +849,7 @@ not to be bought or switched on without approval.
 - **Lead, 24 Nov 2026 ("ok kr do")**: Claude's proposals in R14-10 accepted, and the marks reader skill for photos
   of hand-filled sheets (read in the office's own Claude, not inside TASEMS).
 
-## Round 15 (24 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 15 (24 Nov 2026) — built 24 Nov 2026 (installer v24, CHANGELOG 0.50.0)
 - R15-1. **Colour logo on the result card and the date sheet** (lead, 24 Nov 2026): the official logo in its own
   colours (not grey) on both, with "The Arqam Schools" beside it as on the school's own designs. The lead will send
   the logo file to use.

@@ -2,24 +2,25 @@
 {# Result card of one exam (R14-9, project lead 24 Nov 2026): black and white, like the school's "Result of Periodic Assessment – II" card. Remarks are written by hand. #}
 <html lang="en"><head><meta charset="utf-8"><title>Result cards</title>
 <style>
-  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
-  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
-  @page { size: A4 portrait; margin: 10mm 12mm 10mm; @bottom-center { content: "{{ address }}"; font: 8pt "PSans"; color: #000; } }
-  body { margin: 0; font-family: "PSans", sans-serif; color: #000; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Medium.ttf"); font-weight: 500; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-SemiBold.ttf"); font-weight: 600; }
+  @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Bold.ttf"); font-weight: 700; }
+  @page { size: A4 portrait; margin: 10mm 12mm 10mm; @bottom-center { content: "{{ address|safe }}"; font: 8pt "Poppins"; color: #000; } }
+  body { margin: 0; font-family: "Poppins", sans-serif; color: #000; }
   .card { border: 1.6pt solid #000; padding: 8mm 9mm 7mm; height: 263mm; box-sizing: border-box; page-break-after: always; position: relative; }
   .card:last-child { page-break-after: auto; }
   .head { text-align: center; }
-  .head img { width: 16mm; height: 16mm; vertical-align: middle; margin-right: 3mm; }
-  .head .school { display: inline-block; vertical-align: middle; font-size: 24pt; font-weight: 700; letter-spacing: .02em; }
-  h1 { text-align: center; font-size: 14pt; margin: 5mm 0 7mm; letter-spacing: .02em; }
-  .who { display: table; width: 100%; font-size: 10pt; margin-bottom: 5mm; }
-  .who div { display: table-row; }
-  .who span { display: table-cell; padding: 1.6mm 0; }
-  .who b { font-weight: 700; }
-  .line { border-bottom: .8pt solid #000; display: inline-block; min-width: 52mm; text-align: center; font-weight: 700; }
+  .head img { width: 128mm; height: auto; }
+  h1 { text-align: center; font-size: 13.5pt; font-weight: 700; margin: 4mm 0 7mm; letter-spacing: .01em; }
+  table.who { width: 100%; border-collapse: collapse; margin-bottom: 6mm; font-size: 10pt; }
+  table.who td { padding: 1.8mm 0; vertical-align: bottom; }
+  table.who td.k { font-weight: 700; white-space: nowrap; width: 17mm; padding-right: 2mm; }
+  table.who td.v { border-bottom: .8pt solid #000; text-align: center; font-weight: 600; }
+  table.who td.gap { width: 10mm; }
   table.marks { width: 76%; margin: 0 auto; border-collapse: collapse; }
-  table.marks th, table.marks td { border: 1pt solid #000; padding: 2.4mm 3mm; font-size: 8.5pt; }
-  table.marks th { font-weight: 700; text-align: center; }
+  table.marks th, table.marks td { border: 1pt solid #000; padding: 2.3mm 3mm; font-size: 8.5pt; vertical-align: middle; }
+  table.marks th { font-weight: 700; text-align: center; font-size: 8pt; }
   table.marks td.n { text-align: center; width: 30mm; }
   table.marks td.s { text-transform: uppercase; }
   table.marks tr.total td { font-weight: 700; }
@@ -39,12 +40,12 @@
 </style></head>
 <body>
 {% for c in cards %}<div class="card">
-  <div class="head"><img src="{{ logo }}" alt=""><span class="school">THE ARQAM SCHOOLS</span></div>
+  <div class="head"><img src="{{ banner }}" alt="The Arqam Schools"></div>
   <h1>RESULT OF {{ exam.get_kind_display|upper }}</h1>
-  <div class="who">
-    <div><span><b>Name:</b> <span class="line">{{ c.e.student.full_name }}</span></span><span><b>Class:</b> <span class="line">{{ section.class_level }}</span></span></div>
-    <div><span><b>Code:</b> <span class="line">{{ c.e.student.admission_no }}</span></span><span><b>Section:</b> <span class="line">{{ section.name }}</span></span></div>
-  </div>
+  <table class="who">
+    <tr><td class="k">Name:</td><td class="v">{{ c.e.student.full_name }}</td><td class="gap"></td><td class="k">Class:</td><td class="v">{{ section.class_level }}</td></tr>
+    <tr><td class="k">ADM.NO.:</td><td class="v">{{ c.e.student.admission_no }}</td><td class="gap"></td><td class="k">Section:</td><td class="v">{{ section.name }}</td></tr>
+  </table>
   <table class="marks">
     <thead><tr><th>SUBJECT</th><th>TOTAL MARKS</th><th>OBTAINED MARKS</th></tr></thead>
     <tbody>{% for p, m in c.lines %}<tr><td class="s">{{ p.subject.name }}</td><td class="n">{{ p.total_marks }}</td><td class="n">{% if m %}{% if m.status == "present" %}{{ m.obtained|floatformat:"-1" }}{% else %}Absent{% endif %}{% endif %}</td></tr>{% endfor %}

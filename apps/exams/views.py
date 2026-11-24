@@ -46,6 +46,11 @@ def index(request):
         else []
     )
     mine = [s for s in sections if s.class_teacher_id == request.user.id]
+    # R15-7: filter the sections by class
+    classes = sorted({s.class_level for s in sections}, key=lambda c: c.sort_order)
+    class_id = request.GET.get("class", "")
+    if class_id.isdigit():
+        sections = [s for s in sections if s.class_level_id == int(class_id)]
     from . import documents
 
     can_add = (
@@ -58,7 +63,15 @@ def index(request):
     return render(
         request,
         "exams/index.html",
-        {"exams": exams, "sections": sections, "mine": mine, "session": session, "can_add": can_add},
+        {
+            "exams": exams,
+            "sections": sections,
+            "mine": mine,
+            "session": session,
+            "can_add": can_add,
+            "classes": classes,
+            "class_id": class_id,
+        },  # fmt: skip
     )
 
 

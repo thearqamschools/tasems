@@ -34,6 +34,7 @@ from . import access
 from .forms import (
     AssignmentForm,
     BankAccountForm,
+    BranchDetailsForm,
     BranchForm,
     CampusForm,
     DiscountTypeForm,
@@ -103,6 +104,22 @@ def hub(request):
             _("Sections of this session, class teachers, capacity and campuses."),
             "users",
             here("academics.change_section") or here("organisation.change_campus"),
+        ),
+        (
+            "branch_details",
+            "setup:branch_details",
+            _("Branch details"),
+            _("This branch's name, address, phones, mobile / WhatsApp numbers and website for its printed papers."),
+            "building-2",
+            any(here(p) for p in BRANCH_DETAILS_PERMS),
+        ),
+        (
+            "class_subjects",
+            "setup:class_subjects",
+            _("Classes & subjects"),
+            _("The subjects of each class; only these show for the class in exams, diary and timetable."),
+            "book-open",
+            _network_wide(user, SUBJECTS_PERM) or user.is_superuser,
         ),
         (
             "printer",
@@ -182,6 +199,100 @@ def hub(request):
     if not cards and not user.is_staff:
         raise PermissionDenied
     return render(request, "setup/hub.html", {"cards": cards, "branch": branch})
+
+
+# ---------- Branch details (R15-6) ----------
+BRANCH_DETAILS_PERMS = ("organisation.change_branch", "academics.change_section")
+
+
+@login_required
+def branch_details(request):
+    """The details of the branch TASEMS runs in — name, address, phones, mobile / WhatsApp numbers, website — that
+    its printed papers carry (e.g. the address at the foot of the date sheet)."""
+    branch = current_branch(request)
+    if branch is None or not any(request.user.has_branch_perm(p, branch.id) for p in BRANCH_DETAILS_PERMS):
+        raise PermissionDenied
+    form = BranchDetailsForm(request.POST or None, instance=branch)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, _("Branch details saved."))
+        return redirect("setup:hub")
+    return _form_page(
+        request,
+        form,
+        _("Branch details"),
+        reverse("setup:hub"),
+        lede=_(
+            "Printed on this branch's papers: the address at the foot of date sheets and result cards, and the "
+            "numbers where contact details are shown."
+        ),
+    )
+
+
+# ---------- Classes & subjects (R15-3, network-wide) ----------
+SUBJECTS_PERM = "academics.change_curriculumsubject"
+
+
+@login_required
+def class_subjects(request):
+    """Each class's subjects, class by class (sections of a class share them). Only a class's subjects show for it
+    in the exams, the diary and the timetable. A new subject can be added here."""
+    from apps.academics.models import ClassLevel, CurriculumSubject, Subject
+
+    if not _network_wide(request.user, SUBJECTS_PERM) and not request.user.is_superuser:
+        raise PermissionDenied
+    levels = list(ClassLevel.objects.filter(is_active=True).order_by("sort_order"))
+    if not levels:
+        raise PermissionDenied
+    level = next((lv for lv in levels if str(lv.id) == request.GET.get("class", "")), levels[0])
+    here = f"{reverse('setup:class_subjects')}?class={level.id}"
+    if request.method == "POST":
+        if request.POST.get("action") == "add_subject":
+            name = request.POST.get("name", "").strip()[:80]
+            if not name:
+                messages.error(request, _("Write the subject's name."))
+                return redirect(here)
+            from django.utils.text import slugify
+
+            code = slugify(name)[:40] or f"subject-{Subject.objects.count() + 1}"
+            subject, made = Subject.objects.get_or_create(code=code, defaults={"name": name})
+            if not subject.is_active:
+                subject.is_active = True
+                subject.save(update_fields=["is_active", "updated_at"])
+            CurriculumSubject.objects.get_or_create(
+                class_level=level, subject=subject,
+                defaults={"sort_order": CurriculumSubject.objects.filter(class_level=level).count() + 1},
+            )  # fmt: skip
+            messages.success(request, _("%(s)s added to %(c)s.") % {"s": subject.name, "c": level})
+            return redirect(here)
+        chosen = [int(x) for x in request.POST.getlist("subject") if x.isdigit()]
+        keep = CurriculumSubject.objects.filter(class_level=level)
+        keep.exclude(subject_id__in=chosen).delete()
+        have = set(keep.values_list("subject_id", flat=True))
+        for order, sid in enumerate(chosen, start=1):
+            if sid not in have:
+                CurriculumSubject.objects.create(class_level=level, subject_id=sid, sort_order=order)
+        messages.success(request, _("Subjects of %(c)s saved.") % {"c": level})
+        return redirect(here)
+    mapped = set(CurriculumSubject.objects.filter(class_level=level).values_list("subject_id", flat=True))
+    counts = dict(
+        CurriculumSubject.objects.values_list("class_level_id")
+        .annotate(n=Count("id"))
+        .values_list("class_level_id", "n")
+    )
+    return render(
+        request,
+        "setup/class_subjects.html",
+        {
+            "levels": [(lv, counts.get(lv.id, 0)) for lv in levels],
+            "level": level,
+            # Summer Vacation Work is not ticked here: it is part of every Mid-Term by itself (R14-8).
+            "subjects": [
+                (s, s.id in mapped)
+                for s in Subject.objects.filter(is_active=True).exclude(code="summer-vacation-work").order_by("name")
+            ],
+        },
+    )
 
 
 # ---------- Receipt printer (branch) ----------

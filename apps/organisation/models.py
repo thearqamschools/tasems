@@ -80,6 +80,7 @@ class Branch(TimeStampedModel):
     phone_2 = models.CharField(_("phone 2"), max_length=60, blank=True)
     mobile_1 = models.CharField(_("mobile 1"), max_length=60, blank=True)
     mobile_2 = models.CharField(_("mobile 2"), max_length=60, blank=True)
+    website = models.CharField(_("website"), max_length=120, blank=True)  # R15-6
     receipt_printer = models.CharField(
         _("receipt printer (network address)"),
         max_length=60,

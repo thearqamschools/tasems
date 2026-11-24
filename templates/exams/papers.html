@@ -1,32 +1,42 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
-{% block title %}{% trans "Papers" %} · {{ exam.name }}{% endblock %}
+{% block title %}{% trans "Edit" %} · {{ exam.name }}{% endblock %}
 {% block content %}
 <p><a href="{% url 'exams:index' %}">‹ {% trans "Exams & Results" %}</a></p>
-<h1>{% trans "Papers & question papers" %} · {{ exam.get_kind_display }}</h1>
-<p class="lede">{{ exam.name }}{% if can_edit %} · {% trans "Type the total marks of each subject that has a paper in this exam (empty = no paper). Attach the question paper to keep it on record; it stays private until the exam day." %}{% endif %}</p>
-<nav class="class-tabs" aria-label="{% trans 'Classes' %}">{% for lv, n in levels %}<a class="button sm {% if lv.id == level.id %}{% else %}quiet{% endif %}" href="?class={{ lv.id }}"{% if lv.id == level.id %} aria-current="page"{% endif %}>{{ lv }}{% if n %} <span class="badge muted">{{ n }}</span>{% endif %}</a>{% endfor %}</nav>
+<div class="page-header">
+  <div><h1>{{ exam.get_kind_display }}</h1><p class="lede">{{ exam.session }}{% if can_edit %} · {% trans "For each class: the total marks of its subjects (empty = no paper), the day of each paper and the question paper. The question paper stays private until the exam day." %}{% endif %}</p></div>
+  <div class="actions">
+    <a class="button quiet" href="{% url 'exams:date_sheet' exam.id %}">{% icon "calendar-check" %}{% trans "Date sheet" %}</a>
+    <a class="button" href="{% url 'exams:date_sheet_pdf' exam.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Generate date sheet (PDF)" %}</a>
+  </div>
+</div>
+<nav class="class-tabs" aria-label="{% trans 'Classes' %}">{% for lv, n in levels %}<a class="button sm {% if lv.id != level.id %}quiet{% endif %}" href="?class={{ lv.id }}"{% if lv.id == level.id %} aria-current="page"{% endif %}>{{ lv }}{% if n %} <span class="badge muted">{{ n }}</span>{% endif %}</a>{% endfor %}</nav>
+
+{% if rows %}
+<form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
+  <div class="form-grid">
+    <div class="field"><label for="starts_on">{% trans "Exams start on" %}</label><input type="date" id="starts_on" name="starts_on" value="{{ exam.starts_on|date:'Y-m-d' }}" {% if not can_edit %}disabled{% endif %}></div>
+    <div class="field"><label for="ends_on">{% trans "Exams end on" %}</label><input type="date" id="ends_on" name="ends_on" value="{{ exam.ends_on|date:'Y-m-d' }}" {% if not can_edit %}disabled{% endif %}></div>
+  </div>
+  <h2>{{ level }}</h2>
+  <div class="table-wrap"><table class="papers-table">
+    <thead><tr><th>{% trans "Subject" %}</th><th class="center">{% trans "Total marks" %}</th><th class="center">{% trans "Date" %}</th><th>{% trans "Question paper" %}</th></tr></thead>
+    <tbody>{% for r in rows %}<tr><td><strong>{{ r.subject.name }}</strong></td>
+      <td class="center">{% if can_edit %}<input type="number" name="total_{{ r.subject.id }}" min="1" max="1000" value="{{ r.paper.total_marks|default:'' }}" class="narrow" aria-label="{% trans 'Total marks' %} {{ r.subject.name }}">{% else %}{{ r.paper.total_marks }}{% endif %}</td>
+      <td class="center">{% if can_edit %}<input type="date" name="date_{{ r.subject.id }}" value="{{ r.paper.date|date:'Y-m-d' }}"{% if exam.starts_on %} min="{{ exam.starts_on|date:'Y-m-d' }}"{% endif %}{% if exam.ends_on %} max="{{ exam.ends_on|date:'Y-m-d' }}"{% endif %} aria-label="{% trans 'Date' %} {{ r.subject.name }}">{% else %}{{ r.paper.date|date:"D d M"|default:"—" }}{% endif %}</td>
+      <td><div class="qp-cell">{% if r.paper.question_paper %}{% if r.can_see %}<a class="button quiet sm" href="{% url 'exams:question_paper' r.paper.id %}">{% icon "file-text" %}{% trans "Open" %}</a>{% else %}<span class="muted small">{% trans "Kept (private until the exam)" %}</span>{% endif %}{% endif %}
+        {% if can_edit %}<input type="file" name="qp_{{ r.subject.id }}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" aria-label="{% trans 'Question paper' %} {{ r.subject.name }}">{% endif %}</div></td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% if can_edit %}<div class="actions"><button class="button" type="submit">{% trans "Save" %} {{ level }}</button></div>{% endif %}
+</form>
+{% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "No subjects for this class yet. Set them under Setup → Classes & subjects." %}</p></div>{% endif %}
 
 {% if can_edit and sources %}
-<form method="post" class="filter-inline card">{% csrf_token %}<input type="hidden" name="action" value="copy">
+<details class="card"><summary>{% trans "Copy papers from another exam" %}</summary>
+<form method="post" class="filter-inline">{% csrf_token %}<input type="hidden" name="action" value="copy">
   <label for="source">{% trans "Copy all classes' papers and total marks from" %}</label>
   <select id="source" name="source">{% for e in sources %}<option value="{{ e.id }}">{{ e.name }}</option>{% endfor %}</select>
   <button class="button quiet" type="submit">{% trans "Copy" %}</button>
   <span class="small muted">{% trans "Only papers this exam does not have yet are added." %}</span>
-</form>
+</form></details>
 {% endif %}
-
-{% if rows %}
-<form method="post" enctype="multipart/form-data">{% csrf_token %}
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Subject" %}</th><th class="center">{% trans "Total marks" %}</th><th>{% trans "Date" %}</th><th>{% trans "Question paper" %}</th></tr></thead>
-  <tbody>{% for r in rows %}<tr><td>{{ r.subject.name }}</td>
-    <td class="center">{% if can_edit %}<input type="number" name="total_{{ r.subject.id }}" min="1" max="1000" value="{{ r.paper.total_marks|default:'' }}" style="max-inline-size:6rem" aria-label="{% trans 'Total marks' %} {{ r.subject.name }}">{% else %}{{ r.paper.total_marks }}{% endif %}</td>
-    <td>{{ r.paper.date|date:"D d M"|default:"—" }}</td>
-    <td>{% if r.paper.question_paper %}{% if r.can_see %}<a href="{% url 'exams:question_paper' r.paper.id %}">{% icon "file-text" %}{% trans "Open" %}</a>{% else %}<span class="muted">{% trans "Kept (private until the exam)" %}</span>{% endif %}{% endif %}
-      {% if can_edit and r.paper %} <input type="file" name="qp_{{ r.subject.id }}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" aria-label="{% trans 'Question paper' %} {{ r.subject.name }}">{% endif %}</td></tr>{% endfor %}</tbody>
-</table></div>
-{% if can_edit %}<p class="small muted">{% trans "Save the total marks first; then a question paper can be attached to each paper." %}</p>
-<div class="actions"><button class="button" type="submit">{% trans "Save" %} {{ level }}</button></div>{% endif %}
-</form>
-{% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "No papers for this class yet." %}</p></div>{% endif %}
 {% endblock %}

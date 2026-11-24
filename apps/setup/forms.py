@@ -396,3 +396,22 @@ class NewUserForm(forms.ModelForm):
 class UserDetailsForm(NewUserForm):
     class Meta(NewUserForm.Meta):
         fields = ["first_name", "last_name", "phone", "email", "preferred_language"]
+
+
+class BranchDetailsForm(Labelled, forms.ModelForm):
+    """Setup → Branch details (R15-6): what this branch prints on its papers."""
+
+    class Meta:
+        model = Branch
+        fields = ["name", "address", "phone", "phone_2", "mobile_1", "mobile_2", "website"]
+        labels = {
+            "name": _("Branch name"),
+            "address": _("Full address"),
+            "phone": _("Phone 1"),
+            "phone_2": _("Phone 2"),
+            "mobile_1": _("Mobile / WhatsApp 1"),
+            "mobile_2": _("Mobile / WhatsApp 2"),
+            "website": _("Website"),
+        }
+        widgets = {"phone": LTR, "phone_2": LTR, "mobile_1": LTR, "mobile_2": LTR, "website": LTR,
+                   "address": forms.Textarea(attrs={"rows": 3})}  # fmt: skip

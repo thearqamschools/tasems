@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Classes & subjects" %}{% endblock %}
+{% block content %}
+<p><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<h1>{% trans "Classes & subjects" %}</h1>
+<p class="lede">{% trans "Tick the subjects of each class. All sections of a class share them. Only these subjects show for the class in Exams (papers and marks), the Diary and the Timetable." %}</p>
+<nav class="class-tabs" aria-label="{% trans 'Classes' %}">{% for lv, n in levels %}<a class="button sm {% if lv.id != level.id %}quiet{% endif %}" href="?class={{ lv.id }}"{% if lv.id == level.id %} aria-current="page"{% endif %}>{{ lv }} <span class="badge muted">{{ n }}</span></a>{% endfor %}</nav>
+<form method="post" class="card">{% csrf_token %}
+  <h2>{{ level }}</h2>
+  <div class="subject-ticks">{% for s, on in subjects %}<label class="check"><input type="checkbox" name="subject" value="{{ s.id }}"{% if on %} checked{% endif %}> {{ s.name }}</label>{% endfor %}</div>
+  <div class="actions"><button class="button" type="submit">{% trans "Save" %} {{ level }}</button></div>
+</form>
+<form method="post" class="card filter-inline">{% csrf_token %}<input type="hidden" name="action" value="add_subject">
+  <label for="name">{% trans "A new subject for" %} {{ level }}</label><input type="text" id="name" name="name" maxlength="80" placeholder="{% trans 'e.g. Biology' %}" required>
+  <button class="button quiet" type="submit">{% trans "Add subject" %}</button></form>
+{% endblock %}

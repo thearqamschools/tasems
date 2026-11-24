@@ -67,6 +67,17 @@ def grid(exam, levels):
     return {"columns": columns, "rows": rows, "first": first, "last": last}
 
 
+def branch_address(branch):
+    """The branch's address on one line (Setup → Branch details, R15-6) — no "Head Office" wording, no phones."""
+    lines = [x.strip().rstrip(",") for x in (branch.address or "").splitlines() if x.strip()]
+    return css_text(", ".join(lines))
+
+
+def css_text(text):
+    """Text placed inside a CSS string (page footer): no quotes, backslashes or angle brackets."""
+    return "".join(ch for ch in text if ch not in '"\\<>')
+
+
 def date_sheet_pdf(exam, levels, branch):
     from weasyprint import HTML
 
@@ -76,9 +87,9 @@ def date_sheet_pdf(exam, levels, branch):
             "exam": exam,
             "branch": branch,
             "sheet": grid(exam, levels),
-            "layout": DiaryLayout.current(),
+            "banner": f"file://{settings.BASE_DIR}/static/img/arqam-banner.png",
+            "address": branch_address(branch),
             "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
-            "media_base": f"file://{settings.MEDIA_ROOT}/",
         },
     )
     return HTML(string=html, base_url=str(settings.BASE_DIR)).write_pdf()
