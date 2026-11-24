@@ -962,3 +962,6 @@ not to be bought or switched on without approval.
     remark lines **the same** (now the first is dark, the second light) with **more space between them**.
   - **Teacher** and **Head/ Principal**: both signature lines **the same length**, and each word **centred under its
     own line**.
+- R16-8. **Result card — the line at the foot** (lead, 24 Nov 2026): it shows "The Arqam Schools" twice (the name
+  plus an address that itself starts with the school's name). The foot shows **only the branch's address exactly as
+  written in Setup → Branch details**, nothing added before it — the same as the date sheet.
