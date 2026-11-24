@@ -1038,3 +1038,12 @@ not to be bought or switched on without approval.
   and a UI / UX designer before handing it over — equal spacing left / right and top / bottom, aligned edges, nothing
   touching a border, consistent sizes — so it looks good. (Claude to check every new or changed screen and printed
   paper this way, at the screen sizes the office uses, before sending a version.)
+- R17-8. **Teachers do not show as class teacher / subject teacher** (lead, 24 Nov 2026): staff (teachers) were added
+  under Staff, but Setup → Classes and sections → a section → Class teacher, and Academics → Timetable → subject
+  teacher, list none of them. (Claude: why — those two lists show only people with a **TASEMS login** that has a role
+  in the branch (Setup → Users and roles), because a class teacher signs in to mark attendance, write the diary and
+  enter marks. A staff record under Staff is not a login, so it is not listed. Proposal, for the lead to choose:
+  (A) the lists show the **staff records** (teaching staff of the branch); choosing a teacher who has no login yet
+  makes one for them by itself (username = their EMP.code, a first password to change, role Class teacher), linked to
+  their staff record; or (B) keep as now: give each teacher a login under Setup → Users and roles first, then they
+  appear.)
