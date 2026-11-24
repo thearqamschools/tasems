@@ -940,3 +940,7 @@ not to be bought or switched on without approval.
   - Everything in each box **centred both ways** (across and up-down).
   - (Also from the photo: the lead's date sheet uses "+" for two papers on a day and "Biology/Computer" for a choice;
     both kept as typed.)
+- R16-5. **Results — the whole school's result too** (lead, 24 Nov 2026): on an exam's Results page, the class-wise
+  table ("All classes") is there; at its end add **the whole school's result** for that exam — a total row / summary:
+  students, passed, failed, pass rate, average and highest for the whole branch (Claude: also in the print, PDF and
+  Excel; optionally the school's top three students by percentage).
