@@ -71,7 +71,7 @@
       {% if can_search_students %}
       <form class="appbar-search" method="get" action="{% url 'people:student_list' %}" role="search">
         <label class="visually-hidden" for="global-search">{% trans "Search students" %}</label>
-        {% icon "search" %}<input type="search" id="global-search" name="q" placeholder="{% trans 'Search students…' %}" title="{% trans 'Name, admission no. or parent mobile' %}" autocomplete="off">
+        {% icon "search" %}<input type="search" id="global-search" name="q" placeholder="{% trans 'Search students…' %}" title="{% trans 'Name, computer code or parent mobile' %}" autocomplete="off">
       </form>
       {% endif %}
       <div class="appbar-actions">

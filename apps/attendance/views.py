@@ -183,7 +183,7 @@ def absentees(request):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("Absent students") + f" {date:%d-%m-%Y}",
-            [_("Status"), _("Admission no."), _("Name"), _("Class"), _("Section"), _("Days in a row"),
+            [_("Status"), _("Computer code"), _("Name"), _("Class"), _("Section"), _("Days in a row"),
              _("Father mobile"), _("Mother mobile")],
             (
                 [g["record"].get_status_display(), g["record"].student.admission_no, g["record"].student.full_name,

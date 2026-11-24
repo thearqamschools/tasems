@@ -11,6 +11,7 @@ from django.utils import timezone
 
 from apps.academics.models import CurriculumSubject, Subject
 from apps.attendance.services import is_school_day
+from apps.core import paths
 
 from .models import Diary, DiaryEntry, DiaryLayout, DiaryWeek
 
@@ -122,8 +123,8 @@ def document_context(diary, for_file=False):
         "week": week_info(diary.branch, diary.date),
         "in_class": [e for e in entries if e.in_class],
         "home": [e for e in entries if e.home_task],
-        "font_base": f"file://{settings.BASE_DIR}/static/fonts/" if for_file else f"{settings.STATIC_URL}fonts/",
-        "media_base": f"file://{settings.MEDIA_ROOT}/" if for_file else settings.MEDIA_URL,
+        "font_base": paths.font_base() if for_file else f"{settings.STATIC_URL}fonts/",
+        "media_base": paths.media_base() if for_file else settings.MEDIA_URL,
         "for_file": for_file,
     }
 

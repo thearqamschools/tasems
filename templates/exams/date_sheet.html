@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load i18n tasems_tags %}
+{% extends "base.html" %}{% load i18n static tasems_tags %}
 {% block title %}{% trans "Date sheet" %} · {{ exam.name }}{% endblock %}
 {% block content %}
 <p class="no-print"><a href="{% url 'exams:index' %}">‹ {% trans "Exams & Results" %}</a></p>
@@ -27,9 +27,10 @@
   <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button><a class="button quiet" href="?class={{ level_id }}">{% trans "Cancel" %}</a></div>
 </form>
 {% elif grid.rows %}
+<div class="date-sheet-banner"><img src="{% static 'img/arqam-banner.png' %}" alt="The Arqam Schools"></div>
 <div class="table-wrap"><table class="date-grid">
-  <thead><tr><th>{% trans "Date" %}</th>{% for c in grid.columns %}<th class="center">{{ c }}</th>{% endfor %}</tr></thead>
-  <tbody>{% for d, cells in grid.rows %}<tr><td class="nowrap"><strong>{{ d|date:"d-m-y" }}</strong> <span class="muted small">{{ d|date:"D" }}</span></td>{% for c in cells %}<td class="center">{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+  <thead><tr><th class="date">{% trans "Date" %}</th>{% for c in grid.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for d, cells in grid.rows %}<tr><td class="date"><strong>{{ d|date:"d-m-y" }}</strong><span class="muted small">{{ d|date:"D" }}</span></td>{% for c in cells %}<td{% if c == "–" %} class="none"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "No dates set yet." %}{% if can_edit %} {% trans "Press Edit and give each paper its day." %}{% endif %}</p></div>{% endif %}
 {% endblock %}

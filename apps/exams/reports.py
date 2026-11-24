@@ -130,12 +130,16 @@ def overview(exam, branch, session):
     by_class = {}
     for s in sections:
         by_class.setdefault(s.class_level, []).append(s)
+    everyone = []
     for level, secs in by_class.items():
         students = []
         for s in secs:
             students.extend(section_result(exam, s)[1])
+        everyone.extend(students)
         rows.append({"level": level, "sections": len(secs), **summary(students)})
-    return rows
+    # R16-5: the whole school's result for the exam, at the end
+    school = {"sections": sum(r["sections"] for r in rows), **summary(everyone)}
+    return rows, school
 
 
 def student_progress(student, session=None):

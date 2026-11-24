@@ -99,7 +99,7 @@ def detail(request, pk):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             event.name,
-            [_("Receipt no."), _("Date"), _("Admission no."), _("Student"), _("Class"), _("Section"),
+            [_("Receipt no."), _("Date"), _("Computer code"), _("Student"), _("Class"), _("Section"),
              _("Extra tickets"), _("Amount (Rs)"), _("Paid by"), _("Received by"), _("Refunded")],
             ([s.receipt_no, timezone.localtime(s.received_at).strftime("%d/%m/%Y %H:%M"), s.student.admission_no,
               s.student.full_name, s.class_level.name, s.section_name, s.guest_tickets, s.amount,
@@ -288,7 +288,7 @@ def class_list(request, pk, level_id):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             f"{event.name} {level}",
-            [_("Admission no."), _("Student"), _("Father name"), _("Section"), _("Ticket")],
+            [_("Computer code"), _("Student"), _("Father name"), _("Section"), _("Ticket")],
             ([r["student"].admission_no, r["student"].full_name, r["student"].father_name, r["section"],
               _("Paid") if r["paid"] else _("Not yet")] for r in rows),
             branch=branch,

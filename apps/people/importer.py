@@ -31,7 +31,7 @@ MAX_BYTES = 5 * 1024 * 1024
 
 # key, header, required
 COLUMNS = [
-    ("admission_no", "Admission No", True),
+    ("admission_no", "Computer code", True),
     ("first_name", "First Name", True),
     ("last_name", "Last Name", False),
     ("gender", "Gender", True),
@@ -51,6 +51,8 @@ COLUMNS = [
     ("monthly_fee", "Monthly Fee", False),
 ]
 HEADER_TO_KEY = {re.sub(r"[^a-z]", "", h.lower()): k for k, h, _r in COLUMNS}
+# Sheets made before R16-9 call the computer code "Admission No"; COMP.code is its short form.
+HEADER_TO_KEY.update({"admissionno": "admission_no", "admissionnumber": "admission_no", "compcode": "admission_no"})
 
 GENDERS = {
     "male": "male",
@@ -225,7 +227,7 @@ def template_workbook():
 
 
 OLD_REPORT_COLUMNS = [
-    "Admission No",
+    "Computer code",
     "First Name",
     "Gender",
     "Class",

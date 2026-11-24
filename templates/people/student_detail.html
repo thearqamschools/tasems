@@ -5,7 +5,7 @@
   {% if student.photo %}<img class="profile-photo" src="{% url 'people:student_photo' student.pk %}" alt="{% trans 'Photo' %}" width="96" height="120">
   {% else %}<span class="profile-photo empty" aria-hidden="true">{% icon "users" %}</span>{% endif %}
   <div><h1>{{ student.full_name }}{% if student.status == "active" %} {% include "people/_parent_tree_button.html" with s=student small=True %}{% endif %}</h1>
-<p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p></div>
+<p class="lede">{% trans "Computer code" %} <span class="num">{{ student.admission_no }}</span> · {{ student.get_status_display }}{% if student.is_hifz %} · {% trans "Hifz student" %}{% endif %}</p></div>
 </div>
 <nav class="tabs no-print" aria-label="{% trans 'Sections of this page' %}">
   <a href="#details">{% trans "Details" %}</a><a href="#family">{% trans "Family details" %}</a>
@@ -51,7 +51,7 @@
 <h2 id="siblings">{% trans "Brothers and sisters" %}</h2>
 <p class="muted">{% trans "Same father's CNIC in this branch (the sibling fee uses the same rule)." %}</p>
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Admission no." %}</th><th>{% trans "Name" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Status" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Computer code" %}</th><th>{% trans "Name" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Status" %}</th></tr></thead>
   <tbody>{% for s in siblings %}<tr><td class="num" style="text-align:start">{{ s.admission_no }}</td><td><a href="{% url 'people:student_detail' s.pk %}">{{ s.full_name }}</a></td>
     {% for e in s.current_enrolments %}<td>{{ e.section.class_level }}</td><td>{{ e.section.name }}</td>{% empty %}<td colspan="2">—</td>{% endfor %}
     <td>{{ s.get_status_display }}</td></tr>{% endfor %}</tbody>

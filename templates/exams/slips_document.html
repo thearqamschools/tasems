@@ -34,7 +34,7 @@
       <div class="name">{{ c.s.full_name }}</div>
       {% if c.s.gender == "female" %}D/o{% else %}S/o{% endif %} <b>{{ c.s.father_name|default:"—" }}</b><br>
       Class <b>{{ section.class_level }}</b> · Section <b>{{ section.name }}</b><br>
-      Admission No. <b>{{ c.s.admission_no }}</b>{% if c.e.roll_no %} · Roll No. <b>{{ c.e.roll_no }}</b>{% endif %}
+      Computer code <b>{{ c.s.admission_no }}</b>{% if c.e.roll_no %} · Roll No. <b>{{ c.e.roll_no }}</b>{% endif %}
     </div>
   </div>
   <table>

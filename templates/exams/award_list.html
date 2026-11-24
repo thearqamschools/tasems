@@ -12,7 +12,7 @@
 </div>
 {% include "includes_list_tools.html" %}
 <div class="table-wrap"><table class="award-table">
-  <thead><tr><th class="num">{% trans "Sr." %}</th><th class="num">{% trans "Roll no." %}</th><th>{% trans "Admission no." %}</th><th>{% trans "Name" %}</th><th>{% trans "Father name" %}</th><th class="num">{% trans "Marks obtained" %}</th></tr></thead>
+  <thead><tr><th class="num">{% trans "Sr." %}</th><th class="num">{% trans "Roll no." %}</th><th>{% trans "Computer code" %}</th><th>{% trans "Name" %}</th><th>{% trans "Father name" %}</th><th class="num">{% trans "Marks obtained" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr>
     <td class="num">{{ forloop.counter }}</td><td class="num">{{ r.e.roll_no|default:"" }}</td><td>{{ r.e.student.admission_no }}</td>
     <td>{{ r.e.student.full_name }}</td><td>{{ r.e.student.father_name|default:"" }}</td>

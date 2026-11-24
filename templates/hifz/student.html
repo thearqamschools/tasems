@@ -3,7 +3,7 @@
 {% block content %}
 <p><a href="{% url 'hifz:report' %}{% if enrolment %}?section={{ enrolment.section_id }}{% endif %}">‹ {% trans "Hifz progress" %}</a></p>
 <div class="page-header">
-  <div><h1>{{ student.full_name }}</h1><p class="lede">{% if enrolment %}{{ enrolment.section }} · {% endif %}{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span></p></div>
+  <div><h1>{{ student.full_name }}</h1><p class="lede">{% if enrolment %}{{ enrolment.section }} · {% endif %}{% trans "Computer code" %} <span class="num">{{ student.admission_no }}</span></p></div>
   <div class="actions"><a class="button quiet" href="{% url 'people:student_detail' student.id %}">{% trans "Student record" %}</a></div>
 </div>
 <div class="figures">

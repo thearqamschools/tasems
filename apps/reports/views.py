@@ -110,7 +110,7 @@ def new_admissions(request):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("New admissions") + f" {start:%d-%m-%Y} to {end:%d-%m-%Y}",
-            [_("Admission date"), _("Admission no."), _("Name"), _("Father name"), _("Gender"), _("Class"),
+            [_("Admission date"), _("Computer code"), _("Name"), _("Father name"), _("Gender"), _("Class"),
              _("Section"), _("Hifz"), _("Status")],
             (
                 [r["student"].admission_date, r["student"].admission_no, r["student"].full_name,

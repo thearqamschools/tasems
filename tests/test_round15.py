@@ -1,5 +1,5 @@
 """Round 15 (project lead, 24 Nov 2026): branch details, classes & subjects, one Edit page for an exam, the date sheet
-and result card with the school's banner and fonts, ADM.NO. on the marks table, result reports with pass at 33% and
+and result card with the school's banner and fonts, COMP.code on the marks table, result reports with pass at 33% and
 positions, and the progress report."""
 
 import datetime as dt
@@ -48,9 +48,12 @@ def test_class_subjects_decide_the_exam_subjects(exam_setup, login_as, make_user
     assert "Tarjama tul Quran" in page and "Summer Vacation Work" in page and "Mathematics" not in page
     assert "Generate date sheet (PDF)" in page and "Exams start on" in page
     # One page: first and last day, total marks and each paper's day saved together (R15-4).
+    # R16-3: the first and last day saved once, on their own; then a class's totals and days.
+    client.post(f"/exams/{exam.id}/papers/?class={level.id}",
+                {"action": "dates", "starts_on": "2026-11-10", "ends_on": "2026-11-17"})  # fmt: skip
     client.post(f"/exams/{exam.id}/papers/?class={level.id}", {
-        "starts_on": "2026-11-10", "ends_on": "2026-11-17", f"total_{english.id}": "40",
-        f"date_{english.id}": "2026-11-10", f"total_{urdu.id}": "40", f"date_{urdu.id}": "2026-11-11"})  # fmt: skip
+        f"total_{english.id}": "40", f"date_{english.id}": "2026-11-10",
+        f"total_{urdu.id}": "40", f"date_{urdu.id}": "2026-11-11"})  # fmt: skip
     exam.refresh_from_db()
     paper = Paper.objects.get(exam=exam, class_level=level, subject=english)
     assert (exam.starts_on, exam.ends_on, paper.total_marks, paper.date) == (
@@ -79,7 +82,7 @@ def _marks(exam_setup, a_marks, b_marks):  # noqa: F811
 def test_marks_table_shows_admission_number_not_roll(exam_setup, login_as):  # noqa: F811
     client = login_as(exam_setup["principal"])
     page = client.get(f"/exams/{exam_setup['exam'].id}/section/{exam_setup['section'].id}/marks/").content.decode()
-    assert "ADM.NO." in page and ">Roll<" not in page and ">600<" in page
+    assert "COMP.code" in page and ">Roll<" not in page and ">600<" in page
 
 
 def test_result_report_pass_at_33_and_positions(exam_setup, login_as):  # noqa: F811

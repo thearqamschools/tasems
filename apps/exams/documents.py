@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.template.loader import render_to_string
 
+from apps.core import paths
 from apps.diary.models import DiaryLayout
 
 PAPER_PERM = "exams.change_paper"
@@ -81,15 +82,24 @@ def css_text(text):
 def date_sheet_pdf(exam, levels, branch):
     from weasyprint import HTML
 
+    sheet = grid(exam, levels)
     html = render_to_string(
         "exams/date_sheet_document.html",
         {
             "exam": exam,
             "branch": branch,
-            "sheet": grid(exam, levels),
-            "banner": f"file://{settings.BASE_DIR}/static/img/arqam-banner.png",
+            "sheet": sheet,
+            # R16-1: words never break inside; the type is sized to the number of classes so names fit
+            "font": "10pt"
+            if len(sheet["columns"]) <= 8
+            else "8.6pt"
+            if len(sheet["columns"]) <= 11
+            else "7.6pt"
+            if len(sheet["columns"]) <= 14
+            else "6.6pt",
+            "banner": paths.banner(),
             "address": branch_address(branch),
-            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
+            "font_base": paths.font_base(),
         },
     )
     return HTML(string=html, base_url=str(settings.BASE_DIR)).write_pdf()
@@ -120,12 +130,12 @@ def slips_pdf(exam, section, enrolments):
             "branch": section.branch,
             "papers": papers,
             "slips": [
-                {"e": e, "s": e.student, "photo": f"file://{e.student.photo.path}" if e.student.photo else ""}
+                {"e": e, "s": e.student, "photo": paths.file_uri(e.student.photo.path) if e.student.photo else ""}
                 for e in enrolments
             ],
             "layout": DiaryLayout.current(),
-            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
-            "media_base": f"file://{settings.MEDIA_ROOT}/",
+            "font_base": paths.font_base(),
+            "media_base": paths.media_base(),
         },
     )
     return HTML(string=html, base_url=str(settings.BASE_DIR)).write_pdf()

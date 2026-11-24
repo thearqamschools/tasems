@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-24 14:04+0500\n"
+"POT-Creation-Date: 2026-11-24 15:55+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -286,8 +286,8 @@ msgstr "فیس وصول (%(n)s ادائیگیاں)"
 #: templates/accounting/incomes.html:17 templates/accounting/index.html:34
 #: templates/attendance/today.html:9 templates/events/detail.html:41
 #: templates/events/detail.html:52 templates/events/index.html:9
-#: templates/exams/award_list.html:11 templates/exams/date_sheet.html:31
-#: templates/exams/papers.html:22 templates/exams/papers.html:25
+#: templates/exams/award_list.html:11 templates/exams/date_sheet.html:32
+#: templates/exams/papers.html:23 templates/exams/papers.html:26
 #: templates/exams/section_exam.html:8 templates/fees/collections.html:18
 #: templates/fees/family_receive.html:36 templates/fees/index.html:28
 #: templates/fees/payments_import.html:29 templates/fees/student.html:52
@@ -1345,10 +1345,10 @@ msgid "Status"
 msgstr "حیثیت"
 
 #: apps/attendance/views.py:186 apps/events/views.py:102
-#: apps/events/views.py:291 apps/exams/views.py:465 apps/fees/views.py:262
+#: apps/events/views.py:291 apps/exams/views.py:507 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/fees/views.py:838 apps/hifz/views.py:214
 #: apps/insights/views.py:46 apps/inventory/views.py:318
-#: apps/people/views.py:87 apps/reports/views.py:113
+#: apps/people/forms.py:95 apps/people/views.py:87 apps/reports/views.py:113
 #: templates/events/class_list.html:8 templates/events/sell.html:19
 #: templates/events/sell.html:39 templates/exams/award_list.html:15
 #: templates/fees/find.html:6 templates/fees/student.html:5
@@ -1358,10 +1358,10 @@ msgstr "حیثیت"
 #: templates/people/student_detail.html:54
 #: templates/people/student_list.html:45
 #: templates/reports/new_admissions.html:18
-msgid "Admission no."
-msgstr "داخلہ نمبر"
+msgid "Computer code"
+msgstr "کمپیوٹر کوڈ"
 
-#: apps/attendance/views.py:186 apps/exams/views.py:465 apps/hifz/views.py:214
+#: apps/attendance/views.py:186 apps/exams/views.py:507 apps/hifz/views.py:214
 #: apps/hiring/views.py:122 apps/hr/views.py:118 apps/insights/views.py:46
 #: apps/payroll/views.py:77 apps/payroll/views.py:84 apps/people/views.py:87
 #: apps/reports/views.py:113 apps/setup/forms.py:21 apps/setup/forms.py:232
@@ -1915,7 +1915,7 @@ msgstr "رقم واپسی کی وجہ لکھیں۔"
 msgid "Receipt %(r)s refunded: Rs %(a)s."
 msgstr "رسید %(r)s واپس ہو گئی: %(a)s روپے۔"
 
-#: apps/events/views.py:291 apps/exams/views.py:465 apps/fees/views.py:262
+#: apps/events/views.py:291 apps/exams/views.py:507 apps/fees/views.py:262
 #: apps/fees/views.py:790 apps/fees/views.py:838 apps/hr/forms.py:52
 #: apps/people/forms.py:47 apps/people/views.py:87 apps/reports/views.py:113
 #: templates/events/class_list.html:8 templates/events/receipt.html:12
@@ -2110,126 +2110,130 @@ msgstr "مڈ ٹرم کا پرچہ نہیں"
 msgid "Leave — Final counts"
 msgstr "رخصت — فائنل شمار ہو گا"
 
-#: apps/exams/views.py:146
+#: apps/exams/views.py:188
 #, python-format
 msgid "Marks saved for %(n)s students."
 msgstr "%(n)s طلبہ کے نمبر محفوظ ہو گئے۔"
 
-#: apps/exams/views.py:148
+#: apps/exams/views.py:190
 msgid "Some marks need correcting. Nothing was saved."
 msgstr "کچھ نمبر درست کرنے ہیں۔ کچھ بھی محفوظ نہیں ہوا۔"
 
-#: apps/exams/views.py:268
+#: apps/exams/views.py:310
 msgid "Remarks saved."
 msgstr "تاثرات محفوظ ہو گئے۔"
 
-#: apps/exams/views.py:317 apps/inventory/views.py:93
+#: apps/exams/views.py:359 apps/inventory/views.py:93
 #, python-format
 msgid "%(name)s saved."
 msgstr "%(name)s محفوظ ہو گیا۔"
 
-#: apps/exams/views.py:319
+#: apps/exams/views.py:361
 msgid "Some values need correcting. Nothing was saved."
 msgstr "کچھ اندراجات درست کرنے ہیں۔ کچھ بھی محفوظ نہیں ہوا۔"
 
-#: apps/exams/views.py:403
+#: apps/exams/views.py:445
 #, python-format
 msgid "%(n)s papers had a date or time that could not be read."
 msgstr "%(n)s پرچوں کی تاریخ یا وقت پڑھا نہیں جا سکا۔"
 
-#: apps/exams/views.py:405
+#: apps/exams/views.py:447
 msgid "Date sheet saved."
 msgstr "ڈیٹ شیٹ محفوظ ہو گئی۔"
 
-#: apps/exams/views.py:464 templates/exams/award_list.html:2
+#: apps/exams/views.py:506 templates/exams/award_list.html:2
 #: templates/exams/award_list.html:5 templates/exams/section_exam.html:11
 msgid "Award list"
 msgstr "ایوارڈ لسٹ"
 
-#: apps/exams/views.py:465 templates/exams/award_list.html:15
+#: apps/exams/views.py:507 templates/exams/award_list.html:15
 #: templates/exams/enter_marks.html:9 templates/exams/ratings.html:19
 #: templates/exams/section_results.html:14
 #: templates/people/student_detail.html:63
 msgid "Roll no."
 msgstr "رول نمبر"
 
-#: apps/exams/views.py:465 templates/exams/award_list.html:15
+#: apps/exams/views.py:507 templates/exams/award_list.html:15
 msgid "Marks obtained"
 msgstr "حاصل کردہ نمبر"
 
-#: apps/exams/views.py:465 templates/exams/award_list.html:10
-#: templates/exams/papers.html:22 templates/exams/papers.html:24
+#: apps/exams/views.py:507 templates/exams/award_list.html:10
+#: templates/exams/papers.html:23 templates/exams/papers.html:25
 #: templates/exams/report.html:38 templates/exams/section_exam.html:8
 msgid "Total marks"
 msgstr "کل نمبر"
 
-#: apps/exams/views_year.py:71
+#: apps/exams/views_year.py:72
 #, python-format
 msgid "%(n)s exams added for session %(s)s."
 msgstr "سیشن %(s)s کے لیے %(n)s امتحانات شامل کر دیے گئے۔"
 
-#: apps/exams/views_year.py:73
+#: apps/exams/views_year.py:74
 msgid "This session's four exams are already there."
 msgstr "اس سیشن کے چاروں امتحانات پہلے سے موجود ہیں۔"
 
-#: apps/exams/views_year.py:107
+#: apps/exams/views_year.py:113
+msgid "Exam dates saved."
+msgstr "امتحان کی تاریخیں محفوظ ہو گئیں۔"
+
+#: apps/exams/views_year.py:115
+msgid "The first or last day could not be read."
+msgstr "پہلا یا آخری دن پڑھا نہیں جا سکا۔"
+
+#: apps/exams/views_year.py:120
 msgid "Choose the exam to copy from."
 msgstr "جس امتحان سے نقل کرنا ہے وہ منتخب کریں۔"
 
-#: apps/exams/views_year.py:122
+#: apps/exams/views_year.py:135
 #, python-format
 msgid "%(n)s papers copied from %(e)s. Change any total marks as needed."
 msgstr "%(e)s سے %(n)s پرچے نقل کر دیے گئے۔ ضرورت ہو تو کل نمبر بدل لیں۔"
 
-#: apps/exams/views_year.py:135
-msgid "The first or last day could not be read."
-msgstr "پہلا یا آخری دن پڑھا نہیں جا سکا۔"
-
-#: apps/exams/views_year.py:144
+#: apps/exams/views_year.py:148
 #, python-format
 msgid "%(s)s has marks entered; it was kept."
 msgstr "%(s)s کے نمبر درج ہیں، اس لیے یہ رکھا گیا۔"
 
-#: apps/exams/views_year.py:147
+#: apps/exams/views_year.py:151
 #, python-format
 msgid "%(s)s: total marks must be a whole number."
 msgstr "%(s)s: کل نمبر پورا عدد ہونا چاہیے۔"
 
-#: apps/exams/views_year.py:156
+#: apps/exams/views_year.py:160
 #, python-format
 msgid "%(s)s: the date could not be read."
 msgstr "%(s)s: تاریخ پڑھی نہیں جا سکی۔"
 
-#: apps/exams/views_year.py:161
+#: apps/exams/views_year.py:165
 #, python-format
 msgid ""
 "%(s)s: the question paper must be a PDF, photo or Word file under 20 MB."
 msgstr "%(s)s: سوالیہ پرچہ PDF، تصویر یا Word فائل ہو اور 20 MB سے کم ہو۔"
 
-#: apps/exams/views_year.py:169
+#: apps/exams/views_year.py:173
 #, python-format
 msgid "Papers of %(c)s saved."
 msgstr "%(c)s کے پرچے محفوظ ہو گئے۔"
 
-#: apps/exams/views_year.py:314
+#: apps/exams/views_year.py:318
 msgid ""
 "Some marks in the Excel need correcting (shown in red). Nothing is saved yet."
 msgstr "Excel کے کچھ نمبر درست کرنے ہیں (سرخ میں)۔ ابھی کچھ محفوظ نہیں ہوا۔"
 
-#: apps/exams/views_year.py:317
+#: apps/exams/views_year.py:321
 msgid "The Excel's marks are shown below. Check them and press Save marks."
 msgstr "Excel کے نمبر نیچے دکھائے گئے ہیں۔ چیک کر کے Save marks دبائیں۔"
 
-#: apps/exams/views_year.py:321
+#: apps/exams/views_year.py:325
 msgid "Some marks need correcting (shown in red). Nothing was saved."
 msgstr "کچھ نمبر درست کرنے ہیں (سرخ میں)۔ کچھ محفوظ نہیں ہوا۔"
 
-#: apps/exams/views_year.py:324
+#: apps/exams/views_year.py:328
 #, python-format
 msgid "Marks and ratings saved for %(s)s."
 msgstr "%(s)s کے نمبر اور درجہ بندی محفوظ ہو گئی۔"
 
-#: apps/exams/views_year.py:607
+#: apps/exams/views_year.py:609
 msgid "No exam marks for this student yet."
 msgstr "اس طالب علم کے امتحانی نمبر ابھی نہیں ہیں۔"
 
@@ -2359,8 +2363,8 @@ msgstr "تمام جماعتیں"
 
 #: apps/fees/forms.py:65 templates/attendance/absentees.html:16
 #: templates/attendance/today.html:38 templates/diary/day.html:26
-#: templates/events/sell.html:11 templates/exams/index.html:30
-#: templates/exams/report.html:11 templates/people/student_list.html:20
+#: templates/events/sell.html:11 templates/exams/report.html:11
+#: templates/people/student_list.html:20
 msgid "All sections"
 msgstr "تمام سیکشن"
 
@@ -3502,7 +3506,7 @@ msgstr "سال"
 
 #: apps/hiring/models.py:231 templates/admissions/index.html:24
 #: templates/core/design_system.html:58 templates/core/design_system.html:59
-#: templates/core/design_system.html:60 templates/exams/papers.html:26
+#: templates/core/design_system.html:60 templates/exams/papers.html:27
 #: templates/hiring/vacancy.html:21 templates/people/promotion.html:21
 #: templates/setup/branches.html:13 templates/setup/users.html:24
 msgid "Open"
@@ -3947,15 +3951,15 @@ msgstr "یہ کالم موجود نہیں: %(c)s"
 msgid "Too many rows."
 msgstr "سطریں بہت زیادہ ہیں۔"
 
-#: apps/hr/importer.py:178 apps/hr/importer.py:214 apps/people/importer.py:371
+#: apps/hr/importer.py:178 apps/hr/importer.py:214 apps/people/importer.py:373
 msgid "Required"
 msgstr "لازمی"
 
-#: apps/hr/importer.py:181 apps/people/importer.py:376
+#: apps/hr/importer.py:181 apps/people/importer.py:378
 msgid "Already exists in this branch"
 msgstr "اس برانچ میں پہلے سے موجود ہے"
 
-#: apps/hr/importer.py:183 apps/hr/importer.py:189 apps/people/importer.py:378
+#: apps/hr/importer.py:183 apps/hr/importer.py:189 apps/people/importer.py:380
 #, python-format
 msgid "Repeated in this file (row %(r)s)"
 msgstr "اس فائل میں دوبارہ آیا ہے (قطار %(r)s)"
@@ -3964,7 +3968,7 @@ msgstr "اس فائل میں دوبارہ آیا ہے (قطار %(r)s)"
 msgid "Another person already has this machine ID"
 msgstr "یہ مشین آئی ڈی کسی اور کی ہے"
 
-#: apps/hr/importer.py:194 apps/people/importer.py:384
+#: apps/hr/importer.py:194 apps/people/importer.py:386
 msgid "Use Male or Female"
 msgstr "Male یا Female لکھیں"
 
@@ -3972,12 +3976,12 @@ msgstr "Male یا Female لکھیں"
 msgid "Use Teacher, Hifz, Admin or Support"
 msgstr "Teacher، Hifz، Admin یا Support لکھیں"
 
-#: apps/hr/importer.py:203 apps/people/importer.py:436
+#: apps/hr/importer.py:203 apps/people/importer.py:438
 #, python-format
 msgid "A CNIC has 13 digits: «%(value)s». Left empty"
 msgstr "شناختی کارڈ نمبر 13 ہندسوں کا ہوتا ہے: «%(value)s»۔ خالی چھوڑ دیا گیا"
 
-#: apps/hr/importer.py:210 apps/people/importer.py:411
+#: apps/hr/importer.py:210 apps/people/importer.py:413
 #, python-format
 msgid "Not a Pakistani mobile number: «%(value)s». Imported as written"
 msgstr "پاکستانی موبائل نمبر نہیں: «%(value)s»۔ جیسا لکھا تھا ویسا شامل کر دیا"
@@ -4913,13 +4917,13 @@ msgstr "کم از کم ایک چیز شامل کریں۔"
 
 #: apps/inventory/views.py:227
 #, python-format
-msgid "No student with admission no. %(n)s in this branch."
-msgstr "اس برانچ میں داخلہ نمبر %(n)s کا کوئی طالب علم نہیں۔"
+msgid "No student with computer code %(n)s in this branch."
+msgstr "اس برانچ میں کمپیوٹر کوڈ %(n)s کا کوئی طالب علم نہیں۔"
 
 #: apps/inventory/views.py:229
 msgid ""
-"Enter the student's admission no. to add the amount to their fee account."
-msgstr "رقم فیس کھاتے میں ڈالنے کے لیے طالب علم کا داخلہ نمبر لکھیں۔"
+"Enter the student's computer code to add the amount to their fee account."
+msgstr "رقم فیس کھاتے میں ڈالنے کے لیے طالب علم کا کمپیوٹر کوڈ لکھیں۔"
 
 #: apps/inventory/views.py:239
 #, python-format
@@ -5675,10 +5679,6 @@ msgstr ""
 "بہن بھائی (والد کا ایک ہی شناختی کارڈ) کو بہن بھائی والی فیس خود لگ جاتی ہے؛ "
 "اسے منتخب کرنے کی ضرورت نہیں۔"
 
-#: apps/people/forms.py:95
-msgid "Admission number"
-msgstr "داخلہ نمبر"
-
 #: apps/people/forms.py:96 apps/setup/forms.py:368
 msgid "First name"
 msgstr "پہلا نام"
@@ -5745,8 +5745,8 @@ msgid "Use numbers only, e.g. 4256."
 msgstr "صرف ہندسے لکھیں، مثلاً 4256۔"
 
 #: apps/people/forms.py:208
-msgid "This admission number is already used in this branch."
-msgstr "یہ داخلہ نمبر اس برانچ میں پہلے سے استعمال ہو رہا ہے۔"
+msgid "This computer code is already used in this branch."
+msgstr "یہ کمپیوٹر کوڈ اس برانچ میں پہلے سے استعمال ہو رہا ہے۔"
 
 #: apps/people/forms.py:240
 msgid "Enter a mobile number for this person."
@@ -5806,11 +5806,11 @@ msgstr "فیس کے واجبات ادا ہو چکے"
 msgid "Remarks (optional)"
 msgstr "ریمارکس (اختیاری)"
 
-#: apps/people/importer.py:313
+#: apps/people/importer.py:315
 msgid "No current academic session is set. Ask head office to set it first."
 msgstr "موجودہ تعلیمی سیشن طے نہیں۔ پہلے ہیڈ آفس سے طے کروائیں۔"
 
-#: apps/people/importer.py:322
+#: apps/people/importer.py:324
 msgid ""
 "This file could not be opened. Use the Excel template (.xlsx) or the old "
 "software's PDF report."
@@ -5818,57 +5818,57 @@ msgstr ""
 "یہ فائل نہیں کھل سکی۔ ایکسل ٹیمپلیٹ (.xlsx) یا پرانے سافٹ ویئر کی PDF رپورٹ "
 "استعمال کریں۔"
 
-#: apps/people/importer.py:337
+#: apps/people/importer.py:339
 #, python-format
 msgid "These required columns are missing: %(cols)s. Use the template."
 msgstr "یہ لازمی کالم موجود نہیں: %(cols)s۔ ٹیمپلیٹ استعمال کریں۔"
 
-#: apps/people/importer.py:354
+#: apps/people/importer.py:356
 #, python-format
 msgid "Too many rows. Import at most %(n)s students at a time."
 msgstr ""
 "قطاریں بہت زیادہ ہیں۔ ایک وقت میں زیادہ سے زیادہ %(n)s طلبہ درآمد کریں۔"
 
-#: apps/people/importer.py:392
+#: apps/people/importer.py:394
 #, python-format
 msgid "Not a date: «%(value)s». Left empty; correct it on the student's page"
 msgstr ""
 "یہ تاریخ نہیں: «%(value)s»۔ خالی چھوڑ دی گئی؛ طالب علم کے صفحے پر درست کریں"
 
-#: apps/people/importer.py:399
+#: apps/people/importer.py:401
 msgid ""
 "Date of birth is in the future. Left empty; correct it on the student's page"
 msgstr ""
 "تاریخ پیدائش آنے والے دنوں کی ہے۔ خالی چھوڑ دی گئی؛ طالب علم کے صفحے پر درست "
 "کریں"
 
-#: apps/people/importer.py:404
+#: apps/people/importer.py:406
 msgid "Unknown class. See the 'How to fill' sheet"
 msgstr "نامعلوم جماعت۔ 'How to fill' شیٹ دیکھیں"
 
-#: apps/people/importer.py:418
+#: apps/people/importer.py:420
 #, python-format
 msgid ""
 "«%(value)s» is not Father, Mother, Guardian or Other. Imported as Guardian"
 msgstr ""
 "«%(value)s» والد، والدہ، سرپرست یا دیگر نہیں۔ سرپرست کے طور پر شامل کیا"
 
-#: apps/people/importer.py:429
+#: apps/people/importer.py:431
 #, python-format
 msgid "Not an amount: «%(value)s». Left empty"
 msgstr "یہ رقم نہیں: «%(value)s»۔ خالی چھوڑ دی گئی"
 
-#: apps/people/importer.py:454
+#: apps/people/importer.py:456
 #, python-format
 msgid "Section %(s)s of %(c)s is for %(g)s only"
 msgstr "%(c)s کا سیکشن %(s)s صرف %(g)s کے لیے ہے"
 
-#: apps/people/importer.py:466
+#: apps/people/importer.py:468
 #, python-format
 msgid "Boys and girls cannot share section %(s)s of %(c)s"
 msgstr "لڑکے اور لڑکیاں %(c)s کے سیکشن %(s)s میں اکٹھے نہیں ہو سکتے"
 
-#: apps/people/importer.py:474
+#: apps/people/importer.py:476
 msgid "The file has no student rows."
 msgstr "فائل میں طلبہ کی کوئی قطار نہیں۔"
 
@@ -5891,6 +5891,10 @@ msgstr "منتقل ہو گیا"
 #: apps/people/models.py:53
 msgid "Graduated"
 msgstr "فارغ التحصیل"
+
+#: apps/people/models.py:59
+msgid "computer code"
+msgstr "کمپیوٹر کوڈ"
 
 #: apps/people/models.py:65 templates/people/student_detail.html:29
 msgid "B-Form number"
@@ -6628,7 +6632,7 @@ msgstr "موبائل / واٹس ایپ 2"
 
 #: apps/setup/views.py:82 templates/admissions/form.html:9
 #: templates/events/expense_form.html:10 templates/events/form.html:12
-#: templates/exams/date_sheet.html:27 templates/exams/papers.html:29
+#: templates/exams/date_sheet.html:27 templates/exams/papers.html:30
 #: templates/exams/ratings.html:23 templates/hiring/candidate.html:34
 #: templates/hiring/edit.html:22 templates/hr/_machine_form.html:10
 #: templates/hr/employee_form.html:15 templates/hr/machines.html:22
@@ -7125,7 +7129,7 @@ msgid "Teachers in two classes at the same time"
 msgstr "ایک ہی وقت میں دو جماعتوں میں اساتذہ"
 
 #: templates/academics/index.html:14 templates/events/detail.html:24
-#: templates/exams/papers.html:12 templates/setup/class_subjects.html:7
+#: templates/exams/papers.html:17 templates/setup/class_subjects.html:7
 msgid "Classes"
 msgstr "جماعتیں"
 
@@ -7145,7 +7149,7 @@ msgid "Subject teachers"
 msgstr "مضمون اساتذہ"
 
 #: templates/academics/index.html:24 templates/exams/index.html:40
-#: templates/exams/report.html:55 templates/reports/attendance_month.html:17
+#: templates/exams/report.html:56 templates/reports/attendance_month.html:17
 #: templates/reports/class_strength.html:22 templates/setup/sections.html:25
 msgid "No sections for this session yet."
 msgstr "اس سیشن میں ابھی کوئی سیکشن نہیں۔"
@@ -7179,7 +7183,7 @@ msgid "Class teacher: %(t)s"
 msgstr "کلاس ٹیچر: %(t)s"
 
 #: templates/academics/section_subjects.html:12
-#: templates/exams/award_list.html:9 templates/exams/papers.html:22
+#: templates/exams/award_list.html:9 templates/exams/papers.html:23
 #: templates/exams/ratings.html:11 templates/exams/report.html:38
 #: templates/exams/section_exam.html:8
 msgid "Subject"
@@ -7593,11 +7597,11 @@ msgstr "طالب علم کا ریکارڈ بنائیں"
 #: templates/admissions/admit.html:5
 #, python-format
 msgid ""
-"%(c)s — %(l)s. Check the details, give an admission number and choose the "
+"%(c)s — %(l)s. Check the details, give a computer code and choose the "
 "section. After saving you can make the admission fee voucher."
 msgstr ""
-"%(c)s — %(l)s۔ تفصیل چیک کریں، داخلہ نمبر دیں اور سیکشن چنیں۔ محفوظ کرنے کے "
-"بعد داخلہ فیس کا واؤچر بنا سکتے ہیں۔"
+"%(c)s — %(l)s۔ تفصیل چیک کریں، کمپیوٹر کوڈ دیں اور سیکشن چنیں۔ محفوظ کرنے کے "
+"بعد داخلہ فیس کا واؤچر بن سکتا ہے۔"
 
 #: templates/admissions/admit.html:6
 msgid "No current academic session is set, so the class cannot be chosen yet."
@@ -8015,8 +8019,8 @@ msgid "Search students…"
 msgstr "طلبہ تلاش کریں…"
 
 #: templates/base.html:74 templates/core/design_system.html:68
-msgid "Name, admission no. or parent mobile"
-msgstr "نام، داخلہ نمبر یا والدین کا موبائل"
+msgid "Name, computer code or parent mobile"
+msgstr "نام، کمپیوٹر کوڈ یا والدین کا موبائل"
 
 #: templates/base.html:83 templates/parents/base_parent.html:23
 msgid "Sign out"
@@ -8835,8 +8839,8 @@ msgid ""
 msgstr "رسید رسید پرنٹر پر پرنٹ ہوتی ہے؛ رقم آپ کے نام وصول شدہ درج ہوتی ہے۔"
 
 #: templates/events/sell.html:9 templates/people/student_list.html:14
-msgid "Admission no., name, father name, any mobile or CNIC"
-msgstr "داخلہ نمبر، نام، والد کا نام، کوئی بھی موبائل یا شناختی کارڈ"
+msgid "Computer code, name, father name, any mobile or CNIC"
+msgstr "کمپیوٹر کوڈ، نام، والد کا نام، کوئی بھی موبائل یا شناختی کارڈ"
 
 #: templates/events/sell.html:10
 msgid "All classes in the event"
@@ -8888,6 +8892,14 @@ msgstr ""
 msgid "Your last receipts"
 msgstr "آپ کی آخری رسیدیں"
 
+#: templates/exams/_marks_button.html:1
+msgid "All marks entered"
+msgstr "تمام نمبر درج ہو گئے"
+
+#: templates/exams/_marks_button.html:1 templates/exams/section_exam.html:15
+msgid "Marks & Results"
+msgstr "نمبر اور نتائج"
+
 #: templates/exams/award_list.html:7 templates/people/student_detail.html:72
 msgid "Exam"
 msgstr "امتحان"
@@ -8904,7 +8916,8 @@ msgstr "ممتحن"
 msgid "Checked by"
 msgstr "جانچ کنندہ"
 
-#: templates/exams/card_page.html:2 templates/exams/section_marks.html:40
+#: templates/exams/card_page.html:2 templates/exams/section_marks.html:33
+#: templates/exams/section_marks.html:40
 msgid "Result card"
 msgstr "رزلٹ کارڈ"
 
@@ -8913,12 +8926,12 @@ msgid "Back to results"
 msgstr "نتائج پر واپس"
 
 #: templates/exams/date_sheet.html:2 templates/exams/date_sheet.html:6
-#: templates/exams/index.html:16 templates/exams/papers.html:8
+#: templates/exams/index.html:16 templates/exams/papers.html:13
 #: templates/exams/section_exam.html:17
 msgid "Date sheet"
 msgstr "ڈیٹ شیٹ"
 
-#: templates/exams/date_sheet.html:9 templates/exams/papers.html:9
+#: templates/exams/date_sheet.html:9 templates/exams/papers.html:14
 msgid "Generate date sheet (PDF)"
 msgstr "ڈیٹ شیٹ بنائیں (PDF)"
 
@@ -8943,11 +8956,11 @@ msgid ""
 "Give the first and last day and press Save; then choose each paper's day."
 msgstr "پہلا اور آخری دن دے کر Save دبائیں، پھر ہر پرچے کا دن چنیں۔"
 
-#: templates/exams/date_sheet.html:34
+#: templates/exams/date_sheet.html:35
 msgid "No dates set yet."
 msgstr "ابھی تاریخیں مقرر نہیں ہوئیں۔"
 
-#: templates/exams/date_sheet.html:34
+#: templates/exams/date_sheet.html:35
 msgid "Press Edit and give each paper its day."
 msgstr "Edit دبا کر ہر پرچے کا دن دیں۔"
 
@@ -9025,10 +9038,9 @@ msgstr "اس سیشن کے امتحانات ابھی نہیں بنے۔"
 msgid "Press “Add this session's exams”."
 msgstr "“Add this session's exams” دبائیں۔"
 
-#: templates/exams/index.html:26 templates/exams/index.html:38
-#: templates/exams/section_exam.html:15
-msgid "Marks & cards"
-msgstr "نمبر اور کارڈ"
+#: templates/exams/index.html:30
+msgid "All classes & sections"
+msgstr "تمام کلاسیں اور سیکشن"
 
 #: templates/exams/papers.html:6
 msgid ""
@@ -9039,41 +9051,45 @@ msgstr ""
 "ہر کلاس کے لیے: مضامین کے کل نمبر (خالی = پرچہ نہیں)، ہر پرچے کا دن اور "
 "سوالیہ پرچہ۔ سوالیہ پرچہ امتحان کے دن تک خفیہ رہتا ہے۔"
 
-#: templates/exams/papers.html:17
+#: templates/exams/papers.html:9
 msgid "Exams start on"
 msgstr "امتحانات شروع"
 
-#: templates/exams/papers.html:18
+#: templates/exams/papers.html:10
 msgid "Exams end on"
 msgstr "امتحانات ختم"
 
-#: templates/exams/papers.html:22 templates/exams/papers.html:27
+#: templates/exams/papers.html:11
+msgid "Save dates"
+msgstr "تاریخیں محفوظ کریں"
+
+#: templates/exams/papers.html:23 templates/exams/papers.html:28
 msgid "Question paper"
 msgstr "سوالیہ پرچہ"
 
-#: templates/exams/papers.html:26
+#: templates/exams/papers.html:27
 msgid "Kept (private until the exam)"
 msgstr "محفوظ (امتحان تک خفیہ)"
 
-#: templates/exams/papers.html:31
+#: templates/exams/papers.html:32
 msgid ""
 "No subjects for this class yet. Set them under Setup → Classes & subjects."
 msgstr ""
 "اس کلاس کے مضامین ابھی نہیں ہیں۔ Setup ← Classes & subjects میں مقرر کریں۔"
 
-#: templates/exams/papers.html:34
+#: templates/exams/papers.html:35
 msgid "Copy papers from another exam"
 msgstr "دوسرے امتحان سے پرچے نقل کریں"
 
-#: templates/exams/papers.html:36
+#: templates/exams/papers.html:37
 msgid "Copy all classes' papers and total marks from"
 msgstr "تمام کلاسوں کے پرچے اور کل نمبر یہاں سے نقل کریں"
 
-#: templates/exams/papers.html:38
+#: templates/exams/papers.html:39
 msgid "Copy"
 msgstr "نقل کریں"
 
-#: templates/exams/papers.html:39
+#: templates/exams/papers.html:40
 msgid "Only papers this exam does not have yet are added."
 msgstr "صرف وہ پرچے شامل ہوتے ہیں جو اس امتحان میں ابھی نہیں ہیں۔"
 
@@ -9147,8 +9163,8 @@ msgid "Position"
 msgstr "پوزیشن"
 
 #: templates/exams/report.html:27 templates/exams/section_marks.html:30
-msgid "ADM.NO."
-msgstr "ADM.NO."
+msgid "COMP.code"
+msgstr "COMP.code"
 
 #: templates/exams/report.html:32
 msgid "Not complete"
@@ -9182,6 +9198,10 @@ msgstr "سب سے زیادہ نمبر"
 #: templates/parents/child.html:7
 msgid "Sections"
 msgstr "حصے"
+
+#: templates/exams/report.html:54
+msgid "Whole school"
+msgstr "پورا اسکول"
 
 #: templates/exams/section_exam.html:8
 msgid "Entered"
@@ -9272,11 +9292,6 @@ msgstr ""
 "Enter سے اگلا طالب علم؛ A = غیر حاضر۔ توجہ، وقت کی پابندی، صفائی اور شرکت "
 "پہلے سے Good ہیں — صرف Excellent یا Fair والوں کو بدلیں۔"
 
-#: templates/exams/section_marks.html:33 templates/exams/section_marks.html:40
-#: templates/exams/section_results.html:23
-msgid "Card"
-msgstr "کارڈ"
-
 #: templates/exams/section_results.html:5
 msgid "Result type"
 msgstr "نتیجے کی قسم"
@@ -9319,6 +9334,10 @@ msgid "Below pass in %(n)s subject"
 msgid_plural "Below pass in %(n)s subjects"
 msgstr[0] "%(n)s مضمون میں پاسنگ سے کم"
 msgstr[1] "%(n)s مضامین میں پاسنگ سے کم"
+
+#: templates/exams/section_results.html:23
+msgid "Card"
+msgstr "کارڈ"
 
 #: templates/exams/section_results.html:27
 msgid "All result cards (PDF)"
@@ -9588,8 +9607,8 @@ msgid "Check"
 msgstr "چیک کریں"
 
 #: templates/fees/index.html:9
-msgid "Voucher number, admission number or name"
-msgstr "واؤچر نمبر، داخلہ نمبر یا نام"
+msgid "Voucher number, computer code or name"
+msgstr "واؤچر نمبر، کمپیوٹر کوڈ یا نام"
 
 #: templates/fees/index.html:10
 msgid "Scan or type the voucher number"
@@ -11818,8 +11837,8 @@ msgstr ""
 "ریکارڈ منسوخ کے نشان کے ساتھ رہے گا۔"
 
 #: templates/inventory/sales.html:12
-msgid "Sale no., name or admission no."
-msgstr "فروخت نمبر، نام یا داخلہ نمبر"
+msgid "Sale no., name or computer code"
+msgstr "فروخت نمبر، نام یا کمپیوٹر کوڈ"
 
 #: templates/inventory/sales.html:16
 msgid "Total sales (Rs)"
@@ -11863,8 +11882,8 @@ msgid "Only %(n)s in stock"
 msgstr "اسٹاک میں صرف %(n)s"
 
 #: templates/inventory/sell.html:29
-msgid "Student's admission no."
-msgstr "طالب علم کا داخلہ نمبر"
+msgid "Student's computer code"
+msgstr "طالب علم کا کمپیوٹر کوڈ"
 
 #: templates/inventory/sell.html:29
 msgid "Needed to add the amount to the fee account; optional for cash."
@@ -13819,6 +13838,24 @@ msgstr "کھلا"
 #: templates/setup/users.html:28
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
+
+#~ msgid "Admission no."
+#~ msgstr "داخلہ نمبر"
+
+#~ msgid "Admission number"
+#~ msgstr "داخلہ نمبر"
+
+#~ msgid "This admission number is already used in this branch."
+#~ msgstr "یہ داخلہ نمبر اس برانچ میں پہلے سے استعمال ہو رہا ہے۔"
+
+#~ msgid "Marks & cards"
+#~ msgstr "نمبر اور کارڈ"
+
+#~ msgid "ADM.NO."
+#~ msgstr "ADM.NO."
+
+#~ msgid "Student's admission no."
+#~ msgstr "طالب علم کا داخلہ نمبر"
 
 #~ msgid "Set the dates"
 #~ msgstr "تاریخیں مقرر کریں"

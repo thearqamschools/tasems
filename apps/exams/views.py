@@ -13,6 +13,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from apps.academics.models import Section
+from apps.core import paths
 from apps.core.branch import current_branch
 from apps.diary.models import DiaryLayout
 from apps.organisation.models import AcademicSession
@@ -60,6 +61,11 @@ def index(request):
     )
     for e in exams:
         e.first_day, e.last_day = e.dates
+    progress = _marks_progress(exams, list({*sections, *mine}))
+    for s in sections:
+        s.progress = [(e, progress.get((e.id, s.id))) for e in exams]
+    for s in mine:
+        s.progress = [(e, progress.get((e.id, s.id))) for e in exams]
     return render(
         request,
         "exams/index.html",
@@ -73,6 +79,42 @@ def index(request):
             "class_id": class_id,
         },  # fmt: skip
     )
+
+
+def _marks_progress(exams, sections):
+    """(exam id, section id) → (students complete, students) — complete = every paper of the exam entered (marks or
+    absent) — for the green button and "12 / 30" on Exams & Results (R16-15)."""
+    from collections import Counter
+
+    from django.db.models import Count
+
+    from apps.people.models import Enrolment, Student
+
+    if not exams or not sections:
+        return {}
+    papers = Counter((e, c) for e, c in Paper.objects.filter(exam__in=exams).values_list("exam_id", "class_level_id"))
+    roster = dict(
+        Enrolment.objects.filter(section__in=sections, student__status=Student.Status.ACTIVE)
+        .values("section_id").annotate(n=Count("id")).values_list("section_id", "n")
+    )  # fmt: skip
+    level_of = {s.id: s.class_level_id for s in sections}
+    done = Counter()
+    rows = (
+        Mark.objects.filter(paper__exam__in=exams, section__in=sections, student__status=Student.Status.ACTIVE)
+        .values("paper__exam_id", "section_id", "student_id")
+        .annotate(n=Count("id"))
+    )
+    for r in rows:
+        need = papers.get((r["paper__exam_id"], level_of[r["section_id"]]), 0)
+        if need and r["n"] >= need:
+            done[(r["paper__exam_id"], r["section_id"])] += 1
+    out = {}
+    for e in exams:
+        for s in sections:
+            total = roster.get(s.id, 0)
+            has_papers = papers.get((e.id, s.class_level_id), 0) > 0
+            out[(e.id, s.id)] = (done[(e.id, s.id)], total, has_papers and total > 0 and done[(e.id, s.id)] >= total)
+    return out
 
 
 def _section(request, branch, section_id):
@@ -213,8 +255,8 @@ def _card_context(section, card, results_data, for_file):
         "exam": exam,
         "remarks": remarks,
         "layout": DiaryLayout.current(),
-        "font_base": f"file://{settings.BASE_DIR}/static/fonts/" if for_file else f"{settings.STATIC_URL}fonts/",
-        "media_base": f"file://{settings.MEDIA_ROOT}/" if for_file else settings.MEDIA_URL,
+        "font_base": paths.font_base() if for_file else f"{settings.STATIC_URL}fonts/",
+        "media_base": paths.media_base() if for_file else settings.MEDIA_URL,
     }
 
 
@@ -462,7 +504,7 @@ def award_list(request, paper_id, section_id):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("Award list") + f" {section} {paper.subject.name}",
-            [_("Roll no."), _("Admission no."), _("Name"), _("Father name"), _("Marks obtained"), _("Total marks")],
+            [_("Roll no."), _("Computer code"), _("Name"), _("Father name"), _("Marks obtained"), _("Total marks")],
             (
                 [
                     r["e"].roll_no,

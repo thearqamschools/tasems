@@ -15,7 +15,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from apps.core import exports
+from apps.core import exports, paths
 from apps.core.branch import current_branch
 from apps.diary.models import DiaryLayout
 from apps.fees.models import month_start
@@ -319,8 +319,8 @@ def acknowledgement(request):
             "groups": groups,
             "totals": totals,
             "layout": DiaryLayout.current(),
-            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
-            "media_base": f"file://{settings.MEDIA_ROOT}/",
+            "font_base": paths.font_base(),
+            "media_base": paths.media_base(),
             "printed": timezone.localtime(),
         },  # fmt: skip
     )
@@ -439,8 +439,8 @@ def payslips_pdf(request, run_id):
             "branch": branch,
             "slips": slips,
             "layout": DiaryLayout.current(),
-            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
-            "media_base": f"file://{settings.MEDIA_ROOT}/",
+            "font_base": paths.font_base(),
+            "media_base": paths.media_base(),
         },
     )
     response = HttpResponse(

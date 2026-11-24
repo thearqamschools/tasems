@@ -211,7 +211,7 @@ def report(request):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("Hifz progress") + f" {start:%b %Y}" + (f" — {chosen}" if chosen else ""),
-            [_("Admission no."), _("Name"), _("Paras memorised"), _("Current para"), _("Days heard"),
+            [_("Computer code"), _("Name"), _("Paras memorised"), _("Current para"), _("Days heard"),
              _("Not ready"), _("Absent"), _("Lines of sabaq"), _("Average mistakes"), _("Last lesson")],
             ([r["student"].admission_no, r["student"].full_name, r["paras"], r["current"], r["heard"], r["not_ready"],
               r["absent"], r["lines"], r["mistakes"], r["last"]] for r in rows),

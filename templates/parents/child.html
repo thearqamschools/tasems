@@ -3,7 +3,7 @@
 {% block content %}
 <p><a href="{% url 'parents:home' %}">‹ {% trans "My children" %}</a></p>
 <h1>{% if LANG == "ur" and child.full_name_ur %}{{ child.full_name_ur }}{% else %}{{ child.full_name }}{% endif %}</h1>
-<p class="lede">{% if enrolment %}{{ enrolment.section }} · {% endif %}{% trans "Admission no." %} <span class="num">{{ child.admission_no }}</span></p>
+<p class="lede">{% if enrolment %}{{ enrolment.section }} · {% endif %}{% trans "Computer code" %} <span class="num">{{ child.admission_no }}</span></p>
 <nav class="tabs" aria-label="{% trans 'Sections' %}">
   <a href="?tab=diary" {% if tab == "diary" %}aria-current="page"{% endif %}>{% trans "Diary" %}</a>
   <a href="?tab=attendance" {% if tab == "attendance" %}aria-current="page"{% endif %}>{% trans "Attendance" %}</a>

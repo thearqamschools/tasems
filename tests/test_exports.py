@@ -52,7 +52,7 @@ def test_students_excel_follows_the_filters_and_prints_every_row(school, login_a
     )
     client = login_as(school["principal"])
     rows = sheet(client.get("/students/?format=xlsx&q=Pupil1"))
-    assert rows[0][0].startswith("The Arqam Schools — ") and rows[2][0] == "Admission no."
+    assert rows[0][0].startswith("The Arqam Schools — ") and rows[2][0] == "Computer code"
     assert [r[1] for r in rows[3:]] == ["Pupil1"]  # only what the filter shows
     everyone = sheet(client.get("/students/?format=xlsx"))
     names = {r[1] for r in everyone[3:]}

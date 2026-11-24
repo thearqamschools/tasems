@@ -23,11 +23,11 @@
 <h2>{% trans "My classes" %}</h2>
 <div class="table-wrap"><table class="sections-table">
   <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th>{% for e in exams %}<th class="center">{{ e.get_kind_display }}</th>{% endfor %}</tr></thead>
-  <tbody>{% for s in mine %}<tr><td>{{ s.class_level }}</td><td>{{ s.name }}</td>{% for e in exams %}<td class="center"><a class="button quiet sm" href="{% url 'exams:section_marks' e.id s.id %}">{% trans "Marks & cards" %}</a></td>{% endfor %}</tr>{% endfor %}</tbody>
+  <tbody>{% for s in mine %}<tr><td>{{ s.class_level }}</td><td>{{ s.name }}</td>{% for e, p in s.progress %}<td class="center">{% include "exams/_marks_button.html" %}</td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div>
 {% endif %}
 
-<div class="heading-tools"><h2>{% trans "All sections" %}</h2>
+<div class="heading-tools sections-head"><h2>{% trans "All classes & sections" %}</h2>
   <form method="get" class="filter-inline" style="margin:0"><label for="class">{% trans "Class" %}</label>
     <select id="class" name="class" onchange="this.form.submit()"><option value="">{% trans "All classes" %}</option>{% for c in classes %}<option value="{{ c.id }}" {% if class_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
     <noscript><button class="button quiet sm" type="submit">{% trans "Show" %}</button></noscript></form></div>
@@ -35,7 +35,7 @@
 <div class="table-wrap"><table class="sections-table">
   <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th>{% for e in exams %}<th class="center">{{ e.get_kind_display }}</th>{% endfor %}</tr></thead>
   <tbody>{% for s in sections %}<tr><td>{{ s.class_level }}</td><td>{{ s.name }}</td>
-    {% for e in exams %}<td class="center"><a class="button quiet sm" href="{% url 'exams:section_marks' e.id s.id %}">{% trans "Marks & cards" %}</a></td>{% endfor %}</tr>{% endfor %}</tbody>
+    {% for e, p in s.progress %}<td class="center">{% include "exams/_marks_button.html" %}</td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<div class="card empty-state">{% icon "inbox" %}<p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
 {% endblock %}

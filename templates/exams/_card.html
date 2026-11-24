@@ -61,7 +61,7 @@
 
   <table class="info">
     <tr><td class="k">Student</td><td class="v">{{ r.student.full_name }}{% if r.student.full_name_ur %} <span class="ur" lang="ur" dir="rtl">({{ r.student.full_name_ur }})</span>{% endif %}</td>
-        <td class="k">Admission No.</td><td class="v">{{ r.student.admission_no }}</td></tr>
+        <td class="k">Computer code</td><td class="v">{{ r.student.admission_no }}</td></tr>
     <tr><td class="k">Parent / Guardian</td><td class="v">{{ r.guardian.full_name|default:"—" }}</td>
         <td class="k">Class</td><td class="v">{{ section }}</td></tr>
     <tr><td class="k">Roll No.</td><td class="v">{{ r.enrolment.roll_no|default:"—" }}</td>

@@ -921,7 +921,7 @@ not to be bought or switched on without approval.
   3rd)**. (Claude: 33% of the exam's total marks, as the 33% pass rule TASEMS already uses; positions by percentage,
   equal percentages share a position.)
 
-## Round 16 (24 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 16 (24 Nov 2026) — built 24 Nov 2026 (installer v25, CHANGELOG 0.51.0)
 - R16-1. **Date sheet — subject names on one line** (lead, 24 Nov 2026): "Mathematics" breaks, its last "s" going to a
   second line. Every subject name must fit on one line: the class columns a little wider (and the type sized to fit).
 - R16-2. **Date sheet — the logo does not show** (lead, 24 Nov 2026, on the installed v24): the logo banner must show

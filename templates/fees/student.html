@@ -2,7 +2,7 @@
 {% block title %}{% trans "Fee account" %} · {{ student.full_name }}{% endblock %}
 {% block content %}
 <h1>{{ student.full_name }}</h1>
-<p class="lede">{% trans "Admission no." %} <span class="num">{{ student.admission_no }}</span>{% if enrolment %} · {{ enrolment.section }}{% endif %} · {% trans "Father" %}: {{ student.father_name|default:"—" }}{% if student.father_cnic %} (<span class="num">{{ student.father_cnic|cnic }}</span>){% endif %}</p>
+<p class="lede">{% trans "Computer code" %} <span class="num">{{ student.admission_no }}</span>{% if enrolment %} · {{ enrolment.section }}{% endif %} · {% trans "Father" %}: {{ student.father_name|default:"—" }}{% if student.father_cnic %} (<span class="num">{{ student.father_cnic|cnic }}</span>){% endif %}</p>
 
 <div class="figures">
   <div class="figure {% if balance > 0 %}attention{% endif %}"><div class="value">{{ balance|rupees }}</div><div class="label">{% if balance < 0 %}{% trans "Paid in advance (Rs)" %}{% else %}{% trans "Owed now (Rs)" %}{% endif %}</div></div>

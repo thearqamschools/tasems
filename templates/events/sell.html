@@ -6,7 +6,7 @@
 <p class="lede">{{ event.name }} · {{ event.date|date:"d M Y" }} · {% trans "The receipt prints on the receipt printer; the money is recorded as received by you." %}</p>
 <form method="get" class="card" role="search">
   <div class="form-grid">
-    <div class="field"><label for="q">{% trans "Search" %}</label><input id="q" name="q" value="" autofocus placeholder="{% trans 'Admission no., name, father name, any mobile or CNIC' %}"></div>
+    <div class="field"><label for="q">{% trans "Search" %}</label><input id="q" name="q" value="" autofocus placeholder="{% trans 'Computer code, name, father name, any mobile or CNIC' %}"></div>
     <div class="field"><label for="class">{% trans "Class" %}</label><select id="class" name="class"><option value="">{% trans "All classes in the event" %}</option>{% for l in levels %}<option value="{{ l.id }}"{% if filters.class == l.id|stringformat:"s" %} selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
     <div class="field"><label for="section">{% trans "Section" %}</label><select id="section" name="section"><option value="">{% trans "All sections" %}</option>{% for n in section_names %}<option value="{{ n }}"{% if filters.section == n %} selected{% endif %}>{{ n }}</option>{% endfor %}</select></div>
     <div class="field"><label for="campus">{% trans "Campus" %}</label><select id="campus" name="campus"><option value="">{% trans "All campuses" %}</option>{% for c in campuses %}<option value="{{ c.id }}"{% if filters.campus == c.id|stringformat:"s" %} selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
@@ -16,7 +16,7 @@
 {% if searched %}
 {% if found %}<p class="muted">{% blocktrans count n=found|length %}{{ n }} student{% plural %}{{ n }} students{% endblocktrans %}</p>
 <div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Admission no." %}</th><th>{% trans "Student" %}</th><th>{% trans "Father name" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Ticket (Rs)" %}</th><th>{% trans "Sell" %}</th></tr></thead>
+  <thead><tr><th>{% trans "Computer code" %}</th><th>{% trans "Student" %}</th><th>{% trans "Father name" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Campus" %}</th><th class="num">{% trans "Ticket (Rs)" %}</th><th>{% trans "Sell" %}</th></tr></thead>
   <tbody>{% for f in found %}<tr{% if f.has_ticket %} class="muted"{% endif %}>
     <td class="num" style="text-align:start">{{ f.student.admission_no }}</td><td class="nowrap">{{ f.student.full_name }}</td><td>{{ f.student.father_name|default:"—" }}</td>
     <td class="nowrap">{{ f.place.section.class_level|default:"—" }}</td><td>{{ f.place.section.name|default:"—" }}</td><td class="nowrap">{{ f.place.section.campus|short_campus|default:"—" }}</td>
@@ -36,6 +36,6 @@
 {% else %}<p class="muted">{% trans "Search for a student, or choose a class, section or campus to list its students." %}</p>{% endif %}
 
 {% if recent %}<h2>{% trans "Your last receipts" %}</h2>
-<div class="table-wrap"><table><thead><tr><th>{% trans "Receipt no." %}</th><th>{% trans "Admission no." %}</th><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th class="num">{% trans "Tickets" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
+<div class="table-wrap"><table><thead><tr><th>{% trans "Receipt no." %}</th><th>{% trans "Computer code" %}</th><th>{% trans "Student" %}</th><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th class="num">{% trans "Tickets" %}</th><th class="num">{% trans "Amount (Rs)" %}</th></tr></thead>
 <tbody>{% for s in recent %}<tr{% if s.is_refunded %} class="muted"{% endif %} data-href="{% url 'events:receipt' event.id s.id %}"><td><a class="num" href="{% url 'events:receipt' event.id s.id %}">{{ s.receipt_no }}</a></td><td class="num" style="text-align:start">{{ s.student.admission_no }}</td><td>{{ s.student.full_name }}</td><td>{{ s.class_level }}</td><td>{{ s.section_name|default:"—" }}</td><td class="num">{{ s.tickets }}</td><td class="num money">{{ s.amount|rupees }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
 {% endblock %}

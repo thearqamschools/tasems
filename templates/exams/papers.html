@@ -4,19 +4,20 @@
 <p><a href="{% url 'exams:index' %}">‹ {% trans "Exams & Results" %}</a></p>
 <div class="page-header">
   <div><h1>{{ exam.get_kind_display }}</h1><p class="lede">{{ exam.session }}{% if can_edit %} · {% trans "For each class: the total marks of its subjects (empty = no paper), the day of each paper and the question paper. The question paper stays private until the exam day." %}{% endif %}</p></div>
-  <div class="actions">
+</div>
+<form method="post" class="card exam-dates">{% csrf_token %}<input type="hidden" name="action" value="dates">
+  <div class="field"><label for="starts_on">{% trans "Exams start on" %}</label><input type="date" id="starts_on" name="starts_on" value="{{ exam.starts_on|date:'Y-m-d' }}" {% if not can_edit %}disabled{% endif %}></div>
+  <div class="field"><label for="ends_on">{% trans "Exams end on" %}</label><input type="date" id="ends_on" name="ends_on" value="{{ exam.ends_on|date:'Y-m-d' }}" {% if not can_edit %}disabled{% endif %}></div>
+  {% if can_edit %}<button class="button quiet" type="submit">{% trans "Save dates" %}</button>{% endif %}
+  <div class="actions exam-dates-links">
     <a class="button quiet" href="{% url 'exams:date_sheet' exam.id %}">{% icon "calendar-check" %}{% trans "Date sheet" %}</a>
     <a class="button" href="{% url 'exams:date_sheet_pdf' exam.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Generate date sheet (PDF)" %}</a>
   </div>
-</div>
+</form>
 <nav class="class-tabs" aria-label="{% trans 'Classes' %}">{% for lv, n in levels %}<a class="button sm {% if lv.id != level.id %}quiet{% endif %}" href="?class={{ lv.id }}"{% if lv.id == level.id %} aria-current="page"{% endif %}>{{ lv }}{% if n %} <span class="badge muted">{{ n }}</span>{% endif %}</a>{% endfor %}</nav>
 
 {% if rows %}
 <form method="post" enctype="multipart/form-data" class="card">{% csrf_token %}
-  <div class="form-grid">
-    <div class="field"><label for="starts_on">{% trans "Exams start on" %}</label><input type="date" id="starts_on" name="starts_on" value="{{ exam.starts_on|date:'Y-m-d' }}" {% if not can_edit %}disabled{% endif %}></div>
-    <div class="field"><label for="ends_on">{% trans "Exams end on" %}</label><input type="date" id="ends_on" name="ends_on" value="{{ exam.ends_on|date:'Y-m-d' }}" {% if not can_edit %}disabled{% endif %}></div>
-  </div>
   <h2>{{ level }}</h2>
   <div class="table-wrap"><table class="papers-table">
     <thead><tr><th>{% trans "Subject" %}</th><th class="center">{% trans "Total marks" %}</th><th class="center">{% trans "Date" %}</th><th>{% trans "Question paper" %}</th></tr></thead>

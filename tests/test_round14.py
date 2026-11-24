@@ -125,7 +125,7 @@ def test_marks_of_a_section_on_one_table_excel_cards_progress(exam_setup, login_
     ws = wb["Marks"]
     assert ws.cell(4, 1).value in ("600", "601")
     row = 4 if ws.cell(4, 1).value == "601" else 5
-    ws.cell(row, 3).value = 33  # b's English, column order: ADM.NO., Name, English, Urdu (by date then name)
+    ws.cell(row, 3).value = 33  # b's English, column order: COMP.code, Name, English, Urdu (by date then name)
     buffer = io.BytesIO()
     wb.save(buffer)
     upload = SimpleUploadedFile("m.xlsx", buffer.getvalue())

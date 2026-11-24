@@ -143,7 +143,7 @@ def ticket_receipt(sale, printed_at):
         out += BOLD_ON + line("*** REFUNDED ***") + BOLD_OFF
     out += LEFT + pair("Receipt No", sale.receipt_no) + pair("Event", event.name)
     out += pair("Event date", f"{event.date:%d/%m/%Y}") + dash
-    out += pair("Student", student.full_name) + pair("Admission No", student.admission_no)
+    out += pair("Student", student.full_name) + pair("Computer code", student.admission_no)
     out += pair("Class", f"{sale.class_level.name} {sale.section_name}".strip())
     out += pair("Father", student.father_name or "-") + dash
     out += line(f"Student ticket  {sale.student_tickets} x Rs {sale.student_price:,.0f}".ljust(38)

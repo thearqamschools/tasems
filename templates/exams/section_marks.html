@@ -25,19 +25,19 @@
 {% endif %}
 
 <form method="post" data-marks-grid>{% csrf_token %}
-<p class="small muted no-print">{% trans "Enter goes to the next student; A = absent. Attentive, Punctual, Neatness and Participation start as Good — change only the students who are Excellent or Fair." %}</p>
+<p class="small muted no-print marks-hint">{% trans "Enter goes to the next student; A = absent. Attentive, Punctual, Neatness and Participation start as Good — change only the students who are Excellent or Fair." %}</p>
 <div class="table-wrap"><table class="marks-grid">
-  <thead><tr><th class="center">{% trans "ADM.NO." %}</th><th>{% trans "Name" %}</th>
-    {% for p in papers %}<th class="center">{{ p.subject.name }}<br><span class="muted small">{{ p.total_marks }}</span></th>{% endfor %}
-    <th class="center">{% trans "Total" %}<br><span class="muted small">{{ total }}</span></th><th class="center">%</th>
-    {% for a, label in aspects %}<th class="center rate-head">{{ label }}</th>{% endfor %}<th class="no-print center">{% trans "Card" %}</th></tr></thead>
+  <thead><tr><th class="center">{% trans "COMP.code" %}</th><th>{% trans "Name" %}</th>
+    {% for p in papers %}<th class="center">{{ p.subject.name }}<br><span class="muted small">({{ p.total_marks }})</span></th>{% endfor %}
+    <th class="center">{% trans "Total" %}<br><span class="muted small">({{ total }})</span></th><th class="center">%</th>
+    {% for a, label in aspects %}<th class="center rate-head">{{ label }}</th>{% endfor %}<th class="no-print center">{% trans "Result card" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr data-row>
     <td class="num center nowrap">{{ r.enrolment.student.admission_no }}</td>
     <td class="nowrap">{{ r.enrolment.student.full_name }}</td>
     {% for c in r.cells %}<td class="center"><input class="mark{% if c.error %} bad{% endif %}" name="m_{{ r.enrolment.student_id }}_{{ c.paper.id }}" value="{{ c.text }}" data-total="{{ c.paper.total_marks }}" inputmode="decimal" autocomplete="off" size="3" {% if not can_enter %}readonly{% endif %} aria-label="{{ r.enrolment.student.full_name }} {{ c.paper.subject.name }}"{% if c.error %} title="{{ c.error }}"{% endif %}></td>{% endfor %}
     <td class="num center" data-sum></td><td class="num center" data-pct></td>
     {% for a, level in r.levels %}<td class="center"><select class="rate rate-{{ level }}" name="r_{{ r.enrolment.student_id }}_{{ a }}" {% if not can_enter %}disabled{% endif %} aria-label="{{ r.enrolment.student.full_name }} {{ a }}">{% for v, label in levels %}<option value="{{ v }}" {% if v == level %}selected{% endif %}>{{ label|slice:":1" }}</option>{% endfor %}</select></td>{% endfor %}
-    <td class="no-print center"><a class="button quiet sm" href="{% url 'exams:exam_cards' exam.id section.id %}?student={{ r.enrolment.student_id }}" target="_blank" rel="noopener" title="{% trans 'Result card' %} {{ r.enrolment.student.full_name }}">{% icon "printer" %}{% trans "Card" %}</a></td>
+    <td class="no-print center"><a class="button quiet sm" href="{% url 'exams:exam_cards' exam.id section.id %}?student={{ r.enrolment.student_id }}" target="_blank" rel="noopener" title="{% trans 'Result card' %} {{ r.enrolment.student.full_name }}" aria-label="{% trans 'Result card' %} {{ r.enrolment.student.full_name }}">{% icon "printer" %}</a></td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% if can_enter %}<div class="actions"><button class="button" type="submit">{% trans "Save marks" %}</button></div>{% endif %}

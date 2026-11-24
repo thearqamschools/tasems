@@ -10,7 +10,7 @@ FAMILY_ROLES = ("father", "mother", "guardian")
 
 
 def next_admission_no(branch):
-    """The branch's next admission number: one more than its highest plain-number admission number."""
+    """The branch's next computer code: one more than its highest plain-number computer code."""
     numbers = (
         Student.objects.filter(branch=branch, admission_no__regex=r"^[0-9]+$")
         .order_by(Length("admission_no").desc(), "-admission_no")
@@ -166,7 +166,7 @@ def current_enrolment(student, session):
 
 
 def search(students, q):
-    """Admission no., name, father name, any mobile of the father, mother or guardian, father CNIC or B-Form
+    """Computer code, name, father name, any mobile of the father, mother or guardian, father CNIC or B-Form
     (project lead, 31 Oct 2026). Numbers may be typed with or without dashes."""
     q = q.strip()
     if not q:

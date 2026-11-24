@@ -22,6 +22,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from apps.academics.models import ClassLevel, Section, Subject
+from apps.core import paths
 from apps.diary.models import DiaryLayout
 from apps.organisation.models import AcademicSession
 
@@ -101,6 +102,18 @@ def papers(request, exam_id):
         if not can_edit:
             raise PermissionDenied
         action = request.POST.get("action")
+        if action == "dates":  # the exam's first and last day, once for every class (R16-3)
+            try:
+                first, last = request.POST.get("starts_on", "").strip(), request.POST.get("ends_on", "").strip()
+                exam.starts_on = dt.date.fromisoformat(first) if first else None
+                exam.ends_on = dt.date.fromisoformat(last) if last else None
+                if exam.starts_on and exam.ends_on and exam.ends_on < exam.starts_on:
+                    exam.starts_on, exam.ends_on = exam.ends_on, exam.starts_on
+                exam.save(update_fields=["starts_on", "ends_on", "updated_at"])
+                messages.success(request, _("Exam dates saved."))
+            except ValueError:
+                messages.error(request, _("The first or last day could not be read."))
+            return redirect(here)
         if action == "copy":
             source = Exam.objects.filter(pk=request.POST.get("source")).first()
             if source is None or source.pk == exam.pk:
@@ -124,15 +137,6 @@ def papers(request, exam_id):
             return redirect(here)
         existing = {p.subject_id: p for p in exam.papers.filter(class_level=level)}
         problems = []
-        try:  # the exam's first and last day, on the same page (R15-4)
-            first, last = request.POST.get("starts_on", "").strip(), request.POST.get("ends_on", "").strip()
-            exam.starts_on = dt.date.fromisoformat(first) if first else None
-            exam.ends_on = dt.date.fromisoformat(last) if last else None
-            if exam.starts_on and exam.ends_on and exam.ends_on < exam.starts_on:
-                exam.starts_on, exam.ends_on = exam.ends_on, exam.starts_on
-            exam.save(update_fields=["starts_on", "ends_on", "updated_at"])
-        except ValueError:
-            problems.append(_("The first or last day could not be read."))
         for subject in _subjects(exam, level):
             raw = request.POST.get(f"total_{subject.id}", "").strip()
             paper = existing.get(subject.id)
@@ -342,7 +346,7 @@ def section_marks(request, exam_id, section_id):
 
 def _blank_sheet(request, exam, section, data):
     """The sheet to fill by hand (R14-7 (2)): the same columns as the Excel, opened to print."""
-    headers = ["ADM.NO.", "Name"] + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
+    headers = ["COMP.code", "Name"] + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
     headers += ["Attentive", "Punctual", "Neatness", "Participation"]
     rows = []
     for row in data["rows"]:
@@ -405,9 +409,9 @@ def cards(request, exam_id, section_id):
             "exam": exam,
             "section": section,
             "cards": cards,
-            "address": documents.css_text(_address(section.branch)),
+            "address": documents.branch_address(section.branch),  # R16-8: the address only
             "banner": _banner(),
-            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
+            "font_base": paths.font_base(),
             "levels": ExamRating.Level.choices,
         },
     )
@@ -420,15 +424,9 @@ def cards(request, exam_id, section_id):
     return response
 
 
-def _address(branch):
-    """The branch's address from Setup → Branch details (R15-6), on one line."""
-    lines = [x.strip() for x in (branch.address or "").replace(",\n", "\n").splitlines() if x.strip()]
-    return f"The Arqam Schools, {', '.join(lines)}" if lines else "The Arqam Schools"
-
-
 def _banner():
     """The school's colour logo banner sent by the lead (R15-1), used exactly as sent."""
-    return f"file://{settings.BASE_DIR}/static/img/arqam-banner.png"
+    return paths.banner()
 
 
 @login_required
@@ -488,7 +486,7 @@ def report(request, exam_id):
         scope = str(chosen[0]) if len(chosen) == 1 else str(chosen[0].class_level)
         context["scope"] = scope
     else:
-        context["overview"] = reports.overview(exam, branch, session)
+        context["overview"], context["school"] = reports.overview(exam, branch, session)
         scope = "All classes"
     fmt = request.GET.get("format")
     if fmt in ("pdf", "xlsx") or request.GET.get("print"):
@@ -511,7 +509,7 @@ def _report_paper(exam, branch, scope, context):
                          ("Highest", _pct_text(s["highest"])), ("Lowest", _pct_text(s["lowest"]))]  # fmt: skip
         sections.append({
             "heading": "Students by percentage",
-            "headers": ["Position", "ADM.NO.", "Name", "Section", "Marks", "%", "Result"],
+            "headers": ["Position", "COMP.code", "Name", "Section", "Marks", "%", "Result"],
             "rows": [[{"text": x["place"], "cls": "warn" if x["place"] else ""},
                       {"text": x["enrolment"].student.admission_no},
                       {"text": x["enrolment"].student.full_name, "cls": "l"}, {"text": x["section"].name},
@@ -541,7 +539,11 @@ def _report_paper(exam, branch, scope, context):
             "rows": [[{"text": str(x["level"]), "cls": "l"}, {"text": x["sections"]}, {"text": x["students"]},
                       {"text": x["passed"]}, {"text": x["failed"]}, {"text": _pct_text(x["pass_rate"])},
                       {"text": _pct_text(x["average"])}, {"text": _pct_text(x["highest"])}]
-                     for x in context["overview"]],
+                     for x in context["overview"]]
+            + [[{"text": "Whole school", "cls": "l"}, {"text": context["school"]["sections"]},
+                {"text": context["school"]["students"]}, {"text": context["school"]["passed"]},
+                {"text": context["school"]["failed"]}, {"text": _pct_text(context["school"]["pass_rate"])},
+                {"text": _pct_text(context["school"]["average"])}, {"text": _pct_text(context["school"]["highest"])}]],
         })  # fmt: skip
     return {
         "branch": branch,
@@ -636,7 +638,7 @@ def progress_report(request, student_id):
     paper = {
         "branch": branch,
         "title": "PROGRESS REPORT",
-        "subtitle": f"{student.full_name} · ADM.NO. {student.admission_no}"
+        "subtitle": f"{student.full_name} · COMP.code {student.admission_no}"
         + (f" · {enrolment.section}" if enrolment else "")
         + (f" · Session {session.name}" if session else " · All years"),
         "landscape": len(data["exams"]) > 5,

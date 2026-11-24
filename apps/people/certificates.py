@@ -6,6 +6,7 @@ from django.db.models import Max
 from django.template.loader import render_to_string
 from django.utils import timezone
 
+from apps.core import paths
 from apps.diary.models import DiaryLayout
 from apps.organisation.models import Branch
 
@@ -58,8 +59,8 @@ def render_pdf(certificate):
             "s": certificate.student,
             "branch": certificate.student.branch,
             "layout": DiaryLayout.current(),
-            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
-            "media_base": f"file://{settings.MEDIA_ROOT}/",
+            "font_base": paths.font_base(),
+            "media_base": paths.media_base(),
             "female": certificate.student.gender == "female",
         },
     )

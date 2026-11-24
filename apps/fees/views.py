@@ -18,7 +18,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from apps.academics.models import Section
-from apps.core import exports
+from apps.core import exports, paths
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
 from apps.core.templatetags.tasems_tags import rupees
@@ -129,7 +129,7 @@ def index(request):
 
 
 def find(request, branch, q):
-    """Voucher number (typed or scanned) → payment screen; admission number or name → student."""
+    """Voucher number (typed or scanned) → payment screen; computer code or name → student."""
     digits = q.replace(" ", "")
     if digits.isdigit():
         voucher = Voucher.objects.filter(branch=branch, number=int(digits)).first()
@@ -259,7 +259,7 @@ def vouchers(request):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("Vouchers") + f" {month:%b %Y}",
-            [_("Voucher ID"), _("Admission no."), _("Student"), _("Father name"), _("Class"), _("From month"),
+            [_("Voucher ID"), _("Computer code"), _("Student"), _("Father name"), _("Class"), _("From month"),
              _("Until month"), _("Due date"), _("Payable (Rs)"), _("Status")],
             (
                 [v.number, v.student.admission_no, v.student.full_name, v.student.father_name,
@@ -356,8 +356,8 @@ def _voucher_context(branch, voucher_list, for_file=True):
         "back_notes_en": [x for x in fee_settings.back_notes_en.splitlines() if x.strip()],
         "copies": COPIES,
         "layout": DiaryLayout.current(),
-        "font_base": f"file://{settings.BASE_DIR}/static/fonts/" if for_file else f"{settings.STATIC_URL}fonts/",
-        "media_base": f"file://{settings.MEDIA_ROOT}/" if for_file else settings.MEDIA_URL,
+        "font_base": paths.font_base() if for_file else f"{settings.STATIC_URL}fonts/",
+        "media_base": paths.media_base() if for_file else settings.MEDIA_URL,
     }
 
 
@@ -787,7 +787,7 @@ def defaulters(request):
             )  # fmt: skip
         return exports.xlsx_response(
             _("Defaulters"),
-            [_("Admission no."), _("Student"), _("Father name"), _("Class"), _("Parent mobile"), _("Months unpaid"),
+            [_("Computer code"), _("Student"), _("Father name"), _("Class"), _("Parent mobile"), _("Months unpaid"),
              _("Since"), _("Owed (Rs)")],
             (
                 [r["student"].admission_no, r["student"].full_name, r["student"].father_name, str(r["section"] or ""),
@@ -835,7 +835,7 @@ def collections(request):
             _("Fee collection")
             + f" {date_from:%d-%m-%Y}"
             + (f" to {date_to:%d-%m-%Y}" if date_to != date_from else ""),
-            [_("Date"), _("Receipt"), _("Voucher ID"), _("Admission no."), _("Student"), _("Father name"),
+            [_("Date"), _("Receipt"), _("Voucher ID"), _("Computer code"), _("Student"), _("Father name"),
              _("Received in"), _("Bank"), _("Transaction ID / slip number"), _("Received by"), _("Amount (Rs)"),
              _("Reversed")],
             (

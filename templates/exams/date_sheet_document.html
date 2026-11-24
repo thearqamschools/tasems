@@ -21,9 +21,11 @@
   table.meta td.r { text-align: right; color: #3b4157; }
   table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
   table.grid th, table.grid td { border: .7pt solid #9aa0c8; text-align: center; vertical-align: middle;
-    padding: 2.4mm 1mm; font-size: {{ font|default:"9.5pt" }}; line-height: 1.25; word-wrap: break-word; }
+    padding: 2.2mm 0.8mm; font-size: {{ font|default:"9.5pt" }}; line-height: 1.25; overflow-wrap: normal; word-break: keep-all;
+    hyphens: none; height: 13mm; }
   table.grid th { background: #3e4095; color: #fff; font-weight: 600; border-color: #3e4095; }
-  table.grid th.date { width: 25mm; }
+  table.grid th.date { width: 21mm; }
+  table.grid th { height: auto; }
   table.grid tbody tr:nth-child(even) td { background: #f1f2fa; }
   table.grid td.date { font-weight: 600; white-space: nowrap; color: #14182b; }
   table.grid td.date small { display: block; font-weight: 400; font-size: 7.5pt; color: #5b6080; }

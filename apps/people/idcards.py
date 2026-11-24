@@ -8,6 +8,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
+from apps.core import paths
 from apps.diary.models import DiaryLayout
 
 
@@ -33,14 +34,14 @@ def render_pdf(branch, session, cards):
                 {
                     "s": student,
                     "section": section,
-                    "photo": f"file://{student.photo.path}" if student.photo else "",
+                    "photo": paths.file_uri(student.photo.path) if student.photo else "",
                     "barcode": admission_barcode(student.admission_no),
                 }
                 for student, section in cards
             ],
             "layout": DiaryLayout.current(),
-            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
-            "media_base": f"file://{settings.MEDIA_ROOT}/",
+            "font_base": paths.font_base(),
+            "media_base": paths.media_base(),
         },
     )
     return HTML(string=html, base_url=str(settings.BASE_DIR)).write_pdf()

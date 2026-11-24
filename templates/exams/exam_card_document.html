@@ -12,39 +12,42 @@
   .card:last-child { page-break-after: auto; }
   .head { text-align: center; }
   .head img { width: 128mm; height: auto; }
-  h1 { text-align: center; font-size: 13.5pt; font-weight: 700; margin: 4mm 0 7mm; letter-spacing: .01em; }
-  table.who { width: 100%; border-collapse: collapse; margin-bottom: 6mm; font-size: 10pt; }
-  table.who td { padding: 1.8mm 0; vertical-align: bottom; }
-  table.who td.k { font-weight: 700; white-space: nowrap; width: 17mm; padding-right: 2mm; }
-  table.who td.v { border-bottom: .8pt solid #000; text-align: center; font-weight: 600; }
-  table.who td.gap { width: 10mm; }
-  table.marks { width: 76%; margin: 0 auto; border-collapse: collapse; }
+  h1 { text-align: center; font-size: 16pt; font-weight: 700; margin: 4mm 0 8mm; letter-spacing: .01em; }
+  table.who { width: 100%; border-collapse: collapse; margin-bottom: 7mm; font-size: 10.5pt; }
+  table.who td { padding: 2.2mm 0 0.4mm; vertical-align: bottom; line-height: 1.1; }
+  table.who td.k { font-weight: 700; white-space: nowrap; width: 24mm; padding-right: 2mm; }
+  table.who td.v { border-bottom: .8pt solid #000; text-align: center; font-weight: 500; width: 58mm; }
+  table.who td.v2 { border-bottom: .8pt solid #000; text-align: center; font-weight: 500; width: 36mm; }
+  table.who td.k2 { font-weight: 700; white-space: nowrap; width: 18mm; padding-right: 2mm; padding-left: 0; }
+  table.who td.gap { width: auto; }
+  table.marks { width: 78%; margin: 0 auto; border-collapse: collapse; }
   table.marks th, table.marks td { border: 1pt solid #000; padding: 2.3mm 3mm; font-size: 8.5pt; vertical-align: middle; }
-  table.marks th { font-weight: 700; text-align: center; font-size: 8pt; }
-  table.marks td.n { text-align: center; width: 30mm; }
-  table.marks td.s { text-transform: uppercase; }
-  table.marks tr.total td { font-weight: 700; }
-  table.rate { margin: 5mm auto 0; border-collapse: collapse; font-size: 8.5pt; }
-  table.rate th { font-weight: 400; padding: 0 5mm 1mm; }
-  table.rate td { padding: 1.2mm 5mm; text-align: center; }
-  table.rate td.l { text-align: left; padding-left: 0; padding-right: 10mm; }
+  table.marks th { font-weight: 700; text-align: center; font-size: 10pt; }
+  table.marks td.n { text-align: center; width: 32mm; }
+  table.marks td.s { text-transform: uppercase; font-weight: 400; }
+  table.marks tr.total td { font-weight: 700; font-size: 9pt; }
+  table.rate { margin: 6mm auto 0; border-collapse: collapse; font-size: 8.5pt; }
+  table.rate th { font-weight: 500; padding: 0 5mm 1mm; }
+  table.rate td { padding: 1.3mm 5mm; text-align: center; }
+  table.rate td.l { text-align: left; padding-left: 0; padding-right: 10mm; font-weight: 700; }
   .box { display: inline-block; width: 9mm; height: 4mm; border: .8pt solid #000; border-radius: 1.2mm; text-align: center; font-size: 8pt; line-height: 4mm; font-weight: 700; }
-  .remarks { margin-top: 7mm; font-size: 11pt; font-weight: 700; }
-  .rule { border-bottom: .8pt solid #000; height: 8mm; }
-  .remarks .rule:first-of-type { display: inline-block; width: 82%; vertical-align: bottom; height: 0; }
-  .sign { position: absolute; left: 9mm; right: 9mm; bottom: 8mm; display: table; width: calc(100% - 18mm); font-weight: 700; font-size: 11pt; }
-  .sign span { display: table-cell; }
-  .sign span i { display: block; border-top: .8pt solid #000; width: 40mm; margin-bottom: 1mm; }
-  .sign span.r { text-align: right; }
-  .sign span.r i { width: 60mm; margin-left: auto; }
+  table.remarks { width: 100%; border-collapse: collapse; margin-top: 8mm; font-size: 11pt; }
+  table.remarks td { padding: 0; vertical-align: bottom; }
+  table.remarks td.k { width: 24mm; font-weight: 700; white-space: nowrap; }
+  table.remarks td.line { border-bottom: .8pt solid #000; height: 6mm; }
+  table.remarks tr.more td { height: 12mm; }
+  table.sign { position: absolute; left: 9mm; right: 9mm; bottom: 9mm; width: calc(100% - 18mm); border-collapse: collapse; font-weight: 700; font-size: 11pt; }
+  table.sign td { padding: 0; text-align: center; vertical-align: top; }
+  table.sign td.s { width: 58mm; border-top: .8pt solid #000; padding-top: 1.2mm; }
+  table.sign td.gap { border: 0; }
 </style></head>
 <body>
 {% for c in cards %}<div class="card">
   <div class="head"><img src="{{ banner }}" alt="The Arqam Schools"></div>
   <h1>RESULT OF {{ exam.get_kind_display|upper }}</h1>
   <table class="who">
-    <tr><td class="k">Name:</td><td class="v">{{ c.e.student.full_name }}</td><td class="gap"></td><td class="k">Class:</td><td class="v">{{ section.class_level }}</td></tr>
-    <tr><td class="k">ADM.NO.:</td><td class="v">{{ c.e.student.admission_no }}</td><td class="gap"></td><td class="k">Section:</td><td class="v">{{ section.name }}</td></tr>
+    <tr><td class="k">Name:</td><td class="v">{{ c.e.student.full_name }}</td><td class="gap"></td><td class="k2">Class:</td><td class="v2">{{ section.class_level }}</td></tr>
+    <tr><td class="k">COMP.code:</td><td class="v">{{ c.e.student.admission_no }}</td><td class="gap"></td><td class="k2">Section:</td><td class="v2">{{ section.name }}</td></tr>
   </table>
   <table class="marks">
     <thead><tr><th>SUBJECT</th><th>TOTAL MARKS</th><th>OBTAINED MARKS</th></tr></thead>
@@ -56,7 +59,7 @@
     <thead><tr><th></th>{% for v, label in levels %}<th>{{ label|upper }}</th>{% endfor %}</tr></thead>
     <tbody>{% for label, level in c.ratings %}<tr><td class="l">{{ label|upper }}</td>{% for v, _l in levels %}<td><span class="box">{% if v == level %}✓{% endif %}</span></td>{% endfor %}</tr>{% endfor %}</tbody>
   </table>
-  <div class="remarks">Remarks: <span class="rule"></span><div class="rule"></div></div>
-  <div class="sign"><span><i></i>Teacher</span><span class="r"><i></i>Head/ Principal</span></div>
+  <table class="remarks"><tr><td class="k">Remarks:</td><td class="line"></td></tr><tr class="more"><td class="line" colspan="2"></td></tr></table>
+  <table class="sign"><tr><td class="s">Teacher</td><td class="gap"></td><td class="s">Head/ Principal</td></tr></table>
 </div>{% endfor %}
 </body></html>

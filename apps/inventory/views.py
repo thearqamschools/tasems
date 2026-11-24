@@ -224,9 +224,9 @@ def _complete(request, branch, lines):
     if not lines:
         error = _("Add at least one item.")
     elif adm and student is None:
-        error = _("No student with admission no. %(n)s in this branch.") % {"n": adm}
+        error = _("No student with computer code %(n)s in this branch.") % {"n": adm}
     elif paid_by == Sale.PaidBy.FEES and student is None:
-        error = _("Enter the student's admission no. to add the amount to their fee account.")
+        error = _("Enter the student's computer code to add the amount to their fee account.")
     elif paid_by == Sale.PaidBy.BANK and bank is None:
         error = _("Choose the bank the money came in.")
     if error is None:
@@ -315,7 +315,7 @@ def sales(request):
             )
         return exports.xlsx_response(
             _("Sales") + f" {start:%d-%m-%Y} to {end:%d-%m-%Y}",
-            [_("Sale no."), _("Date"), _("Customer / student"), _("Admission no."), _("Paid by"), _("Sold by"),
+            [_("Sale no."), _("Date"), _("Customer / student"), _("Computer code"), _("Paid by"), _("Sold by"),
              _("Status"), _("Amount (Rs)")],
             ([s.number, s.date, s.customer, s.student.admission_no if s.student else "", s.get_paid_by_display(),
               s.sold_by.get_username(), _("Cancelled") if s.is_cancelled else "", s.total] for s in rows),

@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.51.0 — 2026-11-24 — Round 16: logos on every computer, Computer code, Marks & Results (installer v25)
+- **Logos and fonts in PDFs found on Windows too** (R16-2, R16-6): every PDF now writes picture and font addresses
+  properly (`Path.as_uri()`, e.g. `file:///C:/Program%20Files/…`) instead of `file://` + the folder, which Windows
+  could not read; the logo banner of the date sheet and result card is placed inside the PDF itself.
+- **Date sheet** (R16-1, R16-4): subject names never break inside a word ("Mathematics" on one line); type sized to the
+  number of classes; the screen page has the logo banner, equal boxes with room for three lines, everything centred
+  both ways, and the day under the date.
+- **Exam → Edit** (R16-3): "Exams start on / end on" once at the top under the exam's name, with its own Save dates.
+- **Results** (R16-5): the whole school's result at the foot of the class table (also in print, PDF and Excel).
+- **Result card** (R16-7, R16-8): title bold and larger; Name, COMP.code, Class, Section bold with short lines right
+  under the values, Class and Section further right; table headings bold and larger; Total marks and Percentage
+  bold (subject names not); the four ratings bold; Remarks bold, its line to the right edge, two equal lines with more
+  space; Teacher and Head/ Principal centred under equal lines; at the foot only the branch's address.
+- **"Admission number" is now "Computer code" (COMP.code)** everywhere (R16-9) — lists, records, forms, Excel,
+  exams, slips, ID cards, certificates, receipts; the student import still reads sheets headed "Admission No". The
+  bank's fee file keeps its agreed "Admission No" column.
+- **Marks & Results** (R16-10, R16-11, R16-14, R16-15): renamed from "Marks & cards"; subject totals in brackets, e.g.
+  "(20)"; a "Result card" column with the print icon; more space under the Excel box; on Exams & Results a section's
+  button turns **green** when every student's marks are in, and shows e.g. "12 / 30" while partly done.
+- **Exams & Results** (R16-12, R16-13): Edit, Date sheet and Results on one line in each exam box (two boxes a row);
+  "All classes & sections" with even space above and below its heading.
+
 ## 0.50.0 — 2026-11-24 — Round 15: exams made simpler, colour logo, result reports (installer v24)
 - **Exams & Results** (R15-2, R15-7, R15-11): each exam on its own card (1 to 4) with **Edit**, **Date sheet** and
   **Results** buttons; the sections table has **Class** and **Section** columns and a class filter.

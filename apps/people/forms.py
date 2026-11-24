@@ -92,7 +92,7 @@ class StudentForm(forms.ModelForm):
             "photo",
         ]
         labels = {
-            "admission_no": _("Admission number"),
+            "admission_no": _("Computer code"),
             "first_name": _("First name"),
             "last_name": _("Last name"),
             "gender": _("Gender"),
@@ -205,7 +205,7 @@ class StudentForm(forms.ModelForm):
             raise forms.ValidationError(_("Use numbers only, e.g. 4256."))
         clash = Student.objects.filter(branch=self.branch, admission_no=value).exclude(pk=self.instance.pk)
         if clash.exists():
-            raise forms.ValidationError(_("This admission number is already used in this branch."))
+            raise forms.ValidationError(_("This computer code is already used in this branch."))
         return value
 
     def clean_father_cnic(self):

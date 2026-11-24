@@ -26,7 +26,7 @@
 <form method="post" class="card">{% csrf_token %}<input type="hidden" name="action" value="complete">
   <div class="form-grid">
     <fieldset><legend>{% trans "Paid by" %}</legend>{% for v, l in paid_by %}<label><input type="radio" name="paid_by" value="{{ v }}"{% if forloop.first %} checked{% endif %}> {{ l }}</label><br>{% endfor %}</fieldset>
-    <div class="field"><label for="admission_no">{% trans "Student's admission no." %}</label><input id="admission_no" name="admission_no" dir="ltr" autocomplete="off"><p class="help">{% trans "Needed to add the amount to the fee account; optional for cash." %}</p></div>
+    <div class="field"><label for="admission_no">{% trans "Student's computer code" %}</label><input id="admission_no" name="admission_no" dir="ltr" autocomplete="off"><p class="help">{% trans "Needed to add the amount to the fee account; optional for cash." %}</p></div>
     <div class="field"><label for="customer">{% trans "Or customer name" %}</label><input id="customer" name="customer" maxlength="120"></div>
     {% if banks %}<div class="field"><label for="bank">{% trans "Which bank" %}</label><select id="bank" name="bank"><option value="">—</option>{% for b in banks %}<option value="{{ b.id }}">{{ b.name }}</option>{% endfor %}</select></div>{% endif %}
   </div>

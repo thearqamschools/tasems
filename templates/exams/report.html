@@ -24,7 +24,7 @@
 </div>
 <h2>{% trans "Students by percentage" %}</h2>
 <div class="table-wrap"><table>
-  <thead><tr><th class="center">{% trans "Position" %}</th><th class="center">{% trans "ADM.NO." %}</th><th>{% trans "Name" %}</th><th class="center">{% trans "Section" %}</th><th class="center">{% trans "Marks" %}</th><th class="center">%</th><th class="center">{% trans "Result" %}</th><th class="no-print"></th></tr></thead>
+  <thead><tr><th class="center">{% trans "Position" %}</th><th class="center">{% trans "COMP.code" %}</th><th>{% trans "Name" %}</th><th class="center">{% trans "Section" %}</th><th class="center">{% trans "Marks" %}</th><th class="center">%</th><th class="center">{% trans "Result" %}</th><th class="no-print"></th></tr></thead>
   <tbody>{% for x in result.students %}<tr>
     <td class="center">{% if x.place %}<span class="badge">{{ x.place }}</span>{% endif %}</td>
     <td class="num center">{{ x.enrolment.student.admission_no }}</td><td>{{ x.enrolment.student.full_name }}</td><td class="center">{{ x.section.name }}</td>
@@ -51,6 +51,7 @@
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Class" %}</th><th class="center">{% trans "Sections" %}</th><th class="center">{% trans "Students" %}</th><th class="center">{% trans "Passed" %}</th><th class="center">{% trans "Failed" %}</th><th class="center">{% trans "Pass rate" %}</th><th class="center">{% trans "Average" %}</th><th class="center">{% trans "Highest" %}</th></tr></thead>
   <tbody>{% for x in overview %}<tr><td><a href="?class={{ x.level.id }}">{{ x.level }}</a></td><td class="num center">{{ x.sections }}</td><td class="num center">{{ x.students }}</td><td class="num center">{{ x.passed }}</td><td class="num center">{{ x.failed }}</td><td class="num center">{% if x.pass_rate is not None %}{{ x.pass_rate|floatformat:"-2" }}%{% else %}—{% endif %}</td><td class="num center">{% if x.average is not None %}{{ x.average|floatformat:"-2" }}%{% else %}—{% endif %}</td><td class="num center">{% if x.highest is not None %}{{ x.highest|floatformat:"-2" }}%{% else %}—{% endif %}</td></tr>{% endfor %}</tbody>
+  <tfoot><tr class="school-total"><th>{% trans "Whole school" %}</th><th class="num center">{{ school.sections }}</th><th class="num center">{{ school.students }}</th><th class="num center">{{ school.passed }}</th><th class="num center">{{ school.failed }}</th><th class="num center">{% if school.pass_rate is not None %}{{ school.pass_rate|floatformat:"-2" }}%{% else %}—{% endif %}</th><th class="num center">{% if school.average is not None %}{{ school.average|floatformat:"-2" }}%{% else %}—{% endif %}</th><th class="num center">{% if school.highest is not None %}{{ school.highest|floatformat:"-2" }}%{% else %}—{% endif %}</th></tr></tfoot>
 </table></div>
 {% else %}<div class="card empty-state">{% icon "inbox" %}<p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
 {% endif %}

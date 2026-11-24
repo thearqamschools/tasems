@@ -43,7 +43,7 @@ def attention(request):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("Students needing attention"),
-            [_("Admission no."), _("Name"), _("Father"), _("Class"), _("Parent's mobile"), _("Signals"), _("Details")],
+            [_("Computer code"), _("Name"), _("Father"), _("Class"), _("Parent's mobile"), _("Signals"), _("Details")],
             ([r.student.admission_no, r.student.full_name, r.student.father_name, str(r.section), r.phone,
               len(r.flags), "; ".join(t for _c, t in r.flags)] for r in rows),
             branch=branch,

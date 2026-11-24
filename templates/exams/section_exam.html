@@ -12,7 +12,7 @@
 </table></div>
 {% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "This exam has no papers for this class yet. Head office adds them under Advanced setup → Exams." %}</p></div>{% endif %}
 <div class="actions">
-  <a class="button" href="{% url 'exams:section_marks' exam.id section.id %}">{% trans "Marks & cards" %}</a>
+  <a class="button" href="{% url 'exams:section_marks' exam.id section.id %}">{% trans "Marks & Results" %}</a>
   {% if papers %}<a class="button" href="{% url 'exams:slips' exam.id section.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Exam slips (PDF)" %}</a>
   <a class="button quiet" href="{% url 'exams:date_sheet' exam.id %}?class={{ section.class_level_id }}">{% trans "Date sheet" %}</a>{% endif %}
   <a class="button secondary" href="{% url 'exams:section_results' section.id %}{% if exam.kind == 'mid' %}?card=mid{% endif %}">{% trans "See results" %}</a>

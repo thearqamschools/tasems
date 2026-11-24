@@ -22,7 +22,7 @@
   <table class="facts">
     <tr><th>Name</th><td>{{ s.full_name }}</td></tr>
     <tr><th>{% if female %}Daughter{% else %}Son{% endif %} of</th><td>{{ s.father_name|default:"—" }}</td></tr>
-    <tr><th>Admission No.</th><td>{{ s.admission_no }}</td></tr>
+    <tr><th>Computer code</th><td>{{ s.admission_no }}</td></tr>
     <tr><th>Date of birth</th><td>{{ s.date_of_birth|date:"d F Y"|default:"—" }}</td></tr>
     <tr><th>Date of admission</th><td>{{ s.admission_date|date:"d F Y" }}</td></tr>
     {% if c.kind == "leaving" %}<tr><th>Date of leaving</th><td>{{ c.left_on|date:"d F Y"|default:"—" }}</td></tr>

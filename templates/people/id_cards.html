@@ -29,7 +29,7 @@
       <div class="name">{{ c.s.full_name }}</div>
       {% if c.s.gender == "female" %}D/o{% else %}S/o{% endif %} <b>{{ c.s.father_name|default:"—" }}</b><br>
       Class <b>{{ c.section.class_level|default:"—" }}</b>{% if c.section %} · Section <b>{{ c.section.name }}</b>{% endif %}<br>
-      Admission No. <b>{{ c.s.admission_no }}</b><br>
+      Computer code <b>{{ c.s.admission_no }}</b><br>
       {% if c.s.date_of_birth %}Date of birth <b>{{ c.s.date_of_birth|date:"d M Y" }}</b>{% endif %}
     </div>
   </div>

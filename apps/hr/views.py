@@ -20,7 +20,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from apps.core import exports
+from apps.core import exports, paths
 from apps.core.branch import current_branch
 from apps.organisation.models import AcademicSession
 
@@ -526,8 +526,8 @@ def _report(request, context, filename):
     context = {
         **context,
         "layout": DiaryLayout.current(),
-        "font_base": f"file://{settings.BASE_DIR}/static/fonts/" if as_pdf else f"{settings.STATIC_URL}fonts/",
-        "media_base": f"file://{settings.MEDIA_ROOT}/" if as_pdf else settings.MEDIA_URL,
+        "font_base": paths.font_base() if as_pdf else f"{settings.STATIC_URL}fonts/",
+        "media_base": paths.media_base() if as_pdf else settings.MEDIA_URL,
         "printed": timezone.localtime(),
         "auto_print": not as_pdf,
     }

@@ -124,7 +124,7 @@ def test_template_downloads(org, make_user, login_as):
     client = login_as(make_user("principal", Scope.BRANCH, org["samanabad"]))
     response = client.get("/students/import/template.xlsx")
     wb = load_workbook(io.BytesIO(response.content))
-    assert wb.active.cell(1, 1).value == "Admission No *"
+    assert wb.active.cell(1, 1).value == "Computer code *"
 
 
 def test_import_reports_every_problem_and_saves_nothing(org, students, make_user, login_as):

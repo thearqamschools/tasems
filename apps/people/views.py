@@ -84,7 +84,7 @@ def student_list(request):
     if exports.wants_xlsx(request):
         return exports.xlsx_response(
             _("Students"),
-            [_("Admission no."), _("Name"), _("Father name"), _("Class"), _("Section"), _("Parent mobile"),
+            [_("Computer code"), _("Name"), _("Father name"), _("Class"), _("Section"), _("Parent mobile"),
              _("Father CNIC"), _("Gender"), _("Date of birth"), _("Admission date"), _("Status")],
             (
                 [
