@@ -991,5 +991,5 @@ not to be bought or switched on without approval.
 - R16-15. **Exams & Results — a section's button turns green when its marks are complete** (lead, 24 Nov 2026): in
   "All classes & sections", the **Marks & Results** button of a section for an exam turns **green** once every
   student of that section has every paper of that exam entered and saved (marks, or A for absent) — so it is clear
-  from outside which sections are done. (Claude: not started stays as now; partly entered could show how many are
-  done, e.g. "12 / 30" — to confirm.)
+  from outside which sections are done. Not started stays as now; **partly entered shows how many students are
+  complete, e.g. "12 / 30"** (lead, 24 Nov 2026: yes).
