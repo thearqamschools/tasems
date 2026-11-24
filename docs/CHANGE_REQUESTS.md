@@ -917,3 +917,6 @@ not to be bought or switched on without approval.
   as `static/img/arqam-banner.png` (and the original .webp), used exactly as sent at the top of the date sheet and the
   result card (R15-1, R15-5). (Claude: since the banner already carries the name, the separate title in Helvetica
   Inserat is used only where the name is written as text.)
+- **Lead, 24 Nov 2026 — R15-10 decided**: result reports show **pass / fail at 33%** and **positions (1st, 2nd,
+  3rd)**. (Claude: 33% of the exam's total marks, as the 33% pass rule TASEMS already uses; positions by percentage,
+  equal percentages share a position.)
