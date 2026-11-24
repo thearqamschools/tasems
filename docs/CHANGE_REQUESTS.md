@@ -1053,3 +1053,10 @@ not to be bought or switched on without approval.
     (Claude: the class teacher and subject teacher are kept against the staff record; when that record gets a login
     (Setup → Users and roles, or on the staff member's page), the class teacher's rights — marks, attendance, diary of
     their own section — work through it. Until then the name shows on timetables, result cards' lists etc.)
+- R17-9. **Academics → Timetable — the sections list and Subject teachers page** (lead, 24 Nov 2026):
+  - The list's columns: **Class**, **Section** (separate, not run together), Class teacher, Subjects with a teacher,
+    Periods filled.
+  - **Timetable** and **Subject teachers** as **buttons** (not links) on each row.
+  - **Subject teachers page**: the **class teacher is chosen here too** — at the top, the section's Class teacher
+    (from the teachers list, R17-8), then each subject's teacher; one **Save** for both. (It can still be set from
+    Setup → Classes and sections; both show the same.)
