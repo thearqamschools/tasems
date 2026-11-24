@@ -770,3 +770,16 @@ not to be bought or switched on without approval.
   box; one payment date for all (today to start); each person is paid their full net pay for the month by their own
   method; only after the month's payroll is finalised; staff already paid are not listed; the total of the ticked
   rows shows before saving. Paying part of a salary stays on the person's own page.)
+- R14-3. **Academics → Exams & Results — the year's assessments** (lead, 24 Nov 2026; more details to follow).
+  The academic session starts in **March**. The main assessments of a year, in order:
+  1. **Periodic Assessment – I** — before the summer vacation.
+  2. **Summer Vacation Work** — given for the summer vacation.
+  3. **Mid-Term** — after the summer vacation, in August / September.
+  4. **Periodic Assessment – II** — in November (e.g. the date sheet of 10–17 Nov 2026 and the result card
+     "Result of Periodic Assessment – II" the lead shared: subjects with their own total marks — for Class Seven
+     English 40, Urdu 40, Mathematics 30, Science 30, Islamiyat 30, Computer 25, Tarjama tul Quran 25, Social Studies
+     30, total 250 — percentage, Attentive / Punctual / Neatness / Participation as Excellent / Good / Fair, remarks,
+     Teacher and Head / Principal signatures).
+  5. **Finals** — in February / March.
+  (Claude: TASEMS's exams now know only Class test, Mid-Term and Final; these five are to become the year's exam
+  kinds. Waiting for the lead's further points before proposing how marks, cards and the final result work.)
