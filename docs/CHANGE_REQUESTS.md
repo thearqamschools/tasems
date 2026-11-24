@@ -932,3 +932,11 @@ not to be bought or switched on without approval.
   for every class, so they should not sit inside each class's box. Put them **once, right under the exam's name**
   (e.g. "Periodic Assessment – I") at the top of the page — above the class buttons (Play Group, Nursery, Prep …) and
   above / beside "Date sheet" and "Generate date sheet (PDF)" — and saved on their own, not with a class.
+- R16-4. **Exams → Date sheet page (on the screen) — layout** (lead, 24 Nov 2026, photo of Periodic Assessment – II,
+  10–17 Nov 2026, Play Group to Pre-Nine):
+  - The day written **under the date** (e.g. "10-11-26" and below it "Tue"), not beside it.
+  - More open: columns wider and clearly visible; **every box the same size**, each with room for **three lines**
+    (the longest now, "Social Studies + Tarjama Tul Quran", takes three).
+  - Everything in each box **centred both ways** (across and up-down).
+  - (Also from the photo: the lead's date sheet uses "+" for two papers on a day and "Biology/Computer" for a choice;
+    both kept as typed.)
