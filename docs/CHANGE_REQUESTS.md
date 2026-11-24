@@ -993,3 +993,13 @@ not to be bought or switched on without approval.
   student of that section has every paper of that exam entered and saved (marks, or A for absent) — so it is clear
   from outside which sections are done. Not started stays as now; **partly entered shows how many students are
   complete, e.g. "12 / 30"** (lead, 24 Nov 2026: yes).
+
+## Round 17 (24 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R17-1. **Date sheet PDF — spacing, type and one page** (lead, 24 Nov 2026):
+  - The logo **higher** (less empty space above it), so room is saved lower down.
+  - The space **between the logo and the DATE SHEET band** the same as the space **between the band and the line
+    below it** (dates · exam name · session) — equal above and below the band.
+  - The **exam's name** (e.g. Periodic Assessment – II) about **2 points larger**.
+  - The **heading row bold**: Date, Play Group, Nursery, Prep … (the class names).
+  - The whole date sheet **on one page** — never running onto a second page (Claude: rows and type shrink to fit
+    when the exam has many days).
