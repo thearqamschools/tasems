@@ -865,6 +865,20 @@ not to be bought or switched on without approval.
   with **total marks, the paper's date and the question paper** on the same row; at the top the exam's **first and
   last day**; "Save <class>" at the bottom. The separate "Set the dates" page is no longer needed. A **Date sheet**
   button (and "Generate date sheet (PDF)") at the top of this page too.
-- R15-5. **The date sheet PDF**: the proper logo at the top with "The Arqam Schools" (as R15-1); the line under it
-  with the campus name ("The Arqam Schools — Samanabad Campus (Head Office)") **removed**. (More points from the lead
-  to follow.)
+- R15-5. **The date sheet PDF — layout** (lead, 24 Nov 2026; the lead sends the logo to use):
+  - At the top **the logo** (the file the lead sends). The school name is **not** written separately above (the logo
+    carries it), and the campus line under it ("The Arqam Schools — Samanabad Campus (Head Office)") is removed.
+  - The band: **DATE SHEET**; directly under it, **in the centre, the exam's name** (e.g. Periodic Assessment – I);
+    on the same line, **the dates on the left** (e.g. 10 November – 17 November 2026) and **the session on the right
+    corner** (Session 2026-27) — not all run together as now.
+  - The table: every box and column evenly aligned, the text well placed and centred in each box.
+  - At the very **bottom: the branch's address only** (where the date sheet is made; no "Head Office" wording, no
+    phone or website).
+  - Better alignment, a better-looking sheet and a better colour scheme overall.
+- R15-6. **Setup → Branch details** (lead, 24 Nov 2026): one place in Settings for the details of the branch the
+  software runs in: **branch name** (as shown at the top of TASEMS), **full address**, **phone numbers** (several),
+  **mobile / WhatsApp numbers** (several; mobile and WhatsApp are the same number), and **website**. Printed papers
+  take them from here (e.g. the date sheet's address, R15-5).
+  (Claude: TASEMS already keeps a branch's address, phone 1–2 and mobile 1–2 under Setup → Branches, entered by head
+  office. To do: a "Branch details" page the branch's own principal / owner can fill, the mobiles marked as WhatsApp,
+  and a **website** field added.)
