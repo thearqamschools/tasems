@@ -1008,3 +1008,11 @@ not to be bought or switched on without approval.
   is then used at the top of the date sheet (page and PDF). (Claude: the same header picture to be used on the result
   cards too, so the school's papers match — to confirm; only exam setup / head office may change it; a "Back to the
   school's logo" option to return to the one sent on 24 Nov 2026; PNG / JPG, shown as uploaded, not redrawn.)
+- R17-3. **Result card — even spacing between the blocks** (lead, 24 Nov 2026): the space above and below each block
+  the same:
+  - the title "RESULT OF PERIODIC ASSESSMENT – II": equal space between the logo and the title, and between the
+    title and the Name / Class / COMP.code / Section lines;
+  - the marks table: equal space above it (from the Name … Section lines) and below it (to the ratings);
+  - the Attentive / Punctual / Neatness / Participation block: equal space above (from the table) and below (to
+    Remarks).
+  (Claude: one even gap used between every block, so the card looks balanced.)
