@@ -913,3 +913,7 @@ not to be bought or switched on without approval.
 - **Lead, 24 Nov 2026 — fonts received**: Helvetica Inserat LT Std (Roman) and Poppins (OFL) sent by the lead; kept in
   `static/fonts/` for R15-9 / R15-5. (Helvetica Inserat is a licensed Linotype font; the zip had no licence file —
   the school is responsible for its licence.) Logo file still to come.
+- **Lead, 24 Nov 2026 — logo received**: the colour banner (round logo + "THE ARQAM SCHOOLS" + "دی ارقم سکولز"), kept
+  as `static/img/arqam-banner.png` (and the original .webp), used exactly as sent at the top of the date sheet and the
+  result card (R15-1, R15-5). (Claude: since the banner already carries the name, the separate title in Helvetica
+  Inserat is used only where the name is written as text.)
