@@ -825,3 +825,24 @@ not to be bought or switched on without approval.
   - The address line at the bottom: The Arqam Schools, Sanora Colony, Samanabad, Faisalabad (as on the sample).
   - Cards can be **exported** (PDF) one student at a time or the whole section.
   - Every exam's marks stay on record, so each student's **progress across the exams and the years** is kept.
+- R14-10. **Lead, 24 Nov 2026**: the exams process above is an overview — it need not be built exactly so; anything
+  that makes it easier, quicker or better is to be done. **Claude's proposals** (for the lead to accept or change):
+  1. **One click for the year**: "Add this session's exams" makes Periodic Assessment – I, Mid-Term, Periodic
+     Assessment – II and Final for the session at once (dates added later).
+  2. **Papers copied from last time**: when an exam is set up, the subjects and total marks of each class are copied
+     from the same exam of last year (or the previous exam), then changed where needed — no typing from scratch.
+  3. **Date sheet made on one grid**: dates down the side, classes across the top, the subject chosen in each box;
+     "–" where empty; then Generate date sheet (PDF, logo, no times).
+  4. **Marks table made for speed**: Enter goes to the next student, Tab to the next subject; "A" = absent; marks
+     above the total turn red and are not saved; total and percentage fill in by themselves while typing.
+  5. **Ratings in one move**: Attentive / Punctual / Neatness / Participation start as **Good for everyone** (a
+     "set all" choice); only the students who are Excellent or Fair are clicked — most of the class needs no click.
+  6. **The same sheet for paper and Excel**: one sheet per section (student code, name, subjects with their totals)
+     to print and fill by hand, or fill in Excel and import; the import shows the marks on screen before saving.
+  7. **Question papers private until the exam**: a paper uploaded before its date is seen only by the principal /
+     exam staff; after the exam it is open to teachers of that subject for record.
+  8. **Marks closed after the due date**: after "marks due on", only the principal can change marks (TASEMS already
+     has this rule; kept).
+  9. **Progress on the student's page**: every exam of every year in one table (percentage of each exam), so
+     progress can be seen at a glance.
+  10. Result cards as in R14-9 (black and white, A4, one student per page; the whole section in one PDF).
