@@ -106,7 +106,7 @@ def test_counter_fee_account_needs_a_student(shop, login_as):
     client = login_as(shop["accountant"])
     client.post("/inventory/sell/", {"action": "add", "code": "T1"})
     page = client.post("/inventory/sell/", {"action": "complete", "paid_by": "fees"}, follow=True)
-    assert "admission no." in page.content.decode() and not Sale.objects.exists()
+    assert "computer code" in page.content.decode() and not Sale.objects.exists()
     client.post("/inventory/sell/", {"action": "complete", "paid_by": "fees", "admission_no": "777"})
     assert Sale.objects.get().student == shop["student"]
 
