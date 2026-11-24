@@ -848,3 +848,23 @@ not to be bought or switched on without approval.
   10. Result cards as in R14-9 (black and white, A4, one student per page; the whole section in one PDF).
 - **Lead, 24 Nov 2026 ("ok kr do")**: Claude's proposals in R14-10 accepted, and the marks reader skill for photos
   of hand-filled sheets (read in the office's own Claude, not inside TASEMS).
+
+## Round 15 (24 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R15-1. **Colour logo on the result card and the date sheet** (lead, 24 Nov 2026): the official logo in its own
+  colours (not grey) on both, with "The Arqam Schools" beside it as on the school's own designs. The lead will send
+  the logo file to use.
+- R15-2. **Exams & Results — the exams list**: beside each exam (Periodic Assessment – I, Mid-Term, Periodic
+  Assessment – II, Final) **two clear buttons: Edit and Date sheet** (in place of the "Papers & question papers ·
+  Date sheet" links); the table's alignment and look made proper, so it is easy to see which exams there are.
+- R15-3. **Setup → Classes & Subjects** (new): for **each class** (class-wise, not section-wise — Claude: sections of
+  a class share its subjects, e.g. 9th's Biology / Computer stay subjects of the class), choose its subjects; new
+  subjects can be added here. Only a class's subjects then show for that class in the exams (and elsewhere subjects
+  of a class are listed).
+- R15-4. **Edit = one page for everything of an exam** (the present "Papers & question papers" page): the classes
+  across the top (Play Group, Nursery, Prep, One … ); for the chosen class only **its subjects** (from R15-3), each
+  with **total marks, the paper's date and the question paper** on the same row; at the top the exam's **first and
+  last day**; "Save <class>" at the bottom. The separate "Set the dates" page is no longer needed. A **Date sheet**
+  button (and "Generate date sheet (PDF)") at the top of this page too.
+- R15-5. **The date sheet PDF**: the proper logo at the top with "The Arqam Schools" (as R15-1); the line under it
+  with the campus name ("The Arqam Schools — Samanabad Campus (Head Office)") **removed**. (More points from the lead
+  to follow.)
