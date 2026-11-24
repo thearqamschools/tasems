@@ -944,3 +944,19 @@ not to be bought or switched on without approval.
   table ("All classes") is there; at its end add **the whole school's result** for that exam — a total row / summary:
   students, passed, failed, pass rate, average and highest for the whole branch (Claude: also in the print, PDF and
   Excel; optionally the school's top three students by percentage).
+- R16-6. **Result card — the logo does not show** (lead, 24 Nov 2026, photo of the installed v24: the card shows only
+  the words "The Arqam Schools" where the banner should be — the same as R16-2 on the date sheet). (Claude: the PDF
+  is made with the image's file path written as `file://` + the folder; on Windows that folder is like
+  `C:\Program Files\…`, which does not make a valid address, so the picture is not found. To fix by building the
+  address the proper way (`Path.as_uri()`) for the banner, logos and fonts in every PDF, and test it with a Windows
+  folder path.)
+- R16-7. **Result card — type and lines** (lead, 24 Nov 2026, same photo):
+  - **Bold**: "RESULT OF PERIODIC ASSESSMENT – II"; the four labels **Name, ADM.NO., Class, Section**; the table
+    headings **SUBJECT, TOTAL MARKS, OBTAINED MARKS** (and 1–2 points larger); **every subject name**; **PERCENTAGE**;
+    **ATTENTIVE, PUNCTUAL, NEATNESS, PARTICIPATION**; **Remarks**.
+  - Name / ADM.NO. / Class / Section lines: **shorter**, and **raised** so the line sits right under the written
+    value (now it falls well below it); **Class and Section moved further to the right**.
+  - **Remarks**: its line runs **all the way to the right**, ending where the Head / Principal line ends; the two
+    remark lines **the same** (now the first is dark, the second light) with **more space between them**.
+  - **Teacher** and **Head/ Principal**: both signature lines **the same length**, and each word **centred under its
+    own line**.
