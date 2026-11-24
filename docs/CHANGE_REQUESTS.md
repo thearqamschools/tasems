@@ -988,3 +988,8 @@ not to be bought or switched on without approval.
 - R16-14. **Marks & Results page — spacing** (lead, 24 Nov 2026): the "Bring in marks from Excel …" box and the line
   under it ("Enter goes to the next student; A = absent …") touch; add space between them (more space above that
   line).
+- R16-15. **Exams & Results — a section's button turns green when its marks are complete** (lead, 24 Nov 2026): in
+  "All classes & sections", the **Marks & Results** button of a section for an exam turns **green** once every
+  student of that section has every paper of that exam entered and saved (marks, or A for absent) — so it is clear
+  from outside which sections are done. (Claude: not started stays as now; partly entered could show how many are
+  done, e.g. "12 / 30" — to confirm.)
