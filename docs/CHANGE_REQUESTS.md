@@ -972,3 +972,10 @@ not to be bought or switched on without approval.
   table, marks Excel, sheet to fill by hand, result cards, result reports, progress report), slips, ID cards,
   certificates, vouchers and every other place. Only the name changes: the numbers themselves stay the same.
   (Claude: about 65 places; the Urdu wording changes too, and the marks reader skill's instructions.)
+- R16-10. **"Marks & cards" renamed "Marks & Results"** (lead, 24 Nov 2026): on Exams & Results (the section buttons)
+  and the page's own heading / links.
+- R16-11. **Marks & Results — the marks table headings** (lead, 24 Nov 2026):
+  - Under each subject's name its total marks **in brackets**, e.g. "English" and below it "(20)"; the Total column
+    the same, e.g. "(100)"; the "%" column as it is.
+  - The last column's heading **"Result card"** (in place of "Card"), and in each row **only the print icon** (no
+    word "Card" beside it).
