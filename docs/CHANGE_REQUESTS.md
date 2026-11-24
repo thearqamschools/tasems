@@ -1023,3 +1023,10 @@ not to be bought or switched on without approval.
   graphic / UI-UX designer and make them neat and beautiful: everything aligned on clear lines, e.g. the
   EXCELLENT / GOOD / FAIR headings **centred over their boxes** (FAIR is not centred now), the rating boxes evenly
   spaced, consistent type sizes and weights, even gaps (R17-1, R17-3).
+- R17-6. **Result card — many subjects break the layout** (lead, 24 Nov 2026, photo: Pre-Nine, Periodic Assessment –
+  II, 8 subjects): the marks table grows, and the Remarks lines run into the Teacher / Head-Principal lines (the
+  second remark line falls on top of the signature lines). To do: the card must stay in order for any number of
+  subjects — the signature lines always below the Remarks with proper space (not pinned to a fixed spot), and with
+  the border box placed evenly on the page (R17-4) the extra room at the bottom is used; when there are many subjects,
+  the rows and gaps tighten a little so everything still fits on one page. (Also seen: the logo now shows on the
+  Windows computer.)
