@@ -840,3 +840,21 @@ details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; 
 @media (min-width: 1700px) { .exam-cards { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; } }
 @media (max-width: 760px) { .exam-cards { grid-template-columns: 1fr !important; } .exam-card-actions { flex-wrap: wrap; } }
 .exam-card { flex-direction: column !important; align-items: stretch; }
+/* R17-7: the exam boxes — the same padding on every side; buttons wrap inside the box, never past its edge */
+.exam-card { padding: var(--space-4) !important; }
+.exam-card-actions { flex-wrap: wrap !important; min-inline-size: 0; }
+.exam-card-actions .button { flex: 0 1 auto; min-inline-size: 0; }
+.header-change { margin-block-start: var(--space-4); }
+.sections-table td:nth-child(1), .sections-table td:nth-child(2) { white-space: nowrap; }
+.sections-table td, .sections-table th { padding-inline: 0.5rem; }
+.sections-table .button.sm { padding-inline: 0.55rem; font-size: var(--step--1); white-space: nowrap; }
+.sections-table .button.sm .badge { margin-inline-start: 0.25rem; }
+.timetable-sections td { vertical-align: middle; }
+.timetable-sections th { white-space: normal; line-height: 1.25; }
+.timetable-sections td:nth-child(1), .timetable-sections td:nth-child(2) { white-space: nowrap; }
+.timetable-sections td:nth-child(4), .timetable-sections td:nth-child(5) { text-align: center; }
+.timetable-sections td:last-child { white-space: nowrap; text-align: end; }
+.timetable-sections .button.sm { padding-inline: 0.55rem; }
+.sections-table th { white-space: normal; line-height: 1.25; }
+.sections-table .button.sm { padding-inline: 0.45rem; font-size: 0.8rem; }
+.sections-table td:last-child, .sections-table th:last-child { padding-inline-end: 0.75rem; }

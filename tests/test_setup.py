@@ -187,12 +187,26 @@ def test_section_rules_are_checked(org, make_user, login_as):
         "/setup/sections/new/", {"class_level": six.pk, "name": "A", "gender_group": "mixed", "is_active": "on"}
     )
     assert "gender_group" in r.context["form"].errors
-    # A teacher from another branch is not offered.
+    # A teacher from another branch is not offered (R17-8: teachers come from the staff records).
+    import datetime as dt
+
+    from apps.hr.models import Employee
+
+    other = Employee.objects.create(
+        branch=org["lhr_franchise"], code="X1", full_name="Other Teacher", gender="female", designation="Teacher",
+        staff_type="teaching", joined_on=dt.date(2026, 4, 1), user=outsider,
+    )  # fmt: skip
     r = client.post(
         "/setup/sections/new/",
-        {"class_level": six.pk, "name": "A", "gender_group": "boys", "class_teacher": outsider.pk, "is_active": "on"},
+        {
+            "class_level": six.pk,
+            "name": "A",
+            "gender_group": "boys",
+            "class_teacher_staff": other.pk,
+            "is_active": "on",
+        },
     )
-    assert "class_teacher" in r.context["form"].errors
+    assert "class_teacher_staff" in r.context["form"].errors
     r = client.post(
         "/setup/sections/new/", {"class_level": six.pk, "name": "Rose", "gender_group": "boys", "is_active": "on"}
     )

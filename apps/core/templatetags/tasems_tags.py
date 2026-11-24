@@ -166,3 +166,13 @@ def days(value):
     except (InvalidOperation, ValueError):
         return value
     return int(number) if number == number.to_integral_value() else number.normalize()
+
+
+@register.filter
+def person_name(person):
+    """A staff record's or a login's name (R17-8: teachers may be either)."""
+    if not person:
+        return ""
+    if hasattr(person, "full_name"):
+        return person.full_name
+    return person.get_full_name() or person.username

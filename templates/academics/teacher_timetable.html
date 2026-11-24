@@ -1,9 +1,9 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
-{% block title %}{% if mine %}{% trans "My timetable" %}{% else %}{% trans "Timetable" %} · {{ teacher.get_full_name }}{% endif %}{% endblock %}
+{% block title %}{% if mine %}{% trans "My timetable" %}{% else %}{% trans "Timetable" %} · {{ teacher|person_name }}{% endif %}{% endblock %}
 {% block content %}
 {% if not mine %}<p class="no-print"><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>{% endif %}
 <div class="page-header">
-  <div><h1>{% if mine %}{% trans "My timetable" %}{% else %}{{ teacher.get_full_name|default:teacher.username }}{% endif %}</h1>
+  <div><h1>{% if mine %}{% trans "My timetable" %}{% else %}{{ teacher|person_name }}{% endif %}</h1>
   {% if grid %}<p class="lede">{% blocktrans count n=grid.count %}{{ n }} period a week{% plural %}{{ n }} periods a week{% endblocktrans %}</p>{% endif %}</div>
   <div class="actions"><button class="button quiet" type="button" data-print>{% icon "printer" %}{% trans "Print" %}</button></div>
 </div>

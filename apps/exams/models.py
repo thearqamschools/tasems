@@ -307,3 +307,18 @@ class ExamRating(BranchOwnedModel):
 
     def __str__(self):
         return f"{self.student} {self.exam}"
+
+
+class PrintHeader(TimeStampedModel):
+    """The header picture (logo banner) at the top of date sheets and result cards (R17-2), changed from the Date
+    sheet page. One for the whole network; none = the school's banner sent by the lead on 24 Nov 2026."""
+
+    image = models.ImageField(upload_to="print_header/")
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    def __str__(self):
+        return self.image.name
+
+    @classmethod
+    def current(cls):
+        return cls.objects.order_by("-updated_at").first()

@@ -29,7 +29,7 @@
   <thead><tr><th>{% trans "Section" %}</th><th>{% trans "Class teacher" %}</th><th>{% trans "Diary" %}</th><th></th></tr></thead>
   <tbody>{% for r in rows %}<tr>
     <td>{{ r.section }}</td>
-    <td>{{ r.section.class_teacher.get_full_name|default:r.section.class_teacher|default:"—" }}</td>
+    <td>{{ r.section.class_teacher_name|default:"—" }}</td>
     <td>{% if r.diary %}<a href="{% url 'diary:view' r.diary.pk %}">{{ r.diary.get_status_display }}</a>{% else %}<span class="badge attention">{% trans "Not written" %}</span>{% endif %}</td>
     <td>{% if r.can_edit %}<a href="{% url 'diary:write' r.section.id date|date:'Y-m-d' %}">{% if r.diary %}{% trans "Edit" %}{% else %}{% trans "Write diary" %}{% endif %}</a>{% endif %}</td>
   </tr>{% endfor %}</tbody>

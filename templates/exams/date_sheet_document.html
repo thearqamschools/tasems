@@ -6,30 +6,33 @@
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Medium.ttf"); font-weight: 500; }
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-SemiBold.ttf"); font-weight: 600; }
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Bold.ttf"); font-weight: 700; }
-  @page { size: A4 landscape; margin: 9mm 10mm 12mm;
+  @page { size: A4 landscape; margin: 5mm 10mm 11mm;
     @bottom-center { content: "{{ address|safe }}"; font: 8.5pt "Poppins"; color: #3e4095; } }
   body { margin: 0; font-family: "Poppins", sans-serif; color: #14182b; }
   .top { text-align: center; }
-  .top img { height: 22mm; width: auto; }
-  .band { margin: 3mm 0 0; background: #3e4095; color: #fff; border-radius: 2.5mm; text-align: center; padding: 1.6mm 0 2mm;
+  .top img { height: 21mm; width: auto; display: block; margin: 0 auto; }
+  .band { margin: 3.5mm 0 0; background: #3e4095; color: #fff; border-radius: 2.5mm; text-align: center; padding: 1.6mm 0 2mm;
     border-bottom: 1.4mm solid #ed3237; }
   .band b { font-size: 22pt; font-weight: 700; letter-spacing: .14em; }
-  table.meta { width: 100%; border-collapse: collapse; margin: 2.5mm 0 3.5mm; }
+  table.meta { width: 100%; border-collapse: collapse; margin: 3.5mm 0 3.5mm; }
   table.meta td { width: 33.33%; font-size: 10.5pt; padding: 0; vertical-align: middle; }
   table.meta td.l { text-align: left; color: #3b4157; }
-  table.meta td.c { text-align: center; font-weight: 700; font-size: 13pt; color: #3e4095; }
+  table.meta td.c { text-align: center; font-weight: 700; font-size: 15pt; color: #3e4095; }
   table.meta td.r { text-align: right; color: #3b4157; }
   table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
   table.grid th, table.grid td { border: .7pt solid #9aa0c8; text-align: center; vertical-align: middle;
-    padding: 2.2mm 0.8mm; font-size: {{ font|default:"9.5pt" }}; line-height: 1.25; overflow-wrap: normal; word-break: keep-all;
-    hyphens: none; height: 13mm; }
-  table.grid th { background: #3e4095; color: #fff; font-weight: 600; border-color: #3e4095; }
+    padding: {{ pad|default:"2.2mm" }} 0.8mm; font-size: {% if small %}{{ small }}{% else %}{{ font|default:"9.5pt" }}{% endif %}; line-height: 1.25; overflow-wrap: normal; word-break: keep-all;
+    hyphens: none; height: {{ row_h|default:"13mm" }}; }
+  table.grid th { background: #3e4095; color: #fff; font-weight: 700; border-color: #3e4095; }
   table.grid th.date { width: 21mm; }
-  table.grid th { height: auto; }
+  table.grid th { height: auto; padding-top: 1.8mm; padding-bottom: 1.8mm; }
+
   table.grid tbody tr:nth-child(even) td { background: #f1f2fa; }
   table.grid td.date { font-weight: 600; white-space: nowrap; color: #14182b; }
   table.grid td.date small { display: block; font-weight: 400; font-size: 7.5pt; color: #5b6080; }
   table.grid td.none { color: #9aa0c8; }
+  table.grid td.date .day { font-weight: 400; color: #5b6080; }
+  {% if compact %}.top img { height: 17mm; } .band b { font-size: 18pt; } table.grid th.date { width: 26mm; }{% endif %}
 </style></head>
 <body>
   <div class="top"><img src="{{ banner }}" alt="The Arqam Schools"></div>
@@ -40,6 +43,6 @@
     <td class="r">Session {{ exam.session.name }}</td></tr></table>
   <table class="grid">
     <thead><tr><th class="date">Date</th>{% for c in sheet.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
-    <tbody>{% for d, cells in sheet.rows %}<tr><td class="date">{{ d|date:"d-m-y" }}<small>{{ d|date:"l" }}</small></td>{% for c in cells %}<td{% if c == "–" %} class="none"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+    <tbody>{% for d, cells in sheet.rows %}<tr><td class="date">{{ d|date:"d-m-y" }}{% if compact %} <span class="day">{{ d|date:"D" }}</span>{% else %}<small>{{ d|date:"l" }}</small>{% endif %}</td>{% for c in cells %}<td{% if c == "–" %} class="none"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
   </table>
 </body></html>

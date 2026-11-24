@@ -3,24 +3,29 @@
 {% block content %}
 <p><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>
 <div class="page-header">
-  <div><h1>{% trans "Subject teachers" %} · {{ section }}</h1>
-  <p class="lede">{% blocktrans with t=section.class_teacher.get_full_name|default:"—" %}Class teacher: {{ t }}{% endblocktrans %}</p></div>
-  <div class="actions"><a class="button secondary" href="{% url 'academics:section_timetable' section.id %}">{% trans "Timetable" %}</a></div>
+  <div><h1>{% trans "Class teacher & subject teachers" %} · {{ section }}</h1>
+  <p class="lede">{% trans "Teachers are chosen from the staff records, with or without a TASEMS login. When a teacher is given a login later, their class and subjects follow them by themselves." %}</p></div>
+  <div class="actions"><a class="button secondary" href="{% url 'academics:section_timetable' section.id %}">{% icon "clock" %}{% trans "Timetable" %}</a></div>
 </div>
 <form method="post" class="card">{% csrf_token %}
+  <div class="form-grid">
+    <div class="field"><label for="class_teacher">{% trans "Class teacher" %}</label>
+      {% if can_edit %}<select id="class_teacher" name="class_teacher"><option value="">—</option>{% for t in teachers %}<option value="{{ t.id }}" {% if section.class_teacher_staff_id == t.id %}selected{% endif %}>{{ t.full_name }} [{{ t.code }}]{% if not t.user_id %} · {% trans "no login yet" %}{% endif %}</option>{% endfor %}</select>
+      {% else %}<p><strong>{{ section.class_teacher_name|default:"—" }}</strong></p>{% endif %}</div>
+  </div>
   <div class="table-wrap"><table>
     <thead><tr><th>{% trans "Subject" %}</th><th>{% trans "Teacher" %}</th></tr></thead>
     <tbody>{% for subject, teacher in rows %}<tr><td>{{ subject.name }}</td>
-      <td>{% if can_edit %}<select name="s_{{ subject.id }}" aria-label="{{ subject.name }}"><option value="">—</option>{% for t in teachers %}<option value="{{ t.id }}" {% if teacher.id == t.id %}selected{% endif %}>{{ t.get_full_name|default:t.username }}</option>{% endfor %}</select>{% else %}{{ teacher.get_full_name|default:"—" }}{% endif %}</td></tr>
-    {% empty %}<tr><td colspan="2" class="muted">{% trans "No subjects are set for this class yet (Advanced setup → Curriculum subjects)." %}</td></tr>{% endfor %}</tbody>
+      <td>{% if can_edit %}<select name="s_{{ subject.id }}" aria-label="{{ subject.name }}"><option value="">—</option>{% for t in teachers %}<option value="{{ t.id }}" {% if teacher.full_name and teacher.id == t.id %}selected{% elif not teacher.full_name and teacher and t.user_id == teacher.id %}selected{% endif %}>{{ t.full_name }} [{{ t.code }}]</option>{% endfor %}</select>{% else %}{{ teacher|person_name|default:"—" }}{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="2" class="muted">{% trans "No subjects for this class yet. Set them under Setup → Classes & subjects." %}</td></tr>{% endfor %}</tbody>
   </table></div>
   {% if can_edit %}
   <div class="form-grid">
     <div class="field"><label for="add_subject">{% trans "Another subject (optional)" %}</label><select id="add_subject" name="add_subject"><option value="">—</option>{% for s in other_subjects %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select></div>
-    <div class="field"><label for="add_teacher">{% trans "Its teacher" %}</label><select id="add_teacher" name="add_teacher"><option value="">—</option>{% for t in teachers %}<option value="{{ t.id }}">{{ t.get_full_name|default:t.username }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="add_teacher">{% trans "Its teacher" %}</label><select id="add_teacher" name="add_teacher"><option value="">—</option>{% for t in teachers %}<option value="{{ t.id }}">{{ t.full_name }} [{{ t.code }}]</option>{% endfor %}</select></div>
   </div>
-  <p class="muted small">{% trans "Only people with a login in this branch can be chosen." %}</p>
-  <button class="button" type="submit">{% trans "Save subject teachers" %}</button>
+  {% if not teachers %}<p class="muted small">{% trans "No teachers in the staff records yet: add them under Staff (staff type Teacher or Hifz teacher)." %}</p>{% endif %}
+  <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button></div>
   {% endif %}
 </form>
 {% endblock %}

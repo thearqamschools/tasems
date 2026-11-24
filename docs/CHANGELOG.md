@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.52.0 — 2026-11-24 — Round 17: teachers without logins, header picture, one-page date sheet (installer v26)
+- **Teachers from the staff records** (R17-8, R17-9): Class teacher (Setup → Classes and sections, and the Subject
+  teachers page) and each subject's teacher are chosen from the branch's teachers and Qaris in Staff — with or
+  without a TASEMS login ("no login yet" shows beside them). When a teacher later gets a login, their class and
+  subjects follow them by themselves. Teachers already chosen by their login were moved over.
+- **Academics → Timetable** (R17-9): Class and Section in separate columns; Timetable and Subject teachers as
+  buttons; the **Class teacher is chosen on the Subject teachers page** too, saved with the subject teachers.
+- **Change logo (header picture)** on the Date sheet page (R17-2): choose a picture and Save; it is used at the top
+  of date sheets and result cards; "Back to the school's logo" returns to the banner. Head office / network exam
+  setup only.
+- **Date sheet PDF** (R17-1): the logo higher; equal space above and below the DATE SHEET band; the exam's name 2 pt
+  larger; the heading row (Date, Play Group, Nursery …) bold; **always one page** — with many days the rows, padding
+  and type get smaller and the day goes beside the date.
+- **Result card** (R17-3 to R17-6): the box evenly placed on the page with the address just under it; one even gap
+  between the blocks (logo, title, names, marks table, ratings, remarks); EXCELLENT / GOOD / FAIR centred over their
+  boxes; the signatures always at the foot of the box below the remarks; with many subjects the rows and gaps
+  tighten so the card stays on one page.
+- **Exams & Results** (R17-7): even padding in the exam boxes, the buttons never past the box edge; the sections
+  table fits at smaller widths.
+
 ## 0.51.0 — 2026-11-24 — Round 16: logos on every computer, Computer code, Marks & Results (installer v25)
 - **Logos and fonts in PDFs found on Windows too** (R16-2, R16-6): every PDF now writes picture and font addresses
   properly (`Path.as_uri()`, e.g. `file:///C:/Program%20Files/…`) instead of `file://` + the folder, which Windows

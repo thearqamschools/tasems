@@ -102,6 +102,12 @@ class Section(BranchOwnedModel):
     class_teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="class_sections"
     )
+    # R17-8: the class teacher is chosen from the staff records, with or without a login; the login (class_teacher
+    # above) follows the staff record by itself once the person has one.
+    class_teacher_staff = models.ForeignKey(
+        "hr.Employee", on_delete=models.SET_NULL, null=True, blank=True, related_name="class_sections",
+        verbose_name=_("class teacher"),
+    )  # fmt: skip
     capacity = models.PositiveSmallIntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
@@ -114,6 +120,14 @@ class Section(BranchOwnedModel):
 
     def __str__(self):
         return f"{self.class_level}-{self.name}"
+
+    @property
+    def class_teacher_name(self):
+        if self.class_teacher_staff_id:
+            return self.class_teacher_staff.full_name
+        if self.class_teacher_id:
+            return self.class_teacher.get_full_name() or self.class_teacher.username
+        return ""
 
     def clean(self):
         if self.campus_id and self.branch_id:
@@ -156,6 +170,9 @@ class SectionSubject(BranchOwnedModel):
     teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="subject_sections"
     )
+    teacher_staff = models.ForeignKey(
+        "hr.Employee", on_delete=models.SET_NULL, null=True, blank=True, related_name="subject_sections"
+    )  # R17-8: chosen from the staff records; the login above follows it
 
     class Meta:
         ordering = ["section", "subject__name"]

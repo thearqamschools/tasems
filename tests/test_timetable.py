@@ -22,13 +22,20 @@ def school(org, make_user):
     )
     principal = make_user("principal", Scope.BRANCH, branch, first_name="Pri")
     teacher = make_user("subject_teacher", Scope.BRANCH, branch, first_name="Aisha", last_name="Khan")
+    from apps.hr.models import Employee  # R17-8: teachers are chosen from the staff records
+
+    staff = Employee.objects.create(
+        branch=branch, code="T1", full_name="Aisha Khan", gender="female", designation="Teacher",
+        staff_type="teaching", joined_on=dt.date(2026, 4, 1), user=teacher,
+    )  # fmt: skip
     p1 = Period.objects.create(branch=branch, number=1, starts_at=dt.time(8, 0), ends_at=dt.time(8, 40))
     Period.objects.create(
         branch=branch, number=2, label="Break", starts_at=dt.time(8, 40), ends_at=dt.time(9, 0), is_break=True
     )
     p3 = Period.objects.create(branch=branch, number=3, starts_at=dt.time(9, 0), ends_at=dt.time(9, 40))
     return {
-        "branch": branch, "four": four, "five": five, "principal": principal, "teacher": teacher, "p1": p1, "p3": p3,
+        "branch": branch, "four": four, "five": five, "principal": principal, "teacher": teacher, "staff": staff,
+        "p1": p1, "p3": p3,
     }  # fmt: skip
 
 
@@ -37,8 +44,9 @@ def test_subject_teachers_are_saved_from_the_page(school, login_as):
     english = Subject.objects.get(code="english")
     page = client.get(f"/academics/section/{school['four'].id}/subjects/").content.decode()
     assert "English" in page and "Aisha Khan" in page
-    client.post(f"/academics/section/{school['four'].id}/subjects/", {f"s_{english.id}": school["teacher"].id})
-    assert SectionSubject.objects.get(section=school["four"], subject=english).teacher == school["teacher"]
+    client.post(f"/academics/section/{school['four'].id}/subjects/", {f"s_{english.id}": school["staff"].id})
+    link = SectionSubject.objects.get(section=school["four"], subject=english)
+    assert link.teacher_staff == school["staff"] and link.teacher == school["teacher"]  # the login follows
 
 
 def test_timetable_refuses_a_teacher_in_two_classes(school, login_as):

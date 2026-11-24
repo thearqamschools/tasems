@@ -994,7 +994,7 @@ not to be bought or switched on without approval.
   from outside which sections are done. Not started stays as now; **partly entered shows how many students are
   complete, e.g. "12 / 30"** (lead, 24 Nov 2026: yes).
 
-## Round 17 (24 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 17 (24 Nov 2026) — built 24 Nov 2026 (installer v26, CHANGELOG 0.52.0)
 - R17-1. **Date sheet PDF — spacing, type and one page** (lead, 24 Nov 2026):
   - The logo **higher** (less empty space above it), so room is saved lower down.
   - The space **between the logo and the DATE SHEET band** the same as the space **between the band and the line
@@ -1060,3 +1060,6 @@ not to be bought or switched on without approval.
   - **Subject teachers page**: the **class teacher is chosen here too** — at the top, the section's Class teacher
     (from the teachers list, R17-8), then each subject's teacher; one **Save** for both. (It can still be set from
     Setup → Classes and sections; both show the same.)
+- **Claude, at build (24 Nov 2026)**: R17-2's open question (the changed header on result cards too?) was not
+  answered; built so the one header picture is used on **both** date sheets and result cards, so the school's papers
+  match. Easy to change to date sheets only if the lead prefers.

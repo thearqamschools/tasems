@@ -20,7 +20,7 @@ from apps.organisation.models import AcademicSession
 
 from . import results as R
 from . import services
-from .models import Exam, GradingComponent, GradingScheme, Mark, Paper, Rating, ResultRemark
+from .models import Exam, GradingComponent, GradingScheme, Mark, Paper, PrintHeader, Rating, ResultRemark
 
 
 def _branch(request):
@@ -416,6 +416,9 @@ def date_sheet(request, exam_id):
     if level_id.isdigit():
         levels = levels.filter(pk=level_id)
     editing = can_edit and (request.GET.get("edit") == "1" or request.method == "POST")
+    can_header = documents.can_add_network_exams(request.user)
+    if request.method == "POST" and request.POST.get("action") in ("header", "header_reset"):
+        return _change_header(request, exam, can_header)
     if request.method == "POST":
         if not can_edit:
             raise PermissionDenied
@@ -459,8 +462,41 @@ def date_sheet(request, exam_id):
             "level_id": level_id,
             "can_edit": can_edit,
             "editing": editing,
+            "can_header": can_header,
+            "banner_url": paths.banner_url(),
+            "custom_header": PrintHeader.current() is not None,
         },
     )
+
+
+def _change_header(request, exam, allowed):
+    """R17-2: choose a new header picture for date sheets and result cards, or go back to the school's banner."""
+    if not allowed:
+        raise PermissionDenied
+    back = reverse("exams:date_sheet", args=[exam.id])
+    if request.POST.get("action") == "header_reset":
+        PrintHeader.objects.all().delete()
+        messages.success(request, _("The school's logo banner is used again."))
+        return redirect(back)
+    upload = request.FILES.get("image")
+    if upload is None or not upload.name.lower().endswith((".png", ".jpg", ".jpeg", ".webp")):
+        messages.error(request, _("Choose a picture (PNG or JPG)."))
+        return redirect(back)
+    if upload.size > 5 * 1024 * 1024:
+        messages.error(request, _("The picture must be under 5 MB."))
+        return redirect(back)
+    try:
+        from PIL import Image
+
+        Image.open(upload).verify()
+        upload.seek(0)
+    except Exception:  # noqa: BLE001 - not a picture
+        messages.error(request, _("This file is not a picture that can be read."))
+        return redirect(back)
+    PrintHeader.objects.all().delete()
+    PrintHeader.objects.create(image=upload, updated_by=request.user)
+    messages.success(request, _("New header saved. It is used on date sheets and result cards."))
+    return redirect(back)
 
 
 def _exam_days(exam):

@@ -3,7 +3,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.forms import modelformset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
@@ -43,8 +43,15 @@ def index(request):
     session = _session()
     sections = (
         Section.objects.filter(branch=branch, session=session, is_active=True)
-        .select_related("class_level", "class_teacher")
-        .annotate(cells=Count("timetable", distinct=True), subjects=Count("subject_teachers__teacher", distinct=True))
+        .select_related("class_level", "class_teacher", "class_teacher_staff")
+        .annotate(
+            cells=Count("timetable", distinct=True),
+            subjects=Count(
+                "subject_teachers",
+                filter=Q(subject_teachers__teacher__isnull=False) | Q(subject_teachers__teacher_staff__isnull=False),
+                distinct=True,
+            ),
+        )
         .order_by("class_level__sort_order", "name")
         if session
         else []
@@ -90,19 +97,30 @@ def section_subjects(request, section_id):
         if not can_edit:
             raise PermissionDenied
         by_id = {t.id: t for t in teachers}
+
+        def pick(value):
+            if not value:
+                return None
+            if not value.isdigit() or int(value) not in by_id:
+                raise PermissionDenied  # only this branch's teachers can be chosen
+            return by_id[int(value)]
+
+        # R17-9: the class teacher is chosen on this page too
+        if "class_teacher" in request.POST:
+            from .teachers import set_class_teacher
+
+            set_class_teacher(section, pick(request.POST.get("class_teacher", "")))
+            section.save(update_fields=["class_teacher", "class_teacher_staff", "updated_at"])
         chosen = {}
         for subject, _teacher in rows:
-            value = request.POST.get(f"s_{subject.id}", "")
-            if value and int(value) not in by_id:
-                raise PermissionDenied  # only people of this branch can be chosen
-            chosen[subject] = by_id.get(int(value)) if value else None
+            chosen[subject] = pick(request.POST.get(f"s_{subject.id}", ""))
         extra = request.POST.get("add_subject")
         if extra:
             subject = Subject.objects.filter(pk=extra, is_active=True).first()
             if subject and subject not in chosen:
-                chosen[subject] = by_id.get(int(request.POST.get("add_teacher") or 0))
+                chosen[subject] = pick(request.POST.get("add_teacher", ""))
         T.save_subject_teachers(section, chosen, request.user)
-        messages.success(request, _("Subject teachers saved for %(s)s.") % {"s": section})
+        messages.success(request, _("Class teacher and subject teachers saved for %(s)s.") % {"s": section})
         return redirect("academics:section_subjects", section_id=section.id)
     taken = {s.id for s, _t in rows}
     return render(
@@ -168,6 +186,7 @@ def _teacher_page(request, branch, teacher, mine=False):
 
 @login_required
 def teacher_timetable(request, user_id):
+    """One teacher's week; `user_id` is the teacher's staff record (R17-8)."""
     branch = _branch(request)
     teacher = T.teachers_of(branch).filter(pk=user_id).first()
     if teacher is None:
@@ -178,7 +197,8 @@ def teacher_timetable(request, user_id):
 @login_required
 def my_timetable(request):
     branch = _branch(request)
-    return _teacher_page(request, branch, request.user, mine=True)
+    staff = getattr(request.user, "employee", None)
+    return _teacher_page(request, branch, staff if staff is not None else request.user, mine=True)
 
 
 # --- Holiday calendar (M7) -------------------------------------------------------------------

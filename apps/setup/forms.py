@@ -98,7 +98,7 @@ class SuggestInput(forms.TextInput):
 class SectionForm(Labelled, forms.ModelForm):
     class Meta:
         model = Section
-        fields = ["class_level", "name", "gender_group", "campus", "class_teacher", "capacity", "is_active"]
+        fields = ["class_level", "name", "gender_group", "campus", "class_teacher_staff", "capacity", "is_active"]
         widgets = {"name": SuggestInput(SECTION_NAMES)}
 
     def __init__(self, *args, branch, session, **kwargs):
@@ -110,8 +110,13 @@ class SectionForm(Labelled, forms.ModelForm):
             self.fields["campus"].help_text = _(
                 "This branch has no campus yet. Add one first (Setup → Classes and sections → Add a campus)."
             )
-        self.fields["class_teacher"].queryset = staff_of(branch)
-        self.fields["class_teacher"].label_from_instance = lambda u: u.get_full_name() or u.username
+        # R17-8: teachers from the staff records, with or without a login
+        from apps.academics.teachers import teacher_choices
+
+        field = self.fields["class_teacher_staff"]
+        field.label = _("Class teacher")
+        field.queryset = teacher_choices(branch)
+        field.label_from_instance = lambda e: f"{e.full_name} [{e.code}]" + ("" if e.user_id else " · no login yet")
 
     def clean(self):
         data = super().clean()
@@ -122,6 +127,12 @@ class SectionForm(Labelled, forms.ModelForm):
             ).exclude(pk=self.instance.pk)
             if clash.exists():
                 self.add_error("name", _("This class already has a section with this name in this session."))
+        staff = data.get("class_teacher_staff")
+        # the login follows the staff record (R17-8)
+        login = staff.user if staff is not None and staff.user_id else None
+        if login is not None and self.instance.branch_id not in login.accessible_branch_ids():
+            login = None  # their login has no role in this branch yet; it follows once it has
+        self.instance.class_teacher = login
         return data
 
 

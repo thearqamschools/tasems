@@ -46,7 +46,7 @@
     <td>{% if r.can_mark %}<a href="{% url 'attendance:take' r.section.id date|date:'Y-m-d' %}">{% trans "Correct" %}</a>{% else %}<span class="badge">{% trans "Taken" %}</span>{% endif %}</td>
     {% else %}<td class="num">—</td><td class="num">—</td><td class="num">—</td>
     <td>{% if r.can_mark %}<a href="{% url 'attendance:take' r.section.id date|date:'Y-m-d' %}">{% trans "Take register" %}</a>{% else %}<span class="badge attention">{% trans "Not taken" %}</span>{% endif %}</td>{% endif %}
-    <td>{{ r.section.class_teacher.get_full_name|default:r.section.class_teacher|default:"—" }}</td>
+    <td>{{ r.section.class_teacher_name|default:"—" }}</td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}

@@ -411,6 +411,9 @@ def cards(request, exam_id, section_id):
             "cards": cards,
             "address": documents.branch_address(section.branch),  # R16-8: the address only
             "banner": _banner(),
+            # R17-6: many subjects → the gaps and rows tighten so the card stays on one page
+            "gap": "6mm" if len(data["papers"]) <= 7 else "4.5mm" if len(data["papers"]) <= 10 else "3mm",
+            "cell": "2.3mm" if len(data["papers"]) <= 7 else "1.7mm" if len(data["papers"]) <= 10 else "1.2mm",
             "font_base": paths.font_base(),
             "levels": ExamRating.Level.choices,
         },

@@ -21,7 +21,7 @@
   <thead><tr><th>{% trans "Section" %}</th><th>{% trans "Teacher" %}</th><th class="num">{% trans "Students" %}</th><th class="num">{% trans "Recorded" %}</th><th class="num">{% trans "Heard" %}</th><th></th></tr></thead>
   <tbody>{% for r in rows %}<tr>
     <td><a href="{% url 'hifz:report' %}?section={{ r.section.id }}">{{ r.section }}</a></td>
-    <td>{{ r.section.class_teacher.get_full_name|default:"—" }}</td>
+    <td>{{ r.section.class_teacher_name|default:"—" }}</td>
     <td class="num">{{ r.students }}</td>
     <td class="num">{% if r.done.saved %}{{ r.done.saved }}{% else %}<span class="badge attention">{% trans "Not yet" %}</span>{% endif %}</td>
     <td class="num">{{ r.done.heard }}</td>

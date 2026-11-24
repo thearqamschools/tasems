@@ -9,57 +9,56 @@ from collections import defaultdict
 from django.db import transaction
 from django.utils.translation import gettext as _
 
-from apps.accounts.models import Scope, User
 from apps.core.models import AuditEvent
 
 from .models import WEEKDAYS, CurriculumSubject, Period, SectionSubject, TimetableEntry
+from .teachers import teacher_key, teacher_name
 
 
 def teachers_of(branch):
-    """People with an active role in this branch (the choices for a subject's teacher)."""
-    return (
-        User.objects.filter(
-            is_active=True,
-            role_assignments__is_active=True,
-            role_assignments__scope=Scope.BRANCH,
-            role_assignments__branch=branch,
-        )
-        .distinct()
-        .order_by("first_name", "last_name", "username")
-    )
+    """The choices for a class or subject teacher: the branch's teachers and Qaris from the staff records, with or
+    without a login (R17-8)."""
+    from .teachers import teacher_choices
+
+    return teacher_choices(branch)
 
 
 def subjects_of(section):
     """The class's subjects (curriculum order) plus any other subject already given to the section,
     with the teacher of each: [(subject, teacher or None)]."""
-    assigned = {s.subject_id: s for s in section.subject_teachers.select_related("subject", "teacher")}
+    from .teachers import teacher_of
+
+    assigned = {s.subject_id: s for s in section.subject_teachers.select_related("subject", "teacher", "teacher_staff")}
     rows = []
     for cs in CurriculumSubject.objects.filter(class_level=section.class_level).select_related("subject"):
         ss = assigned.pop(cs.subject_id, None)
-        rows.append((cs.subject, ss.teacher if ss else None))
-    rows += [(ss.subject, ss.teacher) for ss in assigned.values()]
+        rows.append((cs.subject, teacher_of(ss)))
+    rows += [(ss.subject, teacher_of(ss)) for ss in assigned.values()]
     return rows
 
 
 @transaction.atomic
 def save_subject_teachers(section, teachers, user):
-    """`teachers` = {subject: teacher or None}. Records only what changed."""
+    """`teachers` = {subject: staff record or None}. Records only what changed; the login follows the staff record."""
     current = {s.subject_id: s for s in section.subject_teachers.all()}
     changes = {}
     for subject, teacher in teachers.items():
         ss = current.get(subject.id)
-        old = ss.teacher_id if ss else None
-        new = teacher.id if teacher else None
+        old = (ss.teacher_staff_id, None if ss.teacher_staff_id else ss.teacher_id) if ss else (None, None)
+        new = (teacher.id if teacher else None, None)
+        if ss and old[1] and teacher is not None and teacher.user_id == old[1]:
+            old = new  # the same person, chosen before by their login
         if old == new:
             continue
+        login = teacher.user if teacher is not None and teacher.user_id else None
         if ss:
-            ss.teacher = teacher
-            ss.save(update_fields=["teacher", "updated_at"])
+            ss.teacher_staff, ss.teacher = teacher, login
+            ss.save(update_fields=["teacher_staff", "teacher", "updated_at"])
         else:
             SectionSubject.objects.create(
-                branch_id=section.branch_id, section=section, subject=subject, teacher=teacher
+                branch_id=section.branch_id, section=section, subject=subject, teacher_staff=teacher, teacher=login
             )
-        changes[subject.name] = {"from": old, "to": new}
+        changes[subject.name] = {"from": old[0] or old[1], "to": new[0]}
     if changes:
         AuditEvent.objects.create(
             actor=user,
@@ -79,9 +78,15 @@ def days_of(section):
 
 def _teacher_map(sections):
     """{(section_id, subject_id): teacher}"""
+    from django.db.models import Q
+
+    from .teachers import teacher_of
+
     return {
-        (s.section_id, s.subject_id): s.teacher
-        for s in SectionSubject.objects.filter(section__in=sections, teacher__isnull=False).select_related("teacher")
+        (s.section_id, s.subject_id): teacher_of(s)
+        for s in SectionSubject.objects.filter(section__in=sections)
+        .filter(Q(teacher__isnull=False) | Q(teacher_staff__isnull=False))
+        .select_related("teacher", "teacher_staff")
     }
 
 
@@ -111,7 +116,7 @@ def clashes(branch, session):
     ):
         t = teachers.get((e.section_id, e.subject_id))
         if t:
-            slots[(t.id, e.weekday, e.period_id)].append((t, e))
+            slots[(teacher_key(t), e.weekday, e.period_id)].append((t, e))
     days = dict(WEEKDAYS)
     return [
         (items[0][0], days[e_day], items[0][1].period, [e for _t, e in items])
@@ -133,7 +138,7 @@ def save_grid(section, cells, user):
     for e in TimetableEntry.objects.filter(section__in=others).select_related("section__class_level"):
         t = other_teachers.get((e.section_id, e.subject_id))
         if t:
-            busy[(t.id, e.weekday, e.period_id)] = e.section
+            busy[(teacher_key(t), e.weekday, e.period_id)] = e.section
     problems = []
     days = dict(WEEKDAYS)
     periods = {p.id: p for p in Period.objects.filter(branch_id=section.branch_id)}
@@ -141,11 +146,11 @@ def save_grid(section, cells, user):
         if subject is None:
             continue
         t = teachers.get((section.id, subject.id))
-        other = busy.get((t.id, day, period_id)) if t else None
+        other = busy.get((teacher_key(t), day, period_id)) if t else None
         if other:
             problems.append(
                 _("%(t)s already teaches %(s)s on %(d)s, %(p)s.")
-                % {"t": t.get_full_name() or t.username, "s": other, "d": days[day], "p": periods[period_id]}
+                % {"t": teacher_name(t), "s": other, "d": days[day], "p": periods[period_id]}
             )
     if problems:
         raise ValueError(problems)
@@ -168,11 +173,17 @@ def save_grid(section, cells, user):
 
 def teacher_grid(branch, session, teacher):
     """The teacher's week: each period and day with the class and subject they teach."""
+    from django.db.models import Q
+
+    from apps.hr.models import Employee
+
     from .models import Section
 
-    assigned = SectionSubject.objects.filter(
-        branch=branch, teacher=teacher, section__session=session, section__is_active=True
-    ).values_list("section_id", "subject_id")
+    who = Q(teacher_staff=teacher) if isinstance(teacher, Employee) else Q(teacher=teacher)
+    if isinstance(teacher, Employee) and teacher.user_id:
+        who |= Q(teacher_id=teacher.user_id)
+    assigned = SectionSubject.objects.filter(who, branch=branch, section__session=session, section__is_active=True)
+    assigned = assigned.values_list("section_id", "subject_id")
     pairs = set(assigned)
     sections = Section.objects.filter(pk__in={s for s, _sub in pairs})
     entries = defaultdict(list)

@@ -79,6 +79,15 @@ def css_text(text):
     return "".join(ch for ch in text if ch not in '"\\<>')
 
 
+def _fit(rows):
+    rows = max(rows, 1)
+    if rows <= 9:
+        return {"row_h": f"{min(8.6, 125.0 / rows - 4.4):.1f}mm", "pad": "2.2mm", "compact": False}
+    if rows <= 14:
+        return {"row_h": f"{max(3.6, 128.0 / rows - 2.4):.1f}mm", "pad": "1.2mm", "compact": True, "small": "8pt"}
+    return {"row_h": f"{max(3.0, 132.0 / rows - 1.4):.1f}mm", "pad": "0.7mm", "compact": True, "small": "7pt"}
+
+
 def date_sheet_pdf(exam, levels, branch):
     from weasyprint import HTML
 
@@ -97,6 +106,9 @@ def date_sheet_pdf(exam, levels, branch):
             else "7.6pt"
             if len(sheet["columns"]) <= 14
             else "6.6pt",
+            # R17-1: always one page — the rows share the height left under the header (A4 landscape); with many
+            # days the rows, padding and type get smaller and the day goes beside the date
+            **_fit(len(sheet["rows"])),
             "banner": paths.banner(),
             "address": branch_address(branch),
             "font_base": paths.font_base(),

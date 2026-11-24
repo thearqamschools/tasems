@@ -4,7 +4,7 @@
 <p class="no-print"><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>
 <div class="page-header">
   <div><h1>{% trans "Timetable" %} · {{ section }}</h1>
-  <p class="lede">{{ section.session }}{% if section.class_teacher %} · {% blocktrans with t=section.class_teacher.get_full_name %}Class teacher: {{ t }}{% endblocktrans %}{% endif %}</p></div>
+  <p class="lede">{{ section.session }}{% if section.class_teacher_name %} · {% blocktrans with t=section.class_teacher_name %}Class teacher: {{ t }}{% endblocktrans %}{% endif %}</p></div>
   <div class="actions">
     {% if can_edit and not editing %}<a class="button" href="?edit=1">{% trans "Change timetable" %}</a>{% endif %}
     <a class="button secondary" href="{% url 'academics:section_subjects' section.id %}">{% trans "Subject teachers" %}</a>
@@ -23,7 +23,7 @@
     {% if r.period.is_break %}<td colspan="{{ grid.days|length }}" class="muted">{{ r.period.label|default:_("Break") }}</td>
     {% else %}{% for c in r.cells %}<td>
       {% if editing %}<select name="c_{{ c.day }}_{{ r.period.id }}" aria-label="{{ r.period }}"><option value="">—</option>{% for s in subjects %}<option value="{{ s.id }}" {% if c.entry.subject_id == s.id %}selected{% endif %}>{{ s.name }}</option>{% endfor %}</select>
-      {% elif c.entry %}<strong>{{ c.entry.subject.name }}</strong>{% if c.teacher %}<br><span class="muted small">{{ c.teacher.get_full_name|default:c.teacher.username }}</span>{% endif %}
+      {% elif c.entry %}<strong>{{ c.entry.subject.name }}</strong>{% if c.teacher %}<br><span class="muted small">{{ c.teacher|person_name }}</span>{% endif %}
       {% else %}<span class="muted">—</span>{% endif %}
     </td>{% endfor %}{% endif %}
   </tr>{% endfor %}</tbody>

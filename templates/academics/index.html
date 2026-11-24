@@ -8,23 +8,23 @@
 </div>
 {% if not periods %}<div class="callout attention">{% icon "triangle-alert" %}<div>{% trans "Bell times are not set for this branch yet. Set the periods and breaks first; then fill each class's timetable." %}{% if can_edit %} <a href="{% url 'academics:periods' %}">{% trans "Set bell times" %}</a>{% endif %}</div></div>{% endif %}
 {% for t, day, period, entries in clashes %}{% if forloop.first %}<div class="callout danger">{% icon "circle-alert" %}<div><strong>{% trans "Teachers in two classes at the same time" %}</strong><ul>{% endif %}
-  <li>{{ t.get_full_name|default:t.username }} — {{ day }}, {{ period }}: {% for e in entries %}{{ e.section }} ({{ e.subject }}){% if not forloop.last %}, {% endif %}{% endfor %}</li>
+  <li>{{ t|person_name }} — {{ day }}, {{ period }}: {% for e in entries %}{{ e.section }} ({{ e.subject }}){% if not forloop.last %}, {% endif %}{% endfor %}</li>
 {% if forloop.last %}</ul></div></div>{% endif %}{% endfor %}
 
 <h2>{% trans "Classes" %}</h2>
 {% if sections %}
-<div class="table-wrap"><table>
-  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Class teacher" %}</th><th class="num">{% trans "Subjects with a teacher" %}</th><th class="num">{% trans "Periods filled" %}</th><th></th></tr></thead>
+<div class="table-wrap"><table class="timetable-sections">
+  <thead><tr><th>{% trans "Class" %}</th><th>{% trans "Section" %}</th><th>{% trans "Class teacher" %}</th><th class="center">{% trans "Subjects with a teacher" %}</th><th class="center">{% trans "Periods filled" %}</th><th></th></tr></thead>
   <tbody>{% for s in sections %}<tr>
-    <td>{{ s }}</td><td>{{ s.class_teacher.get_full_name|default:"—" }}</td>
-    <td class="num">{{ s.subjects }}</td><td class="num">{{ s.cells }}</td>
-    <td><a href="{% url 'academics:section_timetable' s.id %}">{% trans "Timetable" %}</a> · <a href="{% url 'academics:section_subjects' s.id %}">{% trans "Subject teachers" %}</a></td>
+    <td>{{ s.class_level }}</td><td>{{ s.name }}</td><td>{{ s.class_teacher_name|default:"—" }}</td>
+    <td class="num center">{{ s.subjects }}</td><td class="num center">{{ s.cells }}</td>
+    <td class="nowrap"><a class="button quiet sm" href="{% url 'academics:section_timetable' s.id %}">{% icon "clock" %}{% trans "Timetable" %}</a> <a class="button quiet sm" href="{% url 'academics:section_subjects' s.id %}">{% icon "users" %}{% trans "Subject teachers" %}</a></td>
   </tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No sections for this session yet." %}</p></div>{% endif %}
 
 {% if teachers %}
 <h2>{% trans "Teachers" %}</h2>
-<div class="setup-cards">{% for t in teachers %}<a class="setup-card" href="{% url 'academics:teacher_timetable' t.id %}">{% icon "user" %}<span><strong>{{ t.get_full_name|default:t.username }}</strong></span></a>{% endfor %}</div>
+<div class="setup-cards">{% for t in teachers %}<a class="setup-card" href="{% url 'academics:teacher_timetable' t.id %}">{% icon "user" %}<span><strong>{{ t|person_name }}</strong></span></a>{% endfor %}</div>
 {% endif %}
 {% endblock %}
