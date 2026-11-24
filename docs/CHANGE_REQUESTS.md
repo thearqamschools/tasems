@@ -1003,3 +1003,8 @@ not to be bought or switched on without approval.
   - The **heading row bold**: Date, Play Group, Nursery, Prep … (the class names).
   - The whole date sheet **on one page** — never running onto a second page (Claude: rows and type shrink to fit
     when the exam has many days).
+- R17-2. **Change the logo / header from the Date sheet page** (lead, 24 Nov 2026): on the Date sheet page, next to
+  the logo at the top, a **Change logo** option — **choose a file** (the header picture) and **Save**; the new picture
+  is then used at the top of the date sheet (page and PDF). (Claude: the same header picture to be used on the result
+  cards too, so the school's papers match — to confirm; only exam setup / head office may change it; a "Back to the
+  school's logo" option to return to the one sent on 24 Nov 2026; PNG / JPG, shown as uploaded, not redrawn.)
