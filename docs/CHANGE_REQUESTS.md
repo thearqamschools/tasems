@@ -1030,3 +1030,11 @@ not to be bought or switched on without approval.
   the border box placed evenly on the page (R17-4) the extra room at the bottom is used; when there are many subjects,
   the rows and gaps tighten a little so everything still fits on one page. (Also seen: the logo now shows on the
   Windows computer.)
+- R17-7. **Exams & Results — the exam boxes' inner spacing** (lead, 24 Nov 2026, photo): the Results button touches
+  the box's right border. Equal padding inside each box — **left = right, top = bottom** — and the three buttons
+  evenly spaced, never touching the edge at any screen width (Claude: the buttons share the box's width, or the box
+  grows, instead of running to the border).
+- **Standing instruction from the lead (24 Nov 2026)**: whenever anything is built, look at it as a graphic designer
+  and a UI / UX designer before handing it over — equal spacing left / right and top / bottom, aligned edges, nothing
+  touching a border, consistent sizes — so it looks good. (Claude to check every new or changed screen and printed
+  paper this way, at the screen sizes the office uses, before sending a version.)
