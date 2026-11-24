@@ -910,3 +910,6 @@ not to be bought or switched on without approval.
 - R15-11. **"All sections" table — columns** (lead, 24 Nov 2026): **Class**, then **Section**, then the exams
   (Periodic Assessment – I, Mid-Term, Periodic Assessment – II, Final) — not the class and section run together in
   one column. (Lead also suggested arranging this part exam-wise; with R15-7's filter.)
+- **Lead, 24 Nov 2026 — fonts received**: Helvetica Inserat LT Std (Roman) and Poppins (OFL) sent by the lead; kept in
+  `static/fonts/` for R15-9 / R15-5. (Helvetica Inserat is a licensed Linotype font; the zip had no licence file —
+  the school is responsible for its licence.) Logo file still to come.
