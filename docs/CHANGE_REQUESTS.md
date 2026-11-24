@@ -781,5 +781,19 @@ not to be bought or switched on without approval.
      30, total 250 — percentage, Attentive / Punctual / Neatness / Participation as Excellent / Good / Fair, remarks,
      Teacher and Head / Principal signatures).
   5. **Finals** — in February / March.
-  (Claude: TASEMS's exams now know only Class test, Mid-Term and Final; these five are to become the year's exam
-  kinds. Waiting for the lead's further points before proposing how marks, cards and the final result work.)
+  (Claude: TASEMS's exams now know only Class test, Mid-Term and Final.)
+- R14-4. **Exam kinds — four exams only** (lead, 24 Nov 2026): **Periodic Assessment – I, Mid-Term, Periodic
+  Assessment – II, Final**, in that order under each session (e.g. Session 2026-27). These are ready to choose when an
+  exam is added. **Summer Vacation Work is not an exam** of its own; its marks are added **into the Mid-Term**.
+  **No other exam's marks are added into the Final** (the Final stands on its own). The **total marks of every
+  paper are typed by hand** for each exam in each session, and can be changed.
+- R14-5. **Date sheet** (lead, 24 Nov 2026; the printed 10–17 Nov 2026 sheet is the sample, to be made better): in
+  the exam (e.g. Periodic Assessment – I) a **Generate date sheet** button makes a printable date sheet:
+  - At the top the **logo** and **The Arqam Schools**, below it **DATE SHEET**, below that the **exam's name** (e.g.
+    Periodic Assessment – II), the **dates it runs** (e.g. 10 November – 17 November 2026) and the **session**
+    (Session 2026-27).
+  - Then the grid as in the sample: a row per date, a column per class (Playgroup, Nursery, Prep, One … Seven,
+    Pre-Ninth …), the paper of each class on each date, "–" where a class has no paper.
+  - **No times anywhere** on any date sheet — dates only.
+- R14-6. **Papers** (lead, 24 Nov 2026 — to be continued): after the date sheet come the papers; papers are to be
+  **uploaded** into TASEMS (details to follow).
