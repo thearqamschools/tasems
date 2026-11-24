@@ -84,7 +84,8 @@ def duty_lookup(branch, hr=None):
         by_type[d.staff_type].append(d)
 
     def lookup(staff_type, date):
-        return next((d for d in by_type.get(staff_type, []) if d.starts_from <= date), hr)
+        found = next((d for d in by_type.get(staff_type, []) if d.starts_from <= date), None)
+        return found.for_weekday(date.weekday()) if found else hr
 
     return lookup
 

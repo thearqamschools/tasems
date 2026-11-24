@@ -49,15 +49,19 @@ def test_network_date_sheet_is_set_by_network_exam_setup_only(exam_setup, login_
     exam, english = exam_setup["exam"], exam_setup["english"]
     principal = login_as(exam_setup["principal"])
     page = principal.get(f"/exams/{exam.id}/date-sheet/").content.decode()
-    assert "English" in page and "Change dates and times" not in page
+    assert "No dates set yet" in page and "Set the dates" not in page
     assert principal.post(f"/exams/{exam.id}/date-sheet/", {f"date_{english.id}": "2026-11-02"}).status_code == 403
     admin = login_as(make_user("network_admin", Scope.NETWORK))
     admin.post(
         f"/exams/{exam.id}/date-sheet/",
-        {f"date_{english.id}": "2026-11-02", f"starts_at_{english.id}": "08:30", f"ends_at_{english.id}": "10:30"},
+        {"starts_on": "2026-11-02", "ends_on": "2026-11-05", f"date_{english.id}": "2026-11-02"},
     )
     english.refresh_from_db()
-    assert (english.date, english.starts_at) == (dt.date(2026, 11, 2), dt.time(8, 30))
+    exam.refresh_from_db()
+    assert english.date == dt.date(2026, 11, 2) and english.starts_at is None  # dates only, no times (R14-5)
+    assert (exam.starts_on, exam.ends_on) == (dt.date(2026, 11, 2), dt.date(2026, 11, 5))
+    page = principal.get(f"/exams/{exam.id}/date-sheet/").content.decode()
+    assert "English" in page and "Generate date sheet (PDF)" in page
 
 
 def test_branch_exam_date_sheet_by_branch_setup(exam_setup):

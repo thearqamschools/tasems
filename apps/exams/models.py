@@ -137,9 +137,14 @@ class GradingComponent(TimeStampedModel):
 @audited
 class Exam(TimeStampedModel):
     class Kind(models.TextChoices):
-        TEST = "test", _("Class test")
+        # The year's four exams, in order (R14-4, project lead 24 Nov 2026). Summer Vacation Work is not an exam:
+        # it is a subject of the Mid-Term. Each exam stands alone; no exam's marks are added into another.
+        PA1 = "pa1", _("Periodic Assessment – I")
         MID = "mid", _("Mid-Term")
+        PA2 = "pa2", _("Periodic Assessment – II")
         FINAL = "final", _("Final")
+
+    KIND_ORDER = {"pa1": 1, "mid": 2, "pa2": 3, "final": 4}
 
     session = models.ForeignKey("organisation.AcademicSession", on_delete=models.PROTECT, related_name="exams")
     kind = models.CharField(max_length=10, choices=Kind.choices)
@@ -154,16 +159,35 @@ class Exam(TimeStampedModel):
         help_text=_("Leave empty for an exam held across the whole network."),
     )
     starts_on = models.DateField(null=True, blank=True)
+    ends_on = models.DateField(_("last day"), null=True, blank=True)
     marks_due_on = models.DateField(
         null=True, blank=True, help_text=_("After this date only principals can change marks.")
     )
     is_published = models.BooleanField(default=False, help_text=_("Result cards can be shared with parents."))
 
     class Meta:
-        ordering = ["-session__starts_on", "kind", "starts_on"]
+        ordering = ["-session__starts_on", "starts_on", "kind"]
 
     def __str__(self):
         return self.name
+
+    @property
+    def order(self):
+        return self.KIND_ORDER.get(self.kind, 9)
+
+    @property
+    def dates(self):
+        """First and last day: as set, or from the papers' dates."""
+        dates = sorted(d for d in self.papers.values_list("date", flat=True) if d)
+        first = self.starts_on or (dates[0] if dates else None)
+        last = self.ends_on or (dates[-1] if dates else None)
+        return first, last
+
+
+def question_paper_path(instance, filename):
+    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else "pdf"
+    name = f"{instance.exam_id}-{instance.class_level_id}-{instance.subject_id}.{ext}"
+    return f"question_papers/{instance.exam.session_id}/{name}"
 
 
 @audited
@@ -177,6 +201,9 @@ class Paper(TimeStampedModel):
     date = models.DateField(null=True, blank=True)
     starts_at = models.TimeField(_("starts at"), null=True, blank=True)
     ends_at = models.TimeField(_("ends at"), null=True, blank=True)
+    question_paper = models.FileField(
+        _("question paper"), upload_to=question_paper_path, blank=True, help_text="Kept for the record (R14-6)."
+    )
 
     class Meta:
         ordering = ["class_level__sort_order", "subject__name"]
@@ -249,6 +276,34 @@ class ResultRemark(BranchOwnedModel):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["student", "exam"], name="one_remark_per_student_exam")]
+
+    def __str__(self):
+        return f"{self.student} {self.exam}"
+
+
+class ExamRating(BranchOwnedModel):
+    """Attentive, Punctual, Neatness, Participation on a result card (R14-9): Excellent / Good / Fair, one set per
+    student per exam. Good unless the teacher changes it (R14-10)."""
+
+    class Level(models.TextChoices):
+        EXCELLENT = "excellent", _("Excellent")
+        GOOD = "good", _("Good")
+        FAIR = "fair", _("Fair")
+
+    ASPECTS = [("attentive", _("Attentive")), ("punctual", _("Punctual")), ("neatness", _("Neatness")),
+               ("participation", _("Participation"))]  # fmt: skip
+
+    student = models.ForeignKey("people.Student", on_delete=models.PROTECT, related_name="exam_ratings")
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="+")
+    section = models.ForeignKey("academics.Section", on_delete=models.PROTECT, related_name="+")
+    attentive = models.CharField(max_length=10, choices=Level.choices, default=Level.GOOD)
+    punctual = models.CharField(max_length=10, choices=Level.choices, default=Level.GOOD)
+    neatness = models.CharField(max_length=10, choices=Level.choices, default=Level.GOOD)
+    participation = models.CharField(max_length=10, choices=Level.choices, default=Level.GOOD)
+    entered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["student", "exam"], name="one_exam_rating_per_student")]
 
     def __str__(self):
         return f"{self.student} {self.exam}"

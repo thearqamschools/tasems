@@ -27,7 +27,7 @@ from apps.organisation.models import AcademicSession
 from . import importer
 from . import services as S
 from .forms import CorrectionForm, EmployeeForm, LeaveForm, staff_formsets
-from .models import DutyTime, Employee, HRSettings, LeaveRequest, StaffDay
+from .models import WEEKDAYS, DutyTime, Employee, HRSettings, LeaveRequest, StaffDay
 
 
 def _branch(request, perm=S.VIEW_PERM):
@@ -965,7 +965,22 @@ def duty_times(request):
                 grace = max(min(int(request.POST.get(f"grace_{value}") or 0), 120), 0)
             except ValueError:
                 grace = 0
-            rows.append((value, starts, ends, grace, _clock(request.POST.get(f"half_{value}"))))
+            per_day = {}
+            for weekday in range(7):  # R14-1: a day of the week with its own times (e.g. Friday)
+                d_in, d_out = (
+                    _clock(request.POST.get(f"pd_{value}_{weekday}_in")),
+                    _clock(request.POST.get(f"pd_{value}_{weekday}_out")),
+                )
+                d_half = _clock(request.POST.get(f"pd_{value}_{weekday}_half"))
+                if not d_in and not d_out and not d_half:
+                    continue
+                if (d_in or starts) >= (d_out or ends):
+                    problems.append(f"{name} ({WEEKDAYS[weekday]})")
+                    continue
+                per_day[str(weekday)] = {
+                    k: v.strftime("%H:%M") for k, v in (("in", d_in), ("out", d_out), ("half", d_half)) if v
+                }
+            rows.append((value, starts, ends, grace, _clock(request.POST.get(f"half_{value}")), per_day))
         if date is None or problems or not rows:
             messages.error(
                 request,
@@ -973,11 +988,11 @@ def duty_times(request):
                 % {"t": ", ".join(problems) or _("at least one staff type")},
             )
             return redirect("hr:duty_times")
-        for value, starts, ends, grace, half in rows:
+        for value, starts, ends, grace, half, per_day in rows:
             DutyTime.objects.update_or_create(
                 branch=branch, staff_type=value, starts_from=date,
                 defaults={"duty_starts": starts, "duty_ends": ends, "grace_minutes": grace,
-                          "half_day_after": half, "label": label},
+                          "half_day_after": half, "label": label, "per_day": per_day},
             )  # fmt: skip
         today = timezone.localdate()
         if date <= today:  # days already worked out from this date are worked out again with the new times
@@ -987,8 +1002,23 @@ def duty_times(request):
     today = timezone.localdate()
     lookup = S.duty_lookup(branch)
     current = [(value, name, lookup(value, today)) for value, name in types]
+    hr = HRSettings.for_branch(branch)
+    days = [(i, WEEKDAYS[i]) for i in (hr.working_days or range(6))]
+    # The set in force today per staff type (not today's weekday times), for the form's starting values.
+    latest = {}
+    for d in DutyTime.objects.filter(branch=branch, starts_from__lte=today).order_by("-starts_from"):
+        latest.setdefault(d.staff_type, d)
+    day_rows = [
+        (
+            value,
+            name,
+            [(i, day, (getattr(latest.get(value), "per_day", None) or {}).get(str(i), {})) for i, day in days],
+        )
+        for value, name in types
+    ]
     history = defaultdict(list)
     for d in DutyTime.objects.filter(branch=branch).order_by("-starts_from", "staff_type"):
+        d.day_notes = [(WEEKDAYS[int(k)], v) for k, v in sorted((d.per_day or {}).items())]
         history[d.starts_from].append(d)
     return render(
         request,
@@ -997,6 +1027,7 @@ def duty_times(request):
             "branch": branch,
             "can_edit": can_edit,
             "current": current,
+            "day_rows": day_rows,
             "history": sorted(history.items(), reverse=True),
             "today": today,
         },

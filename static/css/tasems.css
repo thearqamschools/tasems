@@ -780,3 +780,19 @@ details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; 
 .heading-tools h2 { margin: 0; }
 .heading-tools .list-tools { margin: 0; }
 @media print { .mark-key { font-size: 6.6pt; padding: 1pt 0; border: 0; gap: 1pt 6pt; } }
+
+/* Exams (Round 14): marks of a section on one table, date sheet grid, class tabs */
+.marks-grid th, .marks-grid td { padding: 0.35rem 0.4rem; vertical-align: middle; }
+.marks-grid th { text-transform: none !important; letter-spacing: 0 !important; font-size: var(--step--1) !important; }
+.marks-grid input.mark { inline-size: 3.6rem; min-inline-size: 0; text-align: center; padding: 0.3rem 0.2rem; }
+.marks-grid input.mark.bad { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); }
+.marks-grid select.rate { min-inline-size: 0; inline-size: 3rem; padding: 0.25rem 0.2rem; }
+.marks-grid select.rate-excellent { background: var(--ok-soft, #e6f4ea); font-weight: 700; }
+.marks-grid select.rate-fair { background: var(--attention-soft); }
+.marks-grid .rate-head { font-size: var(--step--2) !important; }
+.class-tabs { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-block: var(--space-3); }
+.date-grid th, .date-grid td { padding: 0.5rem 0.4rem; }
+.date-sheet-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: var(--space-3); margin-block: var(--space-3); }
+.date-sheet-edit .card { margin: 0; }
+.date-sheet-edit .field.inline { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-block: 0.3rem; }
+.date-sheet-edit .field.inline select { inline-size: auto; }

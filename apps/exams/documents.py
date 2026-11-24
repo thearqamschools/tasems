@@ -23,6 +23,67 @@ def can_edit_date_sheet(user, exam, branch):
     )
 
 
+def can_add_network_exams(user):
+    from apps.accounts.models import RoleAssignment, Scope
+
+    return (
+        user.is_superuser
+        or RoleAssignment.objects.filter(
+            user=user, is_active=True, scope=Scope.NETWORK, role__permissions__codename="add_exam"
+        ).exists()
+    )
+
+
+def can_see_question_paper(user, paper, branch):
+    """A question paper is private until its exam day (R14-10 (7)): exam setup and principals see it any time;
+    after the paper's date, anyone who may see exams does."""
+    from django.utils import timezone
+
+    if can_edit_date_sheet(user, paper.exam, branch) or user.has_branch_perm("exams.change_mark", branch.id):
+        return True
+    day = paper.date or paper.exam.ends_on
+    return bool(day and day < timezone.localdate()) and user.has_branch_perm("exams.view_paper", branch.id)
+
+
+def grid(exam, levels):
+    """The printed date sheet (R14-5): a row per date from the first to the last day, a column per class, the
+    subject(s) of each class on each date ("+" when two), "–" when none. No times."""
+    import datetime as dt
+
+    papers = list(exam.papers.filter(class_level__in=levels).select_related("subject", "class_level"))
+    columns = sorted({p.class_level for p in papers}, key=lambda c: c.sort_order)
+    first, last = exam.dates
+    dated = sorted({p.date for p in papers if p.date})
+    if first is None or last is None:
+        days = dated
+    else:
+        days = [first + dt.timedelta(days=i) for i in range((last - first).days + 1)]
+        days = sorted(set(days) | set(dated))
+    cell = {}
+    for p in sorted(papers, key=lambda p: p.subject.name):
+        if p.date:
+            cell.setdefault((p.date, p.class_level_id), []).append(p.subject.name)
+    rows = [(d, [" + ".join(cell.get((d, c.id), [])) or "–" for c in columns]) for d in days]
+    return {"columns": columns, "rows": rows, "first": first, "last": last}
+
+
+def date_sheet_pdf(exam, levels, branch):
+    from weasyprint import HTML
+
+    html = render_to_string(
+        "exams/date_sheet_document.html",
+        {
+            "exam": exam,
+            "branch": branch,
+            "sheet": grid(exam, levels),
+            "layout": DiaryLayout.current(),
+            "font_base": f"file://{settings.BASE_DIR}/static/fonts/",
+            "media_base": f"file://{settings.MEDIA_ROOT}/",
+        },
+    )
+    return HTML(string=html, base_url=str(settings.BASE_DIR)).write_pdf()
+
+
 def date_sheet(exam, levels):
     """[(class level, [papers in date order])] for the class levels given."""
     papers = exam.papers.filter(class_level__in=levels).select_related("subject", "class_level")

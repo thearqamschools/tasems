@@ -77,7 +77,7 @@ def test_falling_marks_and_below_pass(school):
     level = school["section"].class_level
     weak = school["kids"]["Weak"]
     for when, name, got in [(dt.date(2026, 9, 1), "Test 1", 40), (dt.date(2026, 10, 10), "Mid-Term", 15)]:
-        exam = Exam.objects.create(session=school["session"], kind="test", name=name, starts_on=when)
+        exam = Exam.objects.create(session=school["session"], kind="pa1", name=name, starts_on=when)
         paper = Paper.objects.create(exam=exam, class_level=level, subject=english, total_marks=50)
         Mark.objects.create(
             branch=school["branch"], paper=paper, student=weak, section=school["section"], obtained=got,

@@ -351,6 +351,64 @@
     form.querySelectorAll("select").forEach(function (select) { select.addEventListener("change", run); });
   });
 
+  // ---------- Tick all + total of the ticked rows (Pay employees, R14-2): [data-check-all], [data-amount] ----------
+  function payTotals(form) {
+    var n = 0, total = 0;
+    form.querySelectorAll("input[data-amount]").forEach(function (box) {
+      if (box.checked) { n += 1; total += parseFloat(box.dataset.amount) || 0; }
+    });
+    var a = form.querySelector("[data-ticked]"), b = form.querySelector("[data-ticked-total]");
+    if (a) a.textContent = String(n);
+    if (b) b.textContent = Math.round(total).toLocaleString("en-PK");
+  }
+  document.addEventListener("change", function (event) {
+    var form = event.target.closest("form");
+    if (!form) return;
+    if (event.target.matches("[data-check-all]")) {
+      form.querySelectorAll("input[data-amount]").forEach(function (box) { box.checked = event.target.checked; });
+    }
+    if (event.target.matches("[data-check-all], input[data-amount]")) payTotals(form);
+  });
+
+  // ---------- Marks of a section on one table (R14-7, R14-10): Enter = next student, red above the total,
+  // total and percentage while typing ----------
+  function marksRow(row) {
+    var sum = 0, total = 0, done = true;
+    row.querySelectorAll("input.mark").forEach(function (input) {
+      var max = parseFloat(input.dataset.total) || 0, text = input.value.trim().toUpperCase();
+      total += max;
+      if (text === "") { done = false; input.classList.remove("bad"); return; }
+      if (text === "A" || text === "ABS" || text === "ABSENT") { input.classList.remove("bad"); return; }
+      var value = Number(text);
+      var bad = isNaN(value) || value < 0 || value > max || Math.round(value * 2) !== value * 2;
+      input.classList.toggle("bad", bad);
+      if (bad) done = false;
+      else sum += value;
+    });
+    var s = row.querySelector("[data-sum]"), p = row.querySelector("[data-pct]");
+    if (s) s.textContent = sum ? String(Math.round(sum * 2) / 2) : "";
+    if (p) p.textContent = done && total ? (Math.round(sum * 10000 / total) / 100).toFixed(2) : "";
+  }
+  document.querySelectorAll("form[data-marks-grid] tr[data-row]").forEach(marksRow);
+  document.addEventListener("input", function (event) {
+    if (!event.target.matches("form[data-marks-grid] input.mark")) return;
+    marksRow(event.target.closest("tr"));
+  });
+  document.addEventListener("change", function (event) {
+    if (!event.target.matches("form[data-marks-grid] select.rate")) return;
+    event.target.className = "rate rate-" + event.target.value;
+  });
+  document.addEventListener("keydown", function (event) {
+    var input = event.target;
+    if (event.key !== "Enter" || !input.matches("form[data-marks-grid] input.mark")) return;
+    event.preventDefault();
+    var cell = input.closest("td"), row = input.closest("tr");
+    var index = Array.prototype.indexOf.call(row.children, cell);
+    var next = row.nextElementSibling;
+    var target = next && next.children[index] && next.children[index].querySelector("input");
+    if (target) { target.focus(); target.select(); }
+  });
+
   if (document.body.hasAttribute("data-autoprint")) {
     window.addEventListener("load", function () { window.print(); });
   }

@@ -1,11 +1,18 @@
 from django.urls import path
 
-from . import views
+from . import views, views_year
 
 app_name = "exams"
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("add-session-exams/", views_year.add_session_exams, name="add_session_exams"),
+    path("<int:exam_id>/papers/", views_year.papers, name="papers"),
+    path("<int:exam_id>/date-sheet.pdf", views_year.date_sheet_pdf, name="date_sheet_pdf"),
+    path("<int:exam_id>/section/<int:section_id>/marks/", views_year.section_marks, name="section_marks"),
+    path("<int:exam_id>/section/<int:section_id>/result-cards.pdf", views_year.cards, name="exam_cards"),
+    path("question-paper/<int:paper_id>/", views_year.question_paper, name="question_paper"),
+    path("marks-reader-skill.zip", views_year.marks_skill, name="marks_skill"),
     path("<int:exam_id>/section/<int:section_id>/", views.section_exam, name="section_exam"),
     path("<int:exam_id>/section/<int:section_id>/remarks/", views.remarks, name="remarks"),
     path("<int:exam_id>/date-sheet/", views.date_sheet, name="date_sheet"),

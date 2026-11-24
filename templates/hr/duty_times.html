@@ -29,6 +29,18 @@
       <td><input type="number" name="grace_{{ value }}" min="0" max="120" value="{{ t.grace_minutes|default:0 }}" style="max-inline-size:6rem" aria-label="{% trans 'Grace minutes' %} {{ name }}"></td>
       <td><input type="time" name="half_{{ value }}" value="{{ t.half_day_after|time:'H:i' }}" aria-label="{% trans 'Half day after' %} {{ name }}"></td></tr>{% endfor %}</tbody>
   </table></div>
+  <h3>{% trans "A different time on a day of the week" %}</h3>
+  <p class="small muted">{% trans "For a day with its own times (e.g. Friday). Leave a day blank and it keeps the times above." %}</p>
+  {% for value, name, drows in day_rows %}
+  <details class="day-times"{% for i, day, t in drows %}{% if t %} open{% endif %}{% endfor %}><summary>{{ name }}</summary>
+  <div class="table-wrap"><table>
+    <thead><tr><th>{% trans "Day" %}</th><th>{% trans "In time" %}</th><th>{% trans "Out time" %}</th><th>{% trans "Half day after" %}</th></tr></thead>
+    <tbody>{% for i, day, t in drows %}<tr><td>{{ day }}</td>
+      <td><input type="time" name="pd_{{ value }}_{{ i }}_in" value="{{ t.in }}" aria-label="{% trans 'In time' %} {{ name }} {{ day }}"></td>
+      <td><input type="time" name="pd_{{ value }}_{{ i }}_out" value="{{ t.out }}" aria-label="{% trans 'Out time' %} {{ name }} {{ day }}"></td>
+      <td><input type="time" name="pd_{{ value }}_{{ i }}_half" value="{{ t.half }}" aria-label="{% trans 'Half day after' %} {{ name }} {{ day }}"></td></tr>{% endfor %}</tbody>
+  </table></div></details>
+  {% endfor %}
   <p class="small muted">{% trans "A date in the past works out the days from that date again (up to two months back); days corrected by hand are kept." %}</p>
   <button class="button" type="submit">{% trans "Save times" %}</button>
 </form></details>
@@ -37,7 +49,7 @@
 {% if history %}<h2>{% trans "All times" %}</h2>
 {% for date, items in history %}<div class="card">
   <h3>{% trans "From" %} {{ date|date:"d M Y" }}{% if items.0.label %} · {{ items.0.label }}{% endif %}</h3>
-  <p class="small">{% for t in items %}{{ t.get_staff_type_display }}: <span class="num">{{ t.duty_starts|time:"H:i" }}–{{ t.duty_ends|time:"H:i" }}</span>{% if t.grace_minutes %} (+{{ t.grace_minutes }} {% trans "min" %}){% endif %}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+  <p class="small">{% for t in items %}{{ t.get_staff_type_display }}: <span class="num">{{ t.duty_starts|time:"H:i" }}–{{ t.duty_ends|time:"H:i" }}</span>{% if t.grace_minutes %} (+{{ t.grace_minutes }} {% trans "min" %}){% endif %}{% for day, v in t.day_notes %} — {{ day }} <span class="num">{{ v.in|default:"" }}–{{ v.out|default:"" }}</span>{% endfor %}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
   {% if can_edit %}<form method="post" style="margin:0">{% csrf_token %}<input type="hidden" name="action" value="remove"><input type="hidden" name="starts_from" value="{{ date|date:'Y-m-d' }}"><button class="button quiet danger" type="submit" data-confirm="{% trans 'Remove these times? The days from this date are worked out again with the times before them.' %}">{% trans "Remove (entered by mistake)" %}</button></form>{% endif %}
 </div>{% endfor %}{% endif %}
 {% endblock %}

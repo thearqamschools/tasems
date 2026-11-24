@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Pay employees" %}{% endblock %}
+{% block content %}
+<p><a href="{{ back }}">‹ {% trans "Payroll" %}</a></p>
+<h1>{% trans "Pay employees" %} · {{ month|date:"F Y" }}</h1>
+<p class="lede">{% trans "Tick the staff whose salary has been handed over and press the button: each is marked as paid their full net pay, by the way their salary is paid (cash or bank). Paying part of a salary is done on the person's own page." %}</p>
+{% if rows %}
+<form method="post" data-pay-many>{% csrf_token %}
+  <div class="form-grid">
+    <div class="field"><label for="paid_on">{% trans "Paid on" %}</label><input type="date" id="paid_on" name="paid_on" required value="{{ today|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}"></div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th class="center"><input type="checkbox" data-check-all aria-label="{% trans 'Tick all' %}"></th><th class="center">{% trans "EMP.code" %}</th><th>{% trans "Name" %}</th><th>{% trans "Designation" %}</th><th>{% trans "Paid by" %}</th><th class="num">{% trans "Net pay (Rs)" %}</th></tr></thead>
+    <tbody>{% for r in rows %}<tr>
+      <td class="center"><input type="checkbox" name="use" value="{{ r.slip.id }}" data-amount="{{ r.slip.net_pay }}" aria-label="{{ r.employee.full_name }}"></td>
+      <td class="num center">{{ r.employee.code }}</td><td>{{ r.employee.full_name }}</td><td>{{ r.employee.designation }}</td>
+      <td>{{ r.slip.get_method_display }}{% if r.slip.method == "bank" and r.slip.bank_name %} <span class="muted small">· {{ r.slip.bank_name }}</span>{% endif %}</td>
+      <td class="num">{{ r.slip.net_pay|rupees }}</td></tr>{% endfor %}</tbody>
+    <tfoot><tr><th colspan="5">{% trans "Ticked" %}: <span data-ticked>0</span></th><th class="num"><span data-ticked-total>0</span></th></tr></tfoot>
+  </table></div>
+  <div class="actions"><button class="button" type="submit" data-confirm="{% trans 'Mark the ticked staff as paid? A payment cannot be changed afterwards.' %}">{% icon "wallet" %}{% trans "Mark the ticked staff as paid" %}</button><a class="button quiet" href="{{ back }}">{% trans "Cancel" %}</a></div>
+</form>
+{% else %}<div class="card empty-state">{% icon "wallet" %}<p>{% trans "Everyone's salary for this month is paid." %}</p></div>{% endif %}
+{% endblock %}

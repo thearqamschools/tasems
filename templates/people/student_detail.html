@@ -65,6 +65,14 @@
   {% empty %}<tr><td colspan="5">{% trans "Not placed in any class yet." %}</td></tr>{% endfor %}</tbody>
 </table></div>
 
+{% if progress %}
+<h2 id="progress">{% trans "Exam results by year" %}</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>{% trans "Session" %}</th><th>{% trans "Exam" %}</th><th class="num">{% trans "Marks" %}</th><th class="num">%</th></tr></thead>
+  <tbody>{% for x in progress %}<tr><td>{{ x.exam.session }}</td><td>{{ x.exam.get_kind_display }}</td><td class="num">{{ x.obtained|floatformat:"-1" }} / {{ x.total }}</td><td class="num"><strong>{% if x.percent is not None %}{{ x.percent|floatformat:"-2" }}%{% else %}—{% endif %}</strong></td></tr>{% endfor %}</tbody>
+</table></div>
+{% endif %}
+
 {% if certificates %}
 <h2 id="certificates">{% trans "Certificates" %}</h2>
 <div class="table-wrap"><table>

@@ -161,10 +161,20 @@ def student_detail(request, pk):
             "can_edit": can_edit,
             "history": history,
             "certificates": student.certificates.select_related("issued_by"),
+            "progress": _exam_progress(request.user, student),
             "hifz": request.user.has_branch_perm("hifz.view_hifzlesson", student.branch_id)
             and (student.is_hifz or student.enrolments.filter(section__class_level__code="hifz").exists()),
         },
     )
+
+
+def _exam_progress(user, student):
+    """Every exam of every year with its percentage (R14-10 (9))."""
+    if not user.has_branch_perm("exams.view_mark", student.branch_id):
+        return []
+    from apps.exams.grid import progress
+
+    return progress(student)
 
 
 def _parent_tree_rows(student):

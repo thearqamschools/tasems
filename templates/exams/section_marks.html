@@ -1,0 +1,46 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{{ exam.get_kind_display }} · {{ section }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'exams:index' %}">‹ {% trans "Exams & Results" %}</a></p>
+<h1>{{ exam.get_kind_display }} · {{ section }}</h1>
+<p class="lede">{% blocktrans count n=rows|length %}{{ n }} student{% plural %}{{ n }} students{% endblocktrans %} · {% trans "Total" %} {{ total }}{% if exam.marks_due_on %} · {% blocktrans with d=exam.marks_due_on|date:"d M Y" %}Marks due {{ d }}{% endblocktrans %}{% endif %}</p>
+
+<div class="list-tools no-print">
+  <a class="button sm" href="{% url 'exams:exam_cards' exam.id section.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Result cards (PDF)" %}</a>
+  <a class="button quiet sm" href="?format=xlsx">{% icon "file-spreadsheet" %}{% trans "Marks sheet (Excel)" %}</a>
+  <a class="button quiet sm" href="?print=1" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Sheet to fill by hand" %}</a>
+</div>
+
+{% if not papers %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "This exam has no papers for this class yet." %} <a href="{% url 'exams:papers' exam.id %}?class={{ section.class_level_id }}">{% trans "Papers & question papers" %}</a></p></div>
+{% else %}
+{% if can_enter %}
+<details class="card no-print"><summary>{% trans "Bring in marks from Excel (or a photo of the filled sheet)" %}</summary>
+  <ol class="small">
+    <li>{% trans "Download “Marks sheet (Excel)”, type the marks, and choose the file below. The marks are shown on the table to check; nothing is saved until you press Save marks." %}</li>
+    <li>{% trans "Filled by hand: give a photo or scan of the sheet to Claude with the TASEMS marks reader skill (in your own Claude account; TASEMS sends nothing anywhere). It gives back the Excel to choose below." %} <a href="{% url 'exams:marks_skill' %}">{% trans "Download the marks reader skill" %}</a></li>
+  </ol>
+  <form method="post" enctype="multipart/form-data" class="filter-inline">{% csrf_token %}<input type="hidden" name="action" value="import">
+    <input type="file" name="file" accept=".xlsx" required aria-label="{% trans 'Marks Excel' %}"><button class="button quiet" type="submit">{% trans "Show the Excel's marks" %}</button></form>
+</details>
+{% endif %}
+
+<form method="post" data-marks-grid>{% csrf_token %}
+<p class="small muted no-print">{% trans "Enter goes to the next student; A = absent. Attentive, Punctual, Neatness and Participation start as Good — change only the students who are Excellent or Fair." %}</p>
+<div class="table-wrap"><table class="marks-grid">
+  <thead><tr><th class="center">{% trans "Roll" %}</th><th>{% trans "Name" %}</th>
+    {% for p in papers %}<th class="center">{{ p.subject.name }}<br><span class="muted small">{{ p.total_marks }}</span></th>{% endfor %}
+    <th class="center">{% trans "Total" %}<br><span class="muted small">{{ total }}</span></th><th class="center">%</th>
+    {% for a, label in aspects %}<th class="center rate-head">{{ label }}</th>{% endfor %}<th class="no-print"></th></tr></thead>
+  <tbody>{% for r in rows %}<tr data-row>
+    <td class="num center">{{ r.enrolment.roll_no|default:"" }}</td>
+    <td class="nowrap">{{ r.enrolment.student.full_name }}<br><span class="muted small">{{ r.enrolment.student.admission_no }}</span></td>
+    {% for c in r.cells %}<td class="center"><input class="mark{% if c.error %} bad{% endif %}" name="m_{{ r.enrolment.student_id }}_{{ c.paper.id }}" value="{{ c.text }}" data-total="{{ c.paper.total_marks }}" inputmode="decimal" autocomplete="off" size="3" {% if not can_enter %}readonly{% endif %} aria-label="{{ r.enrolment.student.full_name }} {{ c.paper.subject.name }}"{% if c.error %} title="{{ c.error }}"{% endif %}></td>{% endfor %}
+    <td class="num center" data-sum></td><td class="num center" data-pct></td>
+    {% for a, level in r.levels %}<td class="center"><select class="rate rate-{{ level }}" name="r_{{ r.enrolment.student_id }}_{{ a }}" {% if not can_enter %}disabled{% endif %} aria-label="{{ r.enrolment.student.full_name }} {{ a }}">{% for v, label in levels %}<option value="{{ v }}" {% if v == level %}selected{% endif %}>{{ label|slice:":1" }}</option>{% endfor %}</select></td>{% endfor %}
+    <td class="no-print"><a class="small" href="{% url 'exams:exam_cards' exam.id section.id %}?student={{ r.enrolment.student_id }}" target="_blank" rel="noopener">{% trans "Card" %}</a></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% if can_enter %}<div class="actions"><button class="button" type="submit">{% trans "Save marks" %}</button></div>{% endif %}
+</form>
+{% endif %}
+{% endblock %}

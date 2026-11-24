@@ -36,6 +36,7 @@
 </div>
 
 <div class="list-tools no-print">
+  {% if run and can_pay and totals.to_pay %}<a class="button sm" href="{% url 'payroll:pay_many' %}?month={{ month|date:'Y-m' }}">{% icon "wallet" %}{% trans "Pay employees" %}</a>{% endif %}
   <a class="button sm" href="{% url 'payroll:acknowledgement' %}?month={{ month|date:'Y-m' }}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Acknowledgement sheet (PDF)" %}</a>
   {% if run %}<a class="button quiet sm" href="{% url 'payroll:payslips' run.id %}" target="_blank" rel="noopener">{% icon "printer" %}{% trans "Payslips (PDF)" %}</a>
   <a class="button quiet sm" href="{% list_url format='xlsx' sheet='bank' %}">{% icon "landmark" %}{% trans "Bank transfer sheet (Excel)" %}</a>{% endif %}

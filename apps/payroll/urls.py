@@ -7,6 +7,7 @@ app_name = "payroll"
 urlpatterns = [
     path("", views.index, name="index"),
     path("finalise/", views.finalise, name="finalise"),
+    path("pay/", views.pay_many, name="pay_many"),
     path("salaries/", views.salaries, name="salaries"),
     path("manual/", views.manual, name="manual"),
     path("rules/", views.rules, name="rules"),

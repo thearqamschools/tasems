@@ -1,0 +1,61 @@
+<!doctype html>
+{# Result card of one exam (R14-9, project lead 24 Nov 2026): black and white, like the school's "Result of Periodic Assessment – II" card. Remarks are written by hand. #}
+<html lang="en"><head><meta charset="utf-8"><title>Result cards</title>
+<style>
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
+  @page { size: A4 portrait; margin: 10mm 12mm 10mm; @bottom-center { content: "{{ address }}"; font: 8pt "PSans"; color: #000; } }
+  body { margin: 0; font-family: "PSans", sans-serif; color: #000; }
+  .card { border: 1.6pt solid #000; padding: 8mm 9mm 7mm; height: 263mm; box-sizing: border-box; page-break-after: always; position: relative; }
+  .card:last-child { page-break-after: auto; }
+  .head { text-align: center; }
+  .head img { width: 16mm; height: 16mm; vertical-align: middle; margin-right: 3mm; }
+  .head .school { display: inline-block; vertical-align: middle; font-size: 24pt; font-weight: 700; letter-spacing: .02em; }
+  h1 { text-align: center; font-size: 14pt; margin: 5mm 0 7mm; letter-spacing: .02em; }
+  .who { display: table; width: 100%; font-size: 10pt; margin-bottom: 5mm; }
+  .who div { display: table-row; }
+  .who span { display: table-cell; padding: 1.6mm 0; }
+  .who b { font-weight: 700; }
+  .line { border-bottom: .8pt solid #000; display: inline-block; min-width: 52mm; text-align: center; font-weight: 700; }
+  table.marks { width: 76%; margin: 0 auto; border-collapse: collapse; }
+  table.marks th, table.marks td { border: 1pt solid #000; padding: 2.4mm 3mm; font-size: 8.5pt; }
+  table.marks th { font-weight: 700; text-align: center; }
+  table.marks td.n { text-align: center; width: 30mm; }
+  table.marks td.s { text-transform: uppercase; }
+  table.marks tr.total td { font-weight: 700; }
+  table.rate { margin: 5mm auto 0; border-collapse: collapse; font-size: 8.5pt; }
+  table.rate th { font-weight: 400; padding: 0 5mm 1mm; }
+  table.rate td { padding: 1.2mm 5mm; text-align: center; }
+  table.rate td.l { text-align: left; padding-left: 0; padding-right: 10mm; }
+  .box { display: inline-block; width: 9mm; height: 4mm; border: .8pt solid #000; border-radius: 1.2mm; text-align: center; font-size: 8pt; line-height: 4mm; font-weight: 700; }
+  .remarks { margin-top: 7mm; font-size: 11pt; font-weight: 700; }
+  .rule { border-bottom: .8pt solid #000; height: 8mm; }
+  .remarks .rule:first-of-type { display: inline-block; width: 82%; vertical-align: bottom; height: 0; }
+  .sign { position: absolute; left: 9mm; right: 9mm; bottom: 8mm; display: table; width: calc(100% - 18mm); font-weight: 700; font-size: 11pt; }
+  .sign span { display: table-cell; }
+  .sign span i { display: block; border-top: .8pt solid #000; width: 40mm; margin-bottom: 1mm; }
+  .sign span.r { text-align: right; }
+  .sign span.r i { width: 60mm; margin-left: auto; }
+</style></head>
+<body>
+{% for c in cards %}<div class="card">
+  <div class="head"><img src="{{ logo }}" alt=""><span class="school">THE ARQAM SCHOOLS</span></div>
+  <h1>RESULT OF {{ exam.get_kind_display|upper }}</h1>
+  <div class="who">
+    <div><span><b>Name:</b> <span class="line">{{ c.e.student.full_name }}</span></span><span><b>Class:</b> <span class="line">{{ section.class_level }}</span></span></div>
+    <div><span><b>Code:</b> <span class="line">{{ c.e.student.admission_no }}</span></span><span><b>Section:</b> <span class="line">{{ section.name }}</span></span></div>
+  </div>
+  <table class="marks">
+    <thead><tr><th>SUBJECT</th><th>TOTAL MARKS</th><th>OBTAINED MARKS</th></tr></thead>
+    <tbody>{% for p, m in c.lines %}<tr><td class="s">{{ p.subject.name }}</td><td class="n">{{ p.total_marks }}</td><td class="n">{% if m %}{% if m.status == "present" %}{{ m.obtained|floatformat:"-1" }}{% else %}Absent{% endif %}{% endif %}</td></tr>{% endfor %}
+      <tr class="total"><td>TOTAL MARKS</td><td class="n">{{ c.total }}</td><td class="n">{{ c.obtained|floatformat:"-1" }}</td></tr>
+      <tr class="total"><td>PERCENTAGE</td><td class="n" colspan="2">{% if c.percent is not None %}{{ c.percent|floatformat:"-2" }}%{% endif %}</td></tr></tbody>
+  </table>
+  <table class="rate">
+    <thead><tr><th></th>{% for v, label in levels %}<th>{{ label|upper }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for label, level in c.ratings %}<tr><td class="l">{{ label|upper }}</td>{% for v, _l in levels %}<td><span class="box">{% if v == level %}✓{% endif %}</span></td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table>
+  <div class="remarks">Remarks: <span class="rule"></span><div class="rule"></div></div>
+  <div class="sign"><span><i></i>Teacher</span><span class="r"><i></i>Head/ Principal</span></div>
+</div>{% endfor %}
+</body></html>

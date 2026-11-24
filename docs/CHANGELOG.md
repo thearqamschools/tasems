@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.49.0 — 2026-11-24 — Round 14: Friday duty times, Pay employees, the year's four exams (installer v23)
+- **Setup → Staff Duty Times — a different time on a day of the week** (R14-1): under each staff type, Monday to
+  Saturday with their own In time, Out time and half day after; a blank day keeps the normal times. Late, half day and
+  early left on that day are worked out from that day's times.
+- **Payroll → Pay employees** (R14-2): before Acknowledgement sheet; a list of the staff not yet paid for the
+  finalised month — tick (or tick all), one date, and all are marked as paid their full net pay by their own method
+  (cash / bank); the total of the ticked rows shows before saving.
+- **Exams — four exams a year** (R14-3, R14-4): Periodic Assessment – I, Mid-Term, Periodic Assessment – II, Final;
+  "Add this session's exams" makes all four at once. Each stands alone; no exam's marks are added into another.
+  Former class tests are now Periodic Assessment – I.
+- **Papers & question papers** (R14-6, R14-8, R14-10): per exam, class by class, the subjects with their total
+  marks (typed for every exam), copied from an earlier exam with one click; **Summer Vacation Work** is a subject of
+  the Mid-Term only. Each paper's **question paper** (PDF / photo / Word) is kept on record — private (exam setup and
+  principals only) until the exam day.
+- **Date sheet** (R14-5): first and last day, then a day for each paper (no times); **Generate date sheet (PDF)** —
+  logo, The Arqam Schools, DATE SHEET, the exam, its dates and the session; a row per date, a column per class, "+"
+  for two papers on a day, "–" for none.
+- **Marks & cards — a whole section on one table** (R14-7, R14-10): students down the side, subjects across; Enter
+  goes to the next student, A = absent, marks above the total turn red and are not saved, total and percentage fill
+  in while typing; Attentive / Punctual / Neatness / Participation start as Good — only Excellent or Fair need a
+  click. **Marks sheet (Excel)** out and back in (shown to check before saving); **Sheet to fill by hand** to print;
+  a **marks reader skill** for Claude reads a photo of a hand-filled sheet into the Excel (TASEMS sends nothing out).
+- **Result cards** (R14-9): one per student for every exam, black and white like the school's card — Name, Class,
+  Code (admission code), Section, subjects with total and obtained marks, total, percentage, the four ratings
+  ticked, Remarks left for hand-writing, Teacher and Head / Principal; one student or the whole section as PDF.
+- **Exam results by year** on the student's page (R14-10): every exam's marks and percentage.
+
 ## 0.48.0 — 2026-11-19 — Round 13: side menu, monthly sheet key and downloads, day report (installer v22)
 - **Side menu** (R13-1, R13-6, R13-8): only **one group open at a time** — opening a group closes the others (the
   group of the page you are on opens by itself). Every word in the menu starts with a capital (Needs Attention,

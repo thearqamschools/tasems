@@ -754,7 +754,7 @@ not to be bought or switched on without approval.
 - **Lead, 19 Nov 2026**: early left stays a small **"e"** on the sheet and in the key ("e = Early Left"); in the menu,
   small joining words (of, and, by, from, a …) stay small, every other word starts with a capital.
 
-## Round 14 (20 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 14 (20–24 Nov 2026) — built 24 Nov 2026 (installer v23, CHANGELOG 0.49.0)
 - R14-1. **Setup → Staff duty times — a different time for a day of the week** (lead, 20 Nov 2026): Friday has
   different In / Out times (Sunday is off), so the duty times need a way to set the times of a day separately —
   either **Friday only**, or **every day of the week**. (Claude's proposal: on each set of duty times (per staff type,
@@ -846,3 +846,5 @@ not to be bought or switched on without approval.
   9. **Progress on the student's page**: every exam of every year in one table (percentage of each exam), so
      progress can be seen at a glance.
   10. Result cards as in R14-9 (black and white, A4, one student per page; the whole section in one PDF).
+- **Lead, 24 Nov 2026 ("ok kr do")**: Claude's proposals in R14-10 accepted, and the marks reader skill for photos
+  of hand-filled sheets (read in the office's own Claude, not inside TASEMS).

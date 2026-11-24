@@ -1,0 +1,30 @@
+{% load tasems_tags %}<!doctype html>
+{# The printed date sheet (R14-5, project lead 24 Nov 2026): logo, school, DATE SHEET, the exam, its dates and the session; a row per date, a column per class; no times. #}
+<html lang="en"><head><meta charset="utf-8"><title>Date sheet</title>
+<style>
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "PSans"; src: url("{{ font_base }}NotoSans-Bold.ttf"); font-weight: 700; }
+  @page { size: A4 landscape; margin: 10mm; }
+  body { margin: 0; font-family: "PSans", sans-serif; color: #14182b; }
+  .top { text-align: center; }
+  .top img { width: 20mm; height: 20mm; }
+  .school { font-size: 18pt; font-weight: 700; color: #3e4095; margin-top: 1mm; }
+  .band { background: #14182b; color: #fff; border-radius: 3mm; padding: 2mm 0 2.5mm; margin: 3mm 0 4mm; text-align: center; }
+  .band b { display: block; font-size: 24pt; letter-spacing: .08em; }
+  .band span { display: block; font-size: 12pt; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  th, td { border: .6pt solid #14182b; text-align: center; vertical-align: middle; padding: 2.2mm 1mm; font-size: {{ font|default:"10pt" }}; }
+  th { background: #e6e8f2; font-weight: 700; }
+  td.date { font-weight: 700; white-space: nowrap; }
+  td.date small { display: block; font-weight: 400; font-size: 7.5pt; color: #3b4157; }
+  .foot { margin-top: 3mm; font-size: 8pt; color: #3b4157; text-align: center; }
+</style></head>
+<body>
+  <div class="top"><img src="{% official_logo layout media_base font_base %}" alt=""><div class="school">The Arqam Schools</div><div style="font-size:9pt;color:#3b4157">{{ branch.name }}</div></div>
+  <div class="band"><b>DATE SHEET</b><span>{{ exam.get_kind_display }}{% if sheet.first %} · {{ sheet.first|date:"j F" }} – {{ sheet.last|date:"j F Y" }}{% endif %} · Session {{ exam.session.name }}</span></div>
+  <table>
+    <thead><tr><th style="width:24mm">Date</th>{% for c in sheet.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for d, cells in sheet.rows %}<tr><td class="date">{{ d|date:"d-m-y" }}<small>{{ d|date:"l" }}</small></td>{% for c in cells %}<td>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table>
+  <p class="foot">The Arqam Schools · www.thearqam.com</p>
+</body></html>

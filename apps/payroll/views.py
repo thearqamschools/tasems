@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
@@ -366,6 +367,55 @@ def cancel(request, run_id):
         S.cancel(run, request.user, reason)
         messages.success(request, _("The month is open again; its payslips are kept as cancelled."))
     return redirect(f"/payroll/?month={run.month:%Y-%m}")
+
+
+@login_required
+def pay_many(request):
+    """Pay employees (R14-2, project lead 20 Nov 2026): tick the staff not yet paid for a finalised month and mark
+    them all as paid at once — each their full net pay, by the way their salary is paid."""
+    branch = _branch(request)
+    if not request.user.has_branch_perm(S.PAY_PERM, branch.id):
+        raise PermissionDenied
+    month = _month(request)
+    run, rows, _totals = _rows(branch, month)
+    back = f"{reverse('payroll:index')}?month={month:%Y-%m}"
+    if not run:
+        messages.error(request, _("Finalise the month's payroll first; then the salaries can be paid."))
+        return redirect(back)
+    unpaid = [r for r in rows if r.get("slip") and not r.get("payment")]
+    today = timezone.localdate()
+    if request.method == "POST":
+        chosen = set(request.POST.getlist("use"))
+        try:
+            paid_on = dt.date.fromisoformat(request.POST.get("paid_on", ""))
+        except ValueError:
+            paid_on = None
+        picked = [r for r in unpaid if str(r["slip"].id) in chosen]
+        if paid_on is None or paid_on > today:
+            messages.error(request, _("Give the date the salaries were paid (not a future date)."))
+        elif not picked:
+            messages.error(request, _("Tick at least one person."))
+        else:
+            done, total = 0, 0
+            for r in picked:
+                slip = r["slip"]
+                try:
+                    S.pay(slip, paid_on, slip.method or PayMethod.CASH, "", request.user)
+                except ValueError:
+                    continue
+                done += 1
+                total += slip.net_pay
+            messages.success(
+                request,
+                _("Salaries of %(m)s marked as paid for %(n)s staff: Rs %(a)s.")
+                % {"m": f"{month:%B %Y}", "n": done, "a": f"{total:,.0f}"},
+            )
+            return redirect(back)
+    return render(
+        request,
+        "payroll/pay_many.html",
+        {"branch": branch, "month": month, "rows": unpaid, "today": today, "back": back},
+    )
 
 
 @login_required

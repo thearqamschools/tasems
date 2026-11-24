@@ -205,6 +205,12 @@ class DutyTime(BranchOwnedModel):
     grace_minutes = models.PositiveSmallIntegerField(_("grace minutes"), default=0, validators=[MaxValueValidator(120)])
     half_day_after = models.TimeField(_("half day after"), null=True, blank=True)
     label = models.CharField(_("name"), max_length=60, blank=True, help_text=_("e.g. Winter times"))
+    per_day = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Times of a day of the week that differ (R14-1, e.g. Friday): "
+        '{"4": {"in": "08:00", "out": "12:30", "half": "10:30"}}; Monday = 0. A day not here keeps the times above.',
+    )
 
     class Meta:
         ordering = ["staff_type", "-starts_from"]
@@ -215,6 +221,26 @@ class DutyTime(BranchOwnedModel):
     def __str__(self):
         return (
             f"{self.get_staff_type_display()} {self.duty_starts:%H:%M}–{self.duty_ends:%H:%M} from {self.starts_from}"
+        )
+
+    def for_weekday(self, weekday):
+        """These times, or the times set for that day of the week (R14-1, project lead 20 Nov 2026)."""
+        day = (self.per_day or {}).get(str(weekday))
+        if not day:
+            return self
+        from types import SimpleNamespace
+
+        def clock(text):
+            return dt.time.fromisoformat(text) if text else None
+
+        return SimpleNamespace(
+            duty_starts=clock(day.get("in")) or self.duty_starts,
+            duty_ends=clock(day.get("out")) or self.duty_ends,
+            half_day_after=clock(day.get("half")) or self.half_day_after,
+            grace_minutes=self.grace_minutes,
+            starts_from=self.starts_from,
+            label=self.label,
+            weekday=weekday,
         )
 
 

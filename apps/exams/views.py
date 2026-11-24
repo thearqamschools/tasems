@@ -37,7 +37,7 @@ def _exams(branch, session):
 def index(request):
     branch = _branch(request)
     session = AcademicSession.objects.filter(is_current=True).first()
-    exams = list(_exams(branch, session).prefetch_related("papers")) if session else []
+    exams = sorted(_exams(branch, session), key=lambda e: e.order) if session else []
     sections = (
         Section.objects.filter(branch=branch, session=session, is_active=True)
         .select_related("class_level")
@@ -46,7 +46,20 @@ def index(request):
         else []
     )
     mine = [s for s in sections if s.class_teacher_id == request.user.id]
-    return render(request, "exams/index.html", {"exams": exams, "sections": sections, "mine": mine, "session": session})
+    from . import documents
+
+    can_add = (
+        bool(session)
+        and len({e.kind for e in exams}) < len(Exam.Kind.values)
+        and (documents.can_add_network_exams(request.user) or request.user.has_branch_perm("exams.add_exam", branch.id))
+    )
+    for e in exams:
+        e.first_day, e.last_day = e.dates
+    return render(
+        request,
+        "exams/index.html",
+        {"exams": exams, "sections": sections, "mine": mine, "session": session, "can_add": can_add},
+    )
 
 
 def _section(request, branch, section_id):
@@ -352,15 +365,26 @@ def date_sheet(request, exam_id):
         if not can_edit:
             raise PermissionDenied
         errors = 0
+        try:  # the exam's first and last day (R14-5); the date sheet has no times
+            first = request.POST.get("starts_on", "").strip()
+            last = request.POST.get("ends_on", "").strip()
+            exam.starts_on = dt.date.fromisoformat(first) if first else None
+            exam.ends_on = dt.date.fromisoformat(last) if last else None
+            if exam.starts_on and exam.ends_on and exam.ends_on < exam.starts_on:
+                exam.starts_on, exam.ends_on = exam.ends_on, exam.starts_on
+            exam.save(update_fields=["starts_on", "ends_on", "updated_at"])
+        except ValueError:
+            errors += 1
         for p in exam.papers.filter(class_level__in=levels):
-            values = {k: request.POST.get(f"{k}_{p.id}", "").strip() for k in ("date", "starts_at", "ends_at")}
+            if f"date_{p.id}" not in request.POST:
+                continue
+            value = request.POST.get(f"date_{p.id}", "").strip()
             try:
-                p.date = dt.date.fromisoformat(values["date"]) if values["date"] else None
-                p.starts_at = dt.time.fromisoformat(values["starts_at"]) if values["starts_at"] else None
-                p.ends_at = dt.time.fromisoformat(values["ends_at"]) if values["ends_at"] else None
+                p.date = dt.date.fromisoformat(value) if value else None
             except ValueError:
                 errors += 1
                 continue
+            p.starts_at = p.ends_at = None
             p.save(update_fields=["date", "starts_at", "ends_at", "updated_at"])
         if errors:
             messages.warning(request, _("%(n)s papers had a date or time that could not be read.") % {"n": errors})
@@ -374,12 +398,21 @@ def date_sheet(request, exam_id):
             "exam": exam,
             "branch": branch,
             "sheet": documents.date_sheet(exam, levels),
+            "grid": documents.grid(exam, levels),
+            "days": _exam_days(exam),
             "levels": all_levels,
             "level_id": level_id,
             "can_edit": can_edit,
             "editing": editing,
         },
     )
+
+
+def _exam_days(exam):
+    first, last = exam.dates
+    if not first or not last:
+        return []
+    return [first + dt.timedelta(days=i) for i in range((last - first).days + 1)]
 
 
 @login_required
