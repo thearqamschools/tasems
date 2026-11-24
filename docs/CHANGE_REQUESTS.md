@@ -985,3 +985,6 @@ not to be bought or switched on without approval.
   - Heading **"All classes & sections"** in place of "All sections".
   - The space between the heading row (with the Class / All classes filter) and the table is **even**: now it is
     large above and none below — the same space above and below.
+- R16-14. **Marks & Results page — spacing** (lead, 24 Nov 2026): the "Bring in marks from Excel …" box and the line
+  under it ("Enter goes to the next student; A = absent …") touch; add space between them (more space above that
+  line).
