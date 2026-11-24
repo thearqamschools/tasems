@@ -979,3 +979,9 @@ not to be bought or switched on without approval.
     the same, e.g. "(100)"; the "%" column as it is.
   - The last column's heading **"Result card"** (in place of "Card"), and in each row **only the print icon** (no
     word "Card" beside it).
+- R16-12. **Exams & Results — the four exam boxes** (lead, 24 Nov 2026, photo): **Edit, Date sheet and Results on one
+  line** (Results now drops to a second line); the boxes **shorter**, with no empty space at the bottom.
+- R16-13. **Exams & Results — the sections table** (same photo):
+  - Heading **"All classes & sections"** in place of "All sections".
+  - The space between the heading row (with the Class / All classes filter) and the table is **even**: now it is
+    large above and none below — the same space above and below.
