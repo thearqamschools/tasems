@@ -1081,3 +1081,9 @@ not to be bought or switched on without approval.
   its class and campus. (Claude: a section matching no set uses the branch's general set; two sets may not cover the
   same class in the same campus — TASEMS warns. Teacher clash checks compare real clock times, since periods of
   different sets do not line up.)
+- R18-4. **Short form written "Comp. Code"** (lead, 26 Nov 2026): on the exams' Marks & Results page (and, Claude:
+  everywhere the short form shows — result cards, marks Excel, reports — so it is the same throughout) "COMP.code"
+  becomes **"Comp. Code"**: capital C, "omp" small, a full stop, a space, capital C "Code".
+- R18-5. **Marks & Results — sort by Comp. Code or Name** (lead, 26 Nov 2026): the students on the marks table can be
+  put in order by **Comp. Code** or by **Name** (click the heading, or a choice above the table), so marks are typed
+  in the same order as the paper sheets.
