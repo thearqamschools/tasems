@@ -1063,3 +1063,13 @@ not to be bought or switched on without approval.
 - **Claude, at build (24 Nov 2026)**: R17-2's open question (the changed header on result cards too?) was not
   answered; built so the one header picture is used on **both** date sheets and result cards, so the school's papers
   match. Easy to change to date sheets only if the lead prefers.
+
+## Round 18 (26 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R18-1. **Setup — "Classes & subjects" inside "Classes and sections"** (lead, 26 Nov 2026): no separate card for
+  Classes & subjects on the Setup page. Open **Classes and sections**; next to "Add a section" (before or after it) a
+  button **Class subjects** that opens the Classes & subjects page.
+- R18-2. **Setup → Branch details — phones and WhatsApp** (lead, 26 Nov 2026):
+  - Labels **Phone 1** and **Phone 2** (Phone 2 beside Phone 1).
+  - **Mobile 1** and **Mobile 2**, each with a tick box **"On WhatsApp"**: ticked → the number shows with the
+    **WhatsApp icon** wherever it is printed or shown; not ticked → it shows as a plain **mobile** (mobile icon, no
+    WhatsApp), e.g. a number not on WhatsApp or one the school does not want people to WhatsApp.
