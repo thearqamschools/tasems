@@ -1073,3 +1073,11 @@ not to be bought or switched on without approval.
   - **Mobile 1** and **Mobile 2**, each with a tick box **"On WhatsApp"**: ticked → the number shows with the
     **WhatsApp icon** wherever it is printed or shown; not ticked → it shows as a plain **mobile** (mobile icon, no
     WhatsApp), e.g. a number not on WhatsApp or one the school does not want people to WhatsApp.
+- R18-3. **Academics → Timetable → Bell times — several sets of bell times** (lead, 26 Nov 2026): the bell times
+  differ by class and by campus, e.g. Play Group to Two one set; Three to Five another (girls campus); Six to Ten
+  another, and for Six to Ten the boys campus and the girls campus each their own. To do: under Bell times, add
+  **several bell-time sets**, each with a **name**, **from class … to class**, the **campus** (or all campuses), and
+  its periods and breaks (number, start, end, break or not). Each section's timetable then uses the set that matches
+  its class and campus. (Claude: a section matching no set uses the branch's general set; two sets may not cover the
+  same class in the same campus — TASEMS warns. Teacher clash checks compare real clock times, since periods of
+  different sets do not line up.)
