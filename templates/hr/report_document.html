@@ -32,7 +32,7 @@
 <body>
   <div class="head"><img src="{% official_logo layout media_base font_base %}" alt="">
     <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}</div></div>
-    <div class="title"><b>{{ title }}</b>{{ subtitle }}</div></div>
+    <div class="title"><b>{{ title }}</b>{% if subtitle_lines %}{% for line in subtitle_lines %}<div>{{ line }}</div>{% endfor %}{% else %}{{ subtitle }}{% endif %}</div></div>
   {% if summary %}<table class="summary"><tr>{% for label, value in summary %}<td><b>{{ value }}</b>{{ label }}</td>{% endfor %}</tr></table>{% endif %}
   {% if key %}<div class="key">{% for k in key %}<span>{{ k }}</span>{% endfor %}</div>{% endif %}
   {% for s in sections %}

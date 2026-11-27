@@ -392,7 +392,7 @@ def _sheet_html(exam, section, data, for_file):
     the exam's total marks at the top, and Obtained and % to fill (R19-2, R19-4); short subject names (R19-5)."""
     total = data["total"]
     headers = ["Comp. Code", "Name"] + [f"{p.subject.short} ({p.total_marks})" for p in data["papers"]]
-    headers += [f"Obtained ({total})", "%", "Attentive", "Punctual", "Neatness", "Participation"]
+    headers += [f"Obtained ({total})", "Percentage", "Attentive", "Punctual", "Neatness", "Participation"]
     rows = []
     for row in data["rows"]:
         e = row["enrolment"]
@@ -407,7 +407,12 @@ def _sheet_html(exam, section, data, for_file):
     context = {
         "branch": section.branch,
         "title": exam.name.upper(),
-        "subtitle": f"{section} · Class teacher: {teacher} · Total marks: {total}",
+        # R20-1: three lines — class (section), class teacher, total marks
+        "subtitle_lines": [
+            f"Class: {section.class_level} ({section.name})",
+            f"Class teacher: {teacher}",
+            f"Total marks: {total}",
+        ],  # fmt: skip
         "landscape": len(data["papers"]) > 6,
         "key": ["A = Absent", "Ratings: E = Excellent, G = Good, F = Fair"],
         "sections": [{"headers": headers, "rows": rows}],
@@ -458,11 +463,13 @@ def cards(request, exam_id, section_id):
             "exam": exam,
             "section": section,
             "cards": cards,
-            "address": documents.branch_address(section.branch),  # R16-8: the address only
-            "banner": _banner(),
-            # R17-6: many subjects → the gaps and rows tighten so the card stays on one page
-            "gap": "6mm" if len(data["papers"]) <= 7 else "4.5mm" if len(data["papers"]) <= 10 else "3mm",
-            "cell": "2.3mm" if len(data["papers"]) <= 7 else "1.7mm" if len(data["papers"]) <= 10 else "1.2mm",
+            "address": _card_address(section.branch),
+            "campus": _campus_line(section.branch),
+            "logo": paths.grey_logo(),
+            # many subjects → the rows and gaps tighten so the card stays on one page (R17-6)
+            "gap_min": "3mm" if len(data["papers"]) <= 8 else "1.5mm",
+            "cell": "2.4mm" if len(data["papers"]) <= 8 else "1.6mm" if len(data["papers"]) <= 11 else "1.1mm",
+            "mark_top": "120mm",
             "font_base": paths.font_base(),
             "levels": ExamRating.Level.choices,
         },
@@ -474,6 +481,24 @@ def cards(request, exam_id, section_id):
     response = HttpResponse(pdf, content_type="application/pdf")
     response["Content-Disposition"] = f'inline; filename="{name}.pdf"'
     return response
+
+
+def _campus_line(branch):
+    """e.g. "Samanabad Campus, Faisalabad" from "The Arqam Schools — Samanabad Campus (Head Office)" and its city."""
+    import re
+
+    name = branch.name.split("—")[-1] if "—" in branch.name else branch.name
+    name = re.sub(r"\(.*?\)", "", name).replace("The Arqam Schools", "").strip(" -—,")
+    city = branch.city if branch.city and branch.city.lower() not in name.lower() else ""
+    return ", ".join(p for p in (name, city) if p)
+
+
+def _card_address(branch):
+    """The address under the card, as on the school's design: "The Arqam Schools, <address>"."""
+    address = documents.branch_address(branch)
+    if address and not address.lower().startswith("the arqam schools"):
+        address = f"The Arqam Schools, {address}"
+    return documents.css_text(address)
 
 
 def _banner():

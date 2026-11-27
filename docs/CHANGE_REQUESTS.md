@@ -1126,7 +1126,7 @@ not to be bought or switched on without approval.
   button **"Sheets to fill by hand (all sections)"** — one section per page, in class order; with a class chosen in
   the filter it gives that class's sections only.
 
-## Round 20 (27 Nov 2026) — noted, not built yet (build with the next version)
+## Round 20 (27 Nov 2026) — built 27 Nov 2026 (installer v29, CHANGELOG 0.55.0)
 - R20-1. **Sheet to fill by hand — the heading on three lines** (lead, 27 Nov 2026): under the exam's name
   (e.g. PERIODIC ASSESSMENT – II) the details now run on one line ("Six-Daisy · Class teacher: … · Total marks: 250")
   and are hard to read. Put them on **three lines**:
@@ -1141,3 +1141,11 @@ not to be bought or switched on without approval.
   never hide.)
 - R20-3. **Sheet to fill by hand — a wider "%" column** (lead, 27 Nov 2026, photo of Play Group-Jasmine,
   Periodic Assessment – II): the % column is too narrow to write in by hand; make it wider (like Obtained).
+- R20-4. **Result card in the school's own design** (lead, 27 Nov 2026: "change the result to exact same design",
+  with "MASTER template" and "Example — Pre-Nine Jasmine" PDFs): rounded frame; grey round logo with THE ARQAM SCHOOLS
+  (Helvetica Inserat) and the campus line (e.g. SAMANABAD CAMPUS, FAISALABAD); a "STUDENT RESULT CARD" badge; the exam
+  on a black pill; Name / Code / Class / Section on a grey panel; the subjects table (No., Subject, Total marks,
+  Obtained marks) with a faint logo behind; Personal qualities beside Total marks / Obtained / Percentage; Remarks;
+  Teacher and Head / Principal; the address under the frame. (Claude: filled in by TASEMS — name, code, class,
+  section, obtained marks, total, percentage, the ticked ratings; subject short names as decided in R19-5; the label
+  "CODE" as in the design.)

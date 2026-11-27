@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.55.0 — 2026-11-27 — Round 20: result card in the school's design (installer v29)
+- **Result card** (R20-4): rebuilt to the school's own design (MASTER template / Pre-Nine Jasmine) — rounded frame,
+  grey round logo with THE ARQAM SCHOOLS and the campus line, "Student Result Card" badge, the exam on a black pill,
+  Name / Code / Class / Section panel, numbered subjects table with a faint logo behind, Personal qualities beside
+  Total marks / Obtained / Percentage, Remarks, signatures, the address under the frame.
+- **Sheet to fill by hand** (R20-1, R20-3): the heading on three lines — Class: Seven (Rose) · Class teacher · Total
+  marks; a wider **Percentage** column.
+- **Exams & Results** (R20-2): the buttons keep their words (Edit, Date sheet, Results) on one line; a box is never
+  narrower than they need — four in a row only on very wide screens.
+
 ## 0.54.0 — 2026-11-27 — Round 19: subject order and short names, Comp. Code order, hand sheet totals (installer v28)
 - **Class subjects in order** (R19-6): Setup → Classes and sections → Class subjects shows a class's subjects as a
   numbered list — drag a subject, or use ↑ ↓, to set the order; untick to take one off; tick below to add. That order

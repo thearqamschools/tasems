@@ -71,3 +71,17 @@ def banner_url():
     if header is not None and header.image:
         return banner()  # uploaded pictures are not served as files in the office app, so it goes in the page
     return static("img/arqam-banner.png")
+
+
+@functools.lru_cache(maxsize=2)
+def grey_logo():
+    """The round official logo in grey for the black-and-white result card (the lead's own design, 27 Nov 2026);
+    the shape is unchanged."""
+    import io
+
+    from PIL import Image
+
+    image = Image.open(Path(settings.BASE_DIR) / "static" / "img" / "arqam-logo-512.png").convert("LA")
+    buffer = io.BytesIO()
+    image.save(buffer, "PNG", optimize=True)
+    return "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode()

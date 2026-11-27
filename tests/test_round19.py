@@ -62,3 +62,14 @@ def test_all_sheets_to_fill_by_hand_in_one_pdf(exam_setup, login_as):  # noqa: F
     assert one.content[:4] == b"%PDF"
     page = client.get(f"/exams/{exam.id}/results/").content.decode()
     assert "Sheets to fill by hand (all sections)" in page
+
+
+def test_result_card_in_the_schools_design_and_hand_sheet_heading(exam_setup, login_as):  # noqa: F811
+    from apps.exams.views_year import _campus_line
+
+    assert _campus_line(exam_setup["branch"]).endswith("Campus") or "," in _campus_line(exam_setup["branch"])
+    client = login_as(exam_setup["principal"])
+    url = f"/exams/{exam_setup['exam'].id}/section/{exam_setup['section'].id}/"
+    assert client.get(f"{url}result-cards.pdf").content[:4] == b"%PDF"
+    sheet = client.get(f"{url}marks/?print=1").content.decode()
+    assert "<div>Class: Four (Rose)</div>" in sheet and "<div>Total marks: 100</div>" in sheet and "Percentage" in sheet
