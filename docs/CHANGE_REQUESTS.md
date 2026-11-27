@@ -1099,3 +1099,7 @@ not to be bought or switched on without approval.
   Quran, Biology/Computer …) add **Obtained marks** and **Percentage** columns to fill; the **total marks** of the exam
   written once at the top (e.g. "Total marks: 250") — or a Total marks column too (Claude: the total once at the top
   and in the Obtained heading, e.g. "Obtained (250)", so the columns stay narrow).
+- R19-3. **Marks & Results — Comp. Code order by default** (lead, 27 Nov 2026): when a section's Marks & Results
+  opens, the students are in **Comp. Code order, smallest first (ascending)** — not by name; Name order stays a
+  choice. The **Sheet to fill by hand**, the **marks Excel** and the **result cards** of the section come in the same
+  Comp. Code order (smallest first).
