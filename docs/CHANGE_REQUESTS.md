@@ -1112,3 +1112,12 @@ not to be bought or switched on without approval.
   by hand, the marks table's headings, the marks Excel's headings, the date sheet grid when its columns are narrow,
   and report tables. A subject with no short form shows its full name everywhere.)
   **Lead, 27 Nov 2026: the result cards use the short names too.**
+- R19-6. **Class subjects — a list in order, set by dragging; the same order everywhere** (lead, 27 Nov 2026):
+  - In Setup → Classes and sections → Class subjects, a class's **ticked subjects show as a list** (the tick boxes
+    stay for adding / removing).
+  - The list can be **dragged up and down** to set the subjects' **order** (sequence) for that class.
+  - **That order is used everywhere**: result cards, the marks table, the sheet to fill by hand, the marks Excel,
+    the Edit page, reports, diary and timetable lists. E.g. Play Group now shows English, Math, EVS, Kids Book, Urdu;
+    the lead wants **English, Urdu, Math, …** — set once here, it follows on every page and paper.
+  - (Claude: the order stays per class; Summer Vacation Work stays at the top in the Mid-Term unless placed
+    elsewhere; also "Move up / Move down" buttons for keyboards and phones, where dragging is awkward.)
