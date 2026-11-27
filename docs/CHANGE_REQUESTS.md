@@ -1133,3 +1133,9 @@ not to be bought or switched on without approval.
   1. **Class: 7 (Rose)** — the class, a space, the section in brackets;
   2. **Class teacher: <name>**;
   3. **Total marks: 250**.
+- R20-2. **Exam boxes — keep the words on the buttons** (lead, 27 Nov 2026, photo): v28 dropped the words "Date
+  sheet" and "Results" (only icons showed) on the lead's wide screen, where the four boxes sit in one row and each
+  box is narrow. Not wanted: the buttons keep their words — **Edit, Date sheet, Results** — **all on one line**.
+  (Claude's mistake in v28: the boxes were made to shrink and the words hid. To fix: each box is wide enough for the
+  three worded buttons — four boxes in a row only when there is room for that, else two per row — and the words
+  never hide.)
