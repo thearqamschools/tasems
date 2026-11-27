@@ -1153,3 +1153,21 @@ not to be bought or switched on without approval.
   Date_Sheet___Colour_A4_landscape.pdf): the same layout, colours and fonts as that file — logo and blue school name,
   DATE SHEET tab, dates / exam / session bar, blue heading row, date + red weekday column, zebra rows, "NO PAPER" row,
   note at the foot; one A4 landscape page. **Built (v29).**
+
+## Round 21 — result card and date sheet finishing (lead, 27 Nov 2026, voice note after v29) — noted, not built yet
+
+- R21-1. **Result card — title block:** "THE ARQAM SCHOOLS" a little smaller; less gap between it and the campus line
+  (SAMANABAD CAMPUS, FAISALABAD) so the two sit together as one block; aligned as a graphic designer would.
+- R21-2. **Result card — more space between the school name and the "STUDENT RESULT CARD" badge.**
+- R21-3. **Result card — room to sign (main problem):** "Teacher" and "Head / Principal" go right down, a little above
+  the frame's bottom line; a clear empty space to sign between the Remarks box and those words, as in the sample.
+  Spread the card's spacing so this room is there.
+- R21-4. **Result card — Total marks / Obtained / Percentage boxes the same:** at the moment Total marks is the one
+  highlighted (grey, large bold) and Obtained is hard to see. Make the three boxes alike; only the Obtained marks a
+  little bolder / highlighted so they stand out.
+- R21-5. **Date sheet — the DATE SHEET tab as in the original:** the box differs from the sent design (there: a large
+  rounded curve at the top-left, the other corners only slightly rounded, a taller box, the words centred in it).
+- R21-6. **Date sheet — header lower, less spacing:** the logo and DATE SHEET sit too high on the page — bring them
+  down a little; less space between the header, the dates / exam / session bar and the table.
+- R21-7. **Date sheet — bar text centred:** "10 – 17 November 2026", the exam name and "Session 2026-27" are not in
+  the middle of their light box (height-wise) — centre them; check every alignment with a designer's eye.
