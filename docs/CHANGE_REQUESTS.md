@@ -1125,3 +1125,11 @@ not to be bought or switched on without approval.
   Periodic Assessment – II, every section's sheet of the school in one PDF. Built: on the exam's **Results** page, a
   button **"Sheets to fill by hand (all sections)"** — one section per page, in class order; with a class chosen in
   the filter it gives that class's sections only.
+
+## Round 20 (27 Nov 2026) — noted, not built yet (build with the next version)
+- R20-1. **Sheet to fill by hand — the heading on three lines** (lead, 27 Nov 2026): under the exam's name
+  (e.g. PERIODIC ASSESSMENT – II) the details now run on one line ("Six-Daisy · Class teacher: … · Total marks: 250")
+  and are hard to read. Put them on **three lines**:
+  1. **Class: 7 (Rose)** — the class, a space, the section in brackets;
+  2. **Class teacher: <name>**;
+  3. **Total marks: 250**.
