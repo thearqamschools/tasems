@@ -1105,3 +1105,10 @@ not to be bought or switched on without approval.
   Comp. Code order (smallest first).
 - R19-4. **Sheet to fill by hand — the class teacher's name** (lead, 27 Nov 2026): at the top of the sheet, with the
   exam and the section, the **class teacher's name** (e.g. "Class teacher: …"; Claude: "—" when none is set).
+- R19-5. **Subject short names** (lead, 27 Nov 2026): each subject can have a **short form**, e.g. Mathematics →
+  Math, Biology → Bio, Computer → COMP, Islamiyat → I.S, Tarjama tul Quran → TQ, Summer Vacation Work → SVW. Where
+  space is short the short form is used. (Claude's proposal: the short form is typed in **Setup → Classes and sections
+  → Class subjects** — a "Short name" box beside each subject, network-wide, head office. Used on: the sheet to fill
+  by hand, the marks table's headings, the marks Excel's headings, the date sheet grid when its columns are narrow,
+  and report tables; the **full name stays on result cards** and anywhere with room. A subject with no short form
+  shows its full name everywhere.)
