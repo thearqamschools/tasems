@@ -1110,5 +1110,5 @@ not to be bought or switched on without approval.
   space is short the short form is used. (Claude's proposal: the short form is typed in **Setup → Classes and sections
   → Class subjects** — a "Short name" box beside each subject, network-wide, head office. Used on: the sheet to fill
   by hand, the marks table's headings, the marks Excel's headings, the date sheet grid when its columns are narrow,
-  and report tables; the **full name stays on result cards** and anywhere with room. A subject with no short form
-  shows its full name everywhere.)
+  and report tables. A subject with no short form shows its full name everywhere.)
+  **Lead, 27 Nov 2026: the result cards use the short names too.**
