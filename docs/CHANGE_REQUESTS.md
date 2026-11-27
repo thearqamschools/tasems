@@ -1139,3 +1139,5 @@ not to be bought or switched on without approval.
   (Claude's mistake in v28: the boxes were made to shrink and the words hid. To fix: each box is wide enough for the
   three worded buttons — four boxes in a row only when there is room for that, else two per row — and the words
   never hide.)
+- R20-3. **Sheet to fill by hand — a wider "%" column** (lead, 27 Nov 2026, photo of Play Group-Jasmine,
+  Periodic Assessment – II): the % column is too narrow to write in by hand; make it wider (like Obtained).
