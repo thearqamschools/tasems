@@ -1103,3 +1103,5 @@ not to be bought or switched on without approval.
   opens, the students are in **Comp. Code order, smallest first (ascending)** — not by name; Name order stays a
   choice. The **Sheet to fill by hand**, the **marks Excel** and the **result cards** of the section come in the same
   Comp. Code order (smallest first).
+- R19-4. **Sheet to fill by hand — the class teacher's name** (lead, 27 Nov 2026): at the top of the sheet, with the
+  exam and the section, the **class teacher's name** (e.g. "Class teacher: …"; Claude: "—" when none is set).
