@@ -1087,3 +1087,15 @@ not to be bought or switched on without approval.
 - R18-5. **Marks & Results — sort by Comp. Code or Name** (lead, 26 Nov 2026): the students on the marks table can be
   put in order by **Comp. Code** or by **Name** (click the heading, or a choice above the table), so marks are typed
   in the same order as the paper sheets.
+
+## Round 19 (27 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+- R19-1. **Exams & Results — Edit, Date sheet and Results still not on one line** (lead, 27 Nov 2026): on the lead's
+  screen Results again drops under Edit and Date sheet although there is room beside them. All three on **one row**
+  in each exam box, at the office's screen size and zoom. (Claude: since R17-7 the buttons may wrap; to fix so they
+  never wrap — smaller buttons / icons, or the boxes laid out so each is wide enough — and check at the office's
+  zoom, e.g. 125% on a 1366-wide screen.)
+- R19-2. **Marks & Results → "Sheet to fill by hand" — totals** (lead, 27 Nov 2026, Pre-Nine Rose, Periodic
+  Assessment – II): after the subjects (English, Mathematics, Urdu, Physics, Chemistry, Islamiyat, Tarjama tul
+  Quran, Biology/Computer …) add **Obtained marks** and **Percentage** columns to fill; the **total marks** of the exam
+  written once at the top (e.g. "Total marks: 250") — or a Total marks column too (Claude: the total once at the top
+  and in the Obtained heading, e.g. "Obtained (250)", so the columns stay narrow).
