@@ -80,39 +80,40 @@ def css_text(text):
 
 
 def _fit(rows):
+    """Row height so the whole date sheet stays on one A4 landscape page (R17-1); 128 mm are left for the rows."""
     rows = max(rows, 1)
-    if rows <= 9:
-        return {"row_h": f"{min(8.6, 125.0 / rows - 4.4):.1f}mm", "pad": "2.2mm", "compact": False}
-    if rows <= 14:
-        return {"row_h": f"{max(3.6, 128.0 / rows - 2.4):.1f}mm", "pad": "1.2mm", "compact": True, "small": "8pt"}
-    return {"row_h": f"{max(3.0, 132.0 / rows - 1.4):.1f}mm", "pad": "0.7mm", "compact": True, "small": "7pt"}
+    total = min(14.6, 128.0 / rows)  # each row's full height in mm
+    pad = 1.6 if total >= 11 else 0.9 if total >= 7.5 else 0.5
+    return {"row_h": f"{max(3.2, total):.1f}mm", "pad": f"{pad}mm", "compact": total < 9.5,
+            "small": "8pt" if total < 7.5 else ""}  # fmt: skip
 
 
 def date_sheet_pdf(exam, levels, branch):
+    """The date sheet in the school's own colour design (lead, 27 Nov 2026: "Date Sheet — Colour A4 landscape")."""
     from weasyprint import HTML
 
-    sheet = grid(exam, levels)
-    if len(sheet["columns"]) > 8:  # narrow columns: short subject names (R19-5)
-        sheet = grid(exam, levels, short=True)
+    from apps.exams.models import PrintHeader
+    from apps.exams.views_year import _campus_line
+
+    sheet = grid(exam, levels, short=True)  # short subject names, as on the design (R19-5)
+    rows = [(d, cells, all(c == "–" for c in cells)) for d, cells in sheet["rows"]]
+    columns = len(sheet["columns"])
+    header = PrintHeader.current()
     html = render_to_string(
         "exams/date_sheet_document.html",
         {
             "exam": exam,
             "branch": branch,
             "sheet": sheet,
-            # R16-1: words never break inside; the type is sized to the number of classes so names fit
-            "font": "10pt"
-            if len(sheet["columns"]) <= 8
-            else "8.6pt"
-            if len(sheet["columns"]) <= 11
-            else "7.6pt"
-            if len(sheet["columns"]) <= 14
-            else "6.6pt",
-            # R17-1: always one page — the rows share the height left under the header (A4 landscape); with many
-            # days the rows, padding and type get smaller and the day goes beside the date
-            **_fit(len(sheet["rows"])),
-            "banner": paths.banner(),
-            "address": branch_address(branch),
+            "rows": rows,
+            "font": "10pt" if columns <= 11 else "9pt" if columns <= 13 else "8pt" if columns <= 16 else "7pt",
+            "head_font": (
+                "9.4pt" if columns <= 11 else "8.6pt" if columns <= 13 else "7.6pt" if columns <= 16 else "7pt"
+            ),
+            **_fit(len(rows)),
+            "logo": paths.file_uri(paths.Path(settings.BASE_DIR) / "static" / "img" / "arqam-logo-512.png"),
+            "header": paths.banner() if header is not None else "",
+            "campus": _campus_line(branch),
             "font_base": paths.font_base(),
         },
     )

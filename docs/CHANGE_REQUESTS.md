@@ -1149,3 +1149,7 @@ not to be bought or switched on without approval.
   Teacher and Head / Principal; the address under the frame. (Claude: filled in by TASEMS — name, code, class,
   section, obtained marks, total, percentage, the ticked ratings; subject short names as decided in R19-5; the label
   "CODE" as in the design.)
+- R20-5. **Date sheet PDF in the school's colour design** (lead, 27 Nov 2026: "datesheet ka design bi ya kr do", with
+  Date_Sheet___Colour_A4_landscape.pdf): the same layout, colours and fonts as that file — logo and blue school name,
+  DATE SHEET tab, dates / exam / session bar, blue heading row, date + red weekday column, zebra rows, "NO PAPER" row,
+  note at the foot; one A4 landscape page. **Built (v29).**

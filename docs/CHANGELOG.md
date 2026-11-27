@@ -9,6 +9,10 @@
   marks; a wider **Percentage** column.
 - **Exams & Results** (R20-2): the buttons keep their words (Edit, Date sheet, Results) on one line; a box is never
   narrower than they need — four in a row only on very wide screens.
+- **Date sheet PDF** (R20-5): rebuilt to the school's colour design (Date Sheet – Colour A4 landscape) — logo with
+  THE ARQAM SCHOOLS in blue and the campus line, a blue DATE SHEET tab, a light bar with the dates, the exam and the
+  session, a blue heading row, the date and weekday (in red) down the left, zebra rows, "NO PAPER" across a day with
+  no paper, "– No paper on this day for the class" at the foot. Still one A4 landscape page.
 
 ## 0.54.0 — 2026-11-27 — Round 19: subject order and short names, Comp. Code order, hand sheet totals (installer v28)
 - **Class subjects in order** (R19-6): Setup → Classes and sections → Class subjects shows a class's subjects as a

@@ -1,48 +1,83 @@
 <!doctype html>
-{# The printed date sheet (R14-5, R15-5): the school's logo banner; DATE SHEET; the exam in the centre with its dates on the left and the session on the right; a row per date, a column per class; no times; the branch's address at the foot. #}
+{% comment %}The date sheet in the school's own colour design (lead, 27 Nov 2026: "Date Sheet — Colour A4 landscape"):
+logo and THE ARQAM SCHOOLS with the campus line; a DATE SHEET tab with a faint red ring; the dates, the exam and the
+session on a light bar; a row per date (weekday in red), a column per class; a day with no paper for any class shows
+"NO PAPER"; one page, no times.{% endcomment %}
 <html lang="en"><head><meta charset="utf-8"><title>Date sheet</title>
 <style>
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Regular.ttf"); font-weight: 400; }
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Medium.ttf"); font-weight: 500; }
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-SemiBold.ttf"); font-weight: 600; }
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Bold.ttf"); font-weight: 700; }
-  @page { size: A4 landscape; margin: 5mm 10mm 11mm;
-    @bottom-center { content: "{{ address|safe }}"; font: 8.5pt "Poppins"; color: #3e4095; } }
-  body { margin: 0; font-family: "Poppins", sans-serif; color: #14182b; }
-  .top { text-align: center; }
-  .top img { height: 21mm; width: auto; display: block; margin: 0 auto; }
-  .band { margin: 3.5mm 0 0; background: #3e4095; color: #fff; border-radius: 2.5mm; text-align: center; padding: 1.6mm 0 2mm;
-    border-bottom: 1.4mm solid #ed3237; }
-  .band b { font-size: 22pt; font-weight: 700; letter-spacing: .14em; }
-  table.meta { width: 100%; border-collapse: collapse; margin: 3.5mm 0 3.5mm; }
-  table.meta td { width: 33.33%; font-size: 10.5pt; padding: 0; vertical-align: middle; }
-  table.meta td.l { text-align: left; color: #3b4157; }
-  table.meta td.c { text-align: center; font-weight: 700; font-size: 15pt; color: #3e4095; }
-  table.meta td.r { text-align: right; color: #3b4157; }
-  table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  table.grid th, table.grid td { border: .7pt solid #9aa0c8; text-align: center; vertical-align: middle;
-    padding: {{ pad|default:"2.2mm" }} 0.8mm; font-size: {% if small %}{{ small }}{% else %}{{ font|default:"9.5pt" }}{% endif %}; line-height: 1.25; overflow-wrap: normal; word-break: keep-all;
-    hyphens: none; height: {{ row_h|default:"13mm" }}; }
-  table.grid th { background: #3e4095; color: #fff; font-weight: 700; border-color: #3e4095; }
-  table.grid th.date { width: 21mm; }
-  table.grid th { height: auto; padding-top: 1.8mm; padding-bottom: 1.8mm; }
+  @font-face { font-family: "Inserat"; src: url("{{ font_base }}HelveticaInseratLTStd-Roman.ttf"); }
+  @page { size: A4 landscape; margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Poppins", sans-serif; color: #1b1d45; }
+  .page { position: relative; width: 297mm; height: 210mm; padding: 3.6mm 7.6mm 0; overflow: hidden; }
+  .ring { position: absolute; right: -14mm; top: -33mm; width: 84mm; height: 84mm; border: 5.6mm solid #ec3237;
+    border-radius: 50%; opacity: .09; }
 
-  table.grid tbody tr:nth-child(even) td { background: #f1f2fa; }
-  table.grid td.date { font-weight: 600; white-space: nowrap; color: #14182b; }
-  table.grid td.date small { display: block; font-weight: 400; font-size: 7.5pt; color: #5b6080; }
-  table.grid td.none { color: #9aa0c8; }
-  table.grid td.date .day { font-weight: 400; color: #5b6080; }
-  {% if compact %}.top img { height: 17mm; } .band b { font-size: 18pt; } table.grid th.date { width: 26mm; }{% endif %}
+  table.head { width: 100%; border-collapse: collapse; position: relative; }
+  table.head td { padding: 0; vertical-align: middle; }
+  table.head td.logo { width: 21mm; }
+  table.head td.logo img { width: 17.4mm; height: 17.4mm; display: block; }
+  .school { font-family: "Inserat", "Poppins", sans-serif; color: #3e4095; font-size: 28pt; line-height: 1; letter-spacing: .01em; }
+  .campus { font-size: 7.2pt; font-weight: 600; letter-spacing: .42em; color: #3b3d63; margin-top: 1.2mm; text-transform: uppercase; }
+  .headerpic { height: 18mm; width: auto; }
+  td.tab { width: 72mm; text-align: right; vertical-align: top; padding-top: 0; }
+  .tab-box { display: inline-block; background: #3e4095; color: #fff; width: 71mm; height: 17.6mm; text-align: center;
+    border-radius: 9mm 3mm 3mm 3mm; font-family: "Inserat", "Poppins", sans-serif; font-size: 29pt; letter-spacing: .1em;
+    line-height: 17.6mm; }
+
+  .bar { margin-top: 15mm; background: #eef0f9; border-radius: 3mm; height: 11.2mm; position: relative; }
+  .bar table { width: 100%; height: 11.2mm; border-collapse: collapse; }
+  .bar td { padding: 0 4.4mm; vertical-align: middle; width: 33.3%; }
+  .bar .dates { font-size: 11.5pt; font-weight: 700; color: #1b1d45; white-space: nowrap; }
+  .bar .dates svg { width: 4.2mm; height: 4.2mm; vertical-align: -0.9mm; margin-right: 2.4mm; }
+  .bar .exam { text-align: center; font-size: 16.5pt; font-weight: 700; color: #3e4095; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
+  .bar .session { text-align: right; font-size: 11.5pt; font-weight: 700; white-space: nowrap; }
+  .bar .session span { color: #d62839; margin-left: 1.4mm; }
+
+  .tbl { margin-top: 13mm; border: .9pt solid #3e4095; border-radius: 3mm; overflow: hidden; }
+  table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.grid thead tr { background: #3e4095; }
+  table.grid th { color: #fff; font-weight: 700; font-size: {{ head_font }}; padding: 2.4mm .6mm; text-align: center; white-space: nowrap;
+    border-left: .5pt solid #6b6eb8; }
+  table.grid th.date { width: 32.6mm; background: #2b3990; letter-spacing: .12em; border-left: 0; }
+  table.grid td { text-align: center; vertical-align: middle; padding: {{ pad }} .6mm; height: {{ row_h }};
+    font-size: {% if small %}{{ small }}{% else %}{{ font }}{% endif %}; font-weight: 600; color: #1b1d45; line-height: 1.25;
+    border-top: .5pt solid #d9dbec; border-left: .5pt solid #d9dbec; overflow-wrap: normal; word-break: keep-all; hyphens: none; }
+  table.grid tbody tr:nth-child(even) { background: #f5f6fb; }
+  table.grid td.date { background: #eef0f9; border-left: 0; border-right: .9pt solid #3e4095; font-size: 11.5pt; font-weight: 700; line-height: 1.15; }
+  table.grid td.date small { display: block; color: #d62839; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; margin-top: .5mm; font-size: 7.4pt; }
+  {% if compact %}table.grid td.date { font-size: 9.5pt; } table.grid td.date small { display: inline; margin: 0 0 0 1.6mm; }{% endif %}
+  table.grid td.none { color: #a6a9c8; font-weight: 400; }
+  table.grid td.nopaper { color: #8a8db0; font-size: 8.6pt; font-weight: 700; letter-spacing: .32em; }
+  table.grid tbody tr.np { background: #f5f6fb; }
+
+  .note { position: absolute; left: 0; right: 0; bottom: 5.4mm; text-align: center; font-size: 7.8pt; font-weight: 500; color: #3b3d63; }
+  .note b { color: #6b6e95; margin-right: 2mm; }
 </style></head>
-<body>
-  <div class="top"><img src="{{ banner }}" alt="The Arqam Schools"></div>
-  <div class="band"><b>DATE SHEET</b></div>
-  <table class="meta"><tr>
-    <td class="l">{% if sheet.first %}{{ sheet.first|date:"j F" }} – {{ sheet.last|date:"j F Y" }}{% endif %}</td>
-    <td class="c">{{ exam.get_kind_display }}</td>
-    <td class="r">Session {{ exam.session.name }}</td></tr></table>
-  <table class="grid">
-    <thead><tr><th class="date">Date</th>{% for c in sheet.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
-    <tbody>{% for d, cells in sheet.rows %}<tr><td class="date">{{ d|date:"d-m-y" }}{% if compact %} <span class="day">{{ d|date:"D" }}</span>{% else %}<small>{{ d|date:"l" }}</small>{% endif %}</td>{% for c in cells %}<td{% if c == "–" %} class="none"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
-  </table>
-</body></html>
+<body><div class="page">
+  <div class="ring"></div>
+  <table class="head"><tr>
+    {% if header %}<td><img class="headerpic" src="{{ header }}" alt="The Arqam Schools"></td>
+    {% else %}<td class="logo"><img src="{{ logo }}" alt=""></td>
+    <td><div class="school">THE ARQAM SCHOOLS</div>{% if campus %}<div class="campus">{{ campus }}</div>{% endif %}</td>{% endif %}
+    <td class="tab"><div class="tab-box">DATE SHEET</div></td>
+  </tr></table>
+  <div class="bar"><table><tr>
+    <td class="dates">{% if sheet.first %}<svg viewBox="0 0 24 24" fill="none" stroke="#ec3237" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>{% if sheet.first.month == sheet.last.month and sheet.first.year == sheet.last.year %}{{ sheet.first|date:"j" }} – {{ sheet.last|date:"j F Y" }}{% else %}{{ sheet.first|date:"j F" }} – {{ sheet.last|date:"j F Y" }}{% endif %}{% endif %}</td>
+    <td class="exam">{{ exam.get_kind_display }}</td>
+    <td class="session">Session<span>{{ exam.session.name }}</span></td>
+  </tr></table></div>
+  <div class="tbl"><table class="grid">
+    <thead><tr><th class="date">DATE</th>{% for c in sheet.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for d, cells, empty in rows %}<tr{% if empty %} class="np"{% endif %}>
+      <td class="date">{{ d|date:"d-m-y" }}<small>{{ d|date:"l" }}</small></td>
+      {% if empty %}<td class="nopaper" colspan="{{ sheet.columns|length }}">NO PAPER</td>
+      {% else %}{% for c in cells %}<td{% if c == "–" %} class="none"{% endif %}>{{ c }}</td>{% endfor %}{% endif %}
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  <div class="note"><b>–</b>No paper on this day for the class</div>
+</div></body></html>
