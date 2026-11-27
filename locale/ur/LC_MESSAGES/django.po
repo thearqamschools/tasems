@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 10:58+0500\n"
+"POT-Creation-Date: 2026-11-27 11:09+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,7 +102,7 @@ msgstr "طلبہ، عملہ یا دونوں منتخب کریں۔"
 #: apps/hr/views.py:118 apps/insights/views.py:46 apps/payroll/views.py:77
 #: apps/payroll/views.py:84 apps/people/views.py:87 apps/reports/views.py:113
 #: apps/setup/forms.py:21 apps/setup/forms.py:243
-#: templates/exams/award_list.html:15 templates/exams/report.html:27
+#: templates/exams/award_list.html:15 templates/exams/report.html:30
 #: templates/exams/section_marks.html:31 templates/hifz/report.html:14
 #: templates/hiring/bin.html:8 templates/hiring/import.html:15
 #: templates/hiring/index.html:26 templates/hiring/interviews.html:7
@@ -779,8 +779,8 @@ msgstr "میری تمام برانچیں"
 #: apps/accounts/context_processors.py:65
 #: apps/accounts/context_processors.py:67 apps/people/views.py:86
 #: apps/reports/catalogue.py:66 templates/academics/holidays.html:24
-#: templates/events/detail.html:26 templates/exams/report.html:18
-#: templates/exams/report.html:44 templates/exams/report.html:52
+#: templates/events/detail.html:26 templates/exams/report.html:21
+#: templates/exams/report.html:47 templates/exams/report.html:55
 #: templates/hifz/index.html:21 templates/people/promotion.html:17
 #: templates/people/student_list.html:2 templates/people/student_list.html:5
 #: templates/reports/class_strength.html:7 templates/setup/sections.html:15
@@ -1487,7 +1487,7 @@ msgstr "کمپیوٹر کوڈ"
 #: templates/events/sell.html:19 templates/events/sell.html:39
 #: templates/exams/award_list.html:8 templates/exams/index.html:25
 #: templates/exams/index.html:31 templates/exams/index.html:36
-#: templates/exams/report.html:8 templates/exams/report.html:52
+#: templates/exams/report.html:8 templates/exams/report.html:55
 #: templates/fees/defaulters.html:10 templates/fees/defaulters.html:31
 #: templates/fees/family_receive.html:14 templates/fees/vouchers.html:11
 #: templates/fees/vouchers.html:25 templates/insights/attention.html:12
@@ -1512,8 +1512,8 @@ msgstr "جماعت"
 #: templates/events/class_list.html:8 templates/events/sell.html:11
 #: templates/events/sell.html:19 templates/events/sell.html:39
 #: templates/exams/index.html:25 templates/exams/index.html:36
-#: templates/exams/report.html:10 templates/exams/report.html:27
-#: templates/exams/report.html:44 templates/hifz/index.html:21
+#: templates/exams/report.html:10 templates/exams/report.html:30
+#: templates/exams/report.html:47 templates/hifz/index.html:21
 #: templates/hifz/report.html:9 templates/people/promotion.html:17
 #: templates/people/student_detail.html:54
 #: templates/people/student_detail.html:63
@@ -2260,7 +2260,7 @@ msgstr "حاصل کردہ نمبر"
 
 #: apps/exams/views.py:543 templates/exams/award_list.html:10
 #: templates/exams/papers.html:23 templates/exams/papers.html:25
-#: templates/exams/report.html:38 templates/exams/section_exam.html:8
+#: templates/exams/report.html:41 templates/exams/section_exam.html:8
 msgid "Total marks"
 msgstr "کل نمبر"
 
@@ -2334,7 +2334,11 @@ msgstr "کچھ نمبر درست کرنے ہیں (سرخ میں)۔ کچھ محف
 msgid "Marks and ratings saved for %(s)s."
 msgstr "%(s)s کے نمبر اور درجہ بندی محفوظ ہو گئی۔"
 
-#: apps/exams/views_year.py:625
+#: apps/exams/views_year.py:378
+msgid "No section has papers and students for this exam yet."
+msgstr "اس امتحان میں ابھی کسی سیکشن کے پرچے اور طلبہ نہیں ہیں۔"
+
+#: apps/exams/views_year.py:661
 msgid "No exam marks for this student yet."
 msgstr "اس طالب علم کے امتحانی نمبر ابھی نہیں ہیں۔"
 
@@ -2455,7 +2459,7 @@ msgstr "حفظ (لڑکیاں)"
 
 #: apps/fees/forms.py:63 templates/attendance/absentees.html:13
 #: templates/core/design_system.html:69 templates/exams/index.html:32
-#: templates/exams/report.html:9 templates/exams/report.html:49
+#: templates/exams/report.html:9 templates/exams/report.html:52
 #: templates/fees/defaulters.html:11 templates/fees/vouchers.html:11
 #: templates/insights/attention.html:12 templates/people/student_list.html:16
 #: templates/setup/fees.html:14
@@ -3126,7 +3130,7 @@ msgstr "فیملی واؤچر %(n)s ادا ہو گیا: %(c)s بچوں کے %(a)
 msgid "Para"
 msgstr "پارہ"
 
-#: apps/hifz/forms.py:25 templates/exams/report.html:27
+#: apps/hifz/forms.py:25 templates/exams/report.html:30
 #: templates/exams/section_results.html:14 templates/hifz/student.html:28
 #: templates/hiring/application.html:42
 msgid "Result"
@@ -3208,9 +3212,9 @@ msgstr "گریڈ"
 msgid "remarks"
 msgstr "تبصرہ"
 
-#: apps/hifz/models.py:67 templates/exams/report.html:19
-#: templates/exams/report.html:38 templates/exams/report.html:44
-#: templates/exams/report.html:52 templates/hifz/student.html:18
+#: apps/hifz/models.py:67 templates/exams/report.html:22
+#: templates/exams/report.html:41 templates/exams/report.html:47
+#: templates/exams/report.html:55 templates/hifz/student.html:18
 #: templates/hifz/student.html:19
 msgid "Passed"
 msgstr "پاس"
@@ -7232,7 +7236,7 @@ msgid "Subject teachers"
 msgstr "مضمون اساتذہ"
 
 #: templates/academics/index.html:24 templates/exams/index.html:40
-#: templates/exams/report.html:56 templates/reports/attendance_month.html:17
+#: templates/exams/report.html:59 templates/reports/attendance_month.html:17
 #: templates/reports/class_strength.html:22 templates/setup/sections.html:27
 msgid "No sections for this session yet."
 msgstr "اس سیشن میں ابھی کوئی سیکشن نہیں۔"
@@ -7311,7 +7315,7 @@ msgstr "ابھی لاگ اِن نہیں"
 
 #: templates/academics/section_subjects.html:17
 #: templates/exams/award_list.html:9 templates/exams/papers.html:23
-#: templates/exams/ratings.html:11 templates/exams/report.html:38
+#: templates/exams/ratings.html:11 templates/exams/report.html:41
 #: templates/exams/section_exam.html:8
 msgid "Subject"
 msgstr "مضمون"
@@ -9140,7 +9144,7 @@ msgstr ""
 "دیں۔ آدھے نمبر دیے جا سکتے ہیں۔"
 
 #: templates/exams/enter_marks.html:9 templates/exams/enter_marks.html:13
-#: templates/exams/ratings.html:19 templates/exams/report.html:27
+#: templates/exams/ratings.html:19 templates/exams/report.html:30
 #: templates/hiring/application.html:11 templates/hiring/vacancy.html:16
 #: templates/people/student_detail.html:72
 msgid "Marks"
@@ -9287,71 +9291,79 @@ msgstr ""
 "پاس = امتحان کے کل نمبروں کا %(p)s%% یا زیادہ؛ فیصد کے لحاظ سے پہلی، دوسری "
 "اور تیسری پوزیشن (برابر فیصد پر ایک ہی پوزیشن)۔"
 
-#: templates/exams/report.html:20 templates/exams/report.html:52
+#: templates/exams/report.html:15
+msgid "Sheets to fill by hand (this class)"
+msgstr "ہاتھ سے بھرنے کی شیٹیں (یہ کلاس)"
+
+#: templates/exams/report.html:15
+msgid "Sheets to fill by hand (all sections)"
+msgstr "ہاتھ سے بھرنے کی شیٹیں (تمام سیکشن)"
+
+#: templates/exams/report.html:23 templates/exams/report.html:55
 msgid "Failed"
 msgstr "فیل"
 
-#: templates/exams/report.html:21 templates/exams/report.html:44
-#: templates/exams/report.html:52
+#: templates/exams/report.html:24 templates/exams/report.html:47
+#: templates/exams/report.html:55
 msgid "Pass rate"
 msgstr "پاس کی شرح"
 
-#: templates/exams/report.html:22 templates/exams/report.html:38
-#: templates/exams/report.html:44 templates/exams/report.html:52
+#: templates/exams/report.html:25 templates/exams/report.html:41
+#: templates/exams/report.html:47 templates/exams/report.html:55
 msgid "Average"
 msgstr "درمیانہ"
 
-#: templates/exams/report.html:23 templates/exams/report.html:44
-#: templates/exams/report.html:52
+#: templates/exams/report.html:26 templates/exams/report.html:47
+#: templates/exams/report.html:55
 msgid "Highest"
 msgstr "سب سے زیادہ"
 
-#: templates/exams/report.html:25
+#: templates/exams/report.html:28
 msgid "Students by percentage"
 msgstr "فیصد کے لحاظ سے طلبہ"
 
-#: templates/exams/report.html:27 templates/exams/section_results.html:14
+#: templates/exams/report.html:30 templates/exams/section_results.html:14
 msgid "Position"
 msgstr "پوزیشن"
 
-#: templates/exams/report.html:27 templates/exams/section_marks.html:30
+#: templates/exams/report.html:30 templates/exams/section_marks.html:30
 msgid "Comp. Code"
 msgstr "Comp. Code"
 
-#: templates/exams/report.html:32
+#: templates/exams/report.html:35
 msgid "Not complete"
 msgstr "نامکمل"
 
-#: templates/exams/report.html:32 templates/exams/section_results.html:20
+#: templates/exams/report.html:35 templates/exams/section_results.html:20
 msgid "Pass"
 msgstr "پاس"
 
-#: templates/exams/report.html:32
+#: templates/exams/report.html:35
 msgid "Fail"
 msgstr "فیل"
 
-#: templates/exams/report.html:33
+#: templates/exams/report.html:36
 msgid "Progress"
 msgstr "پیش رفت"
 
-#: templates/exams/report.html:36
+#: templates/exams/report.html:39
 msgid "Subjects"
 msgstr "مضامین"
 
-#: templates/exams/report.html:38
+#: templates/exams/report.html:41
 msgid "Sat"
 msgstr "شریک"
 
-#: templates/exams/report.html:38
+#: templates/exams/report.html:41
 msgid "Highest marks"
 msgstr "سب سے زیادہ نمبر"
 
-#: templates/exams/report.html:42 templates/exams/report.html:52
+#: templates/exams/report.html:45 templates/exams/report.html:55
 #: templates/parents/child.html:7
 msgid "Sections"
 msgstr "حصے"
 
-#: templates/exams/report.html:54
+#: templates/exams/report.html:57
 msgid "Whole school"
 msgstr "پورا اسکول"
 

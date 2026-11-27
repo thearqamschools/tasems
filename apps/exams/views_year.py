@@ -351,8 +351,44 @@ def section_marks(request, exam_id, section_id):
     )
 
 
+@login_required
+def all_sheets(request, exam_id):
+    """Every section's sheet to fill by hand for one exam, in one PDF — one section per page (lead, 27 Nov 2026).
+    ?class=<id> limits it to one class."""
+    from weasyprint import HTML
+
+    branch = _branch(request)
+    exam = _exam(request, branch, exam_id)
+    sections = (
+        Section.objects.filter(branch=branch, session=exam.session, is_active=True)
+        .select_related("class_level", "class_teacher_staff", "class_teacher", "branch")
+        .order_by("class_level__sort_order", "name")
+    )
+    class_id = request.GET.get("class", "")
+    if class_id.isdigit():
+        sections = sections.filter(class_level_id=class_id)
+    documents = []
+    for section in sections:
+        data = grid.table(exam, section)
+        if not data["papers"] or not data["rows"]:
+            continue
+        html = _sheet_html(exam, section, data, for_file=True)
+        documents.append(HTML(string=html, base_url=str(settings.BASE_DIR)).render())
+    if not documents:
+        messages.info(request, _("No section has papers and students for this exam yet."))
+        return redirect("exams:report", exam_id=exam.id)
+    pages = [page for doc in documents for page in doc.pages]
+    response = HttpResponse(documents[0].copy(pages).write_pdf(), content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="Sheets to fill by hand {exam.name}.pdf"'
+    return response
+
+
 def _blank_sheet(request, exam, section, data):
-    """The sheet to fill by hand (R14-7 (2)): the same columns as the Excel, opened to print; with the class teacher,
+    return HttpResponse(_sheet_html(exam, section, data, for_file=False))
+
+
+def _sheet_html(exam, section, data, for_file):
+    """The sheet to fill by hand (R14-7 (2)): the same columns as the Excel, to print; with the class teacher,
     the exam's total marks at the top, and Obtained and % to fill (R19-2, R19-4); short subject names (R19-5)."""
     total = data["total"]
     headers = ["Comp. Code", "Name"] + [f"{p.subject.short} ({p.total_marks})" for p in data["papers"]]
@@ -377,12 +413,12 @@ def _blank_sheet(request, exam, section, data):
         "sections": [{"headers": headers, "rows": rows}],
         "cell_pad": "2.6mm 1.2mm",
         "layout": DiaryLayout.current(),
-        "font_base": f"{settings.STATIC_URL}fonts/",
-        "media_base": settings.MEDIA_URL,
+        "font_base": paths.font_base() if for_file else f"{settings.STATIC_URL}fonts/",
+        "media_base": paths.media_base() if for_file else settings.MEDIA_URL,
         "printed": timezone.localtime(),
-        "auto_print": True,
+        "auto_print": not for_file,
     }
-    return HttpResponse(render_to_string("hr/report_document.html", context))
+    return render_to_string("hr/report_document.html", context)
 
 
 # --- Result cards (R14-9): black and white, like the school's own card ------------------------------------------

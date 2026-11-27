@@ -11,6 +11,9 @@
   <select id="section" name="section" onchange="this.form.submit()"><option value="">{% trans "All sections" %}</option>{% for s in class_sections %}<option value="{{ s.id }}" {% if section_id == s.id|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>{% endfor %}</select>{% endif %}
   <noscript><button class="button quiet" type="submit">{% trans "Show" %}</button></noscript>
 </form>
+<div class="list-tools no-print">
+  <a class="button quiet sm" href="{% url 'exams:all_sheets' exam.id %}{% if class_id %}?class={{ class_id }}{% endif %}" target="_blank" rel="noopener">{% icon "printer" %}{% if class_id %}{% trans "Sheets to fill by hand (this class)" %}{% else %}{% trans "Sheets to fill by hand (all sections)" %}{% endif %}</a>
+</div>
 {% include "hr/_report_tools.html" %}
 
 {% if result %}

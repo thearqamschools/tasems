@@ -1121,3 +1121,7 @@ not to be bought or switched on without approval.
     the lead wants **English, Urdu, Math, …** — set once here, it follows on every page and paper.
   - (Claude: the order stays per class; Summer Vacation Work stays at the top in the Mid-Term unless placed
     elsewhere; also "Move up / Move down" buttons for keyboards and phones, where dragging is awkward.)
+- R19-7. **All the sheets to fill by hand of an exam at once** (lead, 27 Nov 2026, during the build): e.g. for
+  Periodic Assessment – II, every section's sheet of the school in one PDF. Built: on the exam's **Results** page, a
+  button **"Sheets to fill by hand (all sections)"** — one section per page, in class order; with a class chosen in
+  the filter it gives that class's sections only.

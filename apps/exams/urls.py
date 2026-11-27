@@ -13,6 +13,7 @@ urlpatterns = [
     path("<int:exam_id>/section/<int:section_id>/result-cards.pdf", views_year.cards, name="exam_cards"),
     path("question-paper/<int:paper_id>/", views_year.question_paper, name="question_paper"),
     path("<int:exam_id>/results/", views_year.report, name="report"),
+    path("<int:exam_id>/sheets-to-fill.pdf", views_year.all_sheets, name="all_sheets"),
     path("progress/<int:student_id>/", views_year.progress_report, name="progress"),
     path("marks-reader-skill.zip", views_year.marks_skill, name="marks_skill"),
     path("<int:exam_id>/section/<int:section_id>/", views.section_exam, name="section_exam"),

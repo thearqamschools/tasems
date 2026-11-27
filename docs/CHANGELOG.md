@@ -11,6 +11,8 @@
   result cards list students by Comp. Code, smallest first (numbers in number order); Name order is a click away.
 - **Sheet to fill by hand** (R19-2, R19-4): the class teacher's name and the exam's total marks at the top;
   **Obtained (total)** and **%** columns (filled when all marks are in, else blank to write).
+- **All sheets to fill by hand at once** (R19-7): on an exam's Results page, "Sheets to fill by hand (all sections)"
+  gives every section's sheet in one PDF, one section per page (or one class's sections, with the class filter).
 - **Exams & Results** (R19-1): Edit, Date sheet and Results always on one row in each exam box — checked at 100%,
   125% and 150% zoom; in a very narrow box the words give way to the icons.
 

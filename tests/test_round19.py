@@ -51,3 +51,14 @@ def test_comp_code_order_by_default(exam_setup, login_as):  # noqa: F811
     assert page.index(">20<") < page.index(">100<")  # numbers in number order, smallest first
     sheet = client.get(f"{url}?print=1").content.decode()
     assert sheet.index(">20<") < sheet.index(">100<")
+
+
+def test_all_sheets_to_fill_by_hand_in_one_pdf(exam_setup, login_as):  # noqa: F811
+    client = login_as(exam_setup["principal"])
+    exam = exam_setup["exam"]
+    pdf = client.get(f"/exams/{exam.id}/sheets-to-fill.pdf")
+    assert pdf["Content-Type"] == "application/pdf" and pdf.content[:4] == b"%PDF"
+    one = client.get(f"/exams/{exam.id}/sheets-to-fill.pdf?class={exam_setup['section'].class_level_id}")
+    assert one.content[:4] == b"%PDF"
+    page = client.get(f"/exams/{exam.id}/results/").content.decode()
+    assert "Sheets to fill by hand (all sections)" in page
