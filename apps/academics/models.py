@@ -47,6 +47,12 @@ class ClassLevel(TimeStampedModel):
 class Subject(TimeStampedModel):
     code = models.SlugField(max_length=40, unique=True)
     name = models.CharField(max_length=80)
+    short_name = models.CharField(
+        _("short name"),
+        max_length=12,
+        blank=True,
+        help_text=_("e.g. Math, Bio, COMP, I.S, TQ — used where space is short."),
+    )  # R19-5
     name_ur = models.CharField(_("name (Urdu)"), max_length=80, blank=True)
     is_rtl = models.BooleanField(
         default=False, help_text=_("Content is written right-to-left (Urdu, Islamiat, Arabic, Nazra).")
@@ -58,6 +64,11 @@ class Subject(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def short(self):
+        """The short name where space is short (R19-5), else the name."""
+        return self.short_name or self.name
 
 
 @audited

@@ -291,9 +291,9 @@ def section_marks(request, exam_id, section_id):
         raise Http404
     data = grid.table(exam, section)
     # R18-5: in Comp. Code or Name order, so marks are typed in the order of the paper sheets
-    order = request.GET.get("sort", "")
-    if order in ("code", "-code"):
-        data["rows"].sort(key=lambda r: _code_key(r["enrolment"].student.admission_no), reverse=order == "-code")
+    order = request.GET.get("sort") or "code"
+    if order == "-code":  # Comp. Code order (smallest first) is the default (R19-3)
+        data["rows"].reverse()
     elif order in ("name", "-name"):
         data["rows"].sort(key=lambda r: r["enrolment"].student.full_name.lower(), reverse=order == "-name")
     can_enter = services.can_enter(request.user, section, exam)
@@ -351,27 +351,27 @@ def section_marks(request, exam_id, section_id):
     )
 
 
-def _code_key(code):
-    """Numbers in number order (2, 10, 100), other codes after them in text order."""
-    text = str(code or "").strip()
-    return (0, int(text), "") if text.isdigit() else (1, 0, text.lower())
-
-
 def _blank_sheet(request, exam, section, data):
-    """The sheet to fill by hand (R14-7 (2)): the same columns as the Excel, opened to print."""
-    headers = ["Comp. Code", "Name"] + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
-    headers += ["Attentive", "Punctual", "Neatness", "Participation"]
+    """The sheet to fill by hand (R14-7 (2)): the same columns as the Excel, opened to print; with the class teacher,
+    the exam's total marks at the top, and Obtained and % to fill (R19-2, R19-4); short subject names (R19-5)."""
+    total = data["total"]
+    headers = ["Comp. Code", "Name"] + [f"{p.subject.short} ({p.total_marks})" for p in data["papers"]]
+    headers += [f"Obtained ({total})", "%", "Attentive", "Punctual", "Neatness", "Participation"]
     rows = []
     for row in data["rows"]:
         e = row["enrolment"]
         line = [{"text": e.student.admission_no}, {"text": e.student.full_name, "cls": "l"}]
         line += [{"text": grid.cell_text(row["marks"].get(p.id))} for p in data["papers"]]
+        obtained, _t, percent = grid.student_totals(data["papers"], row["marks"])
+        done = percent is not None
+        line += [{"text": f"{obtained.normalize():f}" if done else ""}, {"text": f"{percent:.2f}" if done else ""}]
         line += [{"text": ""} for _a in ExamRating.ASPECTS]
         rows.append(line)
+    teacher = section.class_teacher_name or "—"
     context = {
         "branch": section.branch,
         "title": exam.name.upper(),
-        "subtitle": f"{section} · Marks sheet",
+        "subtitle": f"{section} · Class teacher: {teacher} · Total marks: {total}",
         "landscape": len(data["papers"]) > 6,
         "key": ["A = Absent", "Ratings: E = Excellent, G = Good, F = Fair"],
         "sections": [{"headers": headers, "rows": rows}],
@@ -628,7 +628,7 @@ def progress_report(request, student_id):
                              for e in data["exams"]]  # fmt: skip
     rows = []
     for subject, cells in data["subjects"]:
-        line = [{"text": subject.name, "cls": "l"}]
+        line = [{"text": subject.short, "cls": "l"}]
         for cell in cells:
             if cell is None:
                 line.append({"text": "–"})

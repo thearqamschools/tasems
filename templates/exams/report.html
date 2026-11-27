@@ -36,7 +36,7 @@
 <h2>{% trans "Subjects" %}</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>{% trans "Subject" %}</th><th class="center">{% trans "Total marks" %}</th><th class="center">{% trans "Sat" %}</th><th class="center">{% trans "Average" %}</th><th class="center">{% trans "Highest marks" %}</th><th class="center">{% trans "Passed" %}</th></tr></thead>
-  <tbody>{% for x in result.subjects %}<tr><td>{{ x.subject.name }}</td><td class="num center">{{ x.total }}</td><td class="num center">{{ x.sat }}</td><td class="num center">{% if x.average is not None %}{{ x.average|floatformat:"-2" }}%{% else %}—{% endif %}</td><td class="num center">{{ x.highest|floatformat:"-1"|default:"—" }}</td><td class="num center">{{ x.passed }}</td></tr>{% endfor %}</tbody>
+  <tbody>{% for x in result.subjects %}<tr><td title="{{ x.subject.name }}">{{ x.subject.short }}</td><td class="num center">{{ x.total }}</td><td class="num center">{{ x.sat }}</td><td class="num center">{% if x.average is not None %}{{ x.average|floatformat:"-2" }}%{% else %}—{% endif %}</td><td class="num center">{{ x.highest|floatformat:"-1"|default:"—" }}</td><td class="num center">{{ x.passed }}</td></tr>{% endfor %}</tbody>
 </table></div>
 {% if result.sections|length > 1 %}
 <h2>{% trans "Sections" %}</h2>

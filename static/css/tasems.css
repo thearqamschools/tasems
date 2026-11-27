@@ -863,3 +863,25 @@ details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; 
 .card > h2:first-child { margin-block-start: 0; }
 .periods-table td { vertical-align: middle; }
 .periods-table td.center input[type="checkbox"] { margin: 0; }
+/* R19-6: a class's subjects in order — drag or arrows */
+.subject-order { list-style: none; margin: var(--space-3) 0; padding: 0; counter-reset: subj; display: grid; gap: var(--space-2); }
+.subject-order li { counter-increment: subj; display: grid; grid-template-columns: auto 2rem minmax(10rem, 1fr) auto auto; align-items: center; gap: var(--space-3);
+  padding: 0.5rem 0.75rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); }
+.subject-order li.dragging { opacity: 0.5; }
+.subject-order li.over { border-color: var(--primary, #3e4095); box-shadow: 0 0 0 2px var(--primary-soft, #e8e9f6); }
+.subject-order .drag { cursor: grab; color: var(--ink-soft); font-weight: 700; letter-spacing: -0.1em; user-select: none; }
+.subject-order .pos::before { content: counter(subj) "."; font-weight: 700; color: var(--ink-soft); }
+.subject-order .name { margin: 0; }
+.subject-order .short { display: flex; align-items: center; gap: 0.4rem; margin: 0; }
+.subject-order .short input { inline-size: 6.5rem; min-inline-size: 0; }
+.subject-order .moves { display: flex; gap: 0.25rem; }
+.summer-short input { inline-size: 6.5rem; margin-inline-start: 0.5rem; }
+@media (max-width: 640px) { .subject-order li { grid-template-columns: auto 1.6rem 1fr; } .subject-order .short, .subject-order .moves { grid-column: 3; } }
+/* R19-1: Edit, Date sheet and Results always on one row in each exam box — at any width or zoom the buttons share the
+   row; in a very narrow box the icons stay and the words go (the word is in the tooltip). */
+.exam-card { container-type: inline-size; }
+.exam-card-actions { flex-wrap: nowrap !important; gap: var(--space-2); }
+.exam-card-actions .button { flex: 0 1 auto; min-inline-size: 0; white-space: nowrap; overflow: hidden; }
+.exam-card-actions .button .lbl { overflow: hidden; text-overflow: ellipsis; }
+@container (max-width: 19rem) { .exam-card-actions .button .lbl { display: none; } }
+.card > input[type="hidden"]:first-child + h2, .card > input[type="hidden"]:first-child + input[type="hidden"] + h2 { margin-block-start: 0; }

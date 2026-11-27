@@ -133,7 +133,7 @@ def test_marks_of_a_section_on_one_table_excel_cards_progress(exam_setup, login_
     assert "Check them and press Save marks" in shown and 'value="33"' in shown
     assert Mark.objects.get(student=b, paper=english).status == "absent"  # not saved yet
     printed = client.get(f"{url}?print=1").content.decode()
-    assert "Marks sheet" in printed and "window.print()" in printed
+    assert "Total marks:" in printed and "window.print()" in printed
     # Result cards: black and white, one per student; progress on the student's page.
     pdf = client.get(f"/exams/{exam.id}/section/{section.id}/result-cards.pdf")
     assert pdf["Content-Type"] == "application/pdf" and pdf.content[:4] == b"%PDF"

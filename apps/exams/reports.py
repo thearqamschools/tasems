@@ -5,6 +5,7 @@ Each exam stands alone (R14-4)."""
 from decimal import Decimal
 
 from apps.academics.models import Section
+from apps.academics.order import subject_order
 
 from . import grid
 from .models import Exam, Mark, Paper
@@ -74,8 +75,10 @@ def summary(students):
     }
 
 
-def subject_rows(papers_by_section, students):
-    """One row per subject: total, average % of those who sat it, highest marks, how many passed it."""
+def subject_rows(papers_by_section, students, order=None):
+    """One row per subject (in the class's order, R19-6): total, average % of those who sat it, highest marks, how
+    many passed it."""
+    order = order or {}
     by_subject = {}
     for s in students:
         for p in papers_by_section[s["section"].id]:
@@ -98,7 +101,7 @@ def subject_rows(papers_by_section, students):
             "sat": len(e["pcts"]),
             "passed": e["passed"],
         }  # fmt: skip
-        for subject, e in sorted(by_subject.items(), key=lambda x: x[0].name)
+        for subject, e in sorted(by_subject.items(), key=lambda x: (order.get(x[0].id, 999), x[0].name))
     ]
 
 
@@ -115,7 +118,9 @@ def class_result(exam, sections):
         "summary": summary(students),
         "students": ranked,
         "sections": per_section,
-        "subjects": subject_rows(papers_by_section, students),
+        "subjects": subject_rows(
+            papers_by_section, students, subject_order(sections[0].class_level) if sections else {}
+        ),
     }
 
 

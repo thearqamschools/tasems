@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.54.0 — 2026-11-27 — Round 19: subject order and short names, Comp. Code order, hand sheet totals (installer v28)
+- **Class subjects in order** (R19-6): Setup → Classes and sections → Class subjects shows a class's subjects as a
+  numbered list — drag a subject, or use ↑ ↓, to set the order; untick to take one off; tick below to add. That order
+  is used on result cards, the marks table, the sheet to fill by hand, the marks Excel, the Edit page and reports.
+- **Short names** (R19-5): a "Short" box beside each subject (e.g. Math, Bio, COMP, I.S, TQ; Summer Vacation Work →
+  SVW), the same for every class; used on result cards, the marks table and Excel headings, the sheet to fill by
+  hand, report tables, and the date sheet PDF when it has more than eight classes. No short name = the full name.
+- **Comp. Code order by default** (R19-3): Marks & Results, the sheet to fill by hand, the marks Excel and the
+  result cards list students by Comp. Code, smallest first (numbers in number order); Name order is a click away.
+- **Sheet to fill by hand** (R19-2, R19-4): the class teacher's name and the exam's total marks at the top;
+  **Obtained (total)** and **%** columns (filled when all marks are in, else blank to write).
+- **Exams & Results** (R19-1): Edit, Date sheet and Results always on one row in each exam box — checked at 100%,
+  125% and 150% zoom; in a very narrow box the words give way to the icons.
+
 ## 0.53.0 — 2026-11-27 — Round 18: bell-time sets, WhatsApp tick, Comp. Code (installer v27)
 - **Setup → Classes and sections → Class subjects** (R18-1): the subjects of each class open from a button beside
   "Add a section" (head office); the separate Setup card is gone.

@@ -1088,7 +1088,7 @@ not to be bought or switched on without approval.
   put in order by **Comp. Code** or by **Name** (click the heading, or a choice above the table), so marks are typed
   in the same order as the paper sheets.
 
-## Round 19 (27 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 19 (27 Nov 2026) — built 27 Nov 2026 (installer v28, CHANGELOG 0.54.0)
 - R19-1. **Exams & Results — Edit, Date sheet and Results still not on one line** (lead, 27 Nov 2026): on the lead's
   screen Results again drops under Edit and Date sheet although there is room beside them. All three on **one row**
   in each exam box, at the office's screen size and zoom. (Claude: since R17-7 the buttons may wrap; to fix so they

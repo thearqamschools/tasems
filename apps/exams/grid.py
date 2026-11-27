@@ -16,11 +16,17 @@ LETTER_LEVELS = {"E": "excellent", "G": "good", "F": "fair"}
 
 
 def papers_for(exam, section):
-    return list(
-        Paper.objects.filter(exam=exam, class_level=section.class_level)
-        .select_related("subject")
-        .order_by("date", "subject__name")
-    )
+    """The exam's papers of the class in the class's subject order (R19-6)."""
+    from apps.academics.order import sort_key, subject_order
+
+    papers = list(Paper.objects.filter(exam=exam, class_level=section.class_level).select_related("subject"))
+    return sorted(papers, key=sort_key(subject_order(section.class_level)))
+
+
+def code_key(code):
+    """Computer codes in number order (2, 10, 100); other codes after them in text order (R19-3)."""
+    text = str(code or "").strip()
+    return (0, int(text), "") if text.isdigit() else (1, 0, text.lower())
 
 
 def table(exam, section):
@@ -32,6 +38,7 @@ def table(exam, section):
     for m in Mark.objects.filter(paper__in=papers, student_id__in=ids):
         marks.setdefault(m.student_id, {})[m.paper_id] = m
     ratings = {r.student_id: r for r in ExamRating.objects.filter(exam=exam, student_id__in=ids)}
+    entries = sorted(entries, key=lambda e: code_key(e.student.admission_no))  # Comp. Code order, smallest first
     rows = [
         {"enrolment": e, "marks": marks.get(e.student_id, {}), "rating": ratings.get(e.student_id)} for e in entries
     ]
@@ -127,7 +134,7 @@ def workbook(exam, section, data):
     ws.append([f"{exam.name} — {section} — The Arqam Schools"])
     ws.append(
         ["Comp. Code", "Name"]
-        + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
+        + [f"{p.subject.short} ({p.total_marks})" for p in data["papers"]]
         + [str(label) for _a, label in ExamRating.ASPECTS]
     )
     ws.append(["student", ""] + [f"paper:{p.id}" for p in data["papers"]] + [a for a, _l in ExamRating.ASPECTS])

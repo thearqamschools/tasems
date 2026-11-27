@@ -46,7 +46,7 @@ def can_see_question_paper(user, paper, branch):
     return bool(day and day < timezone.localdate()) and user.has_branch_perm("exams.view_paper", branch.id)
 
 
-def grid(exam, levels):
+def grid(exam, levels, short=False):
     """The printed date sheet (R14-5): a row per date from the first to the last day, a column per class, the
     subject(s) of each class on each date ("+" when two), "–" when none. No times."""
     import datetime as dt
@@ -63,7 +63,7 @@ def grid(exam, levels):
     cell = {}
     for p in sorted(papers, key=lambda p: p.subject.name):
         if p.date:
-            cell.setdefault((p.date, p.class_level_id), []).append(p.subject.name)
+            cell.setdefault((p.date, p.class_level_id), []).append(p.subject.short if short else p.subject.name)
     rows = [(d, [" + ".join(cell.get((d, c.id), [])) or "–" for c in columns]) for d in days]
     return {"columns": columns, "rows": rows, "first": first, "last": last}
 
@@ -92,6 +92,8 @@ def date_sheet_pdf(exam, levels, branch):
     from weasyprint import HTML
 
     sheet = grid(exam, levels)
+    if len(sheet["columns"]) > 8:  # narrow columns: short subject names (R19-5)
+        sheet = grid(exam, levels, short=True)
     html = render_to_string(
         "exams/date_sheet_document.html",
         {

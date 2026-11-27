@@ -2,12 +2,27 @@
 {% block title %}{% trans "Classes & subjects" %}{% endblock %}
 {% block content %}
 <p><a href="{% url 'setup:sections' %}">‹ {% trans "Classes and sections" %}</a></p>
-<h1>{% trans "Classes & subjects" %}</h1>
-<p class="lede">{% trans "Tick the subjects of each class. All sections of a class share them. Only these subjects show for the class in Exams (papers and marks), the Diary and the Timetable." %}</p>
+<h1>{% trans "Class subjects" %}</h1>
+<p class="lede">{% trans "Each class's subjects, in the order they show on result cards, marks tables, sheets and reports. Drag a subject (or use the arrows) to change the order. All sections of a class share them." %}</p>
 <nav class="class-tabs" aria-label="{% trans 'Classes' %}">{% for lv, n in levels %}<a class="button sm {% if lv.id != level.id %}quiet{% endif %}" href="?class={{ lv.id }}"{% if lv.id == level.id %} aria-current="page"{% endif %}>{{ lv }} <span class="badge muted">{{ n }}</span></a>{% endfor %}</nav>
 <form method="post" class="card">{% csrf_token %}
   <h2>{{ level }}</h2>
-  <div class="subject-ticks">{% for s, on in subjects %}<label class="check"><input type="checkbox" name="subject" value="{{ s.id }}"{% if on %} checked{% endif %}> {{ s.name }}</label>{% endfor %}</div>
+  {% if listed %}
+  <ol class="subject-order" data-sortable aria-label="{% trans 'Subjects in order' %}">
+    {% for s in listed %}<li draggable="true">
+      <input type="hidden" name="order" value="{{ s.id }}">
+      <span class="drag" aria-hidden="true" title="{% trans 'Drag to move' %}">⋮⋮</span>
+      <span class="pos"></span>
+      <label class="check name"><input type="checkbox" name="keep" value="{{ s.id }}" checked> {{ s.name }}</label>
+      <label class="short"><span class="small muted">{% trans "Short" %}</span><input type="text" name="short_{{ s.id }}" value="{{ s.short_name }}" maxlength="12" placeholder="{{ s.name|truncatechars:6 }}" aria-label="{% trans 'Short name' %} {{ s.name }}"></label>
+      <span class="moves"><button type="button" class="button quiet sm" data-move="up" aria-label="{% trans 'Move up' %} {{ s.name }}">↑</button><button type="button" class="button quiet sm" data-move="down" aria-label="{% trans 'Move down' %} {{ s.name }}">↓</button></span>
+    </li>{% endfor %}
+  </ol>
+  <p class="small muted">{% trans "Untick a subject to take it off this class. The short name (e.g. Math, Bio, COMP, I.S, TQ) is used where space is short, and on result cards; it is the same for every class." %}</p>
+  {% endif %}
+  {% if others %}<h3>{% trans "Add to this class" %}</h3>
+  <div class="subject-ticks">{% for s in others %}<label class="check"><input type="checkbox" name="subject" value="{{ s.id }}"> {{ s.name }}</label>{% endfor %}</div>{% endif %}
+  {% if summer %}<p class="summer-short"><label>{% trans "Summer Vacation Work (in every Mid-Term) — short name" %} <input type="text" name="short_{{ summer.id }}" value="{{ summer.short_name }}" maxlength="12" placeholder="SVW"></label></p>{% endif %}
   <div class="actions"><button class="button" type="submit">{% trans "Save" %} {{ level }}</button></div>
 </form>
 <form method="post" class="card filter-inline">{% csrf_token %}<input type="hidden" name="action" value="add_subject">

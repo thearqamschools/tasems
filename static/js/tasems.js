@@ -409,6 +409,37 @@
     if (target) { target.focus(); target.select(); }
   });
 
+  // ---------- An ordered list set by dragging or arrows (R19-6): <ol data-sortable> of <li draggable> ----------
+  var dragged = null;
+  document.addEventListener("dragstart", function (event) {
+    var li = event.target.closest && event.target.closest("[data-sortable] > li");
+    if (!li) return;
+    dragged = li;
+    li.classList.add("dragging");
+    event.dataTransfer.effectAllowed = "move";
+    try { event.dataTransfer.setData("text/plain", ""); } catch (e) { /* some browsers need data */ }
+  });
+  document.addEventListener("dragover", function (event) {
+    var li = event.target.closest && event.target.closest("[data-sortable] > li");
+    if (!li || !dragged || li === dragged || li.parentNode !== dragged.parentNode) return;
+    event.preventDefault();
+    var box = li.getBoundingClientRect();
+    var after = event.clientY > box.top + box.height / 2;
+    li.parentNode.insertBefore(dragged, after ? li.nextSibling : li);
+  });
+  document.addEventListener("dragend", function () {
+    if (dragged) dragged.classList.remove("dragging");
+    dragged = null;
+  });
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest("[data-sortable] [data-move]");
+    if (!button) return;
+    var li = button.closest("li");
+    if (button.dataset.move === "up" && li.previousElementSibling) li.parentNode.insertBefore(li, li.previousElementSibling);
+    if (button.dataset.move === "down" && li.nextElementSibling) li.parentNode.insertBefore(li.nextElementSibling, li);
+    button.focus();
+  });
+
   if (document.body.hasAttribute("data-autoprint")) {
     window.addEventListener("load", function () { window.print(); });
   }

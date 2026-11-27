@@ -248,16 +248,36 @@ def class_subjects(request):
             )  # fmt: skip
             messages.success(request, _("%(s)s added to %(c)s.") % {"s": subject.name, "c": level})
             return redirect(here)
-        chosen = [int(x) for x in request.POST.getlist("subject") if x.isdigit()]
-        keep = CurriculumSubject.objects.filter(class_level=level)
-        keep.exclude(subject_id__in=chosen).delete()
-        have = set(keep.values_list("subject_id", flat=True))
-        for order, sid in enumerate(chosen, start=1):
-            if sid not in have:
-                CurriculumSubject.objects.create(class_level=level, subject_id=sid, sort_order=order)
+        ids = lambda name: [int(x) for x in request.POST.getlist(name) if x.isdigit()]  # noqa: E731
+        # R19-6: the list in its (dragged) order, minus the ones unticked, plus the newly ticked ones at the end
+        kept = [sid for sid in ids("order") if sid in set(ids("keep"))] if "order" in request.POST else []
+        chosen = kept + [sid for sid in ids("subject") if sid not in kept]
+        current = {c.subject_id: c for c in CurriculumSubject.objects.filter(class_level=level)}
+        for sid, link in current.items():
+            if sid not in chosen:
+                link.delete()
+        for position, sid in enumerate(chosen, start=1):
+            link = current.get(sid)
+            if link is None:
+                CurriculumSubject.objects.create(class_level=level, subject_id=sid, sort_order=position)
+            elif link.sort_order != position:
+                link.sort_order = position
+                link.save(update_fields=["sort_order", "updated_at"])
+        # R19-5: short names (network-wide, one per subject)
+        for subject in Subject.objects.filter(pk__in=[int(k[6:]) for k in request.POST if k.startswith("short_")
+                                                      and k[6:].isdigit()]):  # fmt: skip
+            short = request.POST.get(f"short_{subject.id}", "").strip()[:12]
+            if short != subject.short_name:
+                subject.short_name = short
+                subject.save(update_fields=["short_name", "updated_at"])
         messages.success(request, _("Subjects of %(c)s saved.") % {"c": level})
         return redirect(here)
-    mapped = set(CurriculumSubject.objects.filter(class_level=level).values_list("subject_id", flat=True))
+    links = list(
+        CurriculumSubject.objects.filter(class_level=level)
+        .select_related("subject")
+        .order_by("sort_order", "subject__name")
+    )
+    mapped = {c.subject_id for c in links}
     counts = dict(
         CurriculumSubject.objects.values_list("class_level_id")
         .annotate(n=Count("id"))
@@ -270,10 +290,13 @@ def class_subjects(request):
             "levels": [(lv, counts.get(lv.id, 0)) for lv in levels],
             "level": level,
             # Summer Vacation Work is not ticked here: it is part of every Mid-Term by itself (R14-8).
-            "subjects": [
-                (s, s.id in mapped)
+            "listed": [c.subject for c in links],
+            "others": [
+                s
                 for s in Subject.objects.filter(is_active=True).exclude(code="summer-vacation-work").order_by("name")
+                if s.id not in mapped
             ],
+            "summer": Subject.objects.filter(code="summer-vacation-work").first(),
         },
     )
 

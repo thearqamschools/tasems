@@ -29,7 +29,7 @@
 <div class="table-wrap"><table class="marks-grid">
   <thead><tr><th class="center"><a class="sort{% if sort == 'code' or sort == '-code' %} active{% endif %}" href="?sort={% if sort == 'code' %}-code{% else %}code{% endif %}" title="{% trans 'Order by Comp. Code' %}">{% trans "Comp. Code" %}{% if sort == 'code' %} ↑{% elif sort == '-code' %} ↓{% else %} ⇅{% endif %}</a></th>
     <th><a class="sort{% if sort == 'name' or sort == '-name' %} active{% endif %}" href="?sort={% if sort == 'name' %}-name{% else %}name{% endif %}" title="{% trans 'Order by name' %}">{% trans "Name" %}{% if sort == 'name' %} ↑{% elif sort == '-name' %} ↓{% else %} ⇅{% endif %}</a></th>
-    {% for p in papers %}<th class="center">{{ p.subject.name }}<br><span class="muted small">({{ p.total_marks }})</span></th>{% endfor %}
+    {% for p in papers %}<th class="center" title="{{ p.subject.name }}">{{ p.subject.short }}<br><span class="muted small">({{ p.total_marks }})</span></th>{% endfor %}
     <th class="center">{% trans "Total" %}<br><span class="muted small">({{ total }})</span></th><th class="center">%</th>
     {% for a, label in aspects %}<th class="center rate-head">{{ label }}</th>{% endfor %}<th class="no-print center">{% trans "Result card" %}</th></tr></thead>
   <tbody>{% for r in rows %}<tr data-row>
