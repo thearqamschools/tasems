@@ -176,3 +176,32 @@ def person_name(person):
     if hasattr(person, "full_name"):
         return person.full_name
     return person.get_full_name() or person.username
+
+
+CONTACT_ICONS = {  # Lucide shapes drawn inline, so they print in PDFs too (R18-2)
+    "phone": '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1'
+    "-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0"
+    ' 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    "mobile": '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+    "whatsapp": '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.5 9.2c.3 2.2 2.1 4.2 4.6 5l1.2-1.1 1.6.8-.5 1.5'
+    'c-3.8-.2-6.9-3.2-7.2-7l1.5-.5.8 1.6z" fill="currentColor" stroke="none"/>',
+}
+CONTACT_COLOURS = {"phone": "#3e4095", "mobile": "#3e4095", "whatsapp": "#1f9d55"}
+
+
+@register.simple_tag
+def contact_numbers(branch, separator="  "):
+    """The branch's phones and mobiles, each with its mark: phone, mobile, or WhatsApp for a mobile ticked
+    "On WhatsApp" in Setup → Branch details (R18-2)."""
+    from django.utils.html import format_html, mark_safe
+
+    parts = []
+    for kind, number in getattr(branch, "contacts", []):
+        svg = (
+            f'<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;margin-right:0.2em" '
+            f'fill="none" stroke="{CONTACT_COLOURS[kind]}" stroke-width="2" stroke-linecap="round" '
+            f'stroke-linejoin="round" aria-label="{kind}">{CONTACT_ICONS[kind]}</svg>'
+        )
+        span = '<span class="contact" style="white-space:nowrap">{}{}</span>'
+        parts.append(format_html(span, mark_safe(svg), number))
+    return mark_safe(separator.join(parts))

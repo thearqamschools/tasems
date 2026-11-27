@@ -7,6 +7,7 @@ from django.db.models import Count, Q
 from django.forms import modelformset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from apps.core.branch import current_branch
@@ -14,7 +15,7 @@ from apps.organisation.models import AcademicSession
 
 from . import timetable as T
 from .forms import PeriodForm
-from .models import Period, Section, Subject
+from .models import Period, Section, Subject, TimetableEntry
 
 VIEW_PERM, EDIT_PERM = "academics.view_section", "academics.change_section"
 
@@ -65,7 +66,7 @@ def index(request):
             "session": session,
             "sections": sections,
             "teachers": teachers,
-            "periods": Period.objects.filter(branch=branch),
+            "periods": Period.objects.filter(branch=branch).exists(),
             "clashes": T.clashes(branch, session) if session else [],
             "can_edit": request.user.has_branch_perm(EDIT_PERM, branch.id),
         },
@@ -74,16 +75,65 @@ def index(request):
 
 @login_required
 def periods(request):
+    """Bell times (R18-3): several sets, each for some classes in a campus, with its own periods and breaks."""
+    from .forms import BellSetForm
+    from .models import BellSet
+
     branch = _branch(request, EDIT_PERM)
+    sets = list(BellSet.objects.filter(branch=branch).select_related("from_level", "to_level", "campus"))
+    chosen = request.GET.get("set", "")
+    bell = None
+    if chosen.isdigit():
+        bell = next((b for b in sets if b.id == int(chosen)), None)
+        if bell is None:
+            raise Http404
+    elif chosen != "new" and sets:
+        bell = sets[0]
     PeriodFormSet = modelformset_factory(Period, form=PeriodForm, extra=3, can_delete=True)
-    formset = PeriodFormSet(request.POST or None, queryset=Period.objects.filter(branch=branch))
-    if request.method == "POST" and formset.is_valid():
-        for form in formset.forms:
-            form.instance.branch = branch
+    if request.method == "POST" and request.POST.get("action") == "delete" and bell is not None:
+        if TimetableEntry.objects.filter(period__bell_set=bell).exists():
+            messages.error(request, _("Timetables use this set; change them first."))
+        else:
+            bell.periods.all().delete()
+            bell.delete()
+            messages.success(request, _("Bell-time set removed."))
+        return redirect("academics:periods")
+    form = BellSetForm(request.POST or None, instance=bell, branch=branch, prefix="set")
+    formset = PeriodFormSet(
+        request.POST or None, queryset=Period.objects.filter(bell_set=bell) if bell else Period.objects.none()
+    )
+    if request.method == "POST" and form.is_valid() and formset.is_valid():
+        bell = form.save(commit=False)
+        bell.branch = branch
+        bell.save()
+        for f in formset.forms:
+            f.instance.branch, f.instance.bell_set = branch, bell
         formset.save()
-        messages.success(request, _("Bell times saved."))
-        return redirect("academics:index")
-    return render(request, "academics/periods.html", {"formset": formset, "branch": branch})
+        clash = [
+            b.name for b in BellSet.objects.filter(branch=branch).exclude(pk=bell.pk)
+            if b.campus_id == bell.campus_id and _ranges_meet(b, bell)
+        ]  # fmt: skip
+        if clash:
+            messages.warning(
+                request,
+                _("“%(a)s” covers some of the same classes in the same campus as: %(b)s. The narrower set is used.")
+                % {"a": bell.name, "b": ", ".join(clash)},
+            )
+        messages.success(request, _("Bell times “%(n)s” saved.") % {"n": bell.name})
+        return redirect(f"{reverse('academics:periods')}?set={bell.id}")
+    return render(
+        request,
+        "academics/periods.html",
+        {"form": form, "formset": formset, "branch": branch, "sets": sets, "bell": bell, "new": chosen == "new"},
+    )
+
+
+def _ranges_meet(a, b):
+    def bounds(x):
+        return (x.from_level.sort_order if x.from_level_id else 0, x.to_level.sort_order if x.to_level_id else 999)
+
+    (a1, a2), (b1, b2) = bounds(a), bounds(b)
+    return a1 <= b2 and b1 <= a2
 
 
 @login_required
@@ -149,7 +199,7 @@ def section_timetable(request, section_id):
             raise PermissionDenied
         by_id = {s.id: s for s in subjects}
         cells = {}
-        for p in Period.objects.filter(branch=branch, is_break=False):
+        for p in [p for p in T.periods_for(section) if not p.is_break]:
             for day, _label in T.days_of(section):
                 value = request.POST.get(f"c_{day}_{p.id}", "")
                 cells[(day, p.id)] = by_id.get(int(value)) if value.isdigit() else None
@@ -166,6 +216,7 @@ def section_timetable(request, section_id):
         {
             "section": section,
             "grid": T.grid(section),
+            "bell": T.bell_set_for(section),
             "subjects": subjects,
             "editing": editing,
             "errors": errors,

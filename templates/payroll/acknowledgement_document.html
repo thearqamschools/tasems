@@ -33,7 +33,7 @@
 <body>
 {% for g in groups %}<div class="group">
   <div class="head"><img src="{% official_logo layout media_base font_base %}" alt="">
-    <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}{% if branch.contact_numbers %} · {{ branch.contact_numbers|join:", " }}{% endif %}</div></div>
+    <div><div class="school">The Arqam Schools</div><div class="branch">{{ branch.name }}{% if branch.contact_numbers %} · {% contact_numbers branch %}{% endif %}</div></div>
     <div class="title"><b>PAYROLL — {{ month|date:"F Y"|upper }} — ACKNOWLEDGEMENT</b>{% if run %}Finalised {{ run.created_at|date:"d M Y" }}{% else %}Not finalised yet{% endif %}</div></div>
   <h2>{{ g.name }}</h2>
   <table>

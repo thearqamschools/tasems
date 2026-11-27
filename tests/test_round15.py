@@ -1,5 +1,5 @@
 """Round 15 (project lead, 24 Nov 2026): branch details, classes & subjects, one Edit page for an exam, the date sheet
-and result card with the school's banner and fonts, COMP.code on the marks table, result reports with pass at 33% and
+and result card with the school's banner and fonts, Comp. Code on the marks table, result reports with pass at 33% and
 positions, and the progress report."""
 
 import datetime as dt
@@ -82,7 +82,7 @@ def _marks(exam_setup, a_marks, b_marks):  # noqa: F811
 def test_marks_table_shows_admission_number_not_roll(exam_setup, login_as):  # noqa: F811
     client = login_as(exam_setup["principal"])
     page = client.get(f"/exams/{exam_setup['exam'].id}/section/{exam_setup['section'].id}/marks/").content.decode()
-    assert "COMP.code" in page and ">Roll<" not in page and ">600<" in page
+    assert "Comp. Code" in page and ">Roll<" not in page and ">600<" in page
 
 
 def test_result_report_pass_at_33_and_positions(exam_setup, login_as):  # noqa: F811

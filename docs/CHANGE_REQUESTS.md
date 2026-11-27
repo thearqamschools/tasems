@@ -1064,7 +1064,7 @@ not to be bought or switched on without approval.
   answered; built so the one header picture is used on **both** date sheets and result cards, so the school's papers
   match. Easy to change to date sheets only if the lead prefers.
 
-## Round 18 (26 Nov 2026) — noted, not built yet (build when the lead says "haan ji, ab kar do")
+## Round 18 (26 Nov 2026) — built 27 Nov 2026 (installer v27, CHANGELOG 0.53.0)
 - R18-1. **Setup — "Classes & subjects" inside "Classes and sections"** (lead, 26 Nov 2026): no separate card for
   Classes & subjects on the Setup page. Open **Classes and sections**; next to "Add a section" (before or after it) a
   button **Class subjects** that opens the Classes & subjects page.

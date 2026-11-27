@@ -32,7 +32,7 @@
 <body>
 <div class="bar"><button type="button" onclick="window.print()">Print</button></div>
 <div class="head"><img src="{% static 'img/arqam-logo-512.png' %}" alt="">
-  <div><div class="school">The Arqam Schools</div><div class="sub">{{ branch.name }}{% if branch.contact_numbers %} · {{ branch.contact_numbers|join:", " }}{% endif %}</div></div>
+  <div><div class="school">The Arqam Schools</div><div class="sub">{{ branch.name }}{% if branch.contact_numbers %} · {% contact_numbers branch %}{% endif %}</div></div>
   <div class="title"><b>EVENT REPORT — DETAIL</b>{{ event.name }} · {{ event.date|date:"d M Y" }}</div></div>
 <p class="sub">{{ event.get_kind_display }}{% if event.venue %} · {{ event.venue }}{% endif %} · Printed {{ printed|date:"d M Y, h:i A" }} by {{ request.user.get_full_name|default:request.user.username }}</p>
 

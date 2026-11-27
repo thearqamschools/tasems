@@ -414,15 +414,23 @@ class BranchDetailsForm(Labelled, forms.ModelForm):
 
     class Meta:
         model = Branch
-        fields = ["name", "address", "phone", "phone_2", "mobile_1", "mobile_2", "website"]
+        fields = ["name", "address", "phone", "phone_2", "mobile_1", "mobile_1_whatsapp", "mobile_2",
+                  "mobile_2_whatsapp", "website"]  # fmt: skip
         labels = {
             "name": _("Branch name"),
             "address": _("Full address"),
             "phone": _("Phone 1"),
             "phone_2": _("Phone 2"),
-            "mobile_1": _("Mobile / WhatsApp 1"),
-            "mobile_2": _("Mobile / WhatsApp 2"),
+            "mobile_1": _("Mobile 1"),
+            "mobile_1_whatsapp": _("Mobile 1 is on WhatsApp"),
+            "mobile_2": _("Mobile 2"),
+            "mobile_2_whatsapp": _("Mobile 2 is on WhatsApp"),
             "website": _("Website"),
         }
         widgets = {"phone": LTR, "phone_2": LTR, "mobile_1": LTR, "mobile_2": LTR, "website": LTR,
                    "address": forms.Textarea(attrs={"rows": 3})}  # fmt: skip
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, label in self.Meta.labels.items():  # these labels, not the shared ones
+            self.fields[name].label = label

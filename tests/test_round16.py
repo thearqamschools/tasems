@@ -54,7 +54,7 @@ def test_green_button_and_counts_and_names(exam_setup, login_as):  # noqa: F811
 def test_marks_table_headings_and_result_card_column(exam_setup, login_as):  # noqa: F811
     client = login_as(exam_setup["principal"])
     page = client.get(f"/exams/{exam_setup['exam'].id}/section/{exam_setup['section'].id}/marks/").content.decode()
-    assert "(50)" in page and "(100)" in page and "Result card" in page and "COMP.code" in page
+    assert "(50)" in page and "(100)" in page and "Result card" in page and "Comp. Code" in page
     assert ">Card<" not in page
 
 

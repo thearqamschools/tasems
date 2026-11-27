@@ -1,4 +1,4 @@
-{% load static %}<!doctype html>
+{% load static tasems_tags %}<!doctype html>
 {# Parent Tree slip for the 80 mm receipt printer (SPEEDX 400UL), like the old software's (project lead, 28 Oct 2026). English, as printed documents are. #}
 <html lang="en">
 <head>
@@ -31,7 +31,7 @@
 <body>
   <div class="head"><img class="logo" src="{% static 'img/arqam-logo-512.png' %}" alt=""><span class="school">THE ARQAM SCHOOLS</span></div>
   {% if branch.address %}<div class="center addr">{{ branch.address }}</div>{% endif %}
-  {% if branch.contact_numbers %}<div class="center addr num">({{ branch.contact_numbers|join:", " }})</div>{% endif %}
+  {% if branch.contact_numbers %}<div class="center addr num">({% contact_numbers branch %})</div>{% endif %}
   <hr class="rule">
   <div class="center title">Parent Tree</div>
   <div class="meta"><span><b>Parent Name:</b> {{ student.father_name|default:"—" }}</span><span class="num"><b>Date:</b> {{ printed_at|date:"d/m/Y h:i A" }}</span></div>

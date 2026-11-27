@@ -54,3 +54,36 @@ class HolidayForm(forms.Form):
         if not data.get("students_off") and not data.get("staff_off"):
             self.add_error("students_off", _("Choose students, staff or both."))
         return data
+
+
+class BellSetForm(forms.ModelForm):
+    """A set of bell times for some classes in a campus (R18-3)."""
+
+    class Meta:
+        from .models import BellSet
+
+        model = BellSet
+        fields = ["name", "from_level", "to_level", "campus"]
+        labels = {"name": _("Name"), "from_level": _("From class"), "to_level": _("To class"), "campus": _("Campus")}
+
+    def __init__(self, *args, branch, **kwargs):
+        super().__init__(*args, **kwargs)
+        from apps.organisation.models import Campus
+
+        from .models import ClassLevel
+
+        levels = ClassLevel.objects.filter(is_active=True).order_by("sort_order")
+        self.fields["from_level"].queryset = levels
+        self.fields["to_level"].queryset = levels
+        self.fields["from_level"].empty_label = _("— first class —")
+        self.fields["to_level"].empty_label = _("— last class —")
+        self.fields["campus"].queryset = Campus.objects.filter(branch=branch, is_active=True)
+        self.fields["campus"].empty_label = _("Every campus")
+        self.fields["name"].widget.attrs["placeholder"] = _("e.g. Play Group to Two")
+
+    def clean(self):
+        data = super().clean()
+        low, high = data.get("from_level"), data.get("to_level")
+        if low and high and low.sort_order > high.sort_order:
+            self.add_error("to_level", _("The last class comes before the first class."))
+        return data

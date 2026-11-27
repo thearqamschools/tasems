@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.53.0 — 2026-11-27 — Round 18: bell-time sets, WhatsApp tick, Comp. Code (installer v27)
+- **Setup → Classes and sections → Class subjects** (R18-1): the subjects of each class open from a button beside
+  "Add a section" (head office); the separate Setup card is gone.
+- **Setup → Branch details** (R18-2): Phone 1, Phone 2; Mobile 1 and Mobile 2 each with an **On WhatsApp** tick.
+  Papers that show the branch's numbers (vouchers, family vouchers, payslips, salary acknowledgement, event report,
+  Parent Tree slip) show each with its mark: phone, mobile, or WhatsApp.
+- **Academics → Timetable → Bell times — several sets** (R18-3): each set has a name, from class … to class and a
+  campus (or every campus) with its own periods and breaks; a section uses the set that fits it most closely (its
+  campus first, then the narrowest range). Bell times entered before became the branch's "General" set. A teacher in
+  two classes at the same time is caught by clock time, across sets; the teacher's own timetable lists their periods
+  by time.
+- **Comp. Code** (R18-4) is the short form everywhere (was COMP.code).
+- **Marks & Results** (R18-5): the students in Comp. Code or Name order (click the heading; again for the other way).
+
 ## 0.52.0 — 2026-11-24 — Round 17: teachers without logins, header picture, one-page date sheet (installer v26)
 - **Teachers from the staff records** (R17-8, R17-9): Class teacher (Setup → Classes and sections, and the Subject
   teachers page) and each subject's teacher are chosen from the branch's teachers and Qaris in Staff — with or

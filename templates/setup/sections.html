@@ -5,7 +5,9 @@
 <div class="page-header">
   <div><h1>{% trans "Classes and sections" %}</h1>
   <p class="lede">{% if session %}{% blocktrans with s=session.name b=branch.name %}Session {{ s }} · {{ b }}{% endblocktrans %}{% else %}{% trans "No current academic session is set." %}{% endif %}</p></div>
-  {% if can.add and session %}<div class="actions"><a class="button" href="{% url 'setup:section_new' %}">{% icon "user-plus" %}{% trans "Add a section" %}</a></div>{% endif %}
+  {% if can.add and session or can.subjects %}<div class="actions">
+    {% if can.subjects %}<a class="button quiet" href="{% url 'setup:class_subjects' %}">{% icon "book-open" %}{% trans "Class subjects" %}</a>{% endif %}
+    {% if can.add and session %}<a class="button" href="{% url 'setup:section_new' %}">{% icon "user-plus" %}{% trans "Add a section" %}</a>{% endif %}</div>{% endif %}
 </div>
 {% if no_teacher %}<div class="callout attention">{% icon "triangle-alert" %}<div><p>{% blocktrans count n=no_teacher %}{{ n }} section has no class teacher. Without one, only the principal or academic coordinator can take its register or write its diary.{% plural %}{{ n }} sections have no class teacher. Without one, only the principal or academic coordinator can take their registers or write their diaries.{% endblocktrans %}</p></div></div>{% endif %}
 {% if rows %}

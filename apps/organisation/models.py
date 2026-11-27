@@ -80,6 +80,9 @@ class Branch(TimeStampedModel):
     phone_2 = models.CharField(_("phone 2"), max_length=60, blank=True)
     mobile_1 = models.CharField(_("mobile 1"), max_length=60, blank=True)
     mobile_2 = models.CharField(_("mobile 2"), max_length=60, blank=True)
+    # R18-2: a mobile on WhatsApp shows with the WhatsApp mark; one that is not shows as a plain mobile
+    mobile_1_whatsapp = models.BooleanField(_("mobile 1 is on WhatsApp"), default=True)
+    mobile_2_whatsapp = models.BooleanField(_("mobile 2 is on WhatsApp"), default=True)
     website = models.CharField(_("website"), max_length=120, blank=True)  # R15-6
     receipt_printer = models.CharField(
         _("receipt printer (network address)"),
@@ -117,6 +120,15 @@ class Branch(TimeStampedModel):
     def contact_numbers(self):
         """Phone 1, Phone 2, Mobile 1, Mobile 2 — only those filled in."""
         return [n for n in (self.phone, self.phone_2, self.mobile_1, self.mobile_2) if n.strip()]
+
+    @property
+    def contacts(self):
+        """[(kind, number)] — kind is "phone", "mobile" or "whatsapp" (R18-2), only the numbers filled in."""
+        out = [("phone", n) for n in (self.phone, self.phone_2) if n.strip()]
+        for number, on_whatsapp in ((self.mobile_1, self.mobile_1_whatsapp), (self.mobile_2, self.mobile_2_whatsapp)):
+            if number.strip():
+                out.append(("whatsapp" if on_whatsapp else "mobile", number))
+        return out
 
     @property
     def certificate_prefix(self):

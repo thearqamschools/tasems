@@ -114,14 +114,6 @@ def hub(request):
             any(here(p) for p in BRANCH_DETAILS_PERMS),
         ),
         (
-            "class_subjects",
-            "setup:class_subjects",
-            _("Classes & subjects"),
-            _("The subjects of each class; only these show for the class in exams, diary and timetable."),
-            "book-open",
-            _network_wide(user, SUBJECTS_PERM) or user.is_superuser,
-        ),
-        (
             "printer",
             "setup:printer",
             _("Receipt printer"),
@@ -217,16 +209,7 @@ def branch_details(request):
         form.save()
         messages.success(request, _("Branch details saved."))
         return redirect("setup:hub")
-    return _form_page(
-        request,
-        form,
-        _("Branch details"),
-        reverse("setup:hub"),
-        lede=_(
-            "Printed on this branch's papers: the address at the foot of date sheets and result cards, and the "
-            "numbers where contact details are shown."
-        ),
-    )
+    return render(request, "setup/branch_details.html", {"form": form})
 
 
 # ---------- Classes & subjects (R15-3, network-wide) ----------
@@ -356,6 +339,8 @@ def sections(request):
         "change": request.user.has_branch_perm("academics.change_section", branch.id),
         "campus": request.user.has_branch_perm("organisation.change_campus", branch.id),
         "add_campus": request.user.has_branch_perm("organisation.add_campus", branch.id),
+        # R18-1: Class subjects opens from here (network-wide setting)
+        "subjects": _network_wide(request.user, SUBJECTS_PERM) or request.user.is_superuser,
     }
     return render(
         request,

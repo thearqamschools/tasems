@@ -2,20 +2,29 @@
 {% block title %}{% trans "Bell times" %}{% endblock %}
 {% block content %}
 <p><a href="{% url 'academics:index' %}">‹ {% trans "Timetable" %}</a></p>
-<h1>{% trans "Bell times" %}</h1>
-<p class="lede">{% blocktrans with b=branch.name %}Periods and breaks of {{ b }}, the same for every class. Tick "Break" for assembly or lunch; breaks are shown on timetables but get no subject.{% endblocktrans %}</p>
+<div class="page-header">
+  <div><h1>{% trans "Bell times" %}</h1>
+  <p class="lede">{% trans "Classes and campuses can have their own bell times, e.g. Play Group to Two; Three to Five (girls campus); Six to Ten for the boys campus and for the girls campus. Each section uses the set that fits its class and campus most closely." %}</p></div>
+  <div class="actions"><a class="button" href="?set=new">{% icon "clock" %}{% trans "Add bell times" %}</a></div>
+</div>
+{% if sets %}<nav class="class-tabs" aria-label="{% trans 'Bell-time sets' %}">{% for b in sets %}<a class="button sm {% if bell and b.id == bell.id %}{% else %}quiet{% endif %}" href="?set={{ b.id }}"{% if bell and b.id == bell.id %} aria-current="page"{% endif %}>{{ b.name }}</a>{% endfor %}{% if new %}<span class="button sm" aria-current="page">{% trans "New" %}</span>{% endif %}</nav>{% endif %}
+
 <form method="post" class="card">{% csrf_token %}
+  <h2>{% if bell %}{{ bell.name }}{% else %}{% trans "New bell times" %}{% endif %}</h2>
+  <div class="form-grid bell-grid">{% for field in form %}{% include "includes_field.html" %}{% endfor %}</div>
+  <p class="small muted">{% trans "Empty “From class” / “To class” = from the first / to the last class. Empty campus = every campus." %}</p>
   {{ formset.management_form }}
   {% for e in formset.non_form_errors %}<ul class="messages"><li class="error">{{ e }}</li></ul>{% endfor %}
   <div class="table-wrap"><table class="periods-table">
-    <thead><tr><th>{% trans "No." %}</th><th>{% trans "Name (optional)" %}</th><th>{% trans "Starts" %}</th><th>{% trans "Ends" %}</th><th>{% trans "Break" %}</th><th>{% trans "Remove" %}</th></tr></thead>
+    <thead><tr><th>{% trans "No." %}</th><th>{% trans "Name (optional)" %}</th><th>{% trans "Starts" %}</th><th>{% trans "Ends" %}</th><th class="center">{% trans "Break" %}</th><th class="center">{% trans "Remove" %}</th></tr></thead>
     <tbody>{% for f in formset %}<tr>
       {% for h in f.hidden_fields %}{{ h }}{% endfor %}
       <td>{{ f.number }}{{ f.number.errors }}</td><td>{{ f.label }}</td><td>{{ f.starts_at }}{{ f.starts_at.errors }}</td><td>{{ f.ends_at }}{{ f.ends_at.errors }}</td>
-      <td>{{ f.is_break }}</td><td>{% if f.instance.pk %}{{ f.DELETE }}{% endif %}</td>
+      <td class="center">{{ f.is_break }}</td><td class="center">{% if f.instance.pk %}{{ f.DELETE }}{% endif %}</td>
     </tr>{% if f.non_field_errors %}<tr><td colspan="6">{{ f.non_field_errors }}</td></tr>{% endif %}{% endfor %}</tbody>
   </table></div>
-  <p class="muted small">{% trans "Three empty rows are added each time; save to get more." %}</p>
-  <button class="button" type="submit">{% trans "Save bell times" %}</button>
+  <p class="muted small">{% trans "Tick “Break” for assembly or lunch; breaks show on timetables but get no subject. Three empty rows are added each time; save to get more." %}</p>
+  <div class="actions"><button class="button" type="submit">{% trans "Save bell times" %}</button></div>
 </form>
+{% if bell %}<form method="post" style="margin-top:var(--space-3)">{% csrf_token %}<input type="hidden" name="action" value="delete"><button class="button quiet danger sm" type="submit" data-confirm="{% trans 'Remove this set of bell times?' %}">{% trans "Remove this set" %}</button></form>{% endif %}
 {% endblock %}

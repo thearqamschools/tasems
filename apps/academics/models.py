@@ -183,18 +183,61 @@ class SectionSubject(BranchOwnedModel):
 
 
 @audited
+class BellSet(BranchOwnedModel):
+    """A set of bell times (R18-3, project lead 26 Nov 2026): the periods of some classes in a campus, e.g. Play Group
+    to Two; Three to Five (girls campus); Six to Ten boys campus, Six to Ten girls campus. Empty classes = every class;
+    empty campus = every campus. A section takes the set that fits it most closely."""
+
+    name = models.CharField(_("name"), max_length=60)
+    from_level = models.ForeignKey(
+        ClassLevel, on_delete=models.PROTECT, null=True, blank=True, related_name="+", verbose_name=_("from class")
+    )
+    to_level = models.ForeignKey(
+        ClassLevel, on_delete=models.PROTECT, null=True, blank=True, related_name="+", verbose_name=_("to class")
+    )
+    campus = models.ForeignKey(
+        "organisation.Campus", on_delete=models.PROTECT, null=True, blank=True, related_name="+",
+        verbose_name=_("campus"),
+    )  # fmt: skip
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+    def covers(self, section):
+        order = section.class_level.sort_order
+        if self.from_level_id and order < self.from_level.sort_order:
+            return False
+        if self.to_level_id and order > self.to_level.sort_order:
+            return False
+        return not self.campus_id or self.campus_id == section.campus_id
+
+    @property
+    def width(self):
+        """How many classes it covers (a narrower set fits a section more closely)."""
+        low = self.from_level.sort_order if self.from_level_id else 0
+        high = self.to_level.sort_order if self.to_level_id else 999
+        return high - low
+
+
+@audited
 class Period(BranchOwnedModel):
-    """The branch's bell times: period 1, 2, … and breaks. The same for every class of the branch."""
+    """One period or break of a bell-time set (R18-3)."""
 
     number = models.PositiveSmallIntegerField(help_text=_("Order in the day: 1, 2, 3 …"))
     label = models.CharField(max_length=30, blank=True, help_text=_("e.g. Break, Assembly. Empty for a period."))
     starts_at = models.TimeField()
     ends_at = models.TimeField()
     is_break = models.BooleanField(default=False)
+    bell_set = models.ForeignKey(BellSet, on_delete=models.CASCADE, null=True, blank=True, related_name="periods")
 
     class Meta:
         ordering = ["number"]
-        constraints = [models.UniqueConstraint(fields=["branch", "number"], name="unique_period_number")]
+        constraints = [
+            models.UniqueConstraint(fields=["bell_set", "number"], name="unique_period_number_per_set"),
+        ]
 
     def __str__(self):
         name = self.label or _("Period %(n)s") % {"n": self.number}

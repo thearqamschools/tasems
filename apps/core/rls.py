@@ -28,6 +28,7 @@ RLS_TABLES = [
     "exams_resultremark",
     "exams_rating",
     "exams_examrating",
+    "academics_bellset",
     "fees_feerate",
     "fees_voucher",
     "fees_charge",

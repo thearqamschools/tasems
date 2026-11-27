@@ -84,14 +84,15 @@ def test_timetable_pages_and_menu(school, login_as):
 def test_bell_times_page(school, login_as):
     client = login_as(school["principal"])
     data = {
+        "set-name": "Play Group to Two",  # R18-3: bell times come in named sets
         "form-TOTAL_FORMS": "1",
         "form-INITIAL_FORMS": "0",
         "form-0-number": "4",
         "form-0-starts_at": "10:00",
         "form-0-ends_at": "09:00",
     }
-    bad = client.post("/academics/timetable/bell-times/", data)
+    bad = client.post("/academics/timetable/bell-times/?set=new", data)
     assert "must end after it starts" in bad.content.decode()
     data["form-0-ends_at"] = "10:40"
-    client.post("/academics/timetable/bell-times/", data)
-    assert Period.objects.filter(branch=school["branch"], number=4).exists()
+    client.post("/academics/timetable/bell-times/?set=new", data)
+    assert Period.objects.filter(branch=school["branch"], number=4, bell_set__name="Play Group to Two").exists()

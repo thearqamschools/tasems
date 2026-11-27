@@ -290,6 +290,12 @@ def section_marks(request, exam_id, section_id):
     if exam is None:
         raise Http404
     data = grid.table(exam, section)
+    # R18-5: in Comp. Code or Name order, so marks are typed in the order of the paper sheets
+    order = request.GET.get("sort", "")
+    if order in ("code", "-code"):
+        data["rows"].sort(key=lambda r: _code_key(r["enrolment"].student.admission_no), reverse=order == "-code")
+    elif order in ("name", "-name"):
+        data["rows"].sort(key=lambda r: r["enrolment"].student.full_name.lower(), reverse=order == "-name")
     can_enter = services.can_enter(request.user, section, exam)
     if request.GET.get("format") == "xlsx":
         response = HttpResponse(
@@ -310,7 +316,7 @@ def section_marks(request, exam_id, section_id):
             for p in problems[:20]:
                 messages.warning(request, p)
             if form is None:
-                return redirect(request.path)
+                return redirect(request.get_full_path())
             _m, ratings, values, errors = grid.read_form(form, data["papers"], data["rows"])
             imported = True
             if errors:
@@ -326,7 +332,7 @@ def section_marks(request, exam_id, section_id):
             else:
                 grid.save(exam, section, data["papers"], marks, ratings, request.user)
                 messages.success(request, _("Marks and ratings saved for %(s)s.") % {"s": section})
-                return redirect(request.path)
+                return redirect(request.get_full_path())
     return render(
         request,
         "exams/section_marks.html",
@@ -340,13 +346,20 @@ def section_marks(request, exam_id, section_id):
             "imported": imported,
             "levels": ExamRating.Level.choices,
             "aspects": ExamRating.ASPECTS,
+            "sort": order,
         },
     )
 
 
+def _code_key(code):
+    """Numbers in number order (2, 10, 100), other codes after them in text order."""
+    text = str(code or "").strip()
+    return (0, int(text), "") if text.isdigit() else (1, 0, text.lower())
+
+
 def _blank_sheet(request, exam, section, data):
     """The sheet to fill by hand (R14-7 (2)): the same columns as the Excel, opened to print."""
-    headers = ["COMP.code", "Name"] + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
+    headers = ["Comp. Code", "Name"] + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
     headers += ["Attentive", "Punctual", "Neatness", "Participation"]
     rows = []
     for row in data["rows"]:
@@ -512,7 +525,7 @@ def _report_paper(exam, branch, scope, context):
                          ("Highest", _pct_text(s["highest"])), ("Lowest", _pct_text(s["lowest"]))]  # fmt: skip
         sections.append({
             "heading": "Students by percentage",
-            "headers": ["Position", "COMP.code", "Name", "Section", "Marks", "%", "Result"],
+            "headers": ["Position", "Comp. Code", "Name", "Section", "Marks", "%", "Result"],
             "rows": [[{"text": x["place"], "cls": "warn" if x["place"] else ""},
                       {"text": x["enrolment"].student.admission_no},
                       {"text": x["enrolment"].student.full_name, "cls": "l"}, {"text": x["section"].name},
@@ -641,7 +654,7 @@ def progress_report(request, student_id):
     paper = {
         "branch": branch,
         "title": "PROGRESS REPORT",
-        "subtitle": f"{student.full_name} · COMP.code {student.admission_no}"
+        "subtitle": f"{student.full_name} · Comp. Code {student.admission_no}"
         + (f" · {enrolment.section}" if enrolment else "")
         + (f" · Session {session.name}" if session else " · All years"),
         "landscape": len(data["exams"]) > 5,

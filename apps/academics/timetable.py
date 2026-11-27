@@ -90,8 +90,35 @@ def _teacher_map(sections):
     }
 
 
+def bell_set_for(section):
+    """The bell-time set that fits the section most closely (R18-3): its campus before "every campus", then the
+    narrowest range of classes. None when no set covers it."""
+    from .models import BellSet
+
+    sets = [
+        b
+        for b in BellSet.objects.filter(branch_id=section.branch_id).select_related("from_level", "to_level")
+        if b.covers(section)
+    ]
+    if not sets:
+        return None
+    return min(sets, key=lambda b: (0 if b.campus_id else 1, b.width, b.name))
+
+
+def periods_for(section):
+    bell = bell_set_for(section)
+    if bell is not None:
+        return list(Period.objects.filter(bell_set=bell))
+    # periods kept outside any set (older data) are the branch's general bell times
+    return list(Period.objects.filter(branch_id=section.branch_id, bell_set__isnull=True))
+
+
+def _overlap(a, b):
+    return a.starts_at < b.ends_at and b.starts_at < a.ends_at
+
+
 def grid(section):
-    periods = list(Period.objects.filter(branch_id=section.branch_id))
+    periods = periods_for(section)
     entries = {(e.weekday, e.period_id): e for e in section.timetable.select_related("subject", "period")}
     teachers = _teacher_map([section])
     rows = []
@@ -105,24 +132,35 @@ def grid(section):
 
 
 def clashes(branch, session):
-    """Teachers placed in two classes in the same period: [(teacher, day label, period, [entries])]."""
+    """Teachers placed in two classes at the same time — by the real clock times, since classes may follow different
+    bell-time sets (R18-3): [(teacher, day label, period, [entries])]."""
     from .models import Section
 
     sections = Section.objects.filter(branch=branch, session=session)
     teachers = _teacher_map(sections)
-    slots = defaultdict(list)
+    by_teacher_day = defaultdict(list)
     for e in TimetableEntry.objects.filter(section__in=sections).select_related(
         "section__class_level", "period", "subject"
     ):
         t = teachers.get((e.section_id, e.subject_id))
         if t:
-            slots[(teacher_key(t), e.weekday, e.period_id)].append((t, e))
+            by_teacher_day[(teacher_key(t), e.weekday)].append((t, e))
     days = dict(WEEKDAYS)
-    return [
-        (items[0][0], days[e_day], items[0][1].period, [e for _t, e in items])
-        for (_tid, e_day, _pid), items in sorted(slots.items(), key=lambda kv: (kv[0][1], kv[1][0][1].period.number))
-        if len(items) > 1
-    ]
+    out = []
+    for (_key, day), items in by_teacher_day.items():
+        items.sort(key=lambda te: te[1].period.starts_at)
+        group = [items[0]]
+        for item in items[1:]:
+            if any(_overlap(item[1].period, g[1].period) for g in group):
+                group.append(item)
+                continue
+            if len(group) > 1:
+                out.append((group[0][0], day, group))
+            group = [item]
+        if len(group) > 1:
+            out.append((group[0][0], day, group))
+    out.sort(key=lambda x: (x[1], x[2][0][1].period.starts_at))
+    return [(t, days[day], group[0][1].period, [e for _t, e in group]) for t, day, group in out]
 
 
 @transaction.atomic
@@ -134,11 +172,11 @@ def save_grid(section, cells, user):
     teachers = _teacher_map([section])
     others = Section.objects.filter(branch_id=section.branch_id, session_id=section.session_id).exclude(pk=section.pk)
     other_teachers = _teacher_map(others)
-    busy = {}
-    for e in TimetableEntry.objects.filter(section__in=others).select_related("section__class_level"):
+    busy = defaultdict(list)  # (teacher, weekday) → [(period, section)] — compared by clock time (R18-3)
+    for e in TimetableEntry.objects.filter(section__in=others).select_related("section__class_level", "period"):
         t = other_teachers.get((e.section_id, e.subject_id))
         if t:
-            busy[(teacher_key(t), e.weekday, e.period_id)] = e.section
+            busy[(teacher_key(t), e.weekday)].append((e.period, e.section))
     problems = []
     days = dict(WEEKDAYS)
     periods = {p.id: p for p in Period.objects.filter(branch_id=section.branch_id)}
@@ -146,7 +184,8 @@ def save_grid(section, cells, user):
         if subject is None:
             continue
         t = teachers.get((section.id, subject.id))
-        other = busy.get((teacher_key(t), day, period_id)) if t else None
+        here = periods[period_id]
+        other = next((sec for p, sec in busy.get((teacher_key(t), day), []) if _overlap(here, p)), None) if t else None
         if other:
             problems.append(
                 _("%(t)s already teaches %(s)s on %(d)s, %(p)s.")
@@ -187,11 +226,16 @@ def teacher_grid(branch, session, teacher):
     pairs = set(assigned)
     sections = Section.objects.filter(pk__in={s for s, _sub in pairs})
     entries = defaultdict(list)
-    for e in TimetableEntry.objects.filter(section__in=sections).select_related("section__class_level", "subject"):
+    slots = {}
+    for e in TimetableEntry.objects.filter(section__in=sections).select_related(
+        "section__class_level", "subject", "period"
+    ):
         if (e.section_id, e.subject_id) in pairs:
-            entries[(e.weekday, e.period_id)].append(e)
-    periods = list(Period.objects.filter(branch=branch))
+            key = (e.period.starts_at, e.period.ends_at)  # the teacher's own times, across bell-time sets (R18-3)
+            slots.setdefault(key, e.period)
+            entries[(e.weekday, key)].append(e)
+    periods = [slots[k] for k in sorted(slots)]
     days = [d for d in WEEKDAYS if d[0] < 5 or any(day == 5 for day, _p in entries)]
-    rows = [{"period": p, "cells": [entries.get((d, p.id), []) for d, _l in days]} for p in periods]
+    rows = [{"period": slots[k], "cells": [entries.get((d, k), []) for d, _l in days]} for k in sorted(slots)]
     count = sum(len(v) for v in entries.values())
     return {"days": days, "rows": rows, "periods": periods, "count": count, "pairs": len(pairs)}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load i18n tasems_tags %}
+{% block title %}{% trans "Branch details" %}{% endblock %}
+{% block content %}
+<p class="muted small"><a href="{% url 'setup:hub' %}">‹ {% trans "Back" %}</a></p>
+<h1>{% trans "Branch details" %}</h1>
+<p class="lede">{% trans "Printed on this branch's papers: the address at the foot of date sheets and result cards, and the numbers where contact details are shown." %}</p>
+<form method="post" class="card branch-details" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}<ul class="errorlist nonfield">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+  <div class="form-grid">
+    {% with field=form.name %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.website %}{% include "includes_field.html" %}{% endwith %}
+  </div>
+  {% with field=form.address %}{% include "includes_field.html" %}{% endwith %}
+  <div class="form-grid">
+    {% with field=form.phone %}{% include "includes_field.html" %}{% endwith %}
+    {% with field=form.phone_2 %}{% include "includes_field.html" %}{% endwith %}
+  </div>
+  <div class="form-grid">
+    <div class="mobile-field">{% with field=form.mobile_1 %}{% include "includes_field.html" %}{% endwith %}
+      <label class="check">{{ form.mobile_1_whatsapp }} {% icon "message-circle" %}{% trans "On WhatsApp" %}</label></div>
+    <div class="mobile-field">{% with field=form.mobile_2 %}{% include "includes_field.html" %}{% endwith %}
+      <label class="check">{{ form.mobile_2_whatsapp }} {% icon "message-circle" %}{% trans "On WhatsApp" %}</label></div>
+  </div>
+  <p class="small muted">{% trans "Ticked: the number shows with the WhatsApp mark on papers. Not ticked: it shows as a plain mobile number." %}</p>
+  <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button><a class="button quiet" href="{% url 'setup:hub' %}">{% trans "Cancel" %}</a></div>
+</form>
+{% endblock %}

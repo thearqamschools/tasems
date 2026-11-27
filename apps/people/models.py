@@ -56,7 +56,7 @@ class Student(BranchOwnedModel):
         BIOLOGY = "biology", _("Biology")
         COMPUTER = "computer", _("Computer")
 
-    admission_no = models.CharField(_("computer code"), max_length=30)  # R16-9: called Computer code (COMP.code)
+    admission_no = models.CharField(_("computer code"), max_length=30)  # R16-9: called Computer code (Comp. Code)
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80, blank=True)
     full_name_ur = models.CharField(_("full name (Urdu)"), max_length=150, blank=True)

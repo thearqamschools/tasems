@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% load i18n tasems_tags %}
 {% block title %}{% trans "Classes & subjects" %}{% endblock %}
 {% block content %}
-<p><a href="{% url 'setup:hub' %}">‹ {% trans "Setup" %}</a></p>
+<p><a href="{% url 'setup:sections' %}">‹ {% trans "Classes and sections" %}</a></p>
 <h1>{% trans "Classes & subjects" %}</h1>
 <p class="lede">{% trans "Tick the subjects of each class. All sections of a class share them. Only these subjects show for the class in Exams (papers and marks), the Diary and the Timetable." %}</p>
 <nav class="class-tabs" aria-label="{% trans 'Classes' %}">{% for lv, n in levels %}<a class="button sm {% if lv.id != level.id %}quiet{% endif %}" href="?class={{ lv.id }}"{% if lv.id == level.id %} aria-current="page"{% endif %}>{{ lv }} <span class="badge muted">{{ n }}</span></a>{% endfor %}</nav>

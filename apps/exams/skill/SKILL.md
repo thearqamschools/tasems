@@ -17,9 +17,9 @@ downloaded from the same page). Your job: read the photo(s) and fill that Excel,
 
 ## Steps
 
-1. Open the Excel. Row 2 has the headings: COMP.code, Name, then each subject with its total in brackets
+1. Open the Excel. Row 2 has the headings: Comp. Code, Name, then each subject with its total in brackets
    (e.g. `English (40)`), then Attentive, Punctual, Neatness, Participation. Row 3 is hidden: **do not change it**.
-2. For each student on the photo, find their row in the Excel **by COMP.code** (the computer code column); check the name
+2. For each student on the photo, find their row in the Excel **by Comp. Code** (the computer code column); check the name
    matches. Fill:
    - each subject: the marks written (whole or half marks); `A` if written as absent / A / Abs.
    - Attentive, Punctual, Neatness, Participation: `E` (Excellent), `G` (Good) or `F` (Fair) as ticked or written;

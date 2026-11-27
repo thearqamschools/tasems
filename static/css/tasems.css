@@ -858,3 +858,8 @@ details.callout > summary { margin-block-end: var(--space-2); font-weight: 600; 
 .sections-table th { white-space: normal; line-height: 1.25; }
 .sections-table .button.sm { padding-inline: 0.45rem; font-size: 0.8rem; }
 .sections-table td:last-child, .sections-table th:last-child { padding-inline-end: 0.75rem; }
+.branch-details .check { display: inline-flex; align-items: center; gap: 0.4rem; margin-block-start: 0.3rem; }
+.branch-details .check .icon { color: #1f9d55; }
+.card > h2:first-child { margin-block-start: 0; }
+.periods-table td { vertical-align: middle; }
+.periods-table td.center input[type="checkbox"] { margin: 0; }

@@ -126,7 +126,7 @@ def workbook(exam, section, data):
     ws.title = "Marks"
     ws.append([f"{exam.name} — {section} — The Arqam Schools"])
     ws.append(
-        ["COMP.code", "Name"]
+        ["Comp. Code", "Name"]
         + [f"{p.subject.name} ({p.total_marks})" for p in data["papers"]]
         + [str(label) for _a, label in ExamRating.ASPECTS]
     )
@@ -159,7 +159,7 @@ def workbook(exam, section, data):
         "Type the marks under each subject (whole or half marks, not more than the total in brackets).",
         "A = absent. Leave a cell empty if the marks are not ready yet.",
         "Attentive, Punctual, Neatness, Participation: E = Excellent, G = Good, F = Fair.",
-        "Do not change the COMP.code column, the headings or the order of the columns.",
+        "Do not change the Comp. Code column, the headings or the order of the columns.",
         "Then: TASEMS → Exams & Results → the exam → the section → Import Excel; check and press Save.",
     ):
         notes.append([line])
@@ -171,7 +171,7 @@ def workbook(exam, section, data):
 
 def read_workbook(file, papers, rows):
     """The Excel back → a dict like a submitted form ({"m_<student>_<paper>": text, "r_<student>_<aspect>": letter})
-    and a list of problems. Rows are matched by COMP.code (computer code)."""
+    and a list of problems. Rows are matched by Comp. Code (computer code)."""
     from openpyxl import load_workbook
 
     try:
@@ -200,7 +200,7 @@ def read_workbook(file, papers, rows):
         code = str(values[0] or "").strip().upper()
         sid = by_code.get(code)
         if sid is None:
-            problems.append(f"Row {n}: COMP.code {code or '(empty)'} is not a student of this section; left out.")
+            problems.append(f"Row {n}: Comp. Code {code or '(empty)'} is not a student of this section; left out.")
             continue
         for i, (kind, ref) in columns.items():
             value = values[i] if i < len(values) else None
