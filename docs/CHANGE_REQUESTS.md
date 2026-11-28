@@ -1193,7 +1193,7 @@ not to be bought or switched on without approval.
   (measured).
 
 
-## Round 23 — subject names: full or short (lead, 28 Nov 2026, voice note after v31) — noted, not built yet
+## Round 23 — subject names: full or short (lead, 28 Nov 2026, voice note after v31) — noted; lead: build it into the next version (v32)
 
 - R23-1. **Result cards — full subject names, never the short form**, on every exam's card (Periodic Assessment – I,
   Mid-Term, Periodic Assessment – II, Final): e.g. "English", "Mathematics", "Islamiyat", not "Math", "I.S". (Changes
