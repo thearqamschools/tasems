@@ -1171,3 +1171,11 @@ not to be bought or switched on without approval.
   down a little; less space between the header, the dates / exam / session bar and the table.
 - R21-7. **Date sheet — bar text centred:** "10 – 17 November 2026", the exam name and "Session 2026-27" are not in
   the middle of their light box (height-wise) — centre them; check every alignment with a designer's eye.
+
+## Round 22 — result card back to the earlier layout (lead, 28 Nov 2026, photo of Eshal's card) — sample sent, waiting
+
+- R22-1. **Result card in the earlier black-and-white layout** (the one printed for Eshal, Pre-Nine Rose, Periodic
+  Assessment – II): subjects table with Total marks / Percentage rows, the ratings with boxes, Remarks on two lines.
+  Header as on the v30 card — round logo with THE ARQAM SCHOOLS and the campus line, **no Urdu**. The room to sign
+  between Remarks and Teacher / Head / Principal stays (R21-3). Sample sent 28 Nov (template kept in docs/samples/result_card_r22_sample.html; the live card is still v30); the lead will say what to change
+  on it before it is built into an installer.
