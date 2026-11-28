@@ -1199,5 +1199,5 @@ not to be bought or switched on without approval.
   Mid-Term, Periodic Assessment – II, Final): e.g. "English", "Mathematics", "Islamiyat", not "Math", "I.S". (Changes
   R19-5, which put short names on cards.)
 - R23-2. **Sheet to fill by hand (marks sheet) — short forms** in the headings, as now (R19-5).
-- R23-3. **Date sheet — to confirm with the lead:** the voice note says "poora naam hi likhna hai date sheet pe";
-  the PDF uses short names now (R19-5, as on the school's design). Asked: full names on the date sheet too?
+- R23-3. **Date sheet — short names stay** (lead, 28 Nov, voice note read as "date sheet pe bhi short naam aayenge"),
+  as now (R19-5, as on the school's design).
