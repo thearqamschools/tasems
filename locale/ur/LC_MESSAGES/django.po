@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 11:09+0500\n"
+"POT-Creation-Date: 2026-11-28 12:27+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -397,7 +397,7 @@ msgstr "فیس وصول (%(n)s ادائیگیاں)"
 #: templates/accounting/incomes.html:17 templates/accounting/index.html:34
 #: templates/attendance/today.html:9 templates/events/detail.html:41
 #: templates/events/detail.html:52 templates/events/index.html:9
-#: templates/exams/award_list.html:11 templates/exams/date_sheet.html:41
+#: templates/exams/award_list.html:11 templates/exams/date_sheet.html:31
 #: templates/exams/papers.html:23 templates/exams/papers.html:26
 #: templates/exams/section_exam.html:8 templates/fees/collections.html:18
 #: templates/fees/family_receive.html:36 templates/fees/index.html:28
@@ -818,7 +818,7 @@ msgid "Daily Diary"
 msgstr "روزانہ ڈائری"
 
 #: apps/accounts/context_processors.py:80 apps/reports/catalogue.py:177
-#: templates/exams/date_sheet.html:13 templates/exams/index.html:2
+#: templates/exams/date_sheet.html:4 templates/exams/index.html:2
 #: templates/exams/index.html:4 templates/exams/papers.html:4
 #: templates/exams/report.html:4 templates/exams/section_marks.html:4
 msgid "Exams & Results"
@@ -2338,7 +2338,7 @@ msgstr "%(s)s کے نمبر اور درجہ بندی محفوظ ہو گئی۔"
 msgid "No section has papers and students for this exam yet."
 msgstr "اس امتحان میں ابھی کسی سیکشن کے پرچے اور طلبہ نہیں ہیں۔"
 
-#: apps/exams/views_year.py:661
+#: apps/exams/views_year.py:695
 msgid "No exam marks for this student yet."
 msgstr "اس طالب علم کے امتحانی نمبر ابھی نہیں ہیں۔"
 
@@ -6737,8 +6737,7 @@ msgstr "موبائل 2 واٹس ایپ پر ہے"
 
 #: apps/setup/views.py:82 templates/academics/section_subjects.html:28
 #: templates/admissions/form.html:9 templates/events/expense_form.html:10
-#: templates/events/form.html:12 templates/exams/date_sheet.html:7
-#: templates/exams/date_sheet.html:36 templates/exams/date_sheet.html:50
+#: templates/events/form.html:12 templates/exams/date_sheet.html:27
 #: templates/exams/papers.html:30 templates/exams/ratings.html:23
 #: templates/hiring/candidate.html:34 templates/hiring/edit.html:22
 #: templates/hr/_machine_form.html:10 templates/hr/employee_form.html:15
@@ -7382,7 +7381,7 @@ msgstr "ٹائم ٹیبل محفوظ کریں"
 #: templates/academics/section_timetable.html:31
 #: templates/accounting/incomes.html:24 templates/accounting/index.html:42
 #: templates/accounts/password_change.html:9 templates/core/delete.html:22
-#: templates/events/detail.html:46 templates/exams/date_sheet.html:36
+#: templates/events/detail.html:46 templates/exams/date_sheet.html:27
 #: templates/exams/enter_marks.html:19 templates/fees/student.html:44
 #: templates/fees/student.html:77 templates/hifz/student.html:33
 #: templates/payroll/pay_many.html:21 templates/people/leave.html:13
@@ -7757,7 +7756,7 @@ msgid "Call"
 msgstr "کال کریں"
 
 #: templates/admissions/detail.html:10 templates/diary/day.html:34
-#: templates/exams/date_sheet.html:17 templates/exams/index.html:15
+#: templates/exams/date_sheet.html:8 templates/exams/index.html:15
 #: templates/exams/papers.html:2 templates/hr/employee.html:12
 #: templates/setup/branches.html:23 templates/setup/branches.html:34
 #: templates/setup/fees.html:18 templates/setup/fees.html:31
@@ -9066,38 +9065,17 @@ msgstr "رزلٹ کارڈ"
 msgid "Back to results"
 msgstr "نتائج پر واپس"
 
-#: templates/exams/date_sheet.html:2 templates/exams/date_sheet.html:15
+#: templates/exams/date_sheet.html:2 templates/exams/date_sheet.html:6
 #: templates/exams/index.html:16 templates/exams/papers.html:13
 #: templates/exams/section_exam.html:17
 msgid "Date sheet"
 msgstr "ڈیٹ شیٹ"
 
-#: templates/exams/date_sheet.html:3 templates/exams/date_sheet.html:46
-msgid "Change logo (header picture)"
-msgstr "لوگو بدلیں (ہیڈر کی تصویر)"
-
-#: templates/exams/date_sheet.html:4 templates/exams/date_sheet.html:47
-msgid ""
-"The picture at the top of every date sheet and result card. Use a wide "
-"picture of the logo and the school's name (PNG or JPG); it is shown exactly "
-"as uploaded."
-msgstr ""
-"ہر ڈیٹ شیٹ اور رزلٹ کارڈ کے اوپر کی تصویر۔ لوگو اور اسکول کے نام والی چوڑی "
-"تصویر لگائیں (PNG یا JPG)؛ یہ بالکل ویسی ہی دکھائی دیتی ہے۔"
-
-#: templates/exams/date_sheet.html:6 templates/exams/date_sheet.html:49
-msgid "Header picture"
-msgstr "ہیڈر کی تصویر"
-
-#: templates/exams/date_sheet.html:8 templates/exams/date_sheet.html:51
-msgid "Back to the school's logo"
-msgstr "اسکول کا لوگو واپس"
-
-#: templates/exams/date_sheet.html:18 templates/exams/papers.html:14
+#: templates/exams/date_sheet.html:9 templates/exams/papers.html:14
 msgid "Generate date sheet (PDF)"
 msgstr "ڈیٹ شیٹ بنائیں (PDF)"
 
-#: templates/exams/date_sheet.html:22
+#: templates/exams/date_sheet.html:13
 msgid ""
 "This exam is for the whole network: the dates you save print on every "
 "branch's date sheet and exam slips."
@@ -9105,24 +9083,24 @@ msgstr ""
 "یہ امتحان پورے نیٹ ورک کے لیے ہے: محفوظ کی گئی تاریخیں ہر برانچ کی ڈیٹ شیٹ "
 "اور سلپس پر چھپیں گی۔"
 
-#: templates/exams/date_sheet.html:25
+#: templates/exams/date_sheet.html:16
 msgid "First day"
 msgstr "پہلا دن"
 
-#: templates/exams/date_sheet.html:26
+#: templates/exams/date_sheet.html:17
 msgid "Last day"
 msgstr "آخری دن"
 
-#: templates/exams/date_sheet.html:28
+#: templates/exams/date_sheet.html:19
 msgid ""
 "Give the first and last day and press Save; then choose each paper's day."
 msgstr "پہلا اور آخری دن دے کر Save دبائیں، پھر ہر پرچے کا دن چنیں۔"
 
-#: templates/exams/date_sheet.html:44
+#: templates/exams/date_sheet.html:34
 msgid "No dates set yet."
 msgstr "ابھی تاریخیں مقرر نہیں ہوئیں۔"
 
-#: templates/exams/date_sheet.html:44
+#: templates/exams/date_sheet.html:34
 msgid "Press Edit and give each paper its day."
 msgstr "Edit دبا کر ہر پرچے کا دن دیں۔"
 
@@ -14080,6 +14058,23 @@ msgstr "کھلا"
 #: templates/setup/users.html:28
 msgid "Nobody matches these filters."
 msgstr "ان شرائط کے مطابق کوئی نہیں۔"
+
+#~ msgid "Change logo (header picture)"
+#~ msgstr "لوگو بدلیں (ہیڈر کی تصویر)"
+
+#~ msgid ""
+#~ "The picture at the top of every date sheet and result card. Use a wide "
+#~ "picture of the logo and the school's name (PNG or JPG); it is shown "
+#~ "exactly as uploaded."
+#~ msgstr ""
+#~ "ہر ڈیٹ شیٹ اور رزلٹ کارڈ کے اوپر کی تصویر۔ لوگو اور اسکول کے نام والی "
+#~ "چوڑی تصویر لگائیں (PNG یا JPG)؛ یہ بالکل ویسی ہی دکھائی دیتی ہے۔"
+
+#~ msgid "Header picture"
+#~ msgstr "ہیڈر کی تصویر"
+
+#~ msgid "Back to the school's logo"
+#~ msgstr "اسکول کا لوگو واپس"
 
 #~ msgid ""
 #~ "Tick the subjects of each class. All sections of a class share them. Only "

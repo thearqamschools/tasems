@@ -1,5 +1,7 @@
 <!doctype html>
-{% comment %}Result card of one exam — the school's own design (lead, 27 Nov 2026: MASTER template / Pre-Nine Jasmine).{% endcomment %}
+{% comment %}Result card of one exam: the earlier black-and-white layout the school uses (lead, 28 Nov 2026, photo of
+Eshal's Periodic Assessment – II card), with the header of the v30 card — round logo, THE ARQAM SCHOOLS and the campus
+line, no Urdu — and room to sign between the remarks and Teacher / Head / Principal (R21-3).{% endcomment %}
 <html lang="en"><head><meta charset="utf-8"><title>Result cards</title>
 <style>
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Regular.ttf"); font-weight: 400; }
@@ -7,122 +9,86 @@
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-SemiBold.ttf"); font-weight: 600; }
   @font-face { font-family: "Poppins"; src: url("{{ font_base }}Poppins-Bold.ttf"); font-weight: 700; }
   @font-face { font-family: "Inserat"; src: url("{{ font_base }}HelveticaInseratLTStd-Roman.ttf"); }
-  @page { size: A4 portrait; margin: 6.6mm 6.6mm 10mm;
-    @bottom-center { content: "{{ address|safe }}"; font: 7.5pt "Poppins"; color: #222; vertical-align: top; padding-top: 1.6mm; } }
+  @page { size: A4 portrait; margin: 8mm 8mm 13mm;
+    @bottom-center { content: "{{ address|safe }}"; font: 8pt "Poppins"; color: #000; vertical-align: top; padding-top: 2mm; } }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Poppins", sans-serif; color: #111; }
-  .card { position: relative; height: 280.4mm; border: 1.3pt solid #111; border-radius: 5mm; padding: 6mm 9.3mm 5.4mm;
-    page-break-after: always; display: flex; flex-direction: column; }
+  body { margin: 0; font-family: "Poppins", sans-serif; color: #000; }
+  .card { border: 1.6pt solid #000; padding: 8mm 10mm 6mm; height: 276mm; page-break-after: always;
+    display: flex; flex-direction: column; }
   .card:last-child { page-break-after: auto; }
   .gap { flex: 1 1 0; min-height: {{ gap_min }}; }
-  .mark { position: absolute; left: 50%; top: {{ mark_top }}; width: 86mm; margin-left: -43mm; opacity: .028; }
 
-  table.head { width: 100%; border-collapse: collapse; }
-  table.head td { vertical-align: middle; padding: 0; }
-  table.head td.logo { width: 24mm; }
-  table.head td.logo img { width: 19.6mm; height: 19.6mm; display: block; }
-  .school { font-family: "Inserat", "Poppins", sans-serif; font-size: 29pt; line-height: .92; letter-spacing: .01em; }
-  .campus { font-size: 7.4pt; font-weight: 500; letter-spacing: .43em; margin-top: .5mm; text-transform: uppercase; }
-  td.badge { width: 46mm; text-align: right; padding-left: 8mm; }
-  .badge-box { display: inline-block; border: 1.2pt solid #111; border-radius: 3mm; padding: 1.4mm 3.2mm 1.3mm; text-align: center; }
-  .badge-box small { display: block; font-size: 5.6pt; font-weight: 600; letter-spacing: .3em; }
-  .badge-box b { display: block; font-family: "Inserat", "Poppins", sans-serif; font-weight: 400; font-size: 17pt; line-height: 1; margin-top: .4mm; }
+  table.head { margin: 0 auto; border-collapse: collapse; position: relative; left: .3mm; } /* logo + name centred on the card */
+  table.head td { padding: 0; vertical-align: middle; }
+  table.head td.logo { padding-right: 2.6mm; }
+  table.head td.name { padding-top: 1.3mm; } /* the name block's middle on the logo's middle */
+  table.head td.logo img { width: 22mm; height: 22mm; display: block; }
+  .school { font-family: "Inserat", "Poppins", sans-serif; font-size: 33pt; line-height: .92; letter-spacing: .01em; color: #111; }
+  .campus { font-size: 8pt; font-weight: 500; letter-spacing: .43em; margin-top: .2mm; text-transform: uppercase; color: #222;
+    text-align: center; padding-left: .3em; } /* centred right under the name; the padding evens the last letter's spacing */
 
-  .pill { background: #000; color: #fff; border-radius: 6mm; text-align: center; font-weight: 700; font-size: 14pt;
-    letter-spacing: .07em; padding: 2.8mm 0 2.6mm; text-transform: uppercase; }
+  h1 { text-align: center; font-size: 16pt; font-weight: 700; margin: 0; letter-spacing: .01em; }
+  table.who { width: 100%; border-collapse: collapse; font-size: 10.5pt; }
+  table.who td { padding: 1.8mm 0 0.4mm; vertical-align: bottom; line-height: 1.1; }
+  table.who td.k { font-weight: 700; white-space: nowrap; width: 26mm; padding-right: 2mm; }
+  table.who td.v { border-bottom: .8pt solid #000; text-align: center; font-weight: 500; width: 62mm; }
+  table.who td.v2 { border-bottom: .8pt solid #000; text-align: center; font-weight: 500; width: 40mm; }
+  table.who td.k2 { font-weight: 700; white-space: nowrap; width: 20mm; padding-right: 2mm; }
+  table.who td.sp { width: auto; }
 
-  .panel { background: #f0f0f0; border-radius: 3mm; padding: 3mm 5.2mm 4.4mm; }
-  table.who { width: 100%; border-collapse: collapse; }
-  table.who td { padding: 2.6mm 0 0; vertical-align: bottom; }
-  table.who td.k { width: 21mm; font-size: 8.6pt; font-weight: 700; letter-spacing: .14em; padding-bottom: .8mm; }
-  table.who td.v { width: 58mm; border-bottom: .8pt solid #111; text-align: center; font-size: 12pt; font-weight: 600; line-height: 1.15; }
-  table.who td.sp { width: 13mm; }
-  table.who td.k2 { width: 24mm; font-size: 8.6pt; font-weight: 700; letter-spacing: .14em; padding-bottom: .8mm; }
+  table.marks { width: 80%; margin: 0 auto; border-collapse: collapse; }
+  table.marks th, table.marks td { border: 1pt solid #000; padding: {{ cell }} 3mm; font-size: 9pt; vertical-align: middle; }
+  table.marks th { font-weight: 700; text-align: center; font-size: 10pt; padding-top: 2.6mm; padding-bottom: 2.6mm; }
+  table.marks td.n { text-align: center; width: 34mm; }
+  table.marks td.s { text-transform: uppercase; }
+  table.marks tr.total td { font-weight: 700; font-size: 9.5pt; }
 
-  .tbl { border: 1pt solid #111; border-radius: 3mm; overflow: hidden; }
-  table.subjects { width: 100%; border-collapse: collapse; }
-  table.subjects th { background: #222; color: #fff; font-size: 8.2pt; font-weight: 700; letter-spacing: .1em; padding: 3.6mm 3mm; text-align: left; }
-  table.subjects th.c, table.subjects td.c { text-align: center; }
-  table.subjects th + th, table.subjects td + td { border-left: .6pt solid #888; }
-  table.subjects td { font-size: 10.5pt; font-weight: 600; padding: {{ cell }} 3mm; border-top: .6pt solid #999; }
-  table.subjects tr:nth-child(even) td { background: #f1f1f1; }
-  table.subjects td.no { width: 12mm; font-size: 8pt; font-weight: 600; text-align: center; }
-  table.subjects td.n { width: 30mm; text-align: center; font-weight: 400; }
-  table.subjects td.o { width: 38mm; text-align: center; font-weight: 600; }
+  table.rate { margin: 0 auto; border-collapse: collapse; font-size: 8.5pt; }
+  table.rate th, table.rate td { width: 26mm; text-align: center; vertical-align: middle; padding: 1.3mm 0; }
+  table.rate th { font-weight: 500; font-size: 8pt; padding-bottom: 1.8mm; }
+  table.rate th.l, table.rate td.l { width: 40mm; text-align: left; font-weight: 700; }
+  .box { display: inline-block; width: 11mm; height: 5mm; border: .8pt solid #000; border-radius: 1.4mm; text-align: center;
+    font-size: 8pt; line-height: 5mm; font-weight: 700; }
 
-  table.lower { width: 100%; border-collapse: collapse; }
-  table.lower > tbody > tr > td { vertical-align: top; padding: 0; }
-  table.lower td.q { width: 68%; padding-right: 3.6mm; }
-  table.quals { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
-  table.quals th:not(.l) { width: 22%; }
-  table.quals thead tr { background: #222; }
-  table.quals th { background: transparent; color: #fff; font-size: 8.2pt; font-weight: 700; letter-spacing: .1em; text-align: center;
-    padding: 2.6mm 2mm 2.8mm; vertical-align: top; line-height: 1.55; border: 0; }
-  table.quals td { border-left: 0; border-right: 0; }
-  table.quals th.l { text-align: left; padding-left: 3.6mm; width: 34%; }
-  table.quals tbody tr:first-child td { border-top: 0; }
-  table.quals td { padding: 1.9mm 2mm; border-top: .6pt solid #999; text-align: center; vertical-align: middle; }
-  table.quals tbody tr:nth-child(even) { background: #f1f1f1; }
-  table.quals td.l { text-align: left; padding-left: 3.6mm; font-size: 10.5pt; font-weight: 600; }
-  .tick { display: inline-block; width: 5.6mm; height: 5.6mm; border: .9pt solid #111; border-radius: 1.4mm; text-align: center;
-    font-size: 9pt; line-height: 5.4mm; font-weight: 700; background: #fff; }
-  .side { border: 1pt solid #111; border-radius: 3mm; padding: 0 4.2mm; margin-bottom: 2.3mm; }
-  .side:last-child { margin-bottom: 0; }
-  .side table { width: 100%; border-collapse: collapse; }
-  .side td { vertical-align: middle; padding: 0; height: 15.4mm; }
-  .side .k { font-size: 8.6pt; font-weight: 700; letter-spacing: .14em; }
-  .side .v { text-align: right; }
-  .side.got { background: #ececec; border-width: 1.6pt; }
-  .side.got .line { font-size: 13pt; font-weight: 700; }
-  .side .line { display: inline-block; min-width: 18mm; border-bottom: .8pt solid #111; text-align: center; font-size: 11pt; font-weight: 600; line-height: 1.2; }
-
-  .remarks { border: 1pt solid #111; border-radius: 3mm; padding: 3mm 5mm 4.2mm; }
-  .remarks b { font-size: 8.6pt; letter-spacing: .14em; }
-  .remarks .rl { border-bottom: .7pt solid #999; height: 8.6mm; }
-
-  .signroom { flex: 1.6 1 0; min-height: 24mm; } /* R21-3: room to sign between Remarks and the names */
-  table.sign { width: 100%; border-collapse: collapse; }
-  table.sign td { padding: 0; text-align: center; vertical-align: top; font-size: 12pt; font-weight: 700; }
-  table.sign td.s { width: 55.6mm; border-top: .9pt solid #111; padding-top: 2.2mm; }
-  {% if tight %}table.quals td { padding: 1.1mm 2mm; } table.quals th { padding: 1.8mm 2mm 2mm; }
-  .side td { height: 11.6mm; } .side { margin-bottom: 1.6mm; }
-  .remarks { padding: 2.4mm 5mm 3mm; } .remarks .rl { height: 6.6mm; }
-  .signroom { min-height: 17mm; } table.subjects th { padding: 2.6mm 3mm; } table.subjects td { font-size: 10pt; }{% endif %}
+  table.remarks { width: 100%; border-collapse: collapse; font-size: 11pt; }
+  table.remarks td { padding: 0; vertical-align: bottom; }
+  table.remarks td.k { width: 23mm; font-weight: 700; white-space: nowrap; }
+  table.remarks td.line { border-bottom: .8pt solid #000; height: 6mm; }
+  table.remarks tr.more td { height: 11mm; }
+  .signroom { flex: 1.6 1 0; min-height: 22mm; } /* R21-3: room to sign between the remarks and the names */
+  table.sign { width: 100%; border-collapse: collapse; font-weight: 700; font-size: 11pt; }
+  table.sign td { padding: 0; text-align: center; vertical-align: top; }
+  table.sign td.s { width: 60mm; border-top: .8pt solid #000; padding-top: 1.4mm; }
+  {% if tight %}table.rate th, table.rate td { padding: .8mm 0; } table.remarks tr.more td { height: 9mm; }
+  .signroom { min-height: 17mm; }{% endif %}
 </style></head>
 <body>
 {% for c in cards %}<div class="card">
-  <img class="mark" src="{{ logo }}" alt="">
   <table class="head"><tr>
     <td class="logo"><img src="{{ logo }}" alt=""></td>
-    <td><div class="school">THE ARQAM SCHOOLS</div>{% if campus %}<div class="campus">{{ campus }}</div>{% endif %}</td>
-    <td class="badge"><div class="badge-box"><small>STUDENT</small><b>RESULT CARD</b></div></td>
+    <td class="name"><div class="school">THE ARQAM SCHOOLS</div>{% if campus %}<div class="campus">{{ campus }}</div>{% endif %}</td>
   </tr></table>
   <div class="gap"></div>
-  <div class="pill">Result of {{ exam.get_kind_display }}</div>
+  <h1>RESULT OF {{ exam.get_kind_display|upper }}</h1>
   <div class="gap"></div>
-  <div class="panel"><table class="who">
-    <tr><td class="k">NAME</td><td class="v">{{ c.e.student.full_name }}</td><td class="sp"></td><td class="k2">CLASS</td><td class="v">{{ section.class_level }}</td></tr>
-    <tr><td class="k">CODE</td><td class="v">{{ c.e.student.admission_no }}</td><td class="sp"></td><td class="k2">SECTION</td><td class="v">{{ section.name }}</td></tr>
-  </table></div>
+  <table class="who">
+    <tr><td class="k">Name:</td><td class="v">{{ c.e.student.full_name }}</td><td class="sp"></td><td class="k2">Class:</td><td class="v2">{{ section.class_level }}</td></tr>
+    <tr><td class="k">Comp. Code:</td><td class="v">{{ c.e.student.admission_no }}</td><td class="sp"></td><td class="k2">Section:</td><td class="v2">{{ section.name }}</td></tr>
+  </table>
   <div class="gap"></div>
-  <div class="tbl"><table class="subjects">
-    <thead><tr><th class="c" style="width:12mm">NO.</th><th>SUBJECT</th><th class="c" style="width:30mm">TOTAL MARKS</th><th class="c" style="width:38mm">OBTAINED MARKS</th></tr></thead>
-    <tbody>{% for p, m in c.lines %}<tr><td class="no">{{ forloop.counter }}</td><td>{{ p.subject.short }}</td><td class="n">{{ p.total_marks }}</td><td class="o">{% if m %}{% if m.status == "present" %}{{ m.obtained|floatformat:"-1" }}{% else %}Absent{% endif %}{% endif %}</td></tr>{% endfor %}</tbody>
-  </table></div>
+  <table class="marks">
+    <thead><tr><th>SUBJECT</th><th>TOTAL MARKS</th><th>OBTAINED MARKS</th></tr></thead>
+    <tbody>{% for p, m in c.lines %}<tr><td class="s">{{ p.subject.short }}</td><td class="n">{{ p.total_marks }}</td><td class="n">{% if m %}{% if m.status == "present" %}{{ m.obtained|floatformat:"-1" }}{% else %}Absent{% endif %}{% endif %}</td></tr>{% endfor %}
+      <tr class="total"><td>TOTAL MARKS</td><td class="n">{{ c.total }}</td><td class="n">{% if c.percent is not None %}{{ c.obtained|floatformat:"-1" }}{% endif %}</td></tr>
+      <tr class="total"><td>PERCENTAGE</td><td class="n" colspan="2">{% if c.percent is not None %}{{ c.percent|floatformat:"-2" }}%{% endif %}</td></tr></tbody>
+  </table>
   <div class="gap"></div>
-  <table class="lower"><tr>
-    <td class="q"><div class="tbl"><table class="quals">
-      <thead><tr><th class="l">PERSONAL<br>QUALITIES</th>{% for v, label in levels %}<th>{{ label|upper }}</th>{% endfor %}</tr></thead>
-      <tbody>{% for label, level in c.ratings %}<tr><td class="l">{{ label }}</td>{% for v, _l in levels %}<td><span class="tick">{% if v == level %}✓{% endif %}</span></td>{% endfor %}</tr>{% endfor %}</tbody>
-    </table></div></td>
-    <td>
-      <div class="side"><table><tr><td class="k">TOTAL MARKS</td><td class="v"><span class="line">{{ c.total }}</span></td></tr></table></div>
-      <div class="side got"><table><tr><td class="k">OBTAINED</td><td class="v"><span class="line">{% if c.percent is not None %}{{ c.obtained|floatformat:"-1" }}{% endif %}</span></td></tr></table></div>
-      <div class="side"><table><tr><td class="k">PERCENTAGE</td><td class="v"><span class="line">{% if c.percent is not None %}{{ c.percent|floatformat:"-2" }}%{% endif %}</span></td></tr></table></div>
-    </td>
-  </tr></table>
+  <table class="rate">
+    <thead><tr><th class="l"></th>{% for v, label in levels %}<th>{{ label|upper }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for label, level in c.ratings %}<tr><td class="l">{{ label|upper }}</td>{% for v, _l in levels %}<td><span class="box">{% if v == level %}✓{% endif %}</span></td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table>
   <div class="gap"></div>
-  <div class="remarks"><b>REMARKS</b><div class="rl"></div><div class="rl"></div></div>
+  <table class="remarks"><tr><td class="k">Remarks:</td><td class="line"></td></tr><tr class="more"><td class="line" colspan="2"></td></tr></table>
   <div class="signroom"></div>
   <table class="sign"><tr><td class="s">Teacher</td><td></td><td class="s">Head / Principal</td></tr></table>
 </div>{% endfor %}

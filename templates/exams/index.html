@@ -7,16 +7,16 @@
 <div class="heading-tools"><h2>{% trans "Exams this session" %}</h2>
 {% if can_add %}<form method="post" action="{% url 'exams:add_session_exams' %}" style="margin:0">{% csrf_token %}<button class="button sm" type="submit">{% icon "calendar-check" %}{% trans "Add this session's exams" %}</button></form>{% endif %}</div>
 {% if exams %}
-<div class="exam-cards">{% for e in exams %}
+<div class="exam-cards-wrap"><div class="exam-cards">{% for e in exams %}
   <section class="card exam-card">
-    <div class="exam-card-head"><span class="exam-step">{{ forloop.counter }}</span><div><h3>{{ e.get_kind_display }}</h3>
+    <div class="exam-card-head"><span class="exam-step">{{ forloop.counter }}</span><div><h3>{{ e.get_kind_display|keep_dash }}</h3>
       <p class="muted small">{% if e.first_day %}{{ e.first_day|date:"d M" }} – {{ e.last_day|date:"d M Y" }}{% else %}{% trans "Dates not set" %}{% endif %}{% if e.marks_due_on %} · {% blocktrans with d=e.marks_due_on|date:"d M" %}Marks due {{ d }}{% endblocktrans %}{% endif %}</p></div></div>
     <div class="exam-card-actions">
       <a class="button sm" href="{% url 'exams:papers' e.id %}">{% trans "Edit" %}</a>
-      <a class="button quiet sm" href="{% url 'exams:date_sheet' e.id %}" title="{% trans 'Date sheet' %}">{% icon "calendar-check" %}<span class="lbl">{% trans "Date sheet" %}</span></a>
-      <a class="button quiet sm" href="{% url 'exams:report' e.id %}" title="{% trans 'Results' %}">{% icon "file-spreadsheet" %}<span class="lbl">{% trans "Results" %}</span></a>
+      <a class="button quiet sm" href="{% url 'exams:date_sheet' e.id %}"><span class="lbl">{% trans "Date sheet" %}</span></a>
+      <a class="button quiet sm" href="{% url 'exams:report' e.id %}"><span class="lbl">{% trans "Results" %}</span></a>
     </div>
-  </section>{% endfor %}</div>
+  </section>{% endfor %}</div></div>
 {% else %}<div class="card empty-state">{% icon "graduation-cap" %}<p>{% trans "No exams set up yet for this session." %}{% if can_add %} {% trans "Press “Add this session's exams”." %}{% endif %}</p></div>{% endif %}
 
 {% if mine %}

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.57.0 — 2026-11-28 — Round 22: result card in the earlier layout, exam boxes, date sheet page (installer v31)
+- **Result card** (R22-1): back to the earlier black-and-white layout the school printed (subjects table with Total
+  marks and Percentage rows, the rating boxes, Remarks on two lines) with the v30 header — round logo, THE ARQAM
+  SCHOOLS and the campus line centred under it, no Urdu; logo and name close together, their middles on one line, the
+  pair centred on the card. The room to sign stays; every card one page (tried up to 16 subjects).
+- **Exams & Results** (R22-2, R22-5): the four exam boxes all the same size with the same room on every side; the
+  exam's name on one line with its number beside it; Edit, Date sheet and Results (words only) fill the box's width,
+  so no empty space on the right. Four in a row on a wide screen (1920 px), two and two on a laptop or when zoomed
+  (never three and one).
+- **Date sheet page** (R22-3): no logo on the page and no "Change logo (header picture)"; the PDF is always in the
+  school's design.
+- **Date sheet PDF** (R22-4): DATE SHEET in the exact middle of its tab, left–right and top–bottom.
+
 ## 0.56.0 — 2026-11-28 — Round 21: result card and date sheet finishing (installer v30)
 - **Result card** (R21-1 – R21-4): THE ARQAM SCHOOLS a little smaller with the campus line close under it, spread to
   the same width; more space before the STUDENT RESULT CARD badge; a clear room to sign between Remarks and

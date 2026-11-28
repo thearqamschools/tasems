@@ -67,20 +67,17 @@ def _png(color=(200, 30, 30)):
     return SimpleUploadedFile("header.png", buffer.getvalue(), content_type="image/png")
 
 
-def test_header_picture_changed_from_the_date_sheet_page(exam_setup, login_as, make_user):  # noqa: F811
+def test_date_sheet_page_has_no_logo_or_header_picture_option(exam_setup, login_as, make_user):  # noqa: F811
+    """R22-3 (lead, 28 Nov 2026): the date sheet page shows no logo and no "Change logo (header picture)"; the PDF is
+    always in the school's design."""
     exam = exam_setup["exam"]
-    assert login_as(exam_setup["principal"]).post(
-        f"/exams/{exam.id}/date-sheet/", {"action": "header", "image": _png()}
-    ).status_code == 403  # fmt: skip
-    admin = login_as(make_user("network_admin", Scope.NETWORK))
-    assert "Change logo" in admin.get(f"/exams/{exam.id}/date-sheet/").content.decode()
-    admin.post(f"/exams/{exam.id}/date-sheet/", {"action": "header", "image": _png()})
-    assert PrintHeader.objects.count() == 1
-    from apps.core import paths
-
-    assert paths.banner().startswith("data:image/png;base64,")
-    admin.post(f"/exams/{exam.id}/date-sheet/", {"action": "header_reset"})
-    assert not PrintHeader.objects.exists()
+    admin_user = make_user("network_admin", Scope.NETWORK)
+    admin = login_as(admin_user)
+    page = admin.get(f"/exams/{exam.id}/date-sheet/").content.decode()
+    assert "Change logo" not in page and "date-sheet-banner" not in page
+    PrintHeader.objects.create(image=_png(), updated_by=admin_user)  # an old upload is not used any more
+    pdf = admin.get(f"/exams/{exam.id}/date-sheet.pdf")
+    assert pdf.status_code == 200 and pdf.content[:4] == b"%PDF"
 
 
 def test_date_sheet_one_page_and_card_with_many_subjects(exam_setup, login_as, make_user):  # noqa: F811

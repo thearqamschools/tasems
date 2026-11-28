@@ -92,13 +92,11 @@ def date_sheet_pdf(exam, levels, branch):
     """The date sheet in the school's own colour design (lead, 27 Nov 2026: "Date Sheet — Colour A4 landscape")."""
     from weasyprint import HTML
 
-    from apps.exams.models import PrintHeader
     from apps.exams.views_year import _campus_line
 
     sheet = grid(exam, levels, short=True)  # short subject names, as on the design (R19-5)
     rows = [(d, cells, all(c == "–" for c in cells)) for d, cells in sheet["rows"]]
     columns = len(sheet["columns"])
-    header = PrintHeader.current()
     html = render_to_string(
         "exams/date_sheet_document.html",
         {
@@ -112,7 +110,7 @@ def date_sheet_pdf(exam, levels, branch):
             ),
             **_fit(len(rows)),
             "logo": paths.file_uri(paths.Path(settings.BASE_DIR) / "static" / "img" / "arqam-logo-512.png"),
-            "header": paths.banner() if header is not None else "",
+            "header": "",  # R22-3: always the school's design (logo, name, campus line); no uploaded picture
             "campus": _campus_line(branch),
             "font_base": paths.font_base(),
         },

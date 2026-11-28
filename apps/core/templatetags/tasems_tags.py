@@ -205,3 +205,9 @@ def contact_numbers(branch, separator="  "):
         span = '<span class="contact" style="white-space:nowrap">{}{}</span>'
         parts.append(format_html(span, mark_safe(svg), number))
     return mark_safe(separator.join(parts))
+
+
+@register.filter
+def keep_dash(value):
+    """ "Periodic Assessment – II": the dash is tied to the words beside it, never alone on a line (R22-2)."""
+    return str(value).replace(" – ", " – ")

@@ -1172,10 +1172,23 @@ not to be bought or switched on without approval.
 - R21-7. **Date sheet — bar text centred:** "10 – 17 November 2026", the exam name and "Session 2026-27" are not in
   the middle of their light box (height-wise) — centre them; check every alignment with a designer's eye.
 
-## Round 22 — result card back to the earlier layout (lead, 28 Nov 2026, photo of Eshal's card) — sample sent, waiting
+## Round 22 — result card back to the earlier layout (lead, 28 Nov 2026, photo of Eshal's card) — built (v31)
 
 - R22-1. **Result card in the earlier black-and-white layout** (the one printed for Eshal, Pre-Nine Rose, Periodic
   Assessment – II): subjects table with Total marks / Percentage rows, the ratings with boxes, Remarks on two lines.
   Header as on the v30 card — round logo with THE ARQAM SCHOOLS and the campus line, **no Urdu**. The room to sign
-  between Remarks and Teacher / Head / Principal stays (R21-3). Sample sent 28 Nov (template kept in docs/samples/result_card_r22_sample.html; the live card is still v30); the lead will say what to change
-  on it before it is built into an installer.
+  between Remarks and Teacher / Head / Principal stays (R21-3). Samples sent 28 Nov; lead: "yeh wala result ka theek hai". **Built (v31).**
+- R22-1a. (lead, after the samples) campus line right under the name, centred; logo and name block closer, their
+  middles on one line, the pair centred on the page. Lead: "yeh wala result ka theek hai". **Built (v31).**
+- R22-2. **Exam boxes — no empty space on the right** (lead, photo): the same space right of the buttons as left;
+  then the fourth box (Final) comes up into the same row. **Built (v31)** with R22-5.
+- R22-5. **Exam boxes — the name on one line, all boxes one size** (lead, 28 Nov: "Periodic Assessment – I" broke onto
+  two lines with "I" alone): the number beside the name, the name on one line, equal room left / right / top / bottom,
+  every box the same size. **Built (v31):** the buttons fill the box; four in a row when four fit with the name on one
+  line (1920 px screens), otherwise two and two (1366 px laptop, or zoomed) — on a 1366 screen four in a row would need
+  the name on two lines or very small, so two-and-two was chosen.
+- R22-3. **Date sheet page — no logo and no "Change logo (header picture)"** (lead): the design inside the PDF is
+  right. **Built (v31);** an uploaded header picture is no longer used.
+- R22-4. **Date sheet PDF — DATE SHEET centred in its tab, left–right** (lead). **Built (v31):** centred both ways
+  (measured).
+

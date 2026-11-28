@@ -1,14 +1,5 @@
 {% extends "base.html" %}{% load i18n static tasems_tags %}
-{% block title %}{% trans "Date sheet" %} · {{ exam.name }}{% if can_header and not editing %}
-<details class="card header-change"><summary>{% icon "palette" %}{% trans "Change logo (header picture)" %}</summary>
-  <p class="small muted">{% trans "The picture at the top of every date sheet and result card. Use a wide picture of the logo and the school's name (PNG or JPG); it is shown exactly as uploaded." %}</p>
-  <form method="post" enctype="multipart/form-data" class="filter-inline">{% csrf_token %}<input type="hidden" name="action" value="header">
-    <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp" required aria-label="{% trans 'Header picture' %}">
-    <button class="button" type="submit">{% trans "Save" %}</button></form>
-  {% if custom_header %}<form method="post" style="margin-top:.5rem">{% csrf_token %}<input type="hidden" name="action" value="header_reset"><button class="button quiet sm" type="submit">{% trans "Back to the school's logo" %}</button></form>{% endif %}
-</details>
-{% endif %}
-{% endblock %}
+{% block title %}{% trans "Date sheet" %} · {{ exam.name }}{% endblock %}
 {% block content %}
 <p class="no-print"><a href="{% url 'exams:index' %}">‹ {% trans "Exams & Results" %}</a></p>
 <div class="page-header">
@@ -36,19 +27,9 @@
   <div class="actions"><button class="button" type="submit">{% trans "Save" %}</button><a class="button quiet" href="?class={{ level_id }}">{% trans "Cancel" %}</a></div>
 </form>
 {% elif grid.rows %}
-<div class="date-sheet-banner"><img src="{{ banner_url }}" alt="The Arqam Schools"></div>
 <div class="table-wrap"><table class="date-grid">
   <thead><tr><th class="date">{% trans "Date" %}</th>{% for c in grid.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
   <tbody>{% for d, cells in grid.rows %}<tr><td class="date"><strong>{{ d|date:"d-m-y" }}</strong><span class="muted small">{{ d|date:"D" }}</span></td>{% for c in cells %}<td{% if c == "–" %} class="none"{% endif %}>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
 </table></div>
 {% else %}<div class="card empty-state">{% icon "file-text" %}<p>{% trans "No dates set yet." %}{% if can_edit %} {% trans "Press Edit and give each paper its day." %}{% endif %}</p></div>{% endif %}
-{% if can_header and not editing %}
-<details class="card header-change"><summary>{% icon "palette" %}{% trans "Change logo (header picture)" %}</summary>
-  <p class="small muted">{% trans "The picture at the top of every date sheet and result card. Use a wide picture of the logo and the school's name (PNG or JPG); it is shown exactly as uploaded." %}</p>
-  <form method="post" enctype="multipart/form-data" class="filter-inline">{% csrf_token %}<input type="hidden" name="action" value="header">
-    <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp" required aria-label="{% trans 'Header picture' %}">
-    <button class="button" type="submit">{% trans "Save" %}</button></form>
-  {% if custom_header %}<form method="post" style="margin-top:.5rem">{% csrf_token %}<input type="hidden" name="action" value="header_reset"><button class="button quiet sm" type="submit">{% trans "Back to the school's logo" %}</button></form>{% endif %}
-</details>
-{% endif %}
 {% endblock %}

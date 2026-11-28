@@ -15,10 +15,11 @@ def test_card_rows_close_up_as_subjects_grow():
     assert cells == sorted(cells, reverse=True) and cells[0] == 2.4
 
 
-def test_card_keeps_room_to_sign_and_totals_alike():
+def test_card_keeps_room_to_sign_in_the_earlier_layout():
+    """R22-1: the earlier black-and-white card with the v30 header (no Urdu) and the room to sign kept."""
     card = (TEMPLATES / "exam_card_document.html").read_text()
-    assert 'class="signroom"' in card and "min-height: 24mm" in card
-    assert "side total" not in card and 'class="side got"' in card  # Obtained is the one highlighted
+    assert 'class="signroom"' in card and "THE ARQAM SCHOOLS" in card and "banner" not in card
+    assert "TOTAL MARKS" in card and "PERCENTAGE" in card and "Remarks:" in card
 
 
 def test_date_sheet_tab_has_the_designs_corners():
