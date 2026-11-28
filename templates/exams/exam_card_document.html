@@ -78,7 +78,7 @@ line, no Urdu — and room to sign between the remarks and Teacher / Head / Prin
   <div class="gap"></div>
   <table class="marks">
     <thead><tr><th>SUBJECT</th><th>TOTAL MARKS</th><th>OBTAINED MARKS</th></tr></thead>
-    <tbody>{% for p, m in c.lines %}<tr><td class="s">{{ p.subject.short }}</td><td class="n">{{ p.total_marks }}</td><td class="n">{% if m %}{% if m.status == "present" %}{{ m.obtained|floatformat:"-1" }}{% else %}Absent{% endif %}{% endif %}</td></tr>{% endfor %}
+    <tbody>{% for p, m in c.lines %}<tr><td class="s">{{ p.subject.name }}</td><td class="n">{{ p.total_marks }}</td><td class="n">{% if m %}{% if m.status == "present" %}{{ m.obtained|floatformat:"-1" }}{% else %}Absent{% endif %}{% endif %}</td></tr>{% endfor %}
       <tr class="total"><td>TOTAL MARKS</td><td class="n">{{ c.total }}</td><td class="n">{% if c.percent is not None %}{{ c.obtained|floatformat:"-1" }}{% endif %}</td></tr>
       <tr class="total"><td>PERCENTAGE</td><td class="n" colspan="2">{% if c.percent is not None %}{{ c.percent|floatformat:"-2" }}%{% endif %}</td></tr></tbody>
   </table>

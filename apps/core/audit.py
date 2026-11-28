@@ -10,6 +10,7 @@ from django.dispatch import receiver
 
 from .middleware import get_current_request
 from .models import AuditEvent
+from .net import client_ip
 
 SKIP_FIELDS = {"password", "updated_at", "created_at", "last_login"}
 _registered = set()
@@ -31,7 +32,7 @@ def _request_context():
         return None, None
     user = getattr(request, "user", None)
     actor = user if user is not None and user.is_authenticated else None
-    ip = request.META.get("REMOTE_ADDR")
+    ip = client_ip(request)
     return actor, ip
 
 
@@ -93,7 +94,7 @@ def _on_login(sender, request, user, **kwargs):
         model_label="accounts.User",
         object_id=str(user.pk),
         object_repr=str(user),
-        ip_address=request.META.get("REMOTE_ADDR") if request else None,
+        ip_address=client_ip(request),
     )
 
 
@@ -115,5 +116,5 @@ def _on_login_failed(sender, credentials, request=None, **kwargs):
         action=AuditEvent.Action.LOGIN_FAILED,
         model_label="accounts.User",
         object_repr=str(credentials.get("username", ""))[:255],
-        ip_address=request.META.get("REMOTE_ADDR") if request else None,
+        ip_address=client_ip(request),
     )

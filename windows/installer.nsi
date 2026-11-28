@@ -59,6 +59,8 @@ Section "TASEMS" Main
   CreateShortcut "$SMPROGRAMS\TASEMS\Backup data.lnk" ${PY} '${LAUNCHER} --backup' "$INSTDIR\app\windows\tasems.ico"
   CreateShortcut "$SMPROGRAMS\TASEMS\Stop database.lnk" ${PY} '${LAUNCHER} --stop' "$INSTDIR\app\windows\tasems.ico"
   CreateShortcut "$SMPROGRAMS\TASEMS\Uninstall TASEMS.lnk" "$INSTDIR\Uninstall.exe"
+  ; R24-3: TASEMS starts by itself (minimised, no browser) when this user signs in to Windows, e.g. after a power cut.
+  CreateShortcut "$SMSTARTUP\TASEMS.lnk" ${PY} '${LAUNCHER} --autostart' "$INSTDIR\app\windows\tasems.ico" 0 SW_SHOWMINIMIZED
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TASEMS" "DisplayName" "${FULLNAME}"
@@ -73,6 +75,7 @@ Section "Uninstall"
   Delete "$DESKTOP\TASEMS.lnk"
   Delete "$DESKTOP\TASEMS master login.lnk"
   RMDir /r "$SMPROGRAMS\TASEMS"
+  Delete "$SMSTARTUP\TASEMS.lnk"
   RMDir /r "$INSTDIR"
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\TASEMS"
   MessageBox MB_OK "TASEMS is removed. Its data is kept in $LOCALAPPDATA\TASEMS-data (delete that folder to remove the data too)."

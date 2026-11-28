@@ -13,6 +13,8 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_POST
 
+from apps.core.net import client_ip
+
 from . import mfa
 from .forms import CodeForm, LoginForm
 from .middleware import MFA_SESSION_KEY
@@ -75,7 +77,7 @@ def login_view(request):
     form = LoginForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         username = _resolve_username(form.cleaned_data["identifier"])
-        ip = request.META.get("REMOTE_ADDR")
+        ip = client_ip(request)
         if is_locked(username, ip):
             form.add_error(None, _("Too many failed attempts. Please wait 15 minutes and try again."))
         else:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-28 12:27+0500\n"
+"POT-Creation-Date: 2026-11-28 14:04+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1131,32 +1131,32 @@ msgstr "آخری تاریخ شروع کی تاریخ سے پہلے ہے۔"
 msgid "Stops the same code being used twice."
 msgstr "ایک ہی کوڈ دو بار استعمال ہونے سے روکتا ہے۔"
 
-#: apps/accounts/views.py:80 apps/parents/views.py:69 apps/parents/views.py:90
+#: apps/accounts/views.py:82 apps/parents/views.py:70 apps/parents/views.py:91
 msgid "Too many failed attempts. Please wait 15 minutes and try again."
 msgstr "بہت زیادہ ناکام کوششیں۔ براہ کرم 15 منٹ انتظار کر کے دوبارہ کوشش کریں۔"
 
-#: apps/accounts/views.py:84
+#: apps/accounts/views.py:86
 msgid "Username or password is incorrect."
 msgstr "یوزر نیم یا پاس ورڈ درست نہیں۔"
 
-#: apps/accounts/views.py:105
+#: apps/accounts/views.py:107
 msgid "Please sign in again."
 msgstr "براہ کرم دوبارہ سائن اِن کریں۔"
 
-#: apps/accounts/views.py:115
+#: apps/accounts/views.py:117
 msgid "Too many wrong codes. Please sign in again."
 msgstr "بہت زیادہ غلط کوڈ۔ براہ کرم دوبارہ سائن اِن کریں۔"
 
-#: apps/accounts/views.py:117
+#: apps/accounts/views.py:119
 msgid "This code is not correct. Check the time on your phone and try again."
 msgstr "یہ کوڈ درست نہیں۔ اپنے فون کا وقت چیک کر کے دوبارہ کوشش کریں۔"
 
-#: apps/accounts/views.py:137
+#: apps/accounts/views.py:139
 msgid ""
 "This code is not correct. Scan the QR code again and enter the new code."
 msgstr "یہ کوڈ درست نہیں۔ QR کوڈ دوبارہ اسکین کر کے نیا کوڈ درج کریں۔"
 
-#: apps/accounts/views.py:168
+#: apps/accounts/views.py:170
 msgid "Your password is changed."
 msgstr "آپ کا پاس ورڈ بدل گیا ہے۔"
 
@@ -4687,7 +4687,7 @@ msgstr "رخصت کی درخواست واپس لے لی گئی۔"
 msgid "Give the machine's IP address, port and comm key (numbers)."
 msgstr "مشین کا IP ایڈریس، پورٹ اور کام کی (نمبر) لکھیں۔"
 
-#: apps/hr/views.py:862 apps/setup/views.py:151 templates/hr/machines.html:2
+#: apps/hr/views.py:862 apps/setup/views.py:152 templates/hr/machines.html:2
 #: templates/hr/machines.html:5
 msgid "Attendance machine"
 msgstr "حاضری مشین"
@@ -5342,28 +5342,28 @@ msgstr "سکول کی طرف سے دیا گیا کوڈ"
 msgid "Current password"
 msgstr "موجودہ پاس ورڈ"
 
-#: apps/parents/views.py:73
+#: apps/parents/views.py:74
 msgid "Mobile number or password is not correct."
 msgstr "موبائل نمبر یا پاس ورڈ درست نہیں۔"
 
-#: apps/parents/views.py:96
+#: apps/parents/views.py:97
 msgid ""
 "This code is not correct or has expired. Ask the school office for a new one."
 msgstr "یہ کوڈ درست نہیں یا اس کی مدت ختم ہو چکی ہے۔ سکول آفس سے نیا کوڈ لیں۔"
 
-#: apps/parents/views.py:102
+#: apps/parents/views.py:103
 msgid "Your password is set. Welcome!"
 msgstr "آپ کا پاس ورڈ بن گیا۔ خوش آمدید!"
 
-#: apps/parents/views.py:336
+#: apps/parents/views.py:337
 msgid "The current password is not correct."
 msgstr "موجودہ پاس ورڈ درست نہیں۔"
 
-#: apps/parents/views.py:341
+#: apps/parents/views.py:342
 msgid "Password changed."
 msgstr "پاس ورڈ تبدیل ہو گیا۔"
 
-#: apps/parents/views.py:387
+#: apps/parents/views.py:388
 msgid ""
 "No families to print: no primary contact mobile, or all already have an "
 "account."
@@ -6735,7 +6735,7 @@ msgstr "موبائل 1 واٹس ایپ پر ہے"
 msgid "Mobile 2 is on WhatsApp"
 msgstr "موبائل 2 واٹس ایپ پر ہے"
 
-#: apps/setup/views.py:82 templates/academics/section_subjects.html:28
+#: apps/setup/views.py:83 templates/academics/section_subjects.html:28
 #: templates/admissions/form.html:9 templates/events/expense_form.html:10
 #: templates/events/form.html:12 templates/exams/date_sheet.html:27
 #: templates/exams/papers.html:30 templates/exams/ratings.html:23
@@ -6748,21 +6748,21 @@ msgstr "موبائل 2 واٹس ایپ پر ہے"
 msgid "Save"
 msgstr "محفوظ کریں"
 
-#: apps/setup/views.py:103 templates/setup/class_subjects.html:4
+#: apps/setup/views.py:104 templates/setup/class_subjects.html:4
 #: templates/setup/sections.html:2 templates/setup/sections.html:6
 msgid "Classes and sections"
 msgstr "جماعتیں اور سیکشن"
 
-#: apps/setup/views.py:104
+#: apps/setup/views.py:105
 msgid "Sections of this session, class teachers, capacity and campuses."
 msgstr "اس سیشن کے سیکشن، کلاس ٹیچر، گنجائش اور کیمپس۔"
 
-#: apps/setup/views.py:111 templates/setup/branch_details.html:2
+#: apps/setup/views.py:112 templates/setup/branch_details.html:2
 #: templates/setup/branch_details.html:5
 msgid "Branch details"
 msgstr "برانچ کی تفصیل"
 
-#: apps/setup/views.py:112
+#: apps/setup/views.py:113
 msgid ""
 "This branch's name, address, phones, mobile / WhatsApp numbers and website "
 "for its printed papers."
@@ -6770,12 +6770,12 @@ msgstr ""
 "اس برانچ کا نام، پتا، فون، موبائل / واٹس ایپ نمبر اور ویب سائٹ، جو اس کے "
 "پرنٹ ہونے والے کاغذات پر آتے ہیں۔"
 
-#: apps/setup/views.py:119 templates/setup/printer.html:2
+#: apps/setup/views.py:120 templates/setup/printer.html:2
 #: templates/setup/printer.html:6
 msgid "Receipt printer"
 msgstr "رسید پرنٹر"
 
-#: apps/setup/views.py:120
+#: apps/setup/views.py:121
 msgid ""
 "Find the receipt printer on the office network for Parent Tree slips, and "
 "print a test slip."
@@ -6783,22 +6783,22 @@ msgstr ""
 "پیرنٹ ٹری کی پرچی کے لیے دفتر کے نیٹ ورک پر رسید پرنٹر تلاش کریں اور ٹیسٹ "
 "پرچی نکالیں۔"
 
-#: apps/setup/views.py:127 templates/payroll/index.html:11
+#: apps/setup/views.py:128 templates/payroll/index.html:11
 #: templates/payroll/rules.html:2 templates/payroll/rules.html:6
 msgid "Payroll rules"
 msgstr "پے رول کے قواعد"
 
-#: apps/setup/views.py:128
+#: apps/setup/views.py:129
 msgid ""
 "Attendance bonus: on or off, how many days, and which designations get it."
 msgstr "حاضری بونس: آن یا آف، کتنے دن، اور کن عہدوں کو ملے گا۔"
 
-#: apps/setup/views.py:135 templates/hiring/posts.html:2
+#: apps/setup/views.py:136 templates/hiring/posts.html:2
 #: templates/hiring/posts.html:5
 msgid "Hiring posts"
 msgstr "بھرتی کی پوسٹیں"
 
-#: apps/setup/views.py:136
+#: apps/setup/views.py:137
 msgid ""
 "Posts people apply for (Teacher, Designer, Typist …), used in the CV bank "
 "and vacancies."
@@ -6806,13 +6806,13 @@ msgstr ""
 "وہ پوسٹیں جن کے لیے لوگ درخواست دیتے ہیں (ٹیچر، ڈیزائنر، ٹائپسٹ …)، سی وی "
 "بینک اور خالی آسامیوں میں۔"
 
-#: apps/setup/views.py:143 templates/hr/duty_times.html:2
+#: apps/setup/views.py:144 templates/hr/duty_times.html:2
 #: templates/hr/duty_times.html:5 templates/payroll/rules.html:2
 #: templates/payroll/rules.html:17
 msgid "Staff duty times"
 msgstr "عملے کے ڈیوٹی اوقات"
 
-#: apps/setup/views.py:144
+#: apps/setup/views.py:145
 msgid ""
 "In and Out time of each staff type (teachers, Qari, office, support), with "
 "summer and winter times."
@@ -6820,40 +6820,40 @@ msgstr ""
 "ہر قسم کے عملے (اساتذہ، قاری، دفتر، معاون عملہ) کے آنے اور جانے کے اوقات، "
 "گرمیوں اور سردیوں کے اوقات کے ساتھ۔"
 
-#: apps/setup/views.py:152
+#: apps/setup/views.py:153
 msgid ""
 "Connect the staff attendance machine (ZKTeco) on the office network; punches "
 "come in by themselves."
 msgstr ""
 "دفتر کے نیٹ ورک پر عملے کی حاضری مشین (ZKTeco) جوڑیں؛ حاضری خود آتی رہے گی۔"
 
-#: apps/setup/views.py:159 templates/setup/fees.html:2
+#: apps/setup/views.py:160 templates/setup/fees.html:2
 #: templates/setup/fees.html:6
 msgid "Fee rates and vouchers"
 msgstr "فیس ریٹ اور واؤچر"
 
-#: apps/setup/views.py:160
+#: apps/setup/views.py:161
 msgid ""
 "Fee amounts per class, due day, late fine, bank details printed on vouchers."
 msgstr ""
 "ہر جماعت کی فیس، آخری تاریخ، لیٹ فائن، اور واؤچر پر چھپنے والی بینک تفصیلات۔"
 
-#: apps/setup/views.py:167 templates/setup/user_detail.html:4
+#: apps/setup/views.py:168 templates/setup/user_detail.html:4
 #: templates/setup/user_new.html:4 templates/setup/users.html:2
 #: templates/setup/users.html:6
 msgid "Users and roles"
 msgstr "صارفین اور کردار"
 
-#: apps/setup/views.py:168
+#: apps/setup/views.py:169
 msgid "Staff logins, what each person may do and where, password resets."
 msgstr "عملے کے لاگ اِن، کون کہاں کیا کر سکتا ہے، اور پاس ورڈ ری سیٹ۔"
 
-#: apps/setup/views.py:175 templates/setup/branches.html:2
+#: apps/setup/views.py:176 templates/setup/branches.html:2
 #: templates/setup/branches.html:6
 msgid "Branches and regions"
 msgstr "برانچیں اور ریجن"
 
-#: apps/setup/views.py:176
+#: apps/setup/views.py:177
 msgid ""
 "Branch details, franchise or company-owned, royalty %, regions of each head "
 "office."
@@ -6861,92 +6861,92 @@ msgstr ""
 "برانچ کی تفصیلات، فرنچائز یا کمپنی کی ملکیت، رائلٹی %، اور ہر ہیڈ آفس کے "
 "ریجن۔"
 
-#: apps/setup/views.py:184 templates/setup/sessions.html:2
+#: apps/setup/views.py:185 templates/setup/sessions.html:2
 #: templates/setup/sessions.html:6
 msgid "Academic sessions"
 msgstr "تعلیمی سیشن"
 
-#: apps/setup/views.py:185
+#: apps/setup/views.py:186
 msgid "School years and which one is current across the network."
 msgstr "تعلیمی سال، اور پورے نیٹ ورک میں کون سا سیشن جاری ہے۔"
 
-#: apps/setup/views.py:210
+#: apps/setup/views.py:211
 msgid "Branch details saved."
 msgstr "برانچ کی تفصیل محفوظ ہو گئی۔"
 
-#: apps/setup/views.py:236
+#: apps/setup/views.py:237
 msgid "Write the subject's name."
 msgstr "مضمون کا نام لکھیں۔"
 
-#: apps/setup/views.py:249
+#: apps/setup/views.py:250
 #, python-format
 msgid "%(s)s added to %(c)s."
 msgstr "%(s)s کو %(c)s میں شامل کر دیا گیا۔"
 
-#: apps/setup/views.py:273
+#: apps/setup/views.py:274
 #, python-format
 msgid "Subjects of %(c)s saved."
 msgstr "%(c)s کے مضامین محفوظ ہو گئے۔"
 
-#: apps/setup/views.py:325
+#: apps/setup/views.py:326
 #, python-format
 msgid "A test slip was sent to %(ip)s. Check which printer printed it."
 msgstr "ٹیسٹ پرچی %(ip)s پر بھیج دی گئی۔ دیکھیں کس پرنٹر سے نکلی۔"
 
-#: apps/setup/views.py:328
+#: apps/setup/views.py:329
 #, python-format
 msgid "%(ip)s did not answer: %(e)s"
 msgstr "%(ip)s نے جواب نہیں دیا: %(e)s"
 
-#: apps/setup/views.py:334
+#: apps/setup/views.py:335
 msgid "Not a printer address."
 msgstr "یہ پرنٹر کا ایڈریس نہیں۔"
 
-#: apps/setup/views.py:338
+#: apps/setup/views.py:339
 #, python-format
 msgid "Parent Tree slips will print on %(ip)s."
 msgstr "پیرنٹ ٹری کی پرچی اب %(ip)s پر پرنٹ ہوگی۔"
 
-#: apps/setup/views.py:387
+#: apps/setup/views.py:388
 msgid ""
 "No current academic session is set. Set it under Setup → Academic sessions."
 msgstr "کوئی جاری تعلیمی سیشن طے نہیں۔ سیٹ اپ ← تعلیمی سیشن میں طے کریں۔"
 
-#: apps/setup/views.py:395
+#: apps/setup/views.py:396
 #, python-format
 msgid "Section %(s)s saved."
 msgstr "سیکشن %(s)s محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:397
+#: apps/setup/views.py:398
 #, python-format
 msgid "Edit %(s)s"
 msgstr "%(s)s میں تبدیلی"
 
-#: apps/setup/views.py:397 templates/setup/sections.html:10
+#: apps/setup/views.py:398 templates/setup/sections.html:10
 #: templates/setup/sections.html:27
 msgid "Add a section"
 msgstr "سیکشن شامل کریں"
 
-#: apps/setup/views.py:403
+#: apps/setup/views.py:404
 #, python-format
 msgid ""
 "Session %(s)s · %(b)s. The class teacher must have a role in this branch."
 msgstr ""
 "سیشن %(s)s · %(b)s۔ کلاس ٹیچر کی اس برانچ میں کوئی کردار ہونا ضروری ہے۔"
 
-#: apps/setup/views.py:415
+#: apps/setup/views.py:416
 msgid "Campus saved."
 msgstr "کیمپس محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:420
+#: apps/setup/views.py:421
 msgid "Edit campus"
 msgstr "کیمپس میں تبدیلی"
 
-#: apps/setup/views.py:420 templates/setup/sections.html:37
+#: apps/setup/views.py:421 templates/setup/sections.html:37
 msgid "Add a campus"
 msgstr "کیمپس شامل کریں"
 
-#: apps/setup/views.py:423
+#: apps/setup/views.py:424
 #, python-format
 msgid ""
 "A building of %(b)s, e.g. a separate boys or girls campus. Fees and "
@@ -6955,7 +6955,7 @@ msgstr ""
 "%(b)s کی ایک عمارت، مثلاً لڑکوں یا لڑکیوں کا الگ کیمپس۔ فیس اور انتظام برانچ "
 "ہی کے پاس رہتے ہیں۔"
 
-#: apps/setup/views.py:469
+#: apps/setup/views.py:470
 msgid ""
 "Fee rate saved. It is used for vouchers made from now on; vouchers already "
 "made keep their amounts."
@@ -6963,15 +6963,15 @@ msgstr ""
 "فیس ریٹ محفوظ ہو گیا۔ یہ اب سے بننے والے واؤچرز پر لگے گا؛ پہلے سے بنے "
 "واؤچرز کی رقم وہی رہے گی۔"
 
-#: apps/setup/views.py:475
+#: apps/setup/views.py:476
 msgid "Edit fee rate"
 msgstr "فیس ریٹ میں تبدیلی"
 
-#: apps/setup/views.py:475 templates/setup/fees.html:7
+#: apps/setup/views.py:476 templates/setup/fees.html:7
 msgid "Add a fee rate"
 msgstr "فیس ریٹ شامل کریں"
 
-#: apps/setup/views.py:478
+#: apps/setup/views.py:479
 msgid ""
 "To change a fee from a new month, add a new rate starting that month — the "
 "old one stays for the record."
@@ -6979,70 +6979,70 @@ msgstr ""
 "کسی نئے مہینے سے فیس بدلنی ہو تو اسی مہینے سے نیا ریٹ شامل کریں — پرانا ریٹ "
 "ریکارڈ کے لیے رہے گا۔"
 
-#: apps/setup/views.py:489
+#: apps/setup/views.py:490
 msgid "Voucher settings saved."
 msgstr "واؤچر کی ترتیبات محفوظ ہو گئیں۔"
 
-#: apps/setup/views.py:494 templates/setup/fees.html:47
+#: apps/setup/views.py:495 templates/setup/fees.html:47
 msgid "Voucher and payment settings"
 msgstr "واؤچر اور ادائیگی کی ترتیبات"
 
-#: apps/setup/views.py:496
+#: apps/setup/views.py:497
 #, python-format
 msgid "Printed on every fee voucher of %(b)s."
 msgstr "%(b)s کے ہر فیس واؤچر پر چھپتا ہے۔"
 
-#: apps/setup/views.py:508
+#: apps/setup/views.py:509
 msgid "Bank saved."
 msgstr "بینک محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:513
+#: apps/setup/views.py:514
 msgid "Edit bank"
 msgstr "بینک میں تبدیلی"
 
-#: apps/setup/views.py:513 templates/setup/fees.html:25
+#: apps/setup/views.py:514 templates/setup/fees.html:25
 msgid "Add a bank"
 msgstr "بینک شامل کریں"
 
-#: apps/setup/views.py:515
+#: apps/setup/views.py:516
 #, python-format
 msgid "Fees received by bank are recorded against one of %(b)s's banks."
 msgstr "بینک کے ذریعے آنے والی فیس %(b)s کے کسی بینک میں درج ہوتی ہے۔"
 
-#: apps/setup/views.py:528
+#: apps/setup/views.py:529
 msgid "Discount saved."
 msgstr "رعایت محفوظ ہو گئی۔"
 
-#: apps/setup/views.py:533
+#: apps/setup/views.py:534
 msgid "Edit discount"
 msgstr "رعایت میں تبدیلی"
 
-#: apps/setup/views.py:533 templates/setup/fees.html:37
+#: apps/setup/views.py:534 templates/setup/fees.html:37
 msgid "Add a discount"
 msgstr "رعایت شامل کریں"
 
-#: apps/setup/views.py:535
+#: apps/setup/views.py:536
 msgid ""
 "Offered on the admission form. Brothers and sisters get the sibling fee by "
 "themselves."
 msgstr ""
 "داخلہ فارم پر دستیاب۔ بہن بھائیوں کو بہن بھائی والی فیس خود لگ جاتی ہے۔"
 
-#: apps/setup/views.py:597
+#: apps/setup/views.py:598
 #, python-format
 msgid "Branch %(b)s saved."
 msgstr "برانچ %(b)s محفوظ ہو گئی۔"
 
-#: apps/setup/views.py:602
+#: apps/setup/views.py:603
 #, python-format
 msgid "Edit %(b)s"
 msgstr "%(b)s میں تبدیلی"
 
-#: apps/setup/views.py:602 templates/setup/branches.html:7
+#: apps/setup/views.py:603 templates/setup/branches.html:7
 msgid "Add a branch"
 msgstr "برانچ شامل کریں"
 
-#: apps/setup/views.py:605
+#: apps/setup/views.py:606
 msgid ""
 "Royalty %: the head office's share of the fees received each month — usually "
 "8 for franchises and 0 for company-owned campuses."
@@ -7050,44 +7050,44 @@ msgstr ""
 "رائلٹی %: ہر مہینے وصول ہونے والی فیس میں ہیڈ آفس کا حصہ — عام طور پر "
 "فرنچائز کے لیے 8 اور کمپنی کی ملکیت والے کیمپس کے لیے 0۔"
 
-#: apps/setup/views.py:621
+#: apps/setup/views.py:622
 msgid "Region saved."
 msgstr "ریجن محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:623
+#: apps/setup/views.py:624
 msgid "Edit region"
 msgstr "ریجن میں تبدیلی"
 
-#: apps/setup/views.py:623 templates/setup/branches.html:36
+#: apps/setup/views.py:624 templates/setup/branches.html:36
 msgid "Add a region"
 msgstr "ریجن شامل کریں"
 
-#: apps/setup/views.py:645
+#: apps/setup/views.py:646
 msgid "Session saved."
 msgstr "سیشن محفوظ ہو گیا۔"
 
-#: apps/setup/views.py:647
+#: apps/setup/views.py:648
 msgid "Edit session"
 msgstr "سیشن میں تبدیلی"
 
-#: apps/setup/views.py:647 templates/setup/sessions.html:7
+#: apps/setup/views.py:648 templates/setup/sessions.html:7
 msgid "Add a session"
 msgstr "سیشن شامل کریں"
 
-#: apps/setup/views.py:661
+#: apps/setup/views.py:662
 #, python-format
 msgid "%(s)s is now the current session across the network."
 msgstr "%(s)s اب پورے نیٹ ورک میں جاری سیشن ہے۔"
 
-#: apps/setup/views.py:724
+#: apps/setup/views.py:725
 msgid "This role cannot be given at this level."
 msgstr "یہ کردار اس سطح پر نہیں دی جا سکتی۔"
 
-#: apps/setup/views.py:725
+#: apps/setup/views.py:726
 msgid "You can only give roles inside your own area."
 msgstr "آپ صرف اپنے دائرے میں کردار دے سکتے ہیں۔"
 
-#: apps/setup/views.py:727
+#: apps/setup/views.py:728
 msgid ""
 "This role can manage logins or setup there that you cannot manage yourself, "
 "so you cannot give it."
@@ -7095,28 +7095,28 @@ msgstr ""
 "اس کردار میں وہاں لاگ اِن یا سیٹ اپ کا ایسا اختیار ہے جو آپ کے پاس خود نہیں، "
 "اس لیے آپ یہ نہیں دے سکتے۔"
 
-#: apps/setup/views.py:806
+#: apps/setup/views.py:807
 msgid "You can only add logins for people inside your own area."
 msgstr "آپ صرف اپنے دائرے کے لوگوں کے لاگ اِن بنا سکتے ہیں۔"
 
-#: apps/setup/views.py:837
+#: apps/setup/views.py:838
 msgid "Details saved."
 msgstr "تفصیلات محفوظ ہو گئیں۔"
 
-#: apps/setup/views.py:848
+#: apps/setup/views.py:849
 msgid "Role given."
 msgstr "کردار دے دیا گیا۔"
 
-#: apps/setup/views.py:886
+#: apps/setup/views.py:887
 #, python-format
 msgid "%(role)s ended for %(name)s."
 msgstr "%(name)s کا کردار %(role)s ختم کر دیا گیا۔"
 
-#: apps/setup/views.py:915
+#: apps/setup/views.py:916
 msgid "Login switched on."
 msgstr "لاگ اِن کھول دیا گیا۔"
 
-#: apps/setup/views.py:915
+#: apps/setup/views.py:916
 msgid "Login switched off. They can no longer sign in."
 msgstr "لاگ اِن بند کر دیا گیا۔ اب یہ سائن اِن نہیں کر سکیں گے۔"
 

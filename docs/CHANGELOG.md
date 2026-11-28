@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.58.0 — 2026-11-28 — Rounds 23–24: full subject names on result cards; online through a Cloudflare Tunnel (installer v32)
+- **Result cards** (R23-1): the subject's full name on every exam's card (e.g. Mathematics, Islamiyat). The sheet to
+  fill by hand and the date sheet keep the short names (R23-2, R23-3).
+- **Online from the school's computer** (R24, docs/CLOUDFLARE_TUNNEL.md): with `PUBLIC_URL` in the Windows copy's
+  config.env, the visitor's real address is read from Cloudflare (so one person's wrong sign-ins cannot lock everyone
+  out, and the audit log shows the right address); cookies are https-only when opened through https, the office
+  network still works.
+- **Starts with Windows** (R24-3): the installer adds TASEMS to the Windows Startup folder (minimised, no browser).
+- **Daily backup** (R24-4): once a day while TASEMS runs, in Documents\TASEMS backups and, if set
+  (`BACKUP_COPY_TO`), in a second folder such as Google Drive or a USB disk; the last 30 kept.
+
 ## 0.57.0 — 2026-11-28 — Round 22: result card in the earlier layout, exam boxes, date sheet page (installer v31)
 - **Result card** (R22-1): back to the earlier black-and-white layout the school printed (subjects table with Total
   marks and Percentage rows, the rating boxes, Remarks on two lines) with the v30 header — round logo, THE ARQAM

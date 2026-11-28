@@ -72,6 +72,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "apps.core.net.SecureCookiesOverHttpsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -166,6 +167,12 @@ LOCAL_NETWORK = env("LOCAL_NETWORK")
 if LOCAL_NETWORK:
     SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = False
     ALLOWED_HOSTS = ["*"]
+# Windows copy online through a Cloudflare Tunnel (R24, docs/CLOUDFLARE_TUNNEL.md): its address is trusted for forms,
+# and the visitor's address is read from Cloudflare's header (apps/core/net.py).
+PUBLIC_URL = env("PUBLIC_URL", default="").rstrip("/")
+CLOUDFLARE_TUNNEL = bool(PUBLIC_URL)
+if PUBLIC_URL:
+    CSRF_TRUSTED_ORIGINS.append(PUBLIC_URL)
 SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=0)
 # Behind the HTTPS proxy (Caddy) the original scheme arrives in this header.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # set in production once HTTPS is confirmed

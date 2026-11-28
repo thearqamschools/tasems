@@ -26,6 +26,7 @@ from apps.accounts.models import Role, RoleAssignment, Scope
 from apps.core import escpos
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
+from apps.core.net import client_ip
 from apps.fees.models import BankAccount, BranchFeeSettings, DiscountType, FeeRate
 from apps.organisation.models import AcademicSession, Branch, Campus, HeadOffice, Region
 from apps.people.models import Student
@@ -681,7 +682,7 @@ def _log_password_reset(request, target):
         object_id=str(target.pk),
         object_repr=str(target)[:255],
         changes={"password": "reset (new temporary password issued)"},
-        ip_address=request.META.get("REMOTE_ADDR"),
+        ip_address=client_ip(request),
     )
 
 

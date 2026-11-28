@@ -1193,7 +1193,7 @@ not to be bought or switched on without approval.
   (measured).
 
 
-## Round 23 — subject names: full or short (lead, 28 Nov 2026, voice note after v31) — noted; lead: build it into the next version (v32)
+## Round 23 — subject names: full or short (lead, 28 Nov 2026, voice note after v31) — built (v32, 28 Nov)
 
 - R23-1. **Result cards — full subject names, never the short form**, on every exam's card (Periodic Assessment – I,
   Mid-Term, Periodic Assessment – II, Final): e.g. "English", "Mathematics", "Islamiyat", not "Math", "I.S". (Changes
@@ -1202,7 +1202,7 @@ not to be bought or switched on without approval.
 - R23-3. **Date sheet — short names stay** (lead, 28 Nov, voice note read as "date sheet pe bhi short naam aayenge"),
   as now (R19-5, as on the school's design).
 
-## Round 24 — Samanabad online from the school's own computer through a Cloudflare Tunnel (lead, 28 Nov 2026) — proposed by Claude, needs the lead's "kar do"
+## Round 24 — Samanabad online from the school's own computer through a Cloudflare Tunnel (lead, 28 Nov 2026) — lead: "haan ji, v32 bana daan"; built (v32)
 
 The lead chose to put Samanabad online from the school's computer (Windows install) with a free Cloudflare Tunnel
 (`tasems.thearqamschools.com` → `http://localhost:8000`). Claude checked the Windows copy against that and found what

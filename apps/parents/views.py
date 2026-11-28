@@ -24,6 +24,7 @@ from apps.accounts.throttle import is_locked
 from apps.attendance.models import AttendanceRecord
 from apps.core.branch import current_branch
 from apps.core.models import AuditEvent
+from apps.core.net import client_ip
 from apps.diary.models import Diary
 from apps.exams.models import Exam
 from apps.organisation.models import AcademicSession
@@ -53,7 +54,7 @@ def _failed(request, label):
         action=AuditEvent.Action.LOGIN_FAILED,
         model_label="parents.ParentAccount",
         object_repr=label[:255],
-        ip_address=request.META.get("REMOTE_ADDR"),
+        ip_address=client_ip(request),
     )
 
 
@@ -65,7 +66,7 @@ def login_view(request):
     if request.method == "POST" and form.is_valid():
         phone = form.cleaned_data["phone"]
         username = f"parent-{phone}"
-        if is_locked(username, request.META.get("REMOTE_ADDR")):
+        if is_locked(username, client_ip(request)):
             form.add_error(None, _("Too many failed attempts. Please wait 15 minutes and try again."))
         else:
             user = authenticate(request, username=username, password=form.cleaned_data["password"])
@@ -86,7 +87,7 @@ def start_view(request):
     if request.method == "POST" and form.is_valid():
         phone = form.cleaned_data["phone"]
         label = f"parent-code:{phone}"
-        if is_locked(label, request.META.get("REMOTE_ADDR")):
+        if is_locked(label, client_ip(request)):
             form.add_error(None, _("Too many failed attempts. Please wait 15 minutes and try again."))
         else:
             code = S.check_code(phone, form.cleaned_data["code"])

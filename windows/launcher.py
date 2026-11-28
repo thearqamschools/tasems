@@ -7,6 +7,11 @@ Data (kept when the program is updated or removed):  %LOCALAPPDATA%\\TASEMS-data
     python launcher.py --master   make a master login (every permission)
     python launcher.py --backup   save all data to Documents\\TASEMS backups
     python launcher.py --stop     stop the database (close the TASEMS window to stop the web server)
+    python launcher.py --autostart  start without opening the browser (Windows Startup shortcut, R24-3)
+
+Optional lines in TASEMS-data\\config.env (docs/CLOUDFLARE_TUNNEL.md):
+    PUBLIC_URL=https://tasems.thearqamschools.com   online through a Cloudflare Tunnel
+    BACKUP_COPY_TO=G:\\My Drive\\TASEMS backups      a second copy of the daily backup (Google Drive / USB)
 """
 
 import base64
@@ -140,6 +145,7 @@ def django_setup(values):
         DEMO_PASSWORD=DEMO_PASSWORD,
         DEBUG="False",
         LOCAL_NETWORK="True",
+        PUBLIC_URL=values.get("PUBLIC_URL", ""),  # online through a Cloudflare Tunnel (R24, docs/CLOUDFLARE_TUNNEL.md)
         MEDIA_ROOT=str(DATA / "media"),
         DJANGO_SETTINGS_MODULE="config.settings",
     )
@@ -169,7 +175,12 @@ def lan_addresses():
     return [a for a in names if not a.startswith("127.")]
 
 
+AUTOSTART = "--autostart" in sys.argv
+
+
 def start():
+    if port_busy(WEB_PORT) and AUTOSTART:
+        return
     if port_busy(WEB_PORT):
         say("  TASEMS is already running. Opening it...")
         webbrowser.open(f"http://localhost:{WEB_PORT}")
@@ -196,6 +207,7 @@ def start():
     # Large PDFs are made in the background, as on the server.
     threading.Thread(target=lambda: call_command("run_jobs"), daemon=True).start()
     threading.Thread(target=read_machines_now_and_then, daemon=True).start()
+    threading.Thread(target=daily_backup, args=(values,), daemon=True).start()  # R24-4
 
     if WINDOWS:  # closing this window also stops the database
         import ctypes
@@ -219,7 +231,10 @@ def start():
     if values["DEMO_MODE"] == "True":
         say(f"  Demo logins: demo-network, demo-director, demo-principal ... password {DEMO_PASSWORD}")
     say("  Keep this window open. Close it to stop TASEMS.")
-    threading.Timer(2, lambda: webbrowser.open(f"http://localhost:{WEB_PORT}")).start()
+    if values.get("PUBLIC_URL"):
+        say(f"  Online (Cloudflare Tunnel):  {values['PUBLIC_URL']}")
+    if not AUTOSTART:  # started by Windows at sign-in (R24-3): no browser window
+        threading.Timer(2, lambda: webbrowser.open(f"http://localhost:{WEB_PORT}")).start()
     try:
         serve(application, host="0.0.0.0", port=WEB_PORT, threads=8, _quiet=True)
     finally:
@@ -276,13 +291,53 @@ def master():
     call_command("createsuperuser")
 
 
+BACKUPS = Path.home() / "Documents" / "TASEMS backups"
+KEEP_DAILY = 30  # daily backups kept in each folder; older ones are deleted
+
+
+def make_backup(values, name):
+    BACKUPS.mkdir(parents=True, exist_ok=True)
+    target = BACKUPS / name
+    run([exe("pg_dump"), "-U", "postgres", "-d", "tasems", "-Fc", "-f", str(target)], env=pg_env(values))
+    copy_to = values.get("BACKUP_COPY_TO", "").strip()
+    if copy_to:  # a second place off this computer: a Google Drive folder or a USB disk (R24-4)
+        import shutil
+
+        try:
+            Path(copy_to).mkdir(parents=True, exist_ok=True)
+            shutil.copy2(target, Path(copy_to) / name)
+        except OSError as error:
+            say(f"  Backup not copied to {copy_to}: {error}")
+    return target
+
+
+def prune(folder):
+    daily = sorted(Path(folder).glob("tasems-daily-*.dump"))
+    for old in daily[:-KEEP_DAILY]:
+        old.unlink(missing_ok=True)
+
+
+def daily_backup(values, every_minutes=60):
+    """Once a day, while TASEMS is running: a backup in Documents\\TASEMS backups (and in BACKUP_COPY_TO)."""
+    import time
+
+    while True:
+        name = f"tasems-daily-{dt.date.today():%Y-%m-%d}.dump"
+        if not (BACKUPS / name).exists():
+            try:
+                make_backup(values, name)
+                for folder in (BACKUPS, values.get("BACKUP_COPY_TO", "").strip()):
+                    if folder and Path(folder).exists():
+                        prune(folder)
+            except Exception as error:  # never stops TASEMS
+                say(f"  Daily backup failed: {error}")
+        time.sleep(every_minutes * 60)
+
+
 def backup():
     values = first_run_config()
     database_up(values)
-    folder = Path.home() / "Documents" / "TASEMS backups"
-    folder.mkdir(parents=True, exist_ok=True)
-    target = folder / f"tasems-{dt.datetime.now():%Y-%m-%d_%H%M}.dump"
-    run([exe("pg_dump"), "-U", "postgres", "-d", "tasems", "-Fc", "-f", str(target)], env=pg_env(values))
+    target = make_backup(values, f"tasems-{dt.datetime.now():%Y-%m-%d_%H%M}.dump")
     say(f"  Saved: {target}")
 
 
