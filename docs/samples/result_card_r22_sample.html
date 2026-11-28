@@ -18,9 +18,10 @@ line, no Urdu — and room to sign between the remarks and Teacher / Head / Prin
   .card:last-child { page-break-after: auto; }
   .gap { flex: 1 1 0; min-height: {{ gap_min }}; }
 
-  table.head { margin: 0 auto; border-collapse: collapse; }
+  table.head { margin: 0 auto; border-collapse: collapse; position: relative; left: .3mm; } /* logo + name centred on the card */
   table.head td { padding: 0; vertical-align: middle; }
-  table.head td.logo { padding-right: 4.4mm; }
+  table.head td.logo { padding-right: 2.6mm; }
+  table.head td.name { padding-top: 1.3mm; } /* the name block's middle on the logo's middle */
   table.head td.logo img { width: 22mm; height: 22mm; display: block; }
   .school { font-family: "Inserat", "Poppins", sans-serif; font-size: 33pt; line-height: .92; letter-spacing: .01em; color: #111; }
   .campus { font-size: 8pt; font-weight: 500; letter-spacing: .43em; margin-top: .2mm; text-transform: uppercase; color: #222;
@@ -65,7 +66,7 @@ line, no Urdu — and room to sign between the remarks and Teacher / Head / Prin
 {% for c in cards %}<div class="card">
   <table class="head"><tr>
     <td class="logo"><img src="{{ logo }}" alt=""></td>
-    <td><div class="school">THE ARQAM SCHOOLS</div>{% if campus %}<div class="campus">{{ campus }}</div>{% endif %}</td>
+    <td class="name"><div class="school">THE ARQAM SCHOOLS</div>{% if campus %}<div class="campus">{{ campus }}</div>{% endif %}</td>
   </tr></table>
   <div class="gap"></div>
   <h1>RESULT OF {{ exam.get_kind_display|upper }}</h1>
