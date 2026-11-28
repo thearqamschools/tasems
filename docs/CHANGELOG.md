@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.58.1 — 2026-11-28 — Fix: "3E+1" in result reports (installer v33)
+- **Results PDF / print** (lead, 28 Nov 2026, two screenshots): whole marks ending in 0 (30, 100 …) showed as "3E+1",
+  "1E+2" in the student list ("3E+1 / 250"), the subjects' highest marks and a student's progress. They now show as
+  30, 100. (The screen pages were right; only the PDF / printed report had it.)
+
 ## 0.58.0 — 2026-11-28 — Rounds 23–24: full subject names on result cards; online through a Cloudflare Tunnel (installer v32)
 - **Result cards** (R23-1): the subject's full name on every exam's card (e.g. Mathematics, Islamiyat). The sheet to
   fill by hand and the date sheet keep the short names (R23-2, R23-3).

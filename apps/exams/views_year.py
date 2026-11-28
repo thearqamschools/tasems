@@ -533,7 +533,10 @@ def marks_skill(request):
 
 
 def _fmt(value, suffix=""):
-    return "—" if value is None else f"{value.normalize() if hasattr(value, 'normalize') else value}{suffix}"
+    """30 → "30", 27.5 → "27.5" (never "3E+1": a normalised Decimal is written out in full, lead 28 Nov 2026)."""
+    if value is None:
+        return "—"
+    return f"{format(value.normalize(), 'f') if hasattr(value, 'normalize') else value}{suffix}"
 
 
 def _pct_text(value):

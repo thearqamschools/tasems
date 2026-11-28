@@ -66,3 +66,12 @@ def test_daily_backups_keep_the_last_thirty(tmp_path):
 def test_installer_starts_tasems_with_windows():
     nsi = (ROOT / "windows" / "installer.nsi").read_text()
     assert "$SMSTARTUP\\TASEMS.lnk" in nsi and "--autostart" in nsi
+
+
+def test_result_report_numbers_never_in_e_notation():
+    from decimal import Decimal
+
+    from apps.exams.views_year import _fmt
+
+    assert _fmt(Decimal("30")) == "30" and _fmt(Decimal("30.0")) == "30" and _fmt(Decimal("100")) == "100"
+    assert _fmt(Decimal("27.5")) == "27.5" and _fmt(Decimal("20.50")) == "20.5" and _fmt(None) == "—"
