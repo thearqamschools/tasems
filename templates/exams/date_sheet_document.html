@@ -13,32 +13,33 @@ session on a light bar; a row per date (weekday in red), a column per class; a d
   @page { size: A4 landscape; margin: 0; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Poppins", sans-serif; color: #1b1d45; }
-  .page { position: relative; width: 297mm; height: 210mm; padding: 3.6mm 7.6mm 0; overflow: hidden; }
-  .ring { position: absolute; right: -14mm; top: -33mm; width: 84mm; height: 84mm; border: 5.6mm solid #ec3237;
+  .page { position: relative; width: 297mm; height: 210mm; padding: 9.4mm 9mm 0; overflow: hidden; }
+  .ring { position: absolute; right: -16mm; top: -28mm; width: 90mm; height: 90mm; border: 5.6mm solid #ec3237;
     border-radius: 50%; opacity: .09; }
 
   table.head { width: 100%; border-collapse: collapse; position: relative; }
   table.head td { padding: 0; vertical-align: middle; }
-  table.head td.logo { width: 21mm; }
-  table.head td.logo img { width: 17.4mm; height: 17.4mm; display: block; }
-  .school { font-family: "Inserat", "Poppins", sans-serif; color: #3e4095; font-size: 28pt; line-height: 1; letter-spacing: .01em; }
-  .campus { font-size: 7.2pt; font-weight: 600; letter-spacing: .42em; color: #3b3d63; margin-top: 1.2mm; text-transform: uppercase; }
+  table.head td.logo { width: 22.4mm; }
+  table.head td.logo img { width: 18.6mm; height: 18.6mm; display: block; }
+  .school { font-family: "Inserat", "Poppins", sans-serif; color: #3e4095; font-size: 30pt; line-height: .9; letter-spacing: .01em; }
+  .campus { font-size: 7.4pt; font-weight: 600; letter-spacing: .5em; color: #3b3d63; margin-top: .9mm; text-transform: uppercase; }
   .headerpic { height: 18mm; width: auto; }
-  td.tab { width: 72mm; text-align: right; vertical-align: top; padding-top: 0; }
-  .tab-box { display: inline-block; background: #3e4095; color: #fff; width: 71mm; height: 17.6mm; text-align: center;
-    border-radius: 9mm 3mm 3mm 3mm; font-family: "Inserat", "Poppins", sans-serif; font-size: 29pt; letter-spacing: .1em;
-    line-height: 17.6mm; }
+  td.tab { width: 83mm; text-align: right; vertical-align: middle; }
+  /* R21-5: the tab as in the school's design — a large curve top-left, the other corners hardly rounded */
+  .tab-box { display: inline-block; background: #3e4095; color: #fff; width: 82mm; height: 20.4mm; text-align: center;
+    border-radius: 12mm 2mm 3mm 1mm; font-family: "Inserat", "Poppins", sans-serif; font-size: 35pt; letter-spacing: .07em;
+    line-height: 20.4mm; padding-left: 2.4mm; }
 
-  .bar { margin-top: 15mm; background: #eef0f9; border-radius: 3mm; height: 11.2mm; position: relative; }
-  .bar table { width: 100%; height: 11.2mm; border-collapse: collapse; }
-  .bar td { padding: 0 4.4mm; vertical-align: middle; width: 33.3%; }
+  .bar { margin-top: 9.6mm; background: #eef0f9; border-radius: 3mm; height: 12.4mm; position: relative; }
+  .bar table { width: 100%; height: 12.4mm; border-collapse: collapse; }
+  .bar td { padding: 2.9mm 5mm 0; vertical-align: middle; width: 33.3%; line-height: 1; }
   .bar .dates { font-size: 11.5pt; font-weight: 700; color: #1b1d45; white-space: nowrap; }
   .bar .dates svg { width: 4.2mm; height: 4.2mm; vertical-align: -0.9mm; margin-right: 2.4mm; }
   .bar .exam { text-align: center; font-size: 16.5pt; font-weight: 700; color: #3e4095; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
   .bar .session { text-align: right; font-size: 11.5pt; font-weight: 700; white-space: nowrap; }
   .bar .session span { color: #d62839; margin-left: 1.4mm; }
 
-  .tbl { margin-top: 13mm; border: .9pt solid #3e4095; border-radius: 3mm; overflow: hidden; }
+  .tbl { margin-top: 9mm; border: .9pt solid #3e4095; border-radius: 3mm; overflow: hidden; }
   table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
   table.grid thead tr { background: #3e4095; }
   table.grid th { color: #fff; font-weight: 700; font-size: {{ head_font }}; padding: 2.4mm .6mm; text-align: center; white-space: nowrap;

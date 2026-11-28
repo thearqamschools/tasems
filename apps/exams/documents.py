@@ -80,9 +80,9 @@ def css_text(text):
 
 
 def _fit(rows):
-    """Row height so the whole date sheet stays on one A4 landscape page (R17-1); 128 mm are left for the rows."""
+    """Row height so the whole date sheet stays on one A4 landscape page (R17-1); 137 mm are left for the rows."""
     rows = max(rows, 1)
-    total = min(14.6, 128.0 / rows)  # each row's full height in mm
+    total = min(15.4, 137.0 / rows)  # each row's full height in mm
     pad = 1.6 if total >= 11 else 0.9 if total >= 7.5 else 0.5
     return {"row_h": f"{max(3.2, total):.1f}mm", "pad": f"{pad}mm", "compact": total < 9.5,
             "small": "8pt" if total < 7.5 else ""}  # fmt: skip

@@ -11,7 +11,7 @@
     @bottom-center { content: "{{ address|safe }}"; font: 7.5pt "Poppins"; color: #222; vertical-align: top; padding-top: 1.6mm; } }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Poppins", sans-serif; color: #111; }
-  .card { position: relative; height: 280.4mm; border: 1.3pt solid #111; border-radius: 5mm; padding: 6mm 9.3mm 7mm;
+  .card { position: relative; height: 280.4mm; border: 1.3pt solid #111; border-radius: 5mm; padding: 6mm 9.3mm 5.4mm;
     page-break-after: always; display: flex; flex-direction: column; }
   .card:last-child { page-break-after: auto; }
   .gap { flex: 1 1 0; min-height: {{ gap_min }}; }
@@ -21,9 +21,9 @@
   table.head td { vertical-align: middle; padding: 0; }
   table.head td.logo { width: 24mm; }
   table.head td.logo img { width: 19.6mm; height: 19.6mm; display: block; }
-  .school { font-family: "Inserat", "Poppins", sans-serif; font-size: 34pt; line-height: 1; letter-spacing: .01em; }
-  .campus { font-size: 7.6pt; font-weight: 500; letter-spacing: .3em; margin-top: 1.4mm; text-transform: uppercase; }
-  td.badge { width: 40mm; text-align: right; }
+  .school { font-family: "Inserat", "Poppins", sans-serif; font-size: 29pt; line-height: .92; letter-spacing: .01em; }
+  .campus { font-size: 7.4pt; font-weight: 500; letter-spacing: .43em; margin-top: .5mm; text-transform: uppercase; }
+  td.badge { width: 46mm; text-align: right; padding-left: 8mm; }
   .badge-box { display: inline-block; border: 1.2pt solid #111; border-radius: 3mm; padding: 1.4mm 3.2mm 1.3mm; text-align: center; }
   .badge-box small { display: block; font-size: 5.6pt; font-weight: 600; letter-spacing: .3em; }
   .badge-box b { display: block; font-family: "Inserat", "Poppins", sans-serif; font-weight: 400; font-size: 17pt; line-height: 1; margin-top: .4mm; }
@@ -72,18 +72,22 @@
   .side td { vertical-align: middle; padding: 0; height: 15.4mm; }
   .side .k { font-size: 8.6pt; font-weight: 700; letter-spacing: .14em; }
   .side .v { text-align: right; }
-  .side.total { background: #e4e4e4; }
-  .side.total .v { font-family: "Inserat", "Poppins", sans-serif; font-size: 25pt; line-height: 1; }
-  .side.pct { border-width: 1.6pt; }
+  .side.got { background: #ececec; border-width: 1.6pt; }
+  .side.got .line { font-size: 13pt; font-weight: 700; }
   .side .line { display: inline-block; min-width: 18mm; border-bottom: .8pt solid #111; text-align: center; font-size: 11pt; font-weight: 600; line-height: 1.2; }
 
   .remarks { border: 1pt solid #111; border-radius: 3mm; padding: 3mm 5mm 4.2mm; }
   .remarks b { font-size: 8.6pt; letter-spacing: .14em; }
   .remarks .rl { border-bottom: .7pt solid #999; height: 8.6mm; }
 
+  .signroom { flex: 1.6 1 0; min-height: 24mm; } /* R21-3: room to sign between Remarks and the names */
   table.sign { width: 100%; border-collapse: collapse; }
   table.sign td { padding: 0; text-align: center; vertical-align: top; font-size: 12pt; font-weight: 700; }
   table.sign td.s { width: 55.6mm; border-top: .9pt solid #111; padding-top: 2.2mm; }
+  {% if tight %}table.quals td { padding: 1.1mm 2mm; } table.quals th { padding: 1.8mm 2mm 2mm; }
+  .side td { height: 11.6mm; } .side { margin-bottom: 1.6mm; }
+  .remarks { padding: 2.4mm 5mm 3mm; } .remarks .rl { height: 6.6mm; }
+  .signroom { min-height: 17mm; } table.subjects th { padding: 2.6mm 3mm; } table.subjects td { font-size: 10pt; }{% endif %}
 </style></head>
 <body>
 {% for c in cards %}<div class="card">
@@ -112,14 +116,14 @@
       <tbody>{% for label, level in c.ratings %}<tr><td class="l">{{ label }}</td>{% for v, _l in levels %}<td><span class="tick">{% if v == level %}✓{% endif %}</span></td>{% endfor %}</tr>{% endfor %}</tbody>
     </table></div></td>
     <td>
-      <div class="side total"><table><tr><td class="k">TOTAL MARKS</td><td class="v">{{ c.total }}</td></tr></table></div>
-      <div class="side"><table><tr><td class="k">OBTAINED</td><td class="v"><span class="line">{% if c.percent is not None %}{{ c.obtained|floatformat:"-1" }}{% endif %}</span></td></tr></table></div>
-      <div class="side pct"><table><tr><td class="k">PERCENTAGE</td><td class="v"><span class="line">{% if c.percent is not None %}{{ c.percent|floatformat:"-2" }}{% endif %}</span> <b style="font-size:11pt">%</b></td></tr></table></div>
+      <div class="side"><table><tr><td class="k">TOTAL MARKS</td><td class="v"><span class="line">{{ c.total }}</span></td></tr></table></div>
+      <div class="side got"><table><tr><td class="k">OBTAINED</td><td class="v"><span class="line">{% if c.percent is not None %}{{ c.obtained|floatformat:"-1" }}{% endif %}</span></td></tr></table></div>
+      <div class="side"><table><tr><td class="k">PERCENTAGE</td><td class="v"><span class="line">{% if c.percent is not None %}{{ c.percent|floatformat:"-2" }}%{% endif %}</span></td></tr></table></div>
     </td>
   </tr></table>
   <div class="gap"></div>
   <div class="remarks"><b>REMARKS</b><div class="rl"></div><div class="rl"></div></div>
-  <div class="gap" style="flex-grow:1.6"></div>
+  <div class="signroom"></div>
   <table class="sign"><tr><td class="s">Teacher</td><td></td><td class="s">Head / Principal</td></tr></table>
 </div>{% endfor %}
 </body></html>

@@ -1154,7 +1154,7 @@ not to be bought or switched on without approval.
   DATE SHEET tab, dates / exam / session bar, blue heading row, date + red weekday column, zebra rows, "NO PAPER" row,
   note at the foot; one A4 landscape page. **Built (v29).**
 
-## Round 21 — result card and date sheet finishing (lead, 27 Nov 2026, voice note after v29) — noted, not built yet
+## Round 21 — result card and date sheet finishing (lead, 27 Nov 2026, voice note after v29) — built (v30, 28 Nov)
 
 - R21-1. **Result card — title block:** "THE ARQAM SCHOOLS" a little smaller; less gap between it and the campus line
   (SAMANABAD CAMPUS, FAISALABAD) so the two sit together as one block; aligned as a graphic designer would.

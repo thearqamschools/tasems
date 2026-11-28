@@ -467,8 +467,9 @@ def cards(request, exam_id, section_id):
             "campus": _campus_line(section.branch),
             "logo": paths.grey_logo(),
             # many subjects → the rows and gaps tighten so the card stays on one page (R17-6)
-            "gap_min": "3mm" if len(data["papers"]) <= 8 else "1.5mm",
-            "cell": "2.4mm" if len(data["papers"]) <= 8 else "1.6mm" if len(data["papers"]) <= 11 else "1.1mm",
+            "gap_min": "3mm" if len(data["papers"]) <= 6 else "1.5mm",
+            "cell": _card_cell(len(data["papers"])),
+            "tight": len(data["papers"]) > 6,  # R21-3: the room to sign stays, however many subjects
             "mark_top": "120mm",
             "font_base": paths.font_base(),
             "levels": ExamRating.Level.choices,
@@ -491,6 +492,14 @@ def _campus_line(branch):
     name = re.sub(r"\(.*?\)", "", name).replace("The Arqam Schools", "").strip(" -—,")
     city = branch.city if branch.city and branch.city.lower() not in name.lower() else ""
     return ", ".join(p for p in (name, city) if p)
+
+
+def _card_cell(papers):
+    """Padding of a subject row on the result card: the more subjects, the closer the rows (one page, R17-6, R21-3)."""
+    for most, cell in ((6, "2.4mm"), (8, "2mm"), (10, "1.6mm"), (12, "1mm"), (14, "0.7mm")):
+        if papers <= most:
+            return cell
+    return "0.3mm"
 
 
 def _card_address(branch):

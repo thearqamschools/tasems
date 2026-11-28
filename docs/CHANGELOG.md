@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.56.0 — 2026-11-28 — Round 21: result card and date sheet finishing (installer v30)
+- **Result card** (R21-1 – R21-4): THE ARQAM SCHOOLS a little smaller with the campus line close under it, spread to
+  the same width; more space before the STUDENT RESULT CARD badge; a clear room to sign between Remarks and
+  Teacher / Head / Principal, which now sit just above the frame's bottom line — on every card, however many subjects
+  (the rows close up from 7 subjects on; tried 5 to 16 subjects, all one page); Total marks, Obtained and Percentage
+  are alike, with Obtained a little bolder on a light grey box.
+- **Date sheet PDF** (R21-5 – R21-7): the DATE SHEET tab as in the school's design (a large curve top-left, the other
+  corners hardly rounded, taller, the words centred); the header lower on the page and less space between the
+  header, the dates bar and the table; the dates, the exam and the session in the middle of their bar; the rows use
+  the page's height.
+
 ## 0.55.0 — 2026-11-27 — Round 20: result card in the school's design (installer v29)
 - **Result card** (R20-4): rebuilt to the school's own design (MASTER template / Pre-Nine Jasmine) — rounded frame,
   grey round logo with THE ARQAM SCHOOLS and the campus line, "Student Result Card" badge, the exam on a black pill,
