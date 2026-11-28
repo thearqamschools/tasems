@@ -1192,3 +1192,12 @@ not to be bought or switched on without approval.
 - R22-4. **Date sheet PDF — DATE SHEET centred in its tab, left–right** (lead). **Built (v31):** centred both ways
   (measured).
 
+
+## Round 23 — subject names: full or short (lead, 28 Nov 2026, voice note after v31) — noted, not built yet
+
+- R23-1. **Result cards — full subject names, never the short form**, on every exam's card (Periodic Assessment – I,
+  Mid-Term, Periodic Assessment – II, Final): e.g. "English", "Mathematics", "Islamiyat", not "Math", "I.S". (Changes
+  R19-5, which put short names on cards.)
+- R23-2. **Sheet to fill by hand (marks sheet) — short forms** in the headings, as now (R19-5).
+- R23-3. **Date sheet — to confirm with the lead:** the voice note says "poora naam hi likhna hai date sheet pe";
+  the PDF uses short names now (R19-5, as on the school's design). Asked: full names on the date sheet too?
