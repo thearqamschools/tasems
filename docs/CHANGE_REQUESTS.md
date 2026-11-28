@@ -1201,3 +1201,18 @@ not to be bought or switched on without approval.
 - R23-2. **Sheet to fill by hand (marks sheet) — short forms** in the headings, as now (R19-5).
 - R23-3. **Date sheet — short names stay** (lead, 28 Nov, voice note read as "date sheet pe bhi short naam aayenge"),
   as now (R19-5, as on the school's design).
+
+## Round 24 — Samanabad online from the school's own computer through a Cloudflare Tunnel (lead, 28 Nov 2026) — proposed by Claude, needs the lead's "kar do"
+
+The lead chose to put Samanabad online from the school's computer (Windows install) with a free Cloudflare Tunnel
+(`tasems.thearqamschools.com` → `http://localhost:8000`). Claude checked the Windows copy against that and found what
+should change in TASEMS first:
+- R24-1. **Real visitor address behind the tunnel:** every request then arrives from 127.0.0.1, so the "20 failed
+  sign-ins per address" lock (apps/accounts/views.py) would lock *everyone* out for 15 minutes after one person's
+  20 wrong tries, and the audit log would show 127.0.0.1 for all. Use the `CF-Connecting-IP` header — only when the
+  request comes from the local tunnel.
+- R24-2. **Online setting in the Windows copy:** a switch (in `config.env`, e.g. `PUBLIC_URL=https://tasems.thearqamschools.com`)
+  that makes the session and CSRF cookies https-only for that address and adds it to the trusted origins, while the
+  office network (http://192.168.x.x:8000) keeps working.
+- R24-3. **TASEMS starts by itself** when the computer starts (Windows Startup), so a power cut does not leave it off.
+- R24-4. **Daily backup copied off the computer** (e.g. to a USB or Google Drive folder), checked by the principal.
